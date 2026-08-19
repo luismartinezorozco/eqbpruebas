@@ -184,7 +184,18 @@
     </button>
 
     <!-- NAVEGACIÓN LATERAL -->
-    <nav id="main-nav" class="fixed left-4 top-16 bottom-4 z-50 p-3 flex flex-col gap-2 hidden md:flex bg-white/70 dark:bg-slate-900/70 rounded-xl shadow-lg">
+    <style>
+    /* Sidebar mobile behavior */
+    #main-nav { transition: transform .22s ease, opacity .22s ease; }
+    #main-nav.mobile-hidden { transform: translateX(-120%); opacity: 0; }
+    #main-nav.mobile-open { transform: translateX(0); opacity: 1; position: fixed; left: 0; top: 0; bottom: 0; width: 76%; max-width: 320px; z-index: 60; padding-top: 3.5rem; }
+    #sidebar-backdrop { transition: opacity .2s ease; }
+    @media (min-width: 768px) {
+        #menu-toggle, #sidebar-backdrop { display: none !important; }
+        #main-nav { transform: none !important; opacity: 1 !important; position: fixed; left: 1rem; top: 4rem; bottom: 1rem; width: auto; }
+    }
+    </style>
+    <nav id="main-nav" class="fixed left-4 top-16 bottom-4 z-50 p-3 flex flex-col gap-2 mobile-hidden md:flex bg-white/70 dark:bg-slate-900/70 rounded-xl shadow-lg">
         <button onclick="showSection('crear')" id="nav-crear" class="nav-link px-3 py-3 text-[11px] font-black uppercase tracking-widest flex flex-col items-center justify-center gap-2" style="display: none;">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
             <span class="hidden md:inline">Facturar</span>
@@ -210,6 +221,12 @@
             <span class="hidden md:inline">Ajustes</span>
         </button>
     </nav>
+    <!-- Backdrop for mobile sidebar -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
+    <!-- Mobile toggle button -->
+    <button id="menu-toggle" aria-label="Abrir menú" class="md:hidden fixed bottom-6 right-4 z-50 bg-blue-600 text-white p-3 rounded-full shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
 
     <main class="max-w-5xl mx-auto pt-6 px-4 md:pt-32 hidden" id="main-content">
         
@@ -3251,7 +3268,44 @@
 	else {
 		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
 	}
-	// ]]>
-</script>
+    // ]]>
+    </script>
 
-</body></html>
+    <script>
+    // Mobile sidebar toggle logic
+    (function(){
+        const mainNav = document.getElementById('main-nav');
+        const backdrop = document.getElementById('sidebar-backdrop');
+        const toggle = document.getElementById('menu-toggle');
+        if (!mainNav || !backdrop || !toggle) return;
+
+        function openSidebar(){
+            mainNav.classList.remove('mobile-hidden');
+            mainNav.classList.add('mobile-open');
+            backdrop.classList.remove('hidden');
+            backdrop.classList.add('block');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeSidebar(){
+            mainNav.classList.remove('mobile-open');
+            mainNav.classList.add('mobile-hidden');
+            backdrop.classList.remove('block');
+            backdrop.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', ()=>{
+            if (mainNav.classList.contains('mobile-open')) closeSidebar(); else openSidebar();
+        });
+        backdrop.addEventListener('click', closeSidebar);
+
+        // Close sidebar after clicking a nav item on small screens
+        mainNav.addEventListener('click', (e)=>{
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            if (window.innerWidth < 768) setTimeout(closeSidebar, 120);
+        });
+    })();
+    </script>
+
+    </body></html>
