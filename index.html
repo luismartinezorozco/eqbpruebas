@@ -3291,7 +3291,6 @@
 	}
     // ]]>
     </script>
-
     <script>
     // Mobile nav expand/collapse: toggles labels on small screens
     (function(){
@@ -3331,6 +3330,21 @@
                 if (main) main.style.paddingLeft = '96px';
             }
         }
+    })();
+    </script>
+
+    <script>
+    // Demo helper: mostrar interfaz principal y el menú flotante con ?demo=1
+    (function(){
+        try{
+            if (!location.search.includes('demo=1')) return;
+            const login = document.getElementById('login-screen');
+            const main = document.getElementById('main-content');
+            const nav = document.getElementById('main-nav');
+            if (login) login.classList.add('hidden');
+            if (main) main.classList.remove('hidden');
+            if (nav) { nav.style.display = 'flex'; nav.classList.add('expanded'); }
+        }catch(e){console.warn('Demo toggle failed',e)}
     })();
     </script>
 
