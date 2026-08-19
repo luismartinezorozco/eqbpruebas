@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Contrato de Prestación de Servicios - Eventos Laly</title>
     
     <!-- Cargando Tailwind CSS para los estilos -->
@@ -122,19 +122,6 @@
     </style>
 </head>
 <body class="flex flex-col items-center min-h-screen py-4 sm:py-8 px-2 sm:px-4">
-
-    <div class="w-full max-w-4xl flex flex-col sm:flex-row justify-between items-center gap-4 bg-white p-4 rounded-lg shadow-md mb-6 pdf-hide border-l-4 border-blue-500 text-center sm:text-left">
-        <div>
-            <h2 class="text-lg font-bold text-gray-800">Editor de Contrato</h2>
-            <p class="text-sm text-gray-600">Haz clic en los campos resaltados para rellenar la información. Cuando termines, genera el PDF.</p>
-        </div>
-        <button onclick="generarPDF()" id="btn-pdf" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow flex justify-center items-center gap-2 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Descargar PDF
-        </button>
-    </div>
 
     <!-- Contenedor del Documento -->
     <div id="documento-contrato" class="bg-white shadow-2xl w-full max-w-[210mm] min-h-[297mm] p-6 sm:p-10 md:p-16 mx-auto relative text-xs sm:text-sm md:text-base leading-relaxed break-words">
@@ -274,6 +261,16 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Botón de Descarga al pie de la página -->
+    <div class="w-full max-w-[210mm] mt-8 flex justify-center pdf-hide mb-8">
+        <button onclick="generarPDF()" id="btn-pdf" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded shadow-lg flex justify-center items-center gap-2 transition-colors text-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Descargar PDF
+        </button>
     </div>
 
     <script>
