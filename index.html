@@ -183,8 +183,31 @@
         </svg>
     </button>
 
-    <!-- NAVEGACIÓN: ADAPTIVE (bottom on mobile, sidebar on desktop) -->
-    <nav id="main-nav" class="fixed z-50 p-2 flex items-center justify-center gap-2 left-1/2 -translate-x-1/2 bottom-6 md:left-4 md:top-16 md:bottom-4 md:translate-x-0 md:flex-col bg-white/70 dark:bg-slate-900/70 rounded-xl shadow-lg">
+        <!-- NAVEGACIÓN: MOBILE-FIRST (bottom bar on small screens, sidebar on md+) -->
+        <style>
+        :root{--nav-h:72px}
+        /* Mobile-first bottom bar */
+        #main-nav{position:fixed;left:8px;right:8px;bottom:12px;display:flex;justify-content:center;gap:8px;padding:8px;z-index:50;background:rgba(255,255,255,0.95);backdrop-filter:blur(6px);border-radius:14px}
+        #main-nav .nav-link{height:var(--nav-h);min-width:64px;width:64px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px}
+        #main-nav .nav-link svg{display:block}
+        #main-nav .nav-link span{font-size:11px;margin-top:4px}
+        /* Hidden labels on small screens; show when .expanded */
+        #main-nav span.hidden{display:none}
+        #main-nav.expanded span.hidden{display:inline !important}
+
+        /* Desktop: vertical sidebar */
+        @media (min-width: 768px){
+            #main-nav{left:1rem;top:4rem;bottom:1rem;right:auto;flex-direction:column;width:auto;padding:10px;border-radius:12px;background:rgba(255,255,255,0.9)}
+            #main-nav .nav-link{width:auto;height:auto;flex-direction:row;padding:10px 12px}
+            #main-nav .nav-link span{display:inline;margin-left:8px}
+        }
+
+        /* Ensure main content doesn't get overlapped on mobile */
+        @media (max-width: 767px){
+            #main-content{padding-bottom:calc(var(--nav-h) + 24px) !important}
+        }
+        </style>
+        <nav id="main-nav" class="bg-white/90 dark:bg-slate-900/90 shadow-lg">
         <button onclick="showSection('crear')" id="nav-crear" class="nav-link px-3 py-3 text-[11px] font-black uppercase tracking-widest flex flex-col items-center justify-center gap-2" style="display: none;">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
             <span class="hidden md:inline">Facturar</span>
@@ -208,6 +231,11 @@
         <button onclick="showSection('ajustes')" id="nav-ajustes" class="nav-link px-3 py-3 text-[11px] font-black uppercase tracking-widest flex flex-col items-center justify-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0.33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 0-1.82V9a1.65 1.65 0 0 0 1.51 1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
             <span class="hidden md:inline">Ajustes</span>
+        </button>
+        <!-- Mobile expand/collapse control -->
+        <button id="nav-expand-toggle" class="nav-link md:hidden px-3 py-3" aria-label="Mostrar etiquetas">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <span class="hidden md:inline">Mostrar</span>
         </button>
     </nav>
     <!-- (Adaptive menu: no separate mobile toggle/backdrop needed) -->
@@ -3255,6 +3283,21 @@
     // ]]>
     </script>
 
-    <!-- Adaptive nav: no mobile toggle script required -->
+    <script>
+    // Mobile nav expand/collapse: toggles labels on small screens
+    (function(){
+        const nav = document.getElementById('main-nav');
+        const toggle = document.getElementById('nav-expand-toggle');
+        if (!nav || !toggle) return;
+        const STORAGE_KEY = 'app_nav_expanded_v1';
+        // restore state
+        if (localStorage.getItem(STORAGE_KEY) === '1') nav.classList.add('expanded');
+        toggle.addEventListener('click', ()=>{
+            const expanded = nav.classList.toggle('expanded');
+            localStorage.setItem(STORAGE_KEY, expanded ? '1' : '0');
+            toggle.setAttribute('aria-pressed', expanded ? 'true' : 'false');
+        });
+    })();
+    </script>
 
     </body></html>
