@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Contrato de Prestación de Servicios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: #f3f4f6; 
+        }
+        
+        /* Estilos para campos editables */
+        .editable-field {
+            border-bottom: 1px dashed #9ca3af;
+            outline: none;
+            display: inline-block;
+            min-width: 100px;
+            color: #1f2937;
+            font-weight: 600;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        .editable-field:focus { 
+            border-bottom: 2px solid #3b82f6; 
+            background-color: #eff6ff; 
+        }
+        .editable-field:empty::before { 
+            content: attr(data-placeholder); 
+            color: #9ca3af; 
+            font-weight: 400; 
+            pointer-events: none; 
+        }
+
+        /* Contenedor del documento y marca de agua */
+        #documento-contrato {
+            position: relative;
+            background-color: white;
+        }
+        #watermark-container {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        #watermark-image {
+            width: 80%;
+            opacity: 0.08;
+            max-width: 600px;
+        }
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased flex flex-col items-center py-10 px-4 sm:px-8">
+
+    <div id="documento-contrato" class="w-full max-w-4xl shadow-xl rounded-lg p-6 sm:p-12 mb-8 text-sm sm:text-base leading-relaxed">
+        
+        <!-- Marca de agua en el fondo -->
+        <div id="watermark-container">
+            <img id="watermark-image" alt="Marca de agua" crossorigin="anonymous">
+        </div>
+
+        <div class="content-layer">
+            <!-- Título Principal (Empresa) -->
+            <h1 class="text-2xl sm:text-3xl font-bold text-center mb-2 uppercase">
+                <span class="editable-field min-w-[250px] text-center" contenteditable="true" data-placeholder="NOMBRE DE LA EMPRESA"></span>
+            </h1>
+            <h2 class="text-lg sm:text-xl font-semibold text-center mb-8">CONTRATO DE PRESTACION DE SERVICIO</h2>
+
+            <p class="mb-6 text-justify">
+                Agradecemos la oportunidad de atender su evento. Contamos con equipos de última tecnología y personal altamente calificado, lo que nos permite garantizar un servicio de calidad y un cubrimiento impecable en esta fecha tan especial.
+            </p>
+
+            <p class="mb-6 text-justify">
+                Entre: <span class="editable-field min-w-[200px]" contenteditable="true" data-placeholder="Nombre del Contratante"></span>, con NIT o CC <span class="editable-field min-w-[120px]" contenteditable="true" data-placeholder="Número de Identificación"></span> en calidad de <strong>CONTRATANTE</strong>, de una parte, <span class="editable-field min-w-[250px]" contenteditable="true" data-placeholder="Nombre del Representante Legal"></span>, con cédula No. <span class="editable-field min-w-[120px]" contenteditable="true" data-placeholder="Cédula del Representante"></span>, en calidad de <strong>CONTRATISTA</strong> y obrando en representación legal de <span class="editable-field min-w-[200px]" contenteditable="true" data-placeholder="Nombre de la Empresa"></span>.
+            </p>
+            
+            <p class="mb-6 text-justify">A Continuación, describiremos los servicios ofrecidos por nuestra empresa y forma de contrato.</p>
+            <p class="mb-6 font-semibold">HAN CONVENIDO Y PACTADO LO SIGUIENTE:</p>
+
+            <div class="space-y-4 text-justify">
+                <p><strong>CLAUSULA PRIMERA: OBJETO DE LA COTIZACION. -</strong> El CONTRATISTA le concede al CONTRATANTE, durante el evento que se celebrara en <span class="editable-field min-w-[150px]" contenteditable="true" data-placeholder="Ciudad / Departamento"></span>, el día <span class="editable-field min-w-[100px]" contenteditable="true" data-placeholder="DD/MM/AAAA"></span>, goce y disfrute sobre los siguientes servicios contratados:</p>
+                
+                <p><strong>TITULO DEL SERVICIO:</strong> <span class="editable-field min-w-[300px]" contenteditable="true" data-placeholder="Especifique el título del servicio"></span></p>
+                <p>Especificación el servicio: <span class="editable-field w-full mt-1" contenteditable="true" data-placeholder="Describa los detalles de los equipos y servicio aquí..."></span></p>
+
+                <div class="bg-gray-100 p-4 border-l-4 border-gray-400 rounded">
+                    <p class="font-semibold text-sm">NOTA: IMPORTANTE ASIGNAR UNA ZONA DE CONFORT PARA QUE EL PERSONAL PUEDA CAMBIARSE Y DESCANSAR.</p>
+                    <p class="font-semibold text-sm mt-2">ORGANIZACIÓN AL MOMENTOS DE LAS FOTOGRAFIAS</p>
+                </div>
+
+                <p><strong>CLAUSULA SEGUNDA: TERMINO DE DURACION DEL CONTRATO. -</strong> Por la temporalidad máxima de <span class="editable-field min-w-[80px]" contenteditable="true" data-placeholder="Cantidad"></span> HORAS. <br>
+                <span class="editable-field min-w-[150px]" contenteditable="true" data-placeholder="Ej: 5:00pm – 7:00pm"></span></p>
+                <p class="text-sm font-semibold">NOTA: LA REDUCCION DE HORAS DE LOS SERVICIOS NO TIENEN DESCUENTOS EN LOS COSTOS.</p>
+
+                <p><strong>CLAUSULA TERCERA: VALOR Y FORMA DE PAGO, –</strong> El valor por la prestación de los servicios objeto en este contrato se conviene en la suma de <span class="editable-field min-w-[200px]" contenteditable="true" data-placeholder="Valor en letras (Ej: UN MILLÓN)"></span> PESOS ($<span class="editable-field min-w-[100px]" contenteditable="true" data-placeholder="Valor numérico"></span>).<br>
+                <strong>PARRAFO PRIMERO:</strong> El contratante debe abonar la suma de <span class="editable-field min-w-[150px]" contenteditable="true" data-placeholder="Valor abono letras"></span> PESOS ($<span class="editable-field min-w-[100px]" contenteditable="true" data-placeholder="Valor abono numérico"></span>) equivalente al 50% del total, queda como saldo pendiente <span class="editable-field min-w-[150px]" contenteditable="true" data-placeholder="Valor saldo letras"></span> PESOS ($<span class="editable-field min-w-[100px]" contenteditable="true" data-placeholder="Valor saldo numérico"></span>) que deberá ser cancelado antes de iniciar el servicio.</p>
+
+                <p><strong>CLAUSULA CUARTA: ALIMENTACION Y HIDRATACION, -</strong> En virtud del contrato establecido, es responsabilidad del contratante proporcionar alimentación e hidratación al personal. En caso de que el contratante opte por ofrecer un monto en efectivo destinado a la alimentación e hidratación, delegando así la responsabilidad de su provisión al contratista, será necesario realizar una nueva cotización para determinar el monto correspondiente a dichos servicios.</p>
+
+                <p><strong>CLAUSULA QUINTA: SANCIONES POR INCUMPLIMIENTO, -</strong> Si cualquiera de las partes incumpliera con las obligaciones aquí pactadas pagará a la parte afectada una indemnización equivalente al 50% del valor total del contrato que tendrá merito ejecutivo y será exigible con una sola presentación de la demanda, salvo el caso de fuerza mayor debidamente comprobado, las partes acordarán una nueva fecha para el cumplimiento de este contrato. Se considera fuerza mayor: calamidad doméstica comprobada, problemas de orden público o duelo nacional, ciclones, terremotos, imposibilidad en los transportes terrestres o aéreos. No se considera fuerza mayor la no asistencia de público al lugar de la actuación o la falta de fluido eléctrico.</p>
+
+                <p><strong>CLAUSULA SEXTA: USO DE CONTENIDO AUDIOVISUAL;</strong> el CONTRATISTA se obliga a no publicar, divulgar, compartir ni utilizar fotografías, videos, grabaciones o cualquier material audiovisual obtenido durante la ejecución del presente contrato, sin previa autorización verbal o escrita de la empresa.</p>
+                <p>La publicación, uso o difusión no autorizada de dicho material se considerar apropiación indebida de datos e información confidencial, constituyendo una falta grave. En caso de incumplimiento, el CONTRATISTA deberá pagar al CONTRATANTE una sanción equivalente al veinticinco por ciento (25%) adicional sobre el valor total del contrato, sin perjuicio de las acciones legales adicionales que correspondan.</p>
+            </div>
+
+            <p class="mt-6 text-justify">El valor de esta cotización se encuentra libre de IVA, ARL, retención en la fuente y/o cualquier otro descuento o impuesto permitido por la Ley.</p>
+            
+            <p class="mt-4 text-justify">Para cualquier solicitud de información, aclaración de dudas, reservas o verificación de disponibilidad, comuníquese exclusivamente a través de nuestros canales oficiales: correo electrónico y línea telefónica. No utilizamos otros medios de contacto.</p>
+
+            <div class="mt-8 bg-gray-50 p-6 rounded-lg border border-gray-200">
+                <h3 class="font-bold mb-2">CONTACTO DIRECTO:</h3>
+                <p><span class="editable-field min-w-[250px]" contenteditable="true" data-placeholder="Nombre de Contacto Oficial"></span></p>
+                <p>Celular: <span class="editable-field min-w-[150px]" contenteditable="true" data-placeholder="Número de Teléfono"></span></p>
+                <p>E-mail: <span class="editable-field min-w-[250px]" contenteditable="true" data-placeholder="Correo Electrónico"></span></p>
+            </div>
+
+            <p class="mt-8">Para constancia en <span class="editable-field min-w-[150px]" contenteditable="true" data-placeholder="Ciudad"></span> el día <span class="editable-field min-w-[100px]" contenteditable="true" data-placeholder="DD/MM/AAAA"></span></p>
+            <p class="mt-2 font-bold">ACORDADO Y ACEPTADO.</p>
+
+            <div class="mt-16 flex flex-col sm:flex-row justify-between gap-12 sm:gap-4">
+                <!-- Firma Contratante -->
+                <div class="flex-1 flex flex-col items-center sm:items-start text-center sm:text-left">
+                    <div class="w-64 border-b border-black mb-2 h-16 relative"></div>
+                    <p class="font-bold">CONTRATANTE</p>
+                    <p><span class="editable-field min-w-[200px]" contenteditable="true" data-placeholder="Nombre del Contratante"></span></p>
+                    <p>NIT O CC: <span class="editable-field min-w-[150px]" contenteditable="true" data-placeholder="Documento"></span></p>
+                    <p>CEL: <span class="editable-field min-w-[150px]" contenteditable="true" data-placeholder="Celular"></span></p>
+                </div>
+                
+                <!-- Firma Contratista -->
+                <div class="flex-1 flex flex-col items-center sm:items-start text-center sm:text-left">
+                    <div class="w-64 border-b border-black mb-2 h-16 relative"></div>
+                    <p class="font-bold">CONTRATISTA</p>
+                    <p><span class="editable-field min-w-[200px]" contenteditable="true" data-placeholder="Nombre del Contratista"></span></p>
+                    <p>CC: <span class="editable-field min-w-[150px]" contenteditable="true" data-placeholder="Documento"></span></p>
+                    <p>CEL: <span class="editable-field min-w-[150px]" contenteditable="true" data-placeholder="Celular"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="descargarPDF()" class="w-full max-w-sm bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-transform transform hover:scale-105 mb-10 flex items-center justify-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        Descargar PDF
+    </button>
+
+    <script>
+        // Carga la marca de agua transformándola a Base64 con múltiples alternativas
+        window.addEventListener('DOMContentLoaded', async () => {
+            const imageUrl = 'https://www.image2url.com/r2/default/images/1787175274633-14b1243e-dc1b-4cb5-b071-3d20757a5c49.svg';
+            const imgElement = document.getElementById('watermark-image');
+            
+            // Lista de proxies para eludir bloqueos de CORS
+            const proxies = [
+                `https://api.allorigins.win/raw?url=${encodeURIComponent(imageUrl)}`,
+                `https://corsproxy.io/?${encodeURIComponent(imageUrl)}`,
+                `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(imageUrl)}`
+            ];
+
+            let success = false;
+
+            for (const proxy of proxies) {
+                try {
+                    const response = await fetch(proxy);
+                    if (!response.ok) continue;
+                    
+                    const svgText = await response.text();
+                    
+                    // Verificar si el texto devuelto es realmente un SVG
+                    if (svgText.includes('<svg')) {
+                        const encodedData = window.btoa(unescape(encodeURIComponent(svgText)));
+                        imgElement.src = 'data:image/svg+xml;base64,' + encodedData;
+                        success = true;
+                        break; // Si tiene éxito, salir del bucle
+                    }
+                } catch (err) {
+                    // Si falla este proxy, el bucle intentará automáticamente con el siguiente
+                }
+            }
+
+            // Fallback directo: si todos fallan, mostramos la imagen directamente
+            if (!success) {
+                console.warn('Los proxies no respondieron. Usando carga de imagen directa.');
+                imgElement.removeAttribute('crossorigin'); // Quitamos crossorigin para que la imagen cargue
+                imgElement.src = imageUrl;
+            }
+        });
+
+        function descargarPDF() {
+            // Quita el foco del elemento activo
+            if (document.activeElement) document.activeElement.blur();
+
+            const elemento = document.getElementById('documento-contrato');
+            const campos = document.querySelectorAll('.editable-field');
+            
+            // Retirar diseño dashed (puntos) para impresión limpia
+            campos.forEach(c => {
+                c.style.borderBottom = 'none';
+                c.style.backgroundColor = 'transparent';
+            });
+
+            const opt = {
+                margin:       10,
+                filename:     'Contrato_Prestacion_Servicios.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, logging: false },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(elemento).save().then(() => {
+                // Restaurar diseño visual en el navegador
+                campos.forEach(c => {
+                    c.style.borderBottom = '1px dashed #9ca3af';
+                    c.style.backgroundColor = '';
+                });
+            });
+        }
+    </script>
+</body>
+</html>
