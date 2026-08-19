@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrato de Prestación de Servicios - Eventos Laly</title>
+    
+    <!-- Cargando Tailwind CSS para los estilos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Cargando html2pdf para la generación del documento PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        /* Estilos para los campos que el usuario puede editar */
+        .editable-inline {
+            display: inline-block;
+            min-width: 100px;
+            max-width: 100%;
+            word-wrap: break-word;
+            border-bottom: 1px dashed #6b7280;
+            background-color: #f8fafc;
+            padding: 0 4px;
+            font-weight: bold;
+            color: #1e40af;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .editable-inline:focus {
+            background-color: #dbeafe;
+            border-bottom-color: #2563eb;
+        }
+
+        .editable-inline:empty:before {
+            content: attr(data-placeholder);
+            color: #9ca3af;
+            font-weight: normal;
+        }
+
+        .editable-block {
+            display: block;
+            width: 100%;
+            min-height: 80px;
+            border: 1px dashed #6b7280;
+            background-color: #f8fafc;
+            padding: 10px;
+            margin-top: 5px;
+            outline: none;
+            color: #1e40af;
+        }
+
+        .editable-block:focus {
+            background-color: #dbeafe;
+            border-color: #2563eb;
+        }
+
+        .editable-block:empty:before {
+            content: attr(data-placeholder);
+            color: #9ca3af;
+        }
+
+        /* Estilo para la firma simulada de la contratista */
+        .firma-digital {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #1e3a8a;
+            transform: rotate(-3deg);
+        }
+
+        /* Ocultar elementos de UI durante la impresión/PDF */
+        .pdf-hide {
+            display: block;
+        }
+        
+        .is-exporting .pdf-hide {
+            display: none !important;
+        }
+        
+        .is-exporting .editable-inline,
+        .is-exporting .editable-block {
+            border-color: transparent !important;
+            background-color: transparent !important;
+            color: #111827 !important; /* Texto negro en PDF */
+            font-weight: normal !important;
+        }
+        
+        .is-exporting .editable-inline {
+            border-bottom: 1px solid #111827 !important; /* Línea de llenado en PDF */
+        }
+        
+        .marca-de-agua {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            height: 70%;
+            max-width: 550px;
+            opacity: 0.08; /* Transparencia baja para que no afecte la lectura */
+            pointer-events: none; /* Permite hacer clic a través de la imagen */
+            z-index: 0;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+
+        /* Asegurar que todos los textos queden por encima de la marca de agua */
+        #documento-contrato > *:not(.marca-de-agua) {
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center min-h-screen py-4 sm:py-8 px-2 sm:px-4">
+
+    <div class="w-full max-w-4xl flex flex-col sm:flex-row justify-between items-center gap-4 bg-white p-4 rounded-lg shadow-md mb-6 pdf-hide border-l-4 border-blue-500 text-center sm:text-left">
+        <div>
+            <h2 class="text-lg font-bold text-gray-800">Editor de Contrato</h2>
+            <p class="text-sm text-gray-600">Haz clic en los campos resaltados para rellenar la información. Cuando termines, genera el PDF.</p>
+        </div>
+        <button onclick="generarPDF()" id="btn-pdf" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow flex justify-center items-center gap-2 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Descargar PDF
+        </button>
+    </div>
+
+    <!-- Contenedor del Documento -->
+    <div id="documento-contrato" class="bg-white shadow-2xl w-full max-w-[210mm] min-h-[297mm] p-6 sm:p-10 md:p-16 mx-auto relative text-xs sm:text-sm md:text-base leading-relaxed break-words">
+        
+        <!-- Marca de Agua usando CSS background para evitar errores de CORS con html2pdf -->
+        <div class="marca-de-agua"></div>
+
+        <!-- Encabezado -->
+        <div class="text-center mb-6 sm:mb-8">
+            <h1 class="text-2xl sm:text-3xl font-bold tracking-wider mb-1">EVENTOS LALY</h1>
+            <h2 class="text-lg sm:text-xl font-bold text-gray-700">CONTRATO DE PRESTACION DE SERVICIO</h2>
+        </div>
+
+        <!-- Introducción -->
+        <p class="text-justify mb-6">
+            Agradecemos la oportunidad de atender su evento. Contamos con equipos de última tecnología y personal altamente calificado, lo que nos permite garantizar un servicio de calidad y un cubrimiento impecable en esta fecha tan especial.
+        </p>
+
+        <!-- Identificación de las partes -->
+        <p class="text-justify mb-6">
+            Entre: <span class="editable-inline text-center" contenteditable="true" data-placeholder="Nombre del Contratante"></span>, con NIT O CC <span class="editable-inline text-center" contenteditable="true" data-placeholder="Número de Doc."></span> en calidad de <strong>CONTRATANTE</strong>, de una parte, y <strong>LAURA VANESSA ARAUJO PERTUZ</strong>, con cédula No. 1.143.459.468, en calidad de <strong>CONTRATISTA</strong> y obrando en representación legal de <strong>EVENTOS LALY</strong>.
+        </p>
+        <p class="mb-6">A Continuación, describiremos los servicios ofrecidos por nuestra empresa y forma de contrato.</p>
+        
+        <p class="font-bold text-center mb-6">HAN CONVENIDO Y PACTADO LO SIGUIENTE:</p>
+
+        <!-- Cláusula 1 -->
+        <div class="mb-5 text-justify">
+            <p>
+                <strong>CLAUSULA PRIMERA: OBJETO DE LA COTIZACION. -</strong> El CONTRATISTA le concede al CONTRATANTE, durante el evento que se celebrara en <span class="editable-inline text-center" contenteditable="true" data-placeholder="Ciudad / Departamento"></span>, el día <span class="editable-inline text-center" contenteditable="true" data-placeholder="DD/MM/AAAA"></span>, goce y disfrute sobre los siguientes servicios contratados:
+            </p>
+            <p class="mt-4 font-bold">TITULO DEL SERVICIO:</p>
+            <span class="editable-inline w-full mb-2" contenteditable="true" data-placeholder="Ej. Servicio de Fotografía y Sonido"></span>
+            
+            <p class="font-bold mt-2">Especificación el servicio:</p>
+            <div class="editable-block" contenteditable="true" data-placeholder="Describa aquí los detalles y especificaciones del servicio contratado..."></div>
+            
+            <div class="bg-gray-50 border-l-4 border-gray-400 p-4 mt-4 italic text-sm">
+                <p><strong>NOTA:</strong> IMPORTANTE ASIGNAR UNA ZONA DE CONFORT PARA QUE EL PERSONAL PUEDA CAMBIARSE Y DESCANSAR.</p>
+                <p>ORGANIZACIÓN AL MOMENTOS DE LAS FOTOGRAFIAS</p>
+            </div>
+        </div>
+
+        <!-- Cláusula 2 -->
+        <div class="mb-5 text-justify">
+            <p>
+                <strong>CLAUSULA SEGUNDA: TERMINO DE DURACION DEL CONTRATO. -</strong> Por la temporalidad máxima de <span class="editable-inline text-center w-16" contenteditable="true" data-placeholder="Nº"></span> HORAS.
+            </p>
+            <p class="ml-4 mt-1">Horario: <span class="editable-inline text-center" contenteditable="true" data-placeholder="Ej. 5:00pm – 7:00pm"></span></p>
+            <p class="mt-2 text-sm font-bold uppercase">Nota: La reducción de horas de los servicios no tienen descuentos en los costos.</p>
+        </div>
+
+        <!-- Cláusula 3 -->
+        <div class="mb-5 text-justify">
+            <p>
+                <strong>CLAUSULA TERCERA: VALOR Y FORMA DE PAGO, –</strong> El valor por la prestación de los servicios objeto en este contrato se conviene en la suma de <span class="editable-inline text-center" contenteditable="true" data-placeholder="Valor en letras"></span> PESOS ($<span class="editable-inline text-center" contenteditable="true" data-placeholder="Valor en números"></span>).
+            </p>
+            <p class="mt-2">
+                <strong>PARRAFO PRIMERO:</strong> El contratante debe abonar la suma de <span class="editable-inline text-center" contenteditable="true" data-placeholder="Abono en letras"></span> PESOS ($<span class="editable-inline text-center" contenteditable="true" data-placeholder="Abono en números"></span>) equivalente al 50% del total, queda como saldo pendiente <span class="editable-inline text-center" contenteditable="true" data-placeholder="Saldo en letras"></span> PESOS ($<span class="editable-inline text-center" contenteditable="true" data-placeholder="Saldo en números"></span>) que deberá ser cancelado antes de iniciar el servicio.
+            </p>
+        </div>
+
+        <!-- Cláusula 4 -->
+        <div class="mb-5 text-justify">
+            <p>
+                <strong>CLAUSULA CUARTA: ALIMENTACION E HIDRATACION, -</strong> En virtud del contrato establecido, es responsabilidad del contratante proporcionar alimentación e hidratación al personal. En caso de que el contratante opte por ofrecer un monto en efectivo destinado a la alimentación e hidratación, delegando así la responsabilidad de su provisión al contratista, será necesario realizar una nueva cotización para determinar el monto correspondiente a dichos servicios.
+            </p>
+        </div>
+
+        <!-- Cláusula 5 -->
+        <div class="mb-5 text-justify">
+            <p>
+                <strong>CLAUSULA QUINTA: SANCIONES POR INCUMPLIMIENTO, -</strong> Si cualquiera de las partes incumpliera con las obligaciones aquí pactadas pagará a la parte afectada una indemnización equivalente al 50% del valor total del contrato que tendrá merito ejecutivo y será exigible con una sola presentación de la demanda, salvo el caso de fuerza mayor debidamente comprobado, las partes acordarán una nueva fecha para el cumplimiento de este contrato. Se considera fuerza mayor: calamidad doméstica comprobada, problemas de orden público o duelo nacional, ciclones, terremotos, imposibilidad en los transportes terrestres o aéreos. No se considera fuerza mayor la no asistencia de público al lugar de la actuación o la falta de fluido eléctrico.
+            </p>
+        </div>
+
+        <!-- Cláusula 6 -->
+        <div class="mb-5 text-justify">
+            <p>
+                <strong>CLAUSULA SEXTA: USO DE CONTENIDO AUDIOVISUAL;</strong> el CONTRATISTA se obliga a no publicar, divulgar, compartir ni utilizar fotografías, videos, grabaciones o cualquier material audiovisual obtenido durante la ejecución del presente contrato, sin previa autorización verbal o escrita de la empresa.
+            </p>
+            <p class="mt-2">
+                La publicación, uso o difusión no autorizada de dicho material se considerar apropiación indebida de datos e información confidencial, constituyendo una falta grave. En caso de incumplimiento, el CONTRATISTA deberá pagar al CONTRATANTE una sanción equivalente al veinticinco por ciento (25%) adicional sobre el valor total del contrato, sin perjuicio de las acciones legales adicionales que correspondan.
+            </p>
+        </div>
+
+        <!-- Notas Finales -->
+        <div class="mb-8 text-justify">
+            <p class="mb-2">El valor de esta cotización se encuentra libre de IVA, ARL, retención en la fuente y/o cualquier otro descuento o impuesto permitido por la Ley.</p>
+            <p>Para cualquier solicitud de información, aclaración de dudas, reservas o verificación de disponibilidad, comuníquese exclusivamente a través de nuestros canales oficiales: correo electrónico y línea telefónica. No utilizamos otros medios de contacto.</p>
+        </div>
+
+        <!-- Contacto Directo -->
+        <div class="mb-8">
+            <p class="font-bold">CONTACTO DIRECTO:</p>
+            <p>LAURA VANNESA ARAUJO PERTUZ</p>
+            <p>Celular: 3006646724</p>
+            <p>G-mail: eventoslaly0310@gmail.com</p>
+        </div>
+
+        <!-- Constancia -->
+        <div class="mb-12">
+            <p>Para constancia en Barranquilla el día <span class="editable-inline text-center" contenteditable="true" data-placeholder="Fecha de la firma"></span></p>
+            <p class="font-bold mt-4">ACORDADO Y ACEPTADO.</p>
+        </div>
+
+        <!-- Firmas -->
+        <div class="flex flex-col sm:flex-row justify-between mt-12 sm:mt-16 gap-8 sm:gap-10">
+            <!-- Firma Contratante -->
+            <div class="w-full sm:w-5/12">
+                <div class="h-16 border-b border-gray-800 mb-2"></div>
+                <p class="font-bold">CONTRATANTE</p>
+                <div class="mt-2">
+                    <span class="editable-inline w-full text-sm mb-1" contenteditable="true" data-placeholder="Nombre del Contratante"></span>
+                </div>
+                <div class="flex flex-col sm:flex-row mt-1 text-sm">
+                    <span class="mr-1 whitespace-nowrap">NIT O CC:</span> 
+                    <span class="editable-inline flex-1" contenteditable="true" data-placeholder="Número"></span>
+                </div>
+                <div class="flex flex-col sm:flex-row mt-1 text-sm">
+                    <span class="mr-1 whitespace-nowrap">CEL:</span> 
+                    <span class="editable-inline flex-1" contenteditable="true" data-placeholder="Celular"></span>
+                </div>
+            </div>
+
+            <!-- Firma Contratista -->
+            <div class="w-full sm:w-5/12">
+                <div class="h-16 border-b border-gray-800 mb-2 flex items-end">
+                    <!-- Firma digital estilizada que reemplaza la imagen -->
+                    <span class="firma-digital ml-2 sm:ml-4 mb-2">Laura Araujo P.</span>
+                </div>
+                <p class="font-bold">CONTRATISTA</p>
+                <div class="mt-2 text-sm">
+                    <p class="mb-1 uppercase">LAURA ARAUJO PERTUZ</p>
+                    <p class="mt-1">CC. 1143459468</p>
+                    <p class="mt-1">CEL: 3006646724</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cargar la imagen a través de un proxy para convertirla a Base64 y evitar errores de CORS
+        document.addEventListener('DOMContentLoaded', () => {
+            const imgUrl = 'https://www.image2url.com/r2/default/images/1787175274633-14b1243e-dc1b-4cb5-b071-3d20757a5c49.svg';
+            const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(imgUrl);
+            
+            fetch(proxyUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    const reader = new FileReader();
+                    reader.onloadend = function() {
+                        const base64data = reader.result;
+                        // Aplicamos la imagen convertida directamente como fondo
+                        document.querySelector('.marca-de-agua').style.backgroundImage = `url(${base64data})`;
+                    }
+                    reader.readAsDataURL(blob);
+                })
+                .catch(err => {
+                    console.warn('Proxy falló, usando URL directa (podría no verse en el PDF):', err);
+                    document.querySelector('.marca-de-agua').style.backgroundImage = `url('${imgUrl}')`;
+                });
+        });
+
+        function generarPDF() {
+            const boton = document.getElementById('btn-pdf');
+            const documento = document.getElementById('documento-contrato');
+            const cuerpo = document.body;
+            
+            // Estado de carga del botón
+            const textoOriginal = boton.innerHTML;
+            boton.innerHTML = 'Generando PDF...';
+            boton.disabled = true;
+            boton.classList.add('opacity-75', 'cursor-not-allowed');
+
+            // Añadir clase para ocultar estilos de edición antes de generar el PDF
+            cuerpo.classList.add('is-exporting');
+
+            // Configuraciones de html2pdf
+            const opciones = {
+                margin:       [10, 10, 10, 10], // Margenes (top, left, bottom, right) en mm
+                filename:     'Contrato_Eventos_Laly.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Generar PDF
+            html2pdf().set(opciones).from(documento).save().then(() => {
+                // Restaurar estado una vez generado
+                cuerpo.classList.remove('is-exporting');
+                boton.innerHTML = textoOriginal;
+                boton.disabled = false;
+                boton.classList.remove('opacity-75', 'cursor-not-allowed');
+            }).catch(err => {
+                console.error("Error al generar PDF: ", err);
+                alert("Hubo un error al generar el PDF.");
+                cuerpo.classList.remove('is-exporting');
+                boton.innerHTML = textoOriginal;
+                boton.disabled = false;
+                boton.classList.remove('opacity-75', 'cursor-not-allowed');
+            });
+        }
+    </script>
+</body>
+</html>
