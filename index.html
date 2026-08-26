@@ -56,7 +56,9 @@
         button[class~="text-[8px]"]{box-shadow:0 1px 3px rgba(17,17,17,0.1)}
         .dark button[class~="text-[8px]"]{box-shadow:0 1px 3px rgba(0,0,0,0.35)}
         button[class~="text-[8px]"]:not(:disabled):hover{box-shadow:0 5px 12px -4px rgba(255,106,0,0.3)}
-        input,select,textarea{font-size:16px!important;transition:border-color 0.2s ease,box-shadow 0.2s ease,background-color 0.2s ease}.dark input,.dark select,.dark textarea{background-color:#111111;border-color:#495057;color:#E5E7EB}.dark input::placeholder{color:#E9ECEF}
+        input,select,textarea{font-size:16px!important;max-width:100%!important;box-sizing:border-box!important;transition:border-color 0.2s ease,box-shadow 0.2s ease,background-color 0.2s ease}
+        input[type="date"] { -webkit-appearance: none !important; appearance: none !important; min-width: 0 !important; width: 100% !important; display: block; }
+        .dark input,.dark select,.dark textarea{background-color:#111111;border-color:#495057;color:#E5E7EB}.dark input::placeholder{color:#E9ECEF}
         input:not([type="checkbox"]):not([type="radio"]):hover,select:hover,textarea:hover{border-color:rgba(255,106,0,0.45)}
         #main-content .glass-panel{transition:box-shadow 0.3s ease}
         #invoice-render,#history-report,#cobro-render{background:var(--doc-paper)!important;color:var(--doc-ink)!important;box-sizing:border-box}
@@ -862,10 +864,6 @@
                         <h2 class="text-3xl md:text-4xl font-[950] text-slate-900 dark:text-white uppercase tracking-tighter">Registros</h2>
                         <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.3em] mt-2">Historial y seguimiento de facturas</p>
                     </div>
-                    <button type="button" onclick="descargarHistorialPDF()" class="w-full sm:w-auto bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-[900] py-3 px-4 rounded-2xl uppercase tracking-[0.25em] text-[10px] hover:opacity-90 transition-all flex justify-center items-center gap-2 shadow-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                        Exportar Reporte
-                    </button>
                 </div>
 
                 <div id="tab-content-facturas" class="block animate-fade-in">
@@ -1088,49 +1086,6 @@
             </div>
         </section>
 
-        <!-- PLANTILLA REPORTE HISTÓRICO (PDF) -->
-        <div id="history-report-container" class="hidden" style="position:absolute; top:0; left:0; z-index:-100; opacity: 0; pointer-events: none; width:100%; max-width:none;">
-            <div id="history-report" class="p-10 bg-white w-full h-auto min-h-screen text-slate-900" style="width:100%; max-width:none; border-top:8px solid var(--doc-ink)">
-                <div class="flex justify-between items-start mb-8 pb-4 border-b border-slate-200">
-                    <div>
-                        <p class="text-[9px] font-black uppercase tracking-[0.3em] mb-1" style="color:var(--doc-accent)">Documento Interno</p>
-                        <h1 class="text-2xl font-[950] uppercase tracking-tighter">Reporte Contable</h1>
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1" id="hist-empresa">Workspace</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Fecha de Corte</p>
-                        <p class="text-sm font-[900]" id="report-date"></p>
-                    </div>
-                </div>
-                
-                <table class="w-full text-left text-[10px] mb-4 border-collapse table-fixed rounded-lg overflow-hidden">
-                    <thead>
-                        <tr class="text-white font-black uppercase tracking-widest" style="background:var(--doc-ink)">
-                            <th class="py-3 pl-3 w-[10%]">Fecha</th>
-                            <th class="py-3 w-[8%]">No.</th>
-                            <th class="py-3 w-[12%]">NIT / CC</th>
-                            <th class="py-3 w-[20%]">Cliente</th>
-                            <th class="py-3 w-[18%]">Concepto</th>
-                            <th class="py-3 w-[10%]">Pago</th>
-                            <th class="py-3 w-[10%]">Vendedor</th>
-                            <th class="py-3 text-right pr-3 w-[12%]">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody id="report-body" class="font-bold"></tbody>
-                </table>
-
-                <div class="mt-8 flex justify-end">
-                    <div class="text-right rounded-xl px-6 py-4" style="background:var(--doc-accent-soft)">
-                        <p class="text-[10px] font-bold uppercase tracking-widest" style="color:var(--doc-accent)">Total Recaudado</p>
-                        <p class="text-2xl font-[950] tracking-tighter" id="report-total"></p>
-                    </div>
-                </div>
-                
-                <div class="mt-16 pt-4 border-t border-slate-200 text-[9px] font-bold text-slate-400 text-center uppercase tracking-widest">
-                    <p>Fin del Reporte - Generado Automáticamente</p>
-                </div>
-            </div>
-        </div>
     </main>
 
     <!-- LOGICA FIREBASE Y APP -->
@@ -2911,135 +2866,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        window.descargarHistorialPDF = async function() {
-            const config = window.getUserConfig();
-            const btn = document.querySelector('button[onclick="descargarHistorialPDF()"]');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="animate-spin w-4 h-4 mr-2 inline-block flex-shrink-0" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Generando...`;
-            btn.disabled = true;
-
-            const tbody = document.getElementById('report-body');
-            tbody.innerHTML = '';
-            let grandTotal = 0;
-            const sortedFacturas = [...window.db.facturas]
-                .filter(f => window.currentAppUser.role === 'admin' ? true : f.userId === window.currentAppUser.id)
-                .sort((a, b) => new Date(b.fechaServicio) - new Date(a.fechaServicio));
-
-            sortedFacturas.forEach((f, idx) => {
-                grandTotal += f.total;
-                const rowBg = idx % 2 === 0 ? '#ffffff' : 'var(--doc-panel)';
-                tbody.innerHTML += `
-                    <tr class="border-b border-slate-100" style="background:${rowBg}">
-                        <td class="py-2.5 pl-3 text-slate-900 align-top">${window.sanitizeHTML(f.fechaServicio)}</td>
-                        <td class="py-2.5 text-slate-700 align-top">${window.sanitizeHTML(f.num)}</td>
-                        <td class="py-2.5 text-slate-500 text-[10px] align-top">${window.sanitizeHTML(f.cc)}</td>
-                        <td class="py-2.5 text-slate-900 align-top">${window.sanitizeHTML(f.cliente)}</td>
-                        <td class="py-2.5 text-slate-500 text-[10px] align-top">${window.sanitizeHTML(f.concepto)}</td>
-                        <td class="py-2.5 text-slate-500 text-[10px] align-top">${window.sanitizeHTML(f.metodo)}</td>
-                        <td class="py-2.5 text-slate-600 text-[10px] align-top">${window.sanitizeHTML(f.vendedor) || 'N/A'}</td>
-                        <td class="py-2.5 text-right font-medium align-top pr-3" style="color:var(--doc-accent)">${window.formatCOP(f.total)}</td>
-                    </tr>`;
-            });
-            
-            document.getElementById('hist-empresa').innerText = config.empresa || "Nombre Empresa";
-            document.getElementById('report-date').innerText = new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
-            document.getElementById('report-total').innerText = window.formatCOP(grandTotal);
-
-            const container = document.getElementById('history-report-container');
-            const reportEl = document.getElementById('history-report');
-            container.classList.remove('hidden');
-            
-            // Generación responsiva del reporte en A4 landscape
-            const PAGE_WIDTH_MM = 297;
-            const PAGE_HEIGHT_MM = 210;
-            const PAGE_MARGIN_MM = 10;
-
-            const CSS_PX_PER_INCH = 96;
-            const MM_PER_INCH = 25.4;
-            const cssPxPerMm = CSS_PX_PER_INCH / MM_PER_INCH;
-
-            const targetCssPxWidth = Math.round(PAGE_WIDTH_MM * cssPxPerMm);
-            const targetCssPxHeight = Math.round(PAGE_HEIGHT_MM * cssPxPerMm);
-
-            const wrapper = document.createElement('div');
-            wrapper.style.position = 'absolute'; wrapper.style.left = '-9999px'; wrapper.style.top = '0'; wrapper.style.width = targetCssPxWidth + 'px'; wrapper.style.background = 'white'; wrapper.style.overflow = 'hidden'; wrapper.style.boxSizing = 'border-box'; wrapper.style.margin = '0'; wrapper.style.padding = '0';
-            document.body.appendChild(wrapper);
-
-            const clone = reportEl.cloneNode(true);
-            clone.style.boxSizing = 'border-box';
-            clone.style.width = '800px';
-            clone.style.maxWidth = '800px';
-            clone.style.minWidth = '800px';
-            clone.style.margin = '0 auto';
-            clone.style.padding = '12px';
-            clone.style.background = '#ffffff';
-            clone.style.backgroundColor = '#ffffff';
-            // Forzar fondo blanco en la copia usada para captura
-            try { clone.style.setProperty('background', '#ffffff', 'important'); clone.style.setProperty('background-color', '#ffffff', 'important'); clone.style.setProperty('box-shadow', 'none', 'important'); clone.style.setProperty('filter', 'none', 'important'); } catch(e) {}
-            wrapper.appendChild(clone);
-
-            try { clone.querySelectorAll('img').forEach(img => { img.style.maxWidth = '100%'; img.style.height = 'auto'; if(!img.getAttribute('crossorigin')) img.setAttribute('crossorigin','anonymous'); }); } catch(e) {}
-
-            try { if (document.fonts) await document.fonts.ready; } catch(e) {}
-            await new Promise(r => requestAnimationFrame(r));
-            await new Promise(r => setTimeout(r, 50));
-
-            const naturalRect = clone.getBoundingClientRect();
-            const naturalWidth = naturalRect.width || clone.scrollWidth || targetCssPxWidth;
-            const naturalHeight = clone.scrollHeight || naturalRect.height || targetCssPxHeight;
-
-            const scaleX = targetCssPxWidth / naturalWidth;
-            const scaleY = targetCssPxHeight / naturalHeight;
-            const fitScale = Math.min(1, scaleX, scaleY);
-            if (fitScale < 1) { clone.style.transformOrigin = 'top left'; clone.style.transform = `scale(${fitScale})`; wrapper.style.width = Math.ceil(naturalWidth * fitScale) + 'px'; wrapper.style.height = Math.ceil(naturalHeight * fitScale) + 'px'; }
-            else { wrapper.style.width = targetCssPxWidth + 'px'; }
-
-            await new Promise(r => requestAnimationFrame(r));
-
-            const devicePR = Math.max(1, window.devicePixelRatio || 1);
-            const renderScale = Math.min(3, Math.max(1, Math.round(devicePR * 2)));
-
-            // html2canvas/jsPDF no quedan expuestos como globales en este bundle; se usa el propio "worker" de html2pdf para obtener el canvas y el jsPDF ya listos
-            try {
-                const worker = html2pdf().set({
-                    margin: [PAGE_MARGIN_MM, PAGE_MARGIN_MM, PAGE_MARGIN_MM, PAGE_MARGIN_MM],
-                    html2canvas: { scale: renderScale, useCORS: true, backgroundColor: '#ffffff', logging: false },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-                }).from(wrapper);
-
-                await worker.toCanvas();
-                const canvas = await worker.get('canvas');
-                await worker.toPdf();
-                const pdf = await worker.get('pdf');
-
-                // El reporte siempre debe quedar en una sola página landscape; se descartan páginas extra
-                const totalPages = pdf.internal.getNumberOfPages();
-                for (let i = totalPages; i > 1; i--) pdf.deletePage(i);
-
-                const usableWidthMm = PAGE_WIDTH_MM - PAGE_MARGIN_MM * 2;
-                const usableHeightMm = PAGE_HEIGHT_MM - PAGE_MARGIN_MM * 2;
-                let imgWidthMm = usableWidthMm;
-                let imgHeightMm = (canvas.height / canvas.width) * imgWidthMm;
-                // Se reduce todo proporcionalmente (sin deformar) si excede la altura de la página
-                if (imgHeightMm > usableHeightMm) {
-                    const shrink = usableHeightMm / imgHeightMm;
-                    imgHeightMm = usableHeightMm;
-                    imgWidthMm = imgWidthMm * shrink;
-                }
-                const x = (PAGE_WIDTH_MM - imgWidthMm) / 2;
-                const y = PAGE_MARGIN_MM;
-
-                pdf.setPage(1);
-                pdf.setFillColor(255, 255, 255);
-                pdf.rect(0, 0, PAGE_WIDTH_MM, PAGE_HEIGHT_MM, 'F');
-                pdf.addImage(canvas.toDataURL('image/jpeg', 0.98), 'JPEG', x, y, imgWidthMm, imgHeightMm);
-                pdf.save(`Reporte_${new Date().toISOString().split('T')[0]}.pdf`);
-            } catch (e) { console.error(e); window.showToast('Error al generar el reporte'); }
-            finally {
-                try { if (wrapper && wrapper.parentNode) wrapper.parentNode.removeChild(wrapper); } catch(e) {}
-                container.classList.add('hidden'); btn.innerHTML = originalText; btn.disabled = false; reportEl.style.cssText = '';
-            }
-        };
 
         window.sanitizeHTML = function(str) {
             if (str === null || str === undefined) return '';
