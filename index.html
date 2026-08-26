@@ -60,7 +60,8 @@
         input:not([type="checkbox"]):not([type="radio"]):hover,select:hover,textarea:hover{border-color:rgba(255,106,0,0.45)}
         #main-content .glass-panel{transition:box-shadow 0.3s ease}
         #invoice-render,#history-report,#cobro-render{background:var(--doc-paper)!important;color:var(--doc-ink)!important;box-sizing:border-box}
-        #invoice-render,#cobro-render{box-shadow:0 30px 60px -28px rgba(15,23,42,0.4),0 1px 0 rgba(15,23,42,0.04);position:relative;overflow:hidden;max-width:100%;border:1px solid var(--doc-line)}
+        #invoice-render,#cobro-render{box-shadow:0 30px 60px -28px rgba(15,23,42,0.4),0 1px 0 rgba(15,23,42,0.04);position:relative;overflow:hidden;width:100%;max-width:100%;border:1px solid var(--doc-line)}
+        #invoice-render{padding-left:1rem;padding-right:1rem;padding-top:0.85rem;padding-bottom:0.85rem}
         #invoice-render::before,#cobro-render::before{content:'';position:absolute;top:0;left:0;right:0;height:9px;background:linear-gradient(90deg,var(--doc-ink) 0%,var(--doc-ink) 62%,var(--doc-accent) 100%);z-index:20}
         .line-accent{height:4px;width:52px;background-color:var(--doc-accent);border-radius:2px}
         #invoice-render .text-blue-600,#invoice-render .text-blue-500,#invoice-render .text-blue-400{color:var(--doc-accent)!important}
@@ -430,7 +431,7 @@
                 </div>
                 
                 <div class="mobile-viewport-wrapper relative">
-                    <div id="invoice-render" class="w-full max-w-2xl md:max-w-none md:w-[800px] bg-white p-6 sm:p-8 md:p-14 pt-9 sm:pt-11 md:pt-16 flex flex-col relative mx-auto transition-all text-slate-900 min-h-[700px] md:min-h-[900px]">
+                    <div id="invoice-render" class="w-full max-w-none md:max-w-none bg-white p-4 sm:p-5 md:p-6 pt-8 sm:pt-9 md:pt-10 flex flex-col relative mx-auto transition-all text-slate-900 min-h-[700px] md:min-h-[860px]">
                         <div class="flex flex-col md:flex-row justify-between items-center md:items-start mb-8 md:mb-10 gap-6 md:gap-0">
                             <div class="space-y-3 text-center md:text-left w-full md:w-auto">
                                 <div>
@@ -1089,8 +1090,8 @@
         </section>
 
         <!-- PLANTILLA REPORTE HISTÓRICO (PDF) -->
-        <div id="history-report-container" class="hidden" style="position:absolute; top:0; left:0; z-index:-100; opacity: 0; pointer-events: none; width:100%; max-width: 1080px;">
-            <div id="history-report" class="p-10 bg-white w-full h-auto min-h-screen text-slate-900" style="border-top:8px solid var(--doc-ink)">
+        <div id="history-report-container" class="hidden" style="position:absolute; top:0; left:0; z-index:-100; opacity: 0; pointer-events: none; width:100%; max-width:none;">
+            <div id="history-report" class="p-10 bg-white w-full h-auto min-h-screen text-slate-900" style="width:100%; max-width:none; border-top:8px solid var(--doc-ink)">
                 <div class="flex justify-between items-start mb-8 pb-4 border-b border-slate-200">
                     <div>
                         <p class="text-[9px] font-black uppercase tracking-[0.3em] mb-1" style="color:var(--doc-accent)">Documento Interno</p>
@@ -2024,9 +2025,66 @@
         };
 
         window.generarBlobFactura = async function(num, element) {
+            const PAGE_WIDTH_MM = 210;
+            const PAGE_HEIGHT_MM = 297;
+            const PAGE_MARGIN_MM = 10;
+            const FIXED_WIDTH_PX = 1120;
+            const renderScale = Math.min(3, Math.max(2, Math.round((window.devicePixelRatio || 1) * 2)));
+
+            const host = document.createElement('div');
+            host.style.position = 'fixed';
+            host.style.left = '-99999px';
+            host.style.top = '0';
+            host.style.width = FIXED_WIDTH_PX + 'px';
+            host.style.maxWidth = FIXED_WIDTH_PX + 'px';
+            host.style.padding = '0';
+            host.style.margin = '0';
+            host.style.zIndex = '-999999';
+            host.style.opacity = '0';
+            host.style.pointerEvents = 'none';
+            host.style.overflow = 'hidden';
+            host.style.visibility = 'hidden';
+            host.style.boxSizing = 'border-box';
+            document.body.appendChild(host);
+
             const clone = element.cloneNode(true);
-            
+            clone.style.position = 'relative';
+            clone.style.display = 'block';
+            clone.style.width = FIXED_WIDTH_PX + 'px';
+            clone.style.maxWidth = FIXED_WIDTH_PX + 'px';
+            clone.style.minWidth = FIXED_WIDTH_PX + 'px';
+            clone.style.boxSizing = 'border-box';
+            clone.style.padding = '12px';
+            clone.style.margin = '0';
             clone.style.backgroundColor = '#ffffff';
+            clone.style.border = 'none';
+            clone.style.transform = 'none';
+            clone.style.overflow = 'hidden';
+            clone.style.zoom = '1';
+            clone.style.minHeight = 'auto';
+            clone.style.height = 'auto';
+
+            const allNodes = clone.querySelectorAll('*');
+            allNodes.forEach(node => {
+                node.classList.remove('truncate', 'overflow-hidden', 'whitespace-nowrap');
+                node.style.whiteSpace = 'normal';
+                node.style.wordWrap = 'break-word';
+                node.style.overflowWrap = 'anywhere';
+            });
+
+            const cValLabels = clone.querySelectorAll('.c-val, .c-label');
+            cValLabels.forEach(node => {
+                node.style.whiteSpace = 'normal !important';
+                node.style.wordWrap = 'break-word !important';
+                node.style.overflowWrap = 'anywhere';
+            });
+
+            clone.querySelectorAll('#invoice-render, #cobro-render').forEach(el => {
+                el.classList.remove('min-h-[700px]', 'min-h-[860px]', 'min-h-[900px]');
+                el.style.minHeight = 'auto';
+                el.style.height = 'auto';
+            });
+
             clone.querySelectorAll('img.hidden').forEach(img => img.classList.remove('hidden'));
 
             const adjustImage = (selector, style) => {
@@ -2038,49 +2096,65 @@
                     }
                 } catch (e) { console.error('image adjust error', e); }
             };
-
             adjustImage('#render-cobro-logo', 'width: auto !important; height: auto !important; max-width: 200px !important; object-fit: contain !important; display: block !important; margin: 0 !important; padding: 0 !important;');
             adjustImage('#pdf-logo', 'width: auto !important; height: auto !important; max-width: 200px !important; object-fit: contain !important; display: block !important; margin: 0 !important; padding: 0 !important;');
             adjustImage('#render-cobro-firma-img', 'width: auto !important; height: auto !important; max-width: 220px !important; max-height: 120px !important; object-fit: contain !important; display: block !important; margin: 0 auto !important; padding: 0 !important;');
             adjustImage('#pdf-factura-firma', 'width: auto !important; height: auto !important; max-width: 220px !important; max-height: 120px !important; object-fit: contain !important; display: block !important; margin: 0 auto !important; padding: 0 !important;');
 
-            // html2canvas/jsPDF no quedan expuestos como globales en este bundle; se usa el propio "worker" de html2pdf para obtener el canvas y el jsPDF ya listos
-            const PAGE_WIDTH_MM = 210, PAGE_HEIGHT_MM = 297, PAGE_MARGIN_MM = 6;
-            const renderScale = Math.min(3, Math.max(2, Math.round((window.devicePixelRatio || 1) * 2)));
+            host.appendChild(clone);
 
-            const worker = html2pdf().set({
-                html2canvas: { scale: renderScale, useCORS: true, backgroundColor: '#ffffff' },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            }).from(clone);
+            try {
+                await new Promise(resolve => requestAnimationFrame(resolve));
+                await new Promise(resolve => setTimeout(resolve, 50));
 
-            await worker.toCanvas();
-            const canvas = await worker.get('canvas');
-            await worker.toPdf();
-            const pdf = await worker.get('pdf');
+                const worker = html2pdf().set({
+                    margin: [PAGE_MARGIN_MM, PAGE_MARGIN_MM, PAGE_MARGIN_MM, PAGE_MARGIN_MM],
+                    html2canvas: {
+                        scale: renderScale,
+                        useCORS: true,
+                        backgroundColor: '#ffffff',
+                        logging: false,
+                        width: FIXED_WIDTH_PX,
+                        height: clone.scrollHeight || clone.offsetHeight || FIXED_WIDTH_PX
+                    },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                }).from(clone);
 
-            // Se descartan las páginas extra que html2pdf haya podido generar: el documento siempre debe quedar en una sola página
-            const totalPages = pdf.internal.getNumberOfPages();
-            for (let i = totalPages; i > 1; i--) pdf.deletePage(i);
+                await worker.toCanvas();
+                const canvas = await worker.get('canvas');
+                await worker.toPdf();
+                const pdf = await worker.get('pdf');
 
-            const usableWidthMm = PAGE_WIDTH_MM - PAGE_MARGIN_MM * 2;
-            const usableHeightMm = PAGE_HEIGHT_MM - PAGE_MARGIN_MM * 2;
-            let imgWidthMm = usableWidthMm;
-            let imgHeightMm = (canvas.height / canvas.width) * imgWidthMm;
-            // Si aun a ancho completo la altura excede la página, se reduce todo proporcionalmente (sin deformar) para que quepa en una sola hoja
-            if (imgHeightMm > usableHeightMm) {
-                const shrink = usableHeightMm / imgHeightMm;
-                imgHeightMm = usableHeightMm;
-                imgWidthMm = imgWidthMm * shrink;
+                const totalPages = pdf.internal.getNumberOfPages();
+                for (let i = totalPages; i > 1; i--) pdf.deletePage(i);
+
+                const usableWidthMm = PAGE_WIDTH_MM - (PAGE_MARGIN_MM * 2);
+                const usableHeightMm = PAGE_HEIGHT_MM - (PAGE_MARGIN_MM * 2);
+
+                let imgWidthMm = usableWidthMm;
+                let imgHeightMm = (canvas.height / canvas.width) * imgWidthMm;
+
+                if (imgHeightMm > usableHeightMm) {
+                    const shrink = usableHeightMm / imgHeightMm;
+                    imgHeightMm = usableHeightMm;
+                    imgWidthMm = imgWidthMm * shrink;
+                }
+
+                imgWidthMm = Math.min(imgWidthMm, usableWidthMm);
+                imgHeightMm = Math.min(imgHeightMm, usableHeightMm);
+
+                const x = (PAGE_WIDTH_MM - imgWidthMm) / 2;
+                const y = PAGE_MARGIN_MM;
+
+                pdf.setPage(1);
+                pdf.setFillColor(255, 255, 255);
+                pdf.rect(0, 0, PAGE_WIDTH_MM, PAGE_HEIGHT_MM, 'F');
+                pdf.addImage(canvas.toDataURL('image/jpeg', 0.98), 'JPEG', x, y, imgWidthMm, imgHeightMm);
+
+                return pdf.output('blob');
+            } finally {
+                if (host && host.parentNode) host.parentNode.removeChild(host);
             }
-            const x = (PAGE_WIDTH_MM - imgWidthMm) / 2;
-            const y = PAGE_MARGIN_MM;
-
-            pdf.setPage(1);
-            pdf.setFillColor(255, 255, 255);
-            pdf.rect(0, 0, PAGE_WIDTH_MM, PAGE_HEIGHT_MM, 'F');
-            pdf.addImage(canvas.toDataURL('image/jpeg', 0.98), 'JPEG', x, y, imgWidthMm, imgHeightMm);
-
-            return pdf.output('blob');
         };
 
         window.compartirPDF = async function() {
@@ -2893,7 +2967,14 @@
             document.body.appendChild(wrapper);
 
             const clone = reportEl.cloneNode(true);
-            clone.style.boxSizing = 'border-box'; clone.style.margin = '0'; clone.style.padding = '0';
+            clone.style.boxSizing = 'border-box';
+            clone.style.width = '800px';
+            clone.style.maxWidth = '800px';
+            clone.style.minWidth = '800px';
+            clone.style.margin = '0 auto';
+            clone.style.padding = '12px';
+            clone.style.background = '#ffffff';
+            clone.style.backgroundColor = '#ffffff';
             // Forzar fondo blanco en la copia usada para captura
             try { clone.style.setProperty('background', '#ffffff', 'important'); clone.style.setProperty('background-color', '#ffffff', 'important'); clone.style.setProperty('box-shadow', 'none', 'important'); clone.style.setProperty('filter', 'none', 'important'); } catch(e) {}
             wrapper.appendChild(clone);
@@ -2922,7 +3003,8 @@
             // html2canvas/jsPDF no quedan expuestos como globales en este bundle; se usa el propio "worker" de html2pdf para obtener el canvas y el jsPDF ya listos
             try {
                 const worker = html2pdf().set({
-                    html2canvas: { scale: renderScale, useCORS: true, backgroundColor: '#ffffff' },
+                    margin: [PAGE_MARGIN_MM, PAGE_MARGIN_MM, PAGE_MARGIN_MM, PAGE_MARGIN_MM],
+                    html2canvas: { scale: renderScale, useCORS: true, backgroundColor: '#ffffff', logging: false },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
                 }).from(wrapper);
 
