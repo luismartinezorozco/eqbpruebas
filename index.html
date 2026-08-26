@@ -32,8 +32,8 @@
         .nav-liquid{background:rgba(248,249,250,0.9);backdrop-filter:blur(16px)saturate(180%);-webkit-backdrop-filter:blur(16px)saturate(180%);border:1px solid rgba(233,236,239,0.9);box-shadow:0 8px 32px rgba(17,17,17,0.08);border-radius:2rem;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);box-sizing:border-box}.dark .nav-liquid{background:rgba(17,17,17,0.85);border:1px solid rgba(73,80,87,0.5);box-shadow:0 8px 32px rgba(0,0,0,0.4)}
         .nav-link{transition:all 0.3s ease;position:relative;color:#495057;border-radius:1.5rem}.dark .nav-link{color:#E5E7EB}.nav-link:active{transform:scale(0.95)}.nav-link.active{background:#FF6A00;color:#111111!important;box-shadow:0 4px 15px -3px rgba(255,106,0,0.3)}.dark .nav-link.active{background:#FF6A00;box-shadow:0 4px 15px -3px rgba(255,106,0,0.4)}
         .glass-panel{background:#F8F9FA;transition:background-color 0.3s,box-shadow 0.3s;box-sizing:border-box}.dark .glass-panel{background:#111111}
-        /* Documentos imprimibles (factura/cobro/historial): look plano de documento oficial, sin afectar el resto de la interfaz */
-        #invoice-render div,#cobro-render div,#history-report div{border:0!important;border-radius:0!important;box-shadow:none!important}
+        /* Documentos imprimibles (factura/cobro/historial): estética premium de papelería corporativa, sin afectar el resto de la interfaz */
+        :root{--doc-ink:#0f172a;--doc-muted:#64748b;--doc-line:#dfe4ec;--doc-paper:#ffffff;--doc-panel:#f8fafc;--doc-accent:#a8720a;--doc-accent-soft:#faf1de}
         /* ===== Botones: diseño moderno unificado (elevación, brillo y degradados de acento) sobre los colores ya existentes ===== */
         button{cursor:pointer;-webkit-tap-highlight-color:transparent}
         button:disabled{cursor:not-allowed;opacity:0.55;filter:grayscale(0.15);transform:none!important;box-shadow:none!important}
@@ -59,21 +59,23 @@
         input,select,textarea{font-size:16px!important;transition:border-color 0.2s ease,box-shadow 0.2s ease,background-color 0.2s ease}.dark input,.dark select,.dark textarea{background-color:#111111;border-color:#495057;color:#E5E7EB}.dark input::placeholder{color:#E9ECEF}
         input:not([type="checkbox"]):not([type="radio"]):hover,select:hover,textarea:hover{border-color:rgba(255,106,0,0.45)}
         #main-content .glass-panel{transition:box-shadow 0.3s ease}
-        #invoice-render,#history-report,#cobro-render{background:#F8F9FA!important;color:#111111!important;box-sizing:border-box}
-        #invoice-render,#cobro-render{box-shadow:0 20px 25px -5px rgba(0,0,0,0.08);position:relative;overflow:hidden;max-width:100%}
-        .line-accent{height:6px;width:60px;background-color:#475569;border-radius:2px}
-        #invoice-render .text-blue-600,#invoice-render .text-blue-500,#invoice-render .text-blue-400{color:#475569!important}
-        #invoice-render .text-red-600,#invoice-render .text-red-500,#invoice-render .text-red-400{color:#475569!important}
-        #invoice-render .bg-blue-50,#invoice-render .bg-blue-100,#invoice-render .bg-red-50,#invoice-render .bg-red-100,#invoice-render .bg-purple-50{background-color:#F1F5F9!important}
-        #invoice-render .border-blue-100,#invoice-render .border-blue-200,#invoice-render .border-red-50,#invoice-render .border-red-100,#invoice-render .border-purple-100{border-color:#CBD5E1!important}
-        #cobro-render{--theme:#475569}
-        #cobro-render .c-bg{background-color:#F1F5F9!important;color:#0f172a!important}
-        #cobro-render .c-border{border-color:#CBD5E1!important}
-        #cobro-render .c-label{color:#475569!important}
-        #cobro-render .c-val{color:#0f172a!important}
-        #cobro-render .text-red-600,#cobro-render .text-blue-600,#cobro-render .text-blue-500,#cobro-render .text-blue-400,#cobro-render .text-purple-500,#cobro-render .text-purple-600{color:#0f172a!important}
-        #cobro-render .bg-blue-50,#cobro-render .bg-blue-100,#cobro-render .bg-red-50,#cobro-render .bg-red-100,#cobro-render .bg-purple-50{background-color:#F1F5F9!important}
-        #cobro-render .border-blue-100,#cobro-render .border-blue-200,#cobro-render .border-red-50,#cobro-render .border-red-100,#cobro-render .border-purple-100{border-color:#CBD5E1!important}
+        #invoice-render,#history-report,#cobro-render{background:var(--doc-paper)!important;color:var(--doc-ink)!important;box-sizing:border-box}
+        #invoice-render,#cobro-render{box-shadow:0 30px 60px -28px rgba(15,23,42,0.4),0 1px 0 rgba(15,23,42,0.04);position:relative;overflow:hidden;max-width:100%;border:1px solid var(--doc-line)}
+        #invoice-render::before,#cobro-render::before{content:'';position:absolute;top:0;left:0;right:0;height:9px;background:linear-gradient(90deg,var(--doc-ink) 0%,var(--doc-ink) 62%,var(--doc-accent) 100%);z-index:20}
+        .line-accent{height:4px;width:52px;background-color:var(--doc-accent);border-radius:2px}
+        #invoice-render .text-blue-600,#invoice-render .text-blue-500,#invoice-render .text-blue-400{color:var(--doc-accent)!important}
+        #invoice-render .text-red-600,#invoice-render .text-red-500,#invoice-render .text-red-400{color:var(--doc-accent)!important}
+        #invoice-render .bg-blue-50,#invoice-render .bg-blue-100,#invoice-render .bg-red-50,#invoice-render .bg-red-100,#invoice-render .bg-purple-50{background-color:var(--doc-panel)!important}
+        #invoice-render .border-blue-100,#invoice-render .border-blue-200,#invoice-render .border-red-50,#invoice-render .border-red-100,#invoice-render .border-purple-100{border-color:var(--doc-line)!important}
+        #cobro-render{--theme:var(--doc-ink)}
+        #cobro-render .c-bg{background-color:var(--doc-panel)!important;color:var(--doc-ink)!important}
+        #cobro-render .c-border{border-color:var(--doc-line)!important}
+        #cobro-render .c-label{color:var(--doc-muted)!important}
+        #cobro-render .c-val{color:var(--doc-ink)!important}
+        #cobro-render .c-ribbon{background:var(--theme)!important;color:#fff!important}
+        #cobro-render .text-red-600,#cobro-render .text-blue-600,#cobro-render .text-blue-500,#cobro-render .text-blue-400,#cobro-render .text-purple-500,#cobro-render .text-purple-600{color:var(--doc-accent)!important}
+        #cobro-render .bg-blue-50,#cobro-render .bg-blue-100,#cobro-render .bg-red-50,#cobro-render .bg-red-100,#cobro-render .bg-purple-50{background-color:var(--doc-accent-soft)!important}
+        #cobro-render .border-blue-100,#cobro-render .border-blue-200,#cobro-render .border-red-50,#cobro-render .border-red-100,#cobro-render .border-purple-100{border-color:var(--doc-line)!important}
         .section-content{animation:fadeIn 0.4s ease-out}@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
         /* Filas flex con contenido variable (usuarios, listas): permitir encoger sin desbordar */
         #users-list .flex,#lista-cobros .flex,#lista-facturas .flex{min-width:0}
@@ -121,7 +123,7 @@
         .tab-btn:not(.active-tab):hover{background:rgba(255,106,0,0.12);color:#FF6A00}
         .tab-btn.active-tab{color:#111111!important;background-image:linear-gradient(135deg,#FF9142 0%,#FF6A00 55%,#F05500 100%);box-shadow:0 6px 16px -4px rgba(255,106,0,0.45)}
         .dark .tab-btn.active-tab{color:#111111!important;box-shadow:0 6px 16px -4px rgba(255,106,0,0.5)}
-        .c-border{border:2px solid var(--theme)}.c-border-t{border-top:2px solid var(--theme)}.c-border-b{border-bottom:2px solid var(--theme)}.c-border-l{border-left:2px solid var(--theme)}.c-border-r{border-right:2px solid var(--theme)}.c-bg{background-color:var(--theme);color:#fff}.c-text{color:var(--theme)}.c-label{font-size:10px;font-weight:800;padding:6px 10px;display:flex;align-items:center;text-transform:uppercase;letter-spacing:0.05em;line-height:1.2}.c-val{font-size:11px;font-weight:500;padding:6px 10px;display:flex;align-items:center;line-height:1.2}
+        .c-border{border:1px solid var(--doc-line,#dfe4ec)}.c-border-t{border-top:1px solid var(--doc-line,#dfe4ec)}.c-border-b{border-bottom:1px solid var(--doc-line,#dfe4ec)}.c-border-l{border-left:1px solid var(--doc-line,#dfe4ec)}.c-border-r{border-right:1px solid var(--doc-line,#dfe4ec)}.c-bg{background-color:var(--doc-panel,#f8fafc);color:var(--doc-ink,#0f172a)}.c-ribbon{background:var(--theme);color:#fff;letter-spacing:0.2em}.c-text{color:var(--theme)}.c-label{font-size:9px;font-weight:800;padding:9px 12px;display:flex;align-items:center;text-transform:uppercase;letter-spacing:0.08em;line-height:1.2;color:var(--doc-muted,#64748b)}.c-val{font-size:11.5px;font-weight:600;padding:9px 12px;display:flex;align-items:center;line-height:1.3;color:var(--doc-ink,#0f172a)}
         /* Texto largo en filas flex (nombres, direcciones, conceptos): evitar que desborde y desajuste el layout */
         .c-label,.c-val{min-width:0}
         .c-label span,.c-val span,.c-label div,.c-val div{min-width:0;overflow-wrap:anywhere}
@@ -428,8 +430,8 @@
                 </div>
                 
                 <div class="mobile-viewport-wrapper relative">
-                    <div id="invoice-render" class="w-full max-w-2xl md:max-w-none md:w-[800px] bg-white p-4 sm:p-6 md:p-12 flex flex-col relative mx-auto transition-all text-slate-900 min-h-[700px] md:min-h-[900px]">
-                        <div class="flex flex-col md:flex-row justify-between items-center md:items-start mb-6 md:mb-8 gap-6 md:gap-0">
+                    <div id="invoice-render" class="w-full max-w-2xl md:max-w-none md:w-[800px] bg-white p-6 sm:p-8 md:p-14 pt-9 sm:pt-11 md:pt-16 flex flex-col relative mx-auto transition-all text-slate-900 min-h-[700px] md:min-h-[900px]">
+                        <div class="flex flex-col md:flex-row justify-between items-center md:items-start mb-8 md:mb-10 gap-6 md:gap-0">
                             <div class="space-y-3 text-center md:text-left w-full md:w-auto">
                                 <div>
                                     <div class="mb-4 flex justify-center md:justify-start">
@@ -448,12 +450,12 @@
                                 </div>
                             </div>
                             <div class="text-center md:text-right flex flex-col items-center md:items-end w-full md:w-auto">
-                                <div class="mb-4 w-full md:w-auto">
-                                    <h2 class="text-xs font-black text-slate-500 tracking-[0.3em] uppercase mb-1">Comprobante No.</h2>
+                                <div class="mb-4 w-full md:w-auto border-b-2 pb-3" style="border-color:var(--doc-accent)">
+                                    <h2 class="text-xs font-black text-slate-400 tracking-[0.35em] uppercase mb-1">Comprobante No.</h2>
                                     <p class="text-2xl md:text-4xl font-[950] text-slate-900 tracking-tighter" id="pdf-num-label"></p>
                                     <p class="text-slate-500 text-[9px] font-black uppercase tracking-[0.2em] mt-1" id="pdf-fecha-hoy"></p>
                                 </div>
-                                <div class="bank-info-box w-full md:min-w-[220px] py-3">
+                                <div class="bank-info-box w-full md:min-w-[220px] py-3 px-4 rounded-xl bg-slate-50 border border-slate-100">
                                     <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Información de Pago:</p>
                                     <p class="text-xs font-[900] text-slate-900 uppercase" id="pdf-pago-banco"></p>
                                     <p class="text-base md:text-xl font-[950] text-slate-900 tracking-tighter mt-1" id="pdf-cuenta">No. Cuenta</p>
@@ -461,9 +463,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-slate-900 text-white rounded-2xl p-4 md:p-6 flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8 gap-4 md:gap-0 text-center md:text-left shadow-md">
+                        <div class="bg-slate-900 text-white rounded-2xl p-5 md:p-7 flex flex-col md:flex-row justify-between items-center mb-8 md:mb-10 gap-4 md:gap-0 text-center md:text-left shadow-lg" style="border-left:6px solid var(--doc-accent)">
                             <div class="w-full md:w-auto">
-                                <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest mb-1">Facturado a:</p>
+                                <p class="text-[9px] font-black uppercase tracking-[0.3em] mb-1" style="color:var(--doc-accent)">Facturado a:</p>
                                 <h3 class="text-xl md:text-2xl font-[950] tracking-tight uppercase break-words" id="pdf-cliente-nombre"></h3>
                                 <p class="text-slate-400 font-bold text-xs mt-1 uppercase" id="pdf-cliente-cc"></p>
                             </div>
@@ -472,15 +474,15 @@
                             </div>
                         </div>
                         <div class="flex-grow">
-                                <div class="flex flex-col md:flex-row justify-between items-center md:items-start gap-6">
+                                <div class="flex flex-col md:flex-row justify-between items-center md:items-start gap-6 bg-slate-50 border border-slate-100 rounded-2xl p-5 md:p-7">
                                 <div class="flex-grow text-center md:text-left w-full">
-                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">DESCRIPCIÓN DEL SERVICIO</p>
+                                    <p class="text-[10px] font-black uppercase tracking-[0.25em] mb-2" style="color:var(--doc-accent)">Descripción del servicio</p>
                                     <h4 class="text-xl md:text-2xl font-[950] text-slate-900 uppercase leading-tight mb-4" id="pdf-concepto-text"></h4>
                                     
                                     <!-- Fecha Prestación / Horario / Observación / Condiciones eliminados según solicitud del usuario -->
                                 </div>
-                                <div class="flex flex-col items-center justify-center bg-slate-50 border-2 border-slate-900 rounded-[1rem] overflow-hidden w-full md:w-auto md:min-w-[110px] flex-shrink-0">
-                                    <div class="bg-slate-900 w-full text-center py-2"><p class="text-[8px] font-black text-white uppercase tracking-tighter">FECHA EVENTO</p></div>
+                                <div class="flex flex-col items-center justify-center bg-white border border-slate-200 rounded-[1rem] overflow-hidden w-full md:w-auto md:min-w-[110px] flex-shrink-0 shadow-sm">
+                                    <div class="w-full text-center py-2" style="background:var(--doc-accent)"><p class="text-[8px] font-black text-white uppercase tracking-tighter">FECHA EVENTO</p></div>
                                     <div class="p-4 text-center">
                                         <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-0.5" id="pdf-fecha-servicio-mes"></p>
                                         <p class="text-2xl md:text-3xl font-[950] text-slate-900 leading-none tracking-tighter" id="pdf-fecha-servicio-dia"></p>
@@ -489,18 +491,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex flex-col md:flex-row justify-end mt-6 pt-4 border-t border-slate-100 relative">
-                            <p class="absolute bottom-4 left-0 text-[8px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                        <div class="flex flex-col md:flex-row justify-end mt-8 pt-6 border-t border-slate-200 relative">
+                            <p class="absolute bottom-6 left-0 text-[8px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
                                 Generado por: <span id="pdf-vendedor" class="font-black text-slate-900"></span>
                             </p>
-                            <div class="w-full md:w-72 space-y-3">
+                            <div class="w-full md:w-80 space-y-3 bg-slate-50 border border-slate-100 rounded-2xl p-5 md:p-6">
                                 <div class="flex justify-between text-xs font-bold text-slate-500 uppercase tracking-widest">
                                     <span id="pdf-abono-label">Abono Realizado</span><span class="text-slate-900 font-black" id="calc-abono"></span>
                                 </div>
-                                <div id="row-saldo" class="hidden flex justify-between text-xs font-black text-red-600 pt-2 border-t border-red-50 mb-1">
+                                <div id="row-saldo" class="hidden flex justify-between text-xs font-black pt-2 border-t border-slate-200 mb-1" style="color:var(--doc-accent)">
                                     <span>SALDO PENDIENTE</span><span id="calc-saldo"></span>
                                 </div>
-                                <div class="pt-4 border-t-[4px] border-slate-900 flex flex-col items-end">
+                                <div class="pt-4 border-t-2 flex flex-col items-end" style="border-color:var(--doc-accent)">
                                     <span class="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 mb-1">TOTAL DEL SERVICIO</span>
                                     <span class="text-3xl md:text-4xl font-[950] text-slate-900 tracking-tighter" id="calc-total"></span>
                                 </div>
@@ -508,24 +510,24 @@
                         </div>
                         
                         <!-- FIRMA EN FACTURA -->
-                        <div class="mt-8 flex justify-center">
+                        <div class="mt-10 flex justify-center">
                             <div class="w-64 text-center">
                                 <img id="pdf-factura-firma" src="" class="hidden max-h-16 object-contain mx-auto mb-1">
-                                <div class="border-t border-slate-400 pt-2 flex flex-col justify-end">
+                                <div class="border-t border-slate-300 pt-2 flex flex-col justify-end">
                                     <p class="font-black text-[10px] uppercase tracking-widest text-slate-900">FIRMA AUTORIZADA</p>
                                     <p class="text-[9px] font-bold text-slate-500 uppercase mt-0.5" id="pdf-factura-firma-nit"></p>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="mt-8 pt-6 text-center space-y-3 border-t border-slate-100">
-                            <div class="flex justify-center items-center gap-4 text-slate-300">
-                                <div class="h-[1px] w-12 bg-slate-200"></div>
-                                <p class="text-[9px] font-black text-slate-900 uppercase tracking-[0.3em]">DOCUMENTO EQUIVALENTE</p>
-                                <div class="h-[1px] w-12 bg-slate-200"></div>
+                        <div class="mt-8 pt-6 text-center space-y-3 border-t border-slate-200">
+                            <div class="flex justify-center items-center gap-4">
+                                <div class="h-[1px] w-12" style="background:var(--doc-line)"></div>
+                                <p class="text-[9px] font-black text-slate-900 uppercase tracking-[0.3em]">Documento Equivalente</p>
+                                <div class="h-[1px] w-12" style="background:var(--doc-line)"></div>
                             </div>
-                            <div class="text-[8px] text-slate-400 font-bold leading-relaxed max-w-lg mx-auto uppercase">
-                                <p class="font-black mb-1">Retención en la fuente:</p>
+                            <div class="text-[8px] text-slate-400 font-bold leading-relaxed max-w-lg mx-auto uppercase bg-slate-50 border border-slate-100 rounded-xl p-3">
+                                <p class="font-black mb-1" style="color:var(--doc-accent)">Retención en la fuente:</p>
                                 <p>El valor del servicio corresponde a un valor bruto.</p>
                                 <p class="mt-1">La retención en la fuente será practicada por el contratante en los términos del artículo 367 del Estatuto Tributario.</p>
                             </div>
@@ -700,29 +702,29 @@
                         </div>
                         
                         <div class="mobile-viewport-wrapper relative">
-                            <div id="cobro-render" class="w-full max-w-2xl md:max-w-none md:w-[800px] bg-white p-10 md:p-14 flex flex-col relative mx-auto transition-all text-slate-900 min-h-[900px]">
+                            <div id="cobro-render" class="w-full max-w-2xl md:max-w-none md:w-[800px] bg-white p-10 md:p-14 pt-12 md:pt-16 flex flex-col relative mx-auto transition-all text-slate-900 min-h-[900px]">
                                 
                                 <div class="relative z-10 flex-grow flex flex-col">
-                                    <div class="flex justify-between items-center mb-6">
+                                    <div class="flex justify-between items-center mb-8">
                                         <div class="w-1/2 pr-4 flex flex-col justify-center min-h-[100px]">
                                             <img id="render-cobro-logo" src="" class="object-contain hidden" style="width: auto; max-width: 200px; height: auto; margin: 0;">
                                         </div>
                                         <div class="w-1/2 pl-6 md:pl-12">
-                                            <div class="c-border rounded-lg overflow-hidden flex flex-col">
-                                                <div class="c-bg text-center font-[950] text-sm py-2 uppercase tracking-widest">Cuenta de Cobro</div>
+                                            <div class="c-border rounded-xl overflow-hidden flex flex-col shadow-sm">
+                                                <div class="c-ribbon text-center font-[950] text-sm py-2.5 uppercase tracking-widest">Cuenta de Cobro</div>
                                                 <div class="flex c-border-t">
-                                                    <div class="w-1/2 c-border-r c-label bg-slate-50 text-slate-800">Nº</div>
-                                                    <div class="w-1/2 c-val font-black text-slate-900 justify-end text-sm" id="render-cobro-num-disp"></div>
+                                                    <div class="w-1/2 c-border-r c-label">Nº</div>
+                                                    <div class="w-1/2 c-val font-black justify-end text-sm" id="render-cobro-num-disp"></div>
                                                 </div>
                                                 <div class="flex c-border-t">
-                                                    <div class="w-1/2 c-border-r c-label bg-slate-50 text-slate-800 text-[9px]">Fecha de Emisión</div>
+                                                    <div class="w-1/2 c-border-r c-label">Fecha de Emisión</div>
                                                     <div class="w-1/2 c-val justify-end" id="render-cobro-fecha-disp"></div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="c-border rounded-lg overflow-hidden mb-4">
+                                    <div class="c-border rounded-xl overflow-hidden mb-4 shadow-sm">
                                         <div class="flex">
                                             <div class="w-[20%] c-bg c-label">Señor(a) / Empresa:</div>
                                             <div class="w-[40%] c-val c-border-r font-bold uppercase truncate" id="render-cobro-cliente-disp"></div>
@@ -737,7 +739,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="c-border rounded-lg overflow-hidden mb-5">
+                                    <div class="c-border rounded-xl overflow-hidden mb-5 shadow-sm" style="border-left:3px solid var(--doc-accent)">
                                         <div class="flex">
                                             <div class="w-[20%] c-bg c-label">Debe A:</div>
                                             <div class="w-[40%] c-val c-border-r font-bold uppercase truncate" id="render-cobro-my-empresa"></div>
@@ -754,23 +756,23 @@
                                         </div>
                                     </div>
 
-                                    <div class="c-border rounded-lg overflow-hidden mb-4 flex flex-col">
+                                    <div class="c-border rounded-xl overflow-hidden mb-4 flex flex-col shadow-sm">
                                         <div class="c-bg c-label justify-center tracking-widest text-xs">Por Concepto De:</div>
-                                        <div class="p-4 text-sm font-medium leading-relaxed min-h-[70px] whitespace-pre-wrap flex-grow bg-slate-50/30" id="render-cobro-concepto-disp"></div>
+                                        <div class="p-4 text-sm font-medium leading-relaxed min-h-[70px] whitespace-pre-wrap flex-grow" id="render-cobro-concepto-disp"></div>
                                     </div>
 
-                                    <div class="c-border rounded-lg overflow-hidden mb-6 flex flex-col">
-                                        <div class="flex c-border-b bg-slate-50/30">
+                                    <div class="c-border rounded-xl overflow-hidden mb-6 flex flex-col shadow-sm">
+                                        <div class="flex c-border-b">
                                             <div class="w-[22%] c-bg c-label">Fecha Prestación:</div>
                                             <div class="w-[28%] c-val c-border-r font-bold" id="render-cobro-fecha-prestacion"></div>
                                             <div class="w-[15%] c-bg c-label">Horario:</div>
                                             <div class="w-[35%] c-val font-bold" id="render-cobro-horario"></div>
                                         </div>
-                                        <div class="flex c-border-b bg-slate-50/30">
+                                        <div class="flex c-border-b">
                                             <div class="w-[22%] c-bg c-label">Observación:</div>
                                             <div class="w-[78%] c-val" id="render-cobro-observacion"></div>
                                         </div>
-                                        <div class="flex bg-slate-50/30">
+                                        <div class="flex">
                                             <div class="w-[22%] c-bg c-label">Condiciones:</div>
                                             <div class="w-[78%] c-val whitespace-pre-wrap text-[10px]" id="render-cobro-condiciones"></div>
                                         </div>
@@ -778,9 +780,9 @@
 
                                     <div class="flex gap-6 mb-6 mt-auto">
                                         <div class="w-3/5">
-                                            <div class="c-border rounded-lg overflow-hidden h-full flex flex-col">
+                                            <div class="c-border rounded-xl overflow-hidden h-full flex flex-col shadow-sm">
                                                 <div class="c-bg c-label justify-center">Forma de Pago</div>
-                                                <div class="p-4 flex-grow flex flex-col justify-center bg-slate-50/30">
+                                                <div class="p-4 flex-grow flex flex-col justify-center">
                                                     <p class="font-[900] text-sm uppercase" id="render-cobro-banco-nombre"></p>
                                                     <p class="text-sm font-bold text-slate-700 mt-1" id="render-cobro-banco-tipo"></p>
                                                     <p class="text-sm font-black tracking-widest" id="render-cobro-banco-cuenta"></p>
@@ -790,23 +792,23 @@
                                         </div>
                                         <div class="w-2/5 flex flex-col justify-end">
                                             <!-- VERSIÓN NORMAL -->
-                                            <div id="render-cobro-totales-normal" class="c-border rounded-lg overflow-hidden">
+                                            <div id="render-cobro-totales-normal" class="c-border rounded-xl overflow-hidden shadow-sm">
                                                 <div class="flex c-border-b">
                                                     <div class="w-1/2 c-bg c-label">Subtotal</div>
                                                     <div class="w-1/2 c-val justify-end font-black" id="render-cobro-subtotal"></div>
                                                 </div>
                                                 <div class="flex c-border-b">
                                                     <div class="w-1/2 c-bg c-label">Descuento</div>
-                                                    <div class="w-1/2 c-val justify-end font-black text-slate-900" id="render-cobro-desc-disp"></div>
+                                                    <div class="w-1/2 c-val justify-end font-black" id="render-cobro-desc-disp"></div>
                                                 </div>
                                                 <div class="flex">
-                                                    <div class="w-1/2 c-bg c-label text-[11px] font-[900]">TOTAL</div>
-                                                    <div class="w-1/2 c-val justify-end font-[950] text-lg bg-slate-50" id="render-cobro-total"></div>
+                                                    <div class="w-2/5 c-ribbon c-label text-[10px] font-[900]">TOTAL</div>
+                                                    <div class="w-3/5 c-val justify-end font-[950] text-sm sm:text-base" style="background:var(--doc-accent-soft)" id="render-cobro-total"></div>
                                                 </div>
                                             </div>
 
                                             <!-- VERSIÓN RETENCIONES -->
-                                            <div id="render-cobro-totales-retenciones" class="hidden c-border rounded-lg overflow-hidden flex flex-col w-full text-[10px]">
+                                            <div id="render-cobro-totales-retenciones" class="hidden c-border rounded-xl overflow-hidden flex flex-col w-full text-[10px] shadow-sm">
                                                 <div class="flex c-border-b">
                                                     <div class="w-[55%] c-bg c-label text-[8px] sm:text-[9px]">Valor del servicio:</div>
                                                     <div class="w-[45%] c-val justify-end font-bold text-xs" id="render-cobro-r-bruto"></div>
@@ -814,15 +816,15 @@
                                                 <!-- Fila 'Base' eliminada: ahora se usa el valor bruto como base -->
                                                 <div class="flex c-border-b">
                                                     <div class="w-[55%] c-bg c-label text-[8px] sm:text-[9px]" id="render-cobro-lbl-retefuente">Retefuente:</div>
-                                                    <div class="w-[45%] c-val justify-end font-bold text-slate-900 text-xs" id="render-cobro-r-retefuente"></div>
+                                                    <div class="w-[45%] c-val justify-end font-bold text-xs" id="render-cobro-r-retefuente"></div>
                                                 </div>
                                                 <div class="flex c-border-b">
                                                     <div class="w-[55%] c-bg c-label text-[8px] sm:text-[9px]" id="render-cobro-lbl-reteica">Rete ica:</div>
-                                                    <div class="w-[45%] c-val justify-end font-bold text-slate-900 text-xs" id="render-cobro-r-reteica"></div>
+                                                    <div class="w-[45%] c-val justify-end font-bold text-xs" id="render-cobro-r-reteica"></div>
                                                 </div>
                                                 <div class="flex">
-                                                    <div class="w-[55%] c-bg c-label text-[10px] font-[900]">Total a pagar:</div>
-                                                    <div class="w-[45%] c-val justify-end font-[950] text-sm sm:text-base bg-slate-50" id="render-cobro-r-total"></div>
+                                                    <div class="w-[40%] c-ribbon c-label text-[9px] font-[900]">Total a pagar:</div>
+                                                    <div class="w-[60%] c-val justify-end font-[950] text-sm" style="background:var(--doc-accent-soft)" id="render-cobro-r-total"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -832,7 +834,7 @@
                                     <div class="flex justify-center mt-4">
                                         <div class="w-80 text-center">
                                             <img id="render-cobro-firma-img" src="" class="hidden max-h-24 object-contain mx-auto mb-2">
-                                            <div class="border-t border-slate-400 pt-3 h-16 flex flex-col justify-end">
+                                            <div class="border-t border-slate-300 pt-3 h-16 flex flex-col justify-end">
                                                 <p class="font-black text-[11px] uppercase tracking-widest text-slate-900" id="render-cobro-firmante-nombre">FIRMA AUTORIZADA</p>
                                                 <p class="text-[10px] font-bold text-slate-500 uppercase mt-0.5">C.C. / NIT <span id="render-cobro-firmante-cc"></span></p>
                                             </div>
@@ -1088,9 +1090,10 @@
 
         <!-- PLANTILLA REPORTE HISTÓRICO (PDF) -->
         <div id="history-report-container" class="hidden" style="position:absolute; top:0; left:0; z-index:-100; opacity: 0; pointer-events: none; width:100%; max-width: 1080px;">
-            <div id="history-report" class="p-8 bg-white w-full h-auto min-h-screen text-slate-900">
-                <div class="flex justify-between items-start mb-6 border-b-4 border-slate-900 pb-4">
+            <div id="history-report" class="p-10 bg-white w-full h-auto min-h-screen text-slate-900" style="border-top:8px solid var(--doc-ink)">
+                <div class="flex justify-between items-start mb-8 pb-4 border-b border-slate-200">
                     <div>
+                        <p class="text-[9px] font-black uppercase tracking-[0.3em] mb-1" style="color:var(--doc-accent)">Documento Interno</p>
                         <h1 class="text-2xl font-[950] uppercase tracking-tighter">Reporte Contable</h1>
                         <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1" id="hist-empresa">Workspace</p>
                     </div>
@@ -1100,30 +1103,30 @@
                     </div>
                 </div>
                 
-                <table class="w-full text-left text-[10px] mb-4 border-collapse table-fixed">
+                <table class="w-full text-left text-[10px] mb-4 border-collapse table-fixed rounded-lg overflow-hidden">
                     <thead>
-                        <tr class="text-slate-500 border-b-2 border-slate-200 font-black uppercase tracking-widest">
-                            <th class="pb-3 w-[10%]">Fecha</th>
-                            <th class="pb-3 w-[8%]">No.</th>
-                            <th class="pb-3 w-[12%]">NIT / CC</th>
-                            <th class="pb-3 w-[20%]">Cliente</th>
-                            <th class="pb-3 w-[18%]">Concepto</th>
-                            <th class="pb-3 w-[10%]">Pago</th>
-                            <th class="pb-3 w-[10%]">Vendedor</th>
-                            <th class="pb-3 text-right w-[12%]">Total</th>
+                        <tr class="text-white font-black uppercase tracking-widest" style="background:var(--doc-ink)">
+                            <th class="py-3 pl-3 w-[10%]">Fecha</th>
+                            <th class="py-3 w-[8%]">No.</th>
+                            <th class="py-3 w-[12%]">NIT / CC</th>
+                            <th class="py-3 w-[20%]">Cliente</th>
+                            <th class="py-3 w-[18%]">Concepto</th>
+                            <th class="py-3 w-[10%]">Pago</th>
+                            <th class="py-3 w-[10%]">Vendedor</th>
+                            <th class="py-3 text-right pr-3 w-[12%]">Total</th>
                         </tr>
                     </thead>
                     <tbody id="report-body" class="font-bold"></tbody>
                 </table>
 
-                <div class="mt-8 flex justify-end gap-8 border-t-4 border-slate-900 pt-4">
-                    <div class="text-right">
-                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total Recaudado</p>
+                <div class="mt-8 flex justify-end">
+                    <div class="text-right rounded-xl px-6 py-4" style="background:var(--doc-accent-soft)">
+                        <p class="text-[10px] font-bold uppercase tracking-widest" style="color:var(--doc-accent)">Total Recaudado</p>
                         <p class="text-2xl font-[950] tracking-tighter" id="report-total"></p>
                     </div>
                 </div>
                 
-                <div class="mt-16 text-[9px] font-bold text-slate-400 text-center uppercase tracking-widest">
+                <div class="mt-16 pt-4 border-t border-slate-200 text-[9px] font-bold text-slate-400 text-center uppercase tracking-widest">
                     <p>Fin del Reporte - Generado Automáticamente</p>
                 </div>
             </div>
@@ -2849,18 +2852,19 @@
                 .filter(f => window.currentAppUser.role === 'admin' ? true : f.userId === window.currentAppUser.id)
                 .sort((a, b) => new Date(b.fechaServicio) - new Date(a.fechaServicio));
 
-            sortedFacturas.forEach(f => {
+            sortedFacturas.forEach((f, idx) => {
                 grandTotal += f.total;
+                const rowBg = idx % 2 === 0 ? '#ffffff' : 'var(--doc-panel)';
                 tbody.innerHTML += `
-                    <tr class="border-b border-slate-100">
-                        <td class="py-2 pl-1 text-slate-900 align-top">${window.sanitizeHTML(f.fechaServicio)}</td>
-                        <td class="py-2 text-slate-700 align-top">${window.sanitizeHTML(f.num)}</td>
-                        <td class="py-2 text-slate-500 text-[10px] align-top">${window.sanitizeHTML(f.cc)}</td>
-                        <td class="py-2 text-slate-900 align-top">${window.sanitizeHTML(f.cliente)}</td>
-                        <td class="py-2 text-slate-500 text-[10px] align-top">${window.sanitizeHTML(f.concepto)}</td>
-                        <td class="py-2 text-slate-500 text-[10px] align-top">${window.sanitizeHTML(f.metodo)}</td>
-                        <td class="py-2 text-slate-600 text-[10px] align-top">${window.sanitizeHTML(f.vendedor) || 'N/A'}</td>
-                        <td class="py-2 text-right font-medium text-slate-900 pr-1 align-top">${window.formatCOP(f.total)}</td>
+                    <tr class="border-b border-slate-100" style="background:${rowBg}">
+                        <td class="py-2.5 pl-3 text-slate-900 align-top">${window.sanitizeHTML(f.fechaServicio)}</td>
+                        <td class="py-2.5 text-slate-700 align-top">${window.sanitizeHTML(f.num)}</td>
+                        <td class="py-2.5 text-slate-500 text-[10px] align-top">${window.sanitizeHTML(f.cc)}</td>
+                        <td class="py-2.5 text-slate-900 align-top">${window.sanitizeHTML(f.cliente)}</td>
+                        <td class="py-2.5 text-slate-500 text-[10px] align-top">${window.sanitizeHTML(f.concepto)}</td>
+                        <td class="py-2.5 text-slate-500 text-[10px] align-top">${window.sanitizeHTML(f.metodo)}</td>
+                        <td class="py-2.5 text-slate-600 text-[10px] align-top">${window.sanitizeHTML(f.vendedor) || 'N/A'}</td>
+                        <td class="py-2.5 text-right font-medium align-top pr-3" style="color:var(--doc-accent)">${window.formatCOP(f.total)}</td>
                     </tr>`;
             });
             
