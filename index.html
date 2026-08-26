@@ -75,6 +75,9 @@
         #cobro-render .bg-blue-50,#cobro-render .bg-blue-100,#cobro-render .bg-red-50,#cobro-render .bg-red-100,#cobro-render .bg-purple-50{background-color:#F1F5F9!important}
         #cobro-render .border-blue-100,#cobro-render .border-blue-200,#cobro-render .border-red-50,#cobro-render .border-red-100,#cobro-render .border-purple-100{border-color:#CBD5E1!important}
         .section-content{animation:fadeIn 0.4s ease-out}@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        /* Filas flex con contenido variable (usuarios, listas): permitir encoger sin desbordar */
+        #users-list .flex,#lista-cobros .flex,#lista-facturas .flex{min-width:0}
+        #users-list p,#lista-clientes-tabla p{overflow-wrap:anywhere}
         #confirm-modal,#login-screen{backdrop-filter:blur(8px)}
         .mobile-viewport-wrapper{width:100%;display:flex;justify-content:center;align-items:flex-start;background:#F8F9FA;border-radius:1.5rem;padding:0.6rem;min-height:40vh;overflow-x:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box}.dark .mobile-viewport-wrapper{background:#111111;border:1px solid #495057}
         .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0.25rem}.calendar-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:0.75rem;font-size:0.8rem;font-weight:800;cursor:pointer;transition:all 0.2s}.calendar-day:hover{background-color:rgba(255,106,0,0.1)}.calendar-day.selected{background-color:#FF6A00;color:#111111}.dark .calendar-day.selected{background-color:#FF6A00;color:#111111}.calendar-day.today{border:2px solid #FF6A00}.calendar-day.empty{pointer-events:none}.event-dot{width:4px;height:4px;background-color:#FF6A00;border-radius:50%;margin-top:2px}.calendar-day.selected .event-dot{background-color:#111111}
@@ -119,6 +122,11 @@
         .tab-btn.active-tab{color:#111111!important;background-image:linear-gradient(135deg,#FF9142 0%,#FF6A00 55%,#F05500 100%);box-shadow:0 6px 16px -4px rgba(255,106,0,0.45)}
         .dark .tab-btn.active-tab{color:#111111!important;box-shadow:0 6px 16px -4px rgba(255,106,0,0.5)}
         .c-border{border:2px solid var(--theme)}.c-border-t{border-top:2px solid var(--theme)}.c-border-b{border-bottom:2px solid var(--theme)}.c-border-l{border-left:2px solid var(--theme)}.c-border-r{border-right:2px solid var(--theme)}.c-bg{background-color:var(--theme);color:#fff}.c-text{color:var(--theme)}.c-label{font-size:10px;font-weight:800;padding:6px 10px;display:flex;align-items:center;text-transform:uppercase;letter-spacing:0.05em;line-height:1.2}.c-val{font-size:11px;font-weight:500;padding:6px 10px;display:flex;align-items:center;line-height:1.2}
+        /* Texto largo en filas flex (nombres, direcciones, conceptos): evitar que desborde y desajuste el layout */
+        .c-label,.c-val{min-width:0}
+        .c-label span,.c-val span,.c-label div,.c-val div{min-width:0;overflow-wrap:anywhere}
+        .truncate{min-width:0}
+        .responsive-table tbody td{min-width:0;overflow-wrap:anywhere}
         @keyframes logoutIconBounce{0%{transform:translateX(0) scale(1)}50%{transform:translateX(2px) scale(1.1)}100%{transform:translateX(0) scale(1)}}
         #btn-logout:hover svg{animation:logoutIconBounce 0.6s ease-in-out infinite}#btn-logout:active svg{animation:none}
         .mobile-menu-toggle{display:none}
