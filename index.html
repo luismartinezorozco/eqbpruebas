@@ -85,40 +85,39 @@
         .mobile-viewport-wrapper{width:100%;display:flex;justify-content:center;align-items:flex-start;background:#F8F9FA;border-radius:1.5rem;padding:0.6rem;min-height:40vh;overflow-x:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box}.dark .mobile-viewport-wrapper{background:#111111;border:1px solid #495057}
         .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0.25rem}.calendar-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:0.75rem;font-size:0.8rem;font-weight:800;cursor:pointer;transition:all 0.2s}.calendar-day:hover{background-color:rgba(255,106,0,0.1)}.calendar-day.selected{background-color:#FF6A00;color:#111111}.dark .calendar-day.selected{background-color:#FF6A00;color:#111111}.calendar-day.today{border:2px solid #FF6A00}.calendar-day.empty{pointer-events:none}.event-dot{width:4px;height:4px;background-color:#FF6A00;border-radius:50%;margin-top:2px}.calendar-day.selected .event-dot{background-color:#111111}
         @media(max-width:640px){.responsive-table thead{display:none}.responsive-table tbody tr{display:block;background:#F8F9FA;border:1px solid #E9ECEF;border-radius:1rem;margin-bottom:1rem;padding:1rem;box-shadow:0 2px 4px rgba(0,0,0,0.02)}.dark .responsive-table tbody tr{background:#111111;border-color:#495057}.responsive-table tbody td{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0;border-bottom:1px dashed #E5E7EB;text-align:right}.dark .responsive-table tbody td{border-color:#495057}.responsive-table tbody td:last-child{border-bottom:none;justify-content:center;padding-top:1rem;margin-top:0.5rem}.responsive-table td::before{content:attr(data-label);font-weight:900;color:#495057;text-transform:uppercase;font-size:0.7rem;letter-spacing:0.05em;margin-right:1rem;text-align:left}.dark .responsive-table td::before{color:#E5E7EB}}
-        /* Mobile: compactar vista previa de Cuentas de Cobro (solo CSS, sin tocar lógica) */
         @media (max-width:640px) {
-            /* wrapper más ajustado */
-            #preview-cobro-container .mobile-viewport-wrapper{padding:0.4rem;min-height:28vh}
-            /* cobro render compacto */
-            #preview-cobro-container #cobro-render{padding:12px !important;min-height:520px !important;max-width:96%}
-            /* apilar cabecera */
-            #preview-cobro-container #cobro-render .flex.justify-between.items-center.mb-6,
-            #preview-cobro-container #cobro-render .flex.justify-between.items-center{flex-direction:column;align-items:flex-start;gap:6px}
-            #preview-cobro-container #cobro-render .w-1\/2{width:100%;padding:0}
-            /* etiquetas y valores más pequeños */
-            #preview-cobro-container #cobro-render .c-label{font-size:9px;padding:4px 8px}
-            #preview-cobro-container #cobro-render .c-val{font-size:11px;padding:4px 8px}
-            #preview-cobro-container #cobro-render .c-bg{padding:6px 8px}
-            #preview-cobro-container #cobro-render .p-4{padding:8px;font-size:13px}
-            #preview-cobro-container #cobro-render .min-h-\[100px\]{min-height:60px}
-            /* ajustar columnas de totales y paneles para que ocupen 100% */
-            #preview-cobro-container #cobro-render .w-3\/5,#preview-cobro-container #cobro-render .w-2\/5{width:100%}
-            /* reducir margenes y gaps */
-            #preview-cobro-container #cobro-render .mb-6,#preview-cobro-container #cobro-render .mb-8,#preview-cobro-container #cobro-render .mb-5{margin-bottom:8px}
-            #preview-cobro-container #cobro-render .gap-6,#preview-cobro-container #cobro-render .gap-4,#preview-cobro-container #cobro-render .gap-5{gap:6px}
-            /* firma más pequeña */
-            #preview-cobro-container #cobro-render #render-cobro-firma-img{max-height:64px}
-            /* botones de cabecera más compactos */
-            #preview-cobro-container .flex>button{padding:8px 10px;font-size:10px}
-            /* permitir scroll vertical si es necesario */
-            #preview-cobro-container #cobro-render{overflow-y:auto;-webkit-overflow-scrolling:touch;max-height:calc(100vh - 80px)}
-            /* apilar filas internas */
-            #preview-cobro-container #cobro-render .c-border .flex>div{display:block;width:100% !important}
-            #preview-cobro-container #cobro-render .c-border .flex .c-label{display:block;width:100% !important;border-right:none !important}
-            #preview-cobro-container #cobro-render .c-border .flex .c-val{display:block;width:100% !important;border-right:none !important}
-            /* ajustar tipografías globales dentro del render */
-            #preview-cobro-container #cobro-render h1,#preview-cobro-container #cobro-render h2,#preview-cobro-container #cobro-render h3,#preview-cobro-container #cobro-render h4,#preview-cobro-container #cobro-render p{font-size:14px}
-            #preview-cobro-container #cobro-render .text-2xl{font-size:18px}
+            #preview-cobro-container .mobile-viewport-wrapper {
+                padding: 0.25rem;
+                min-height: 42vh;
+                overflow-x: auto;
+                overflow-y: hidden;
+                justify-content: flex-start;
+                -webkit-overflow-scrolling: touch;
+            }
+            #preview-cobro-container #cobro-render {
+                min-width: 760px;
+                width: 760px;
+                max-width: none;
+                min-height: auto;
+                height: auto;
+                padding: 10px !important;
+                box-sizing: border-box;
+                flex-shrink: 0;
+                overflow: visible;
+            }
+            #preview-cobro-container #cobro-render .c-label,
+            #preview-cobro-container #cobro-render .c-val {
+                white-space: normal !important;
+                word-wrap: break-word !important;
+                overflow-wrap: anywhere;
+            }
+            #preview-cobro-container #cobro-render .c-border .flex,
+            #preview-cobro-container #cobro-render .c-border .flex > div {
+                min-width: 0;
+            }
+            #preview-cobro-container #cobro-render .c-border .flex {
+                flex-wrap: nowrap;
+            }
         }
         .tab-btn{flex:1;text-align:center;padding:0.75rem;font-size:0.75rem;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer;border:none;background:transparent;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);color:#495057}.dark .tab-btn{color:#E5E7EB}
         .tab-btn:not(.active-tab):hover{background:rgba(255,106,0,0.12);color:#FF6A00}
