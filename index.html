@@ -2041,15 +2041,60 @@
             adjustImage('#render-cobro-firma-img', 'width: auto !important; height: auto !important; max-width: 220px !important; max-height: 120px !important; object-fit: contain !important; display: block !important; margin: 0 auto !important; padding: 0 !important;');
             adjustImage('#pdf-factura-firma', 'width: auto !important; height: auto !important; max-width: 220px !important; max-height: 120px !important; object-fit: contain !important; display: block !important; margin: 0 auto !important; padding: 0 !important;');
 
-            const opt = {
-                margin: [5, 5, 5, 5],
-                filename: `Documento_${num}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, letterRendering: true, backgroundColor: '#ffffff' },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
+            // Se renderiza el documento completo a un canvas y se escala (sin deformar) para que quepa siempre en una sola página A4
+            const PAGE_WIDTH_MM = 210, PAGE_HEIGHT_MM = 297, PAGE_MARGIN_MM = 6;
+            const CSS_PX_PER_INCH = 96, MM_PER_INCH = 25.4;
+            const targetCssPxWidth = Math.round(PAGE_WIDTH_MM * (CSS_PX_PER_INCH / MM_PER_INCH));
 
-            return await html2pdf().set(opt).from(clone).output('blob');
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = `position:absolute;left:-9999px;top:0;width:${targetCssPxWidth}px;background:#ffffff;overflow:hidden;box-sizing:border-box;margin:0;padding:0;`;
+            clone.style.width = targetCssPxWidth + 'px';
+            clone.style.maxWidth = targetCssPxWidth + 'px';
+            clone.style.margin = '0';
+            wrapper.appendChild(clone);
+            document.body.appendChild(wrapper);
+
+            try { if (document.fonts) await document.fonts.ready; } catch (e) {}
+            await new Promise(r => requestAnimationFrame(r));
+            await new Promise(r => setTimeout(r, 50));
+
+            const rect = clone.getBoundingClientRect();
+            const captureWidthCss = Math.max(1, Math.ceil(rect.width));
+            const captureHeightCss = Math.max(1, Math.ceil(clone.scrollHeight || rect.height));
+            const devicePR = Math.max(1, window.devicePixelRatio || 1);
+            const renderScale = Math.min(3, Math.max(2, Math.round(devicePR * 2)));
+
+            let pdfBlob;
+            try {
+                const canvas = await html2canvas(clone, { scale: renderScale, useCORS: true, backgroundColor: '#ffffff', width: captureWidthCss, height: captureHeightCss, windowWidth: captureWidthCss, scrollX: 0, scrollY: 0 });
+
+                const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                const jsPDFCtor = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : (window.jsPDF ? window.jsPDF : null);
+                const pdf = new jsPDFCtor({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+
+                const usableWidthMm = PAGE_WIDTH_MM - PAGE_MARGIN_MM * 2;
+                const usableHeightMm = PAGE_HEIGHT_MM - PAGE_MARGIN_MM * 2;
+                let imgWidthMm = usableWidthMm;
+                let imgHeightMm = (canvas.height / canvas.width) * imgWidthMm;
+                // Si aun a ancho completo la altura excede la página, se reduce todo proporcionalmente para que quepa en una sola hoja
+                if (imgHeightMm > usableHeightMm) {
+                    const shrink = usableHeightMm / imgHeightMm;
+                    imgHeightMm = usableHeightMm;
+                    imgWidthMm = imgWidthMm * shrink;
+                }
+                const x = (PAGE_WIDTH_MM - imgWidthMm) / 2;
+                const y = PAGE_MARGIN_MM;
+
+                pdf.setFillColor(255, 255, 255);
+                pdf.rect(0, 0, PAGE_WIDTH_MM, PAGE_HEIGHT_MM, 'F');
+                pdf.addImage(imgData, 'JPEG', x, y, imgWidthMm, imgHeightMm);
+
+                pdfBlob = pdf.output('blob');
+            } finally {
+                if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper);
+            }
+
+            return pdfBlob;
         };
 
         window.compartirPDF = async function() {
