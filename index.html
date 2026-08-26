@@ -2041,60 +2041,43 @@
             adjustImage('#render-cobro-firma-img', 'width: auto !important; height: auto !important; max-width: 220px !important; max-height: 120px !important; object-fit: contain !important; display: block !important; margin: 0 auto !important; padding: 0 !important;');
             adjustImage('#pdf-factura-firma', 'width: auto !important; height: auto !important; max-width: 220px !important; max-height: 120px !important; object-fit: contain !important; display: block !important; margin: 0 auto !important; padding: 0 !important;');
 
-            // Se renderiza el documento completo a un canvas y se escala (sin deformar) para que quepa siempre en una sola página A4
+            // html2canvas/jsPDF no quedan expuestos como globales en este bundle; se usa el propio "worker" de html2pdf para obtener el canvas y el jsPDF ya listos
             const PAGE_WIDTH_MM = 210, PAGE_HEIGHT_MM = 297, PAGE_MARGIN_MM = 6;
-            const CSS_PX_PER_INCH = 96, MM_PER_INCH = 25.4;
-            const targetCssPxWidth = Math.round(PAGE_WIDTH_MM * (CSS_PX_PER_INCH / MM_PER_INCH));
+            const renderScale = Math.min(3, Math.max(2, Math.round((window.devicePixelRatio || 1) * 2)));
 
-            const wrapper = document.createElement('div');
-            wrapper.style.cssText = `position:absolute;left:-9999px;top:0;width:${targetCssPxWidth}px;background:#ffffff;overflow:hidden;box-sizing:border-box;margin:0;padding:0;`;
-            clone.style.width = targetCssPxWidth + 'px';
-            clone.style.maxWidth = targetCssPxWidth + 'px';
-            clone.style.margin = '0';
-            wrapper.appendChild(clone);
-            document.body.appendChild(wrapper);
+            const worker = html2pdf().set({
+                html2canvas: { scale: renderScale, useCORS: true, backgroundColor: '#ffffff' },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).from(clone);
 
-            try { if (document.fonts) await document.fonts.ready; } catch (e) {}
-            await new Promise(r => requestAnimationFrame(r));
-            await new Promise(r => setTimeout(r, 50));
+            await worker.toCanvas();
+            const canvas = await worker.get('canvas');
+            await worker.toPdf();
+            const pdf = await worker.get('pdf');
 
-            const rect = clone.getBoundingClientRect();
-            const captureWidthCss = Math.max(1, Math.ceil(rect.width));
-            const captureHeightCss = Math.max(1, Math.ceil(clone.scrollHeight || rect.height));
-            const devicePR = Math.max(1, window.devicePixelRatio || 1);
-            const renderScale = Math.min(3, Math.max(2, Math.round(devicePR * 2)));
+            // Se descartan las páginas extra que html2pdf haya podido generar: el documento siempre debe quedar en una sola página
+            const totalPages = pdf.internal.getNumberOfPages();
+            for (let i = totalPages; i > 1; i--) pdf.deletePage(i);
 
-            let pdfBlob;
-            try {
-                const canvas = await html2canvas(clone, { scale: renderScale, useCORS: true, backgroundColor: '#ffffff', width: captureWidthCss, height: captureHeightCss, windowWidth: captureWidthCss, scrollX: 0, scrollY: 0 });
-
-                const imgData = canvas.toDataURL('image/jpeg', 0.98);
-                const jsPDFCtor = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : (window.jsPDF ? window.jsPDF : null);
-                const pdf = new jsPDFCtor({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-
-                const usableWidthMm = PAGE_WIDTH_MM - PAGE_MARGIN_MM * 2;
-                const usableHeightMm = PAGE_HEIGHT_MM - PAGE_MARGIN_MM * 2;
-                let imgWidthMm = usableWidthMm;
-                let imgHeightMm = (canvas.height / canvas.width) * imgWidthMm;
-                // Si aun a ancho completo la altura excede la página, se reduce todo proporcionalmente para que quepa en una sola hoja
-                if (imgHeightMm > usableHeightMm) {
-                    const shrink = usableHeightMm / imgHeightMm;
-                    imgHeightMm = usableHeightMm;
-                    imgWidthMm = imgWidthMm * shrink;
-                }
-                const x = (PAGE_WIDTH_MM - imgWidthMm) / 2;
-                const y = PAGE_MARGIN_MM;
-
-                pdf.setFillColor(255, 255, 255);
-                pdf.rect(0, 0, PAGE_WIDTH_MM, PAGE_HEIGHT_MM, 'F');
-                pdf.addImage(imgData, 'JPEG', x, y, imgWidthMm, imgHeightMm);
-
-                pdfBlob = pdf.output('blob');
-            } finally {
-                if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper);
+            const usableWidthMm = PAGE_WIDTH_MM - PAGE_MARGIN_MM * 2;
+            const usableHeightMm = PAGE_HEIGHT_MM - PAGE_MARGIN_MM * 2;
+            let imgWidthMm = usableWidthMm;
+            let imgHeightMm = (canvas.height / canvas.width) * imgWidthMm;
+            // Si aun a ancho completo la altura excede la página, se reduce todo proporcionalmente (sin deformar) para que quepa en una sola hoja
+            if (imgHeightMm > usableHeightMm) {
+                const shrink = usableHeightMm / imgHeightMm;
+                imgHeightMm = usableHeightMm;
+                imgWidthMm = imgWidthMm * shrink;
             }
+            const x = (PAGE_WIDTH_MM - imgWidthMm) / 2;
+            const y = PAGE_MARGIN_MM;
 
-            return pdfBlob;
+            pdf.setPage(1);
+            pdf.setFillColor(255, 255, 255);
+            pdf.rect(0, 0, PAGE_WIDTH_MM, PAGE_HEIGHT_MM, 'F');
+            pdf.addImage(canvas.toDataURL('image/jpeg', 0.98), 'JPEG', x, y, imgWidthMm, imgHeightMm);
+
+            return pdf.output('blob');
         };
 
         window.compartirPDF = async function() {
@@ -2929,36 +2912,44 @@
 
             await new Promise(r => requestAnimationFrame(r));
 
-            const captureRect = clone.getBoundingClientRect();
-            const captureWidthCss = Math.max(1, Math.ceil(captureRect.width));
-            const captureHeightCss = Math.max(1, Math.ceil(captureRect.height));
             const devicePR = Math.max(1, window.devicePixelRatio || 1);
             const renderScale = Math.min(3, Math.max(1, Math.round(devicePR * 2)));
 
+            // html2canvas/jsPDF no quedan expuestos como globales en este bundle; se usa el propio "worker" de html2pdf para obtener el canvas y el jsPDF ya listos
             try {
-                const canvas = await html2canvas(clone, { scale: renderScale, useCORS: true, backgroundColor: '#ffffff', width: captureWidthCss, height: captureHeightCss, windowWidth: captureWidthCss, scrollX:0, scrollY:0 });
-                const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                const worker = html2pdf().set({
+                    html2canvas: { scale: renderScale, useCORS: true, backgroundColor: '#ffffff' },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+                }).from(wrapper);
 
-                const jsPDFCtor = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : (window.jsPDF ? window.jsPDF : null);
-                if (jsPDFCtor) {
-                    const pdf = new jsPDFCtor({ unit: 'mm', format: 'a4', orientation: 'landscape' });
-                    const usableWidthMm = PAGE_WIDTH_MM - PAGE_MARGIN_MM * 2;
-                    const imgWidthPx = canvas.width;
-                    const imgHeightPx = canvas.height;
-                    let imgHeightMm = (imgHeightPx / imgWidthPx) * usableWidthMm;
-                    const maxUsableHeightMm = PAGE_HEIGHT_MM - PAGE_MARGIN_MM * 2;
-                    if (imgHeightMm > maxUsableHeightMm) imgHeightMm = maxUsableHeightMm;
-                    const imgWidthMm = usableWidthMm;
-                    const x = (PAGE_WIDTH_MM - imgWidthMm) / 2;
-                    const y = PAGE_MARGIN_MM;
-                    // Asegurar fondo blanco en la página antes de añadir la imagen
-                    try { pdf.setFillColor(255,255,255); pdf.rect(0, 0, PAGE_WIDTH_MM, PAGE_HEIGHT_MM, 'F'); } catch(e) {}
-                    pdf.addImage(imgData, 'JPEG', x, y, imgWidthMm, imgHeightMm);
-                    pdf.save(`Reporte_${new Date().toISOString().split('T')[0]}.pdf`);
-                } else {
-                    await html2pdf().set({ margin: PAGE_MARGIN_MM, filename: `Reporte_${new Date().toISOString().split('T')[0]}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: renderScale, useCORS: true, windowWidth: captureWidthCss, width: captureWidthCss }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } }).from(wrapper).save();
+                await worker.toCanvas();
+                const canvas = await worker.get('canvas');
+                await worker.toPdf();
+                const pdf = await worker.get('pdf');
+
+                // El reporte siempre debe quedar en una sola página landscape; se descartan páginas extra
+                const totalPages = pdf.internal.getNumberOfPages();
+                for (let i = totalPages; i > 1; i--) pdf.deletePage(i);
+
+                const usableWidthMm = PAGE_WIDTH_MM - PAGE_MARGIN_MM * 2;
+                const usableHeightMm = PAGE_HEIGHT_MM - PAGE_MARGIN_MM * 2;
+                let imgWidthMm = usableWidthMm;
+                let imgHeightMm = (canvas.height / canvas.width) * imgWidthMm;
+                // Se reduce todo proporcionalmente (sin deformar) si excede la altura de la página
+                if (imgHeightMm > usableHeightMm) {
+                    const shrink = usableHeightMm / imgHeightMm;
+                    imgHeightMm = usableHeightMm;
+                    imgWidthMm = imgWidthMm * shrink;
                 }
-            } catch (e) { console.error(e); }
+                const x = (PAGE_WIDTH_MM - imgWidthMm) / 2;
+                const y = PAGE_MARGIN_MM;
+
+                pdf.setPage(1);
+                pdf.setFillColor(255, 255, 255);
+                pdf.rect(0, 0, PAGE_WIDTH_MM, PAGE_HEIGHT_MM, 'F');
+                pdf.addImage(canvas.toDataURL('image/jpeg', 0.98), 'JPEG', x, y, imgWidthMm, imgHeightMm);
+                pdf.save(`Reporte_${new Date().toISOString().split('T')[0]}.pdf`);
+            } catch (e) { console.error(e); window.showToast('Error al generar el reporte'); }
             finally {
                 try { if (wrapper && wrapper.parentNode) wrapper.parentNode.removeChild(wrapper); } catch(e) {}
                 container.classList.add('hidden'); btn.innerHTML = originalText; btn.disabled = false; reportEl.style.cssText = '';
