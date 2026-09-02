@@ -112,7 +112,19 @@
         .skeleton-card { padding: 1.25rem; margin-bottom: 1rem; border-radius: 1.5rem; background: white; border: 1px solid rgba(243, 244, 246, 0.7); }
         .skeleton-card .skeleton-base { height: 2rem; margin-bottom: 0.75rem; }
 
-        /* ============ Login Type Selector ============ */
+        /* ============ Responsive Text Sizing ============ */
+        .text-responsive-h1 { font-size: clamp(1.5rem, 5vw, 3rem); }
+        .text-responsive-h2 { font-size: clamp(1.25rem, 4vw, 2rem); }
+        .text-responsive-h3 { font-size: clamp(1rem, 3vw, 1.5rem); }
+        
+        /* ============ Mobile First Spacing ============ */
+        .safe-padding-mobile { padding: 1rem; }
+        @media (min-width: 768px) { .safe-padding-mobile { padding: 1.5rem; } }
+        @media (min-width: 1024px) { .safe-padding-mobile { padding: 2rem; } }
+        
+        /* ============ Botones Responsive (min 44px touch target) ============ */
+        button { min-height: 44px; }
+        input, select, textarea { min-height: 44px; }
         .login-type-btn { transition: all 0.3s ease-out; border-width: 2px; }
         .login-type-btn.active { background-color: #bb7434; border-color: #bb7434; color: #fff; }
         .login-type-btn.inactive { background-color: transparent; border-color: #ddd; color: #999; }
@@ -121,48 +133,48 @@
 </head>
 <body class="overflow-hidden">
 
-    <div id="login-screen" class="fixed inset-0 min-h-[100dvh] bg-[#542c1c] flex flex-col items-center justify-center p-6 fade-in z-[300] overflow-y-auto">
-        <div class="w-20 h-20 bg-[#bb7434] rounded-3xl flex items-center justify-center text-white mb-8 shadow-[0_0_40px_rgba(187,116,52,0.3)] ring-4 ring-[#bb7434]/20">
-           <i data-lucide="briefcase" style="width: 40px; height: 40px;"></i>
+    <div id="login-screen" class="fixed inset-0 min-h-[100dvh] bg-[#542c1c] flex flex-col items-center justify-center p-4 md:p-6 fade-in z-[300] overflow-y-auto">
+        <div class="w-16 h-16 md:w-20 md:h-20 bg-[#bb7434] rounded-3xl flex items-center justify-center text-white mb-6 md:mb-8 shadow-[0_0_40px_rgba(187,116,52,0.3)] ring-4 ring-[#bb7434]/20">
+           <i data-lucide="briefcase" style="width: 32px; height: 32px; min-width: 32px;"></i>
         </div>
-        <h1 class="text-4xl font-black text-white mb-2 tracking-tight text-center">LALY TALENTO</h1>
-        <p class="text-[#cab2a2] font-medium mb-10 text-center max-w-sm">Sistema de gestión de talento y rendimiento.</p>
+        <h1 class="text-3xl md:text-4xl font-black text-white mb-2 tracking-tight text-center">LALY TALENTO</h1>
+        <p class="text-[#cab2a2] font-medium mb-8 text-center max-w-sm text-sm md:text-base">Sistema de gestión de talento y rendimiento.</p>
         
-        <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)] border border-white/20">
-          <h2 class="text-2xl font-black text-[#542c1c] mb-6 text-center">¿Quién eres?</h2>
+        <div class="bg-white rounded-[2rem] p-6 md:p-8 w-full max-w-sm shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)] border border-white/20">
+          <h2 class="text-xl md:text-2xl font-black text-[#542c1c] mb-6 text-center">¿Quién eres?</h2>
           
           <!-- Selector Admin/Trabajador -->
-          <div class="flex gap-3 mb-8">
-            <button type="button" id="login-type-admin" onclick="window.switchLoginType('admin')" class="flex-1 login-type-btn active border-2 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all">
-              <i data-lucide="shield" class="w-5 h-5"></i> Admin
+          <div class="flex gap-2 md:gap-3 mb-6 md:mb-8">
+            <button type="button" id="login-type-admin" onclick="window.switchLoginType('admin')" class="flex-1 login-type-btn active border-2 py-2.5 md:py-3 rounded-xl font-bold text-sm md:text-base flex items-center justify-center gap-2 transition-all">
+              <i data-lucide="shield" class="w-4 h-4 md:w-5 md:h-5"></i> <span class="hidden sm:inline">Admin</span>
             </button>
-            <button type="button" id="login-type-worker" onclick="window.switchLoginType('worker')" class="flex-1 login-type-btn inactive border-2 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all">
-              <i data-lucide="briefcase" class="w-5 h-5"></i> Trabajador
+            <button type="button" id="login-type-worker" onclick="window.switchLoginType('worker')" class="flex-1 login-type-btn inactive border-2 py-2.5 md:py-3 rounded-xl font-bold text-sm md:text-base flex items-center justify-center gap-2 transition-all">
+              <i data-lucide="briefcase" class="w-4 h-4 md:w-5 md:h-5"></i> <span class="hidden sm:inline">Trabajador</span>
             </button>
           </div>
 
           <!-- Formulario Admin -->
-          <form id="login-form-admin" onsubmit="window.handleLogin(event)" class="space-y-6">
+          <form id="login-form-admin" onsubmit="window.handleLogin(event)" class="space-y-4 md:space-y-6">
             <div class="text-left">
               <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Usuario</label>
-              <input type="text" id="login-username" placeholder="Nombre de usuario" class="w-full border border-transparent bg-gray-50/50 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#bb7434]/50 focus:border-transparent font-medium text-lg transition-all duration-300 ease-out" />
+              <input type="text" id="login-username" placeholder="Usuario" class="w-full border border-transparent bg-gray-50/50 rounded-xl p-3 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-[#bb7434]/50 focus:border-transparent font-medium transition-all duration-300 ease-out" />
             </div>
             <div class="text-left">
               <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Contraseña</label>
-              <input type="password" id="login-password" placeholder="Contraseña" class="w-full border border-transparent bg-gray-50/50 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#bb7434]/50 focus:border-transparent font-medium text-lg transition-all duration-300 ease-out" />
+              <input type="password" id="login-password" placeholder="Contraseña" class="w-full border border-transparent bg-gray-50/50 rounded-xl p-3 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-[#bb7434]/50 focus:border-transparent font-medium transition-all duration-300 ease-out" />
             </div>
-            <button type="submit" id="login-btn" class="w-full bg-[#bb7434] text-white py-3.5 rounded-xl font-black hover:bg-[#a55f25] transition-all duration-300 ease-out shadow-lg shadow-[#bb7434]/30 hover:shadow-xl hover:shadow-[#bb7434]/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:opacity-70 disabled:cursor-wait">
+            <button type="submit" id="login-btn" class="w-full bg-[#bb7434] text-white py-3 md:py-3.5 rounded-xl font-black text-sm md:text-base hover:bg-[#a55f25] transition-all duration-300 ease-out shadow-lg shadow-[#bb7434]/30 hover:shadow-xl hover:shadow-[#bb7434]/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:opacity-70 disabled:cursor-wait">
               Ingresar
             </button>
           </form>
 
           <!-- Formulario Trabajador -->
-          <form id="login-form-worker" onsubmit="window.handleLogin(event)" class="space-y-6 hidden">
+          <form id="login-form-worker" onsubmit="window.handleLogin(event)" class="space-y-4 md:space-y-6 hidden">
             <div class="text-left">
               <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Número de Documento</label>
-              <input type="number" id="login-cedula" placeholder="Número de documento" class="w-full border border-transparent bg-gray-50/50 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#bb7434]/50 focus:border-transparent font-medium text-lg transition-all duration-300 ease-out" />
+              <input type="number" id="login-cedula" placeholder="Cédula" class="w-full border border-transparent bg-gray-50/50 rounded-xl p-3 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-[#bb7434]/50 focus:border-transparent font-medium transition-all duration-300 ease-out" />
             </div>
-            <button type="submit" id="login-btn" class="w-full bg-[#bb7434] text-white py-3.5 rounded-xl font-black hover:bg-[#a55f25] transition-all duration-300 ease-out shadow-lg shadow-[#bb7434]/30 hover:shadow-xl hover:shadow-[#bb7434]/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:opacity-70 disabled:cursor-wait">
+            <button type="submit" id="login-btn" class="w-full bg-[#bb7434] text-white py-3 md:py-3.5 rounded-xl font-black text-sm md:text-base hover:bg-[#a55f25] transition-all duration-300 ease-out shadow-lg shadow-[#bb7434]/30 hover:shadow-xl hover:shadow-[#bb7434]/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:opacity-70 disabled:cursor-wait">
               Ingresar
             </button>
           </form>
@@ -172,45 +184,45 @@
     <div id="app-layout" class="hidden flex h-[100dvh] w-full bg-[#542c1c] overflow-hidden relative">
         
         <!-- SIDEBAR (PC) -->
-        <div class="hidden md:flex flex-col w-72 bg-[#542c1c] text-white pt-8 pb-6 px-6 border-r border-[#7a4a35] relative z-20 shrink-0">
-            <div class="mb-10 flex items-center gap-3">
-                <div class="w-10 h-10 bg-[#bb7434] rounded-xl flex items-center justify-center text-white shadow-lg shadow-[#bb7434]/25">
+        <div class="hidden lg:flex flex-col w-64 xl:w-72 bg-[#542c1c] text-white pt-6 md:pt-8 pb-4 md:pb-6 px-4 md:px-6 border-r border-[#7a4a35] relative z-20 shrink-0">
+            <div class="mb-8 md:mb-10 flex items-center gap-3">
+                <div class="w-10 h-10 bg-[#bb7434] rounded-xl flex items-center justify-center text-white shadow-lg shadow-[#bb7434]/25 shrink-0">
                     <i data-lucide="briefcase" class="w-6 h-6"></i>
                 </div>
-                <div>
-                    <h2 class="text-xl font-black tracking-tight leading-tight">LALY TALENTO</h2>
-                    <p class="text-[10px] text-[#cab2a2] uppercase font-bold tracking-widest">Sistema de Talento</p>
+                <div class="min-w-0">
+                    <h2 class="text-lg md:text-xl font-black tracking-tight leading-tight truncate">LALY</h2>
+                    <p class="text-[10px] text-[#cab2a2] uppercase font-bold tracking-widest">Talento</p>
                 </div>
             </div>
 
-            <nav id="desktop-nav" class="flex-1 space-y-2">
+            <nav id="desktop-nav" class="flex-1 space-y-1 md:space-y-2">
                 <!-- Nav items inyectados por JS -->
             </nav>
 
-            <div class="mt-auto bg-white/5 backdrop-blur-sm p-4 rounded-3xl border border-white/10">
-                <div class="flex items-center gap-3 mb-3">
-                    <div id="user-avatar" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#542c1c] font-bold overflow-hidden ring-2 ring-[#bb7434]/40 shadow-md">U</div>
+            <div class="mt-auto bg-white/5 backdrop-blur-sm p-3 md:p-4 rounded-3xl border border-white/10">
+                <div class="flex items-center gap-3 mb-3 min-w-0">
+                    <div id="user-avatar" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#542c1c] font-bold overflow-hidden ring-2 ring-[#bb7434]/40 shadow-md shrink-0">U</div>
                     <div class="flex-1 min-w-0">
                       <p id="user-name" class="text-sm font-bold truncate">Usuario</p>
                       <p id="user-role" class="text-[10px] text-[#cab2a2] font-black uppercase tracking-wider">Rol</p>
                     </div>
                 </div>
-                <button onclick="window.appSignOut()" class="w-full flex items-center justify-center gap-2 text-xs font-bold text-gray-300 hover:text-white bg-white/10 hover:bg-white/20 py-2 rounded-xl transition-all duration-300 ease-out active:scale-95">
-                    <i data-lucide="log-out" class="w-4 h-4"></i> Cerrar Sesión
+                <button onclick="window.appSignOut()" class="w-full flex items-center justify-center gap-2 text-xs font-bold text-gray-300 hover:text-white bg-white/10 hover:bg-white/20 py-2 px-2 md:py-2.5 md:px-3 rounded-xl transition-all duration-300 ease-out active:scale-95">
+                    <i data-lucide="log-out" class="w-4 h-4 shrink-0"></i> <span class="hidden sm:inline">Cerrar</span>
                 </button>
             </div>
         </div>
 
         <!-- MAIN CONTENT AREA -->
-        <div class="flex-1 flex flex-col h-[100dvh] bg-[#f8fafc] md:rounded-l-[2.5rem] overflow-hidden relative shadow-2xl md:border-l md:border-white/10">
+        <div class="flex-1 flex flex-col h-[100dvh] bg-[#f3ebe3] lg:rounded-l-[2.5rem] overflow-hidden relative shadow-2xl lg:border-l lg:border-white/10">
             
-            <div id="main-content" class="flex-1 overflow-y-auto p-6 md:p-8 relative pb-32 md:pb-10 hide-scrollbar">
+            <div id="main-content" class="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 lg:p-8 relative pb-24 sm:pb-28 md:pb-10 hide-scrollbar">
                 <!-- Vistas dinámicas inyectadas aquí -->
             </div>
 
-            <!-- BOTTOM NAV (Móvil) -->
-            <div class="md:hidden fixed nav-safe left-4 right-4 bg-white/75 backdrop-blur-xl border border-white/60 px-2 py-2 rounded-[2rem] shadow-[0_12px_40px_-8px_rgba(13,78,70,0.18),0_4px_12px_rgba(13,78,70,0.06)] z-[200]">
-                <div id="mobile-nav" class="flex justify-around items-center max-w-sm mx-auto">
+            <!-- BOTTOM NAV (Móvil + Tablet) -->
+            <div class="lg:hidden fixed nav-safe left-3 right-3 sm:left-4 sm:right-4 bg-white/75 backdrop-blur-xl border border-white/60 px-2 py-2 sm:py-3 rounded-[2rem] shadow-[0_12px_40px_-8px_rgba(84,44,28,0.18),0_4px_12px_rgba(84,44,28,0.06)] z-[200]">
+                <div id="mobile-nav" class="flex justify-around items-center w-full">
                     <!-- Nav items inyectados por JS -->
                 </div>
             </div>
@@ -219,35 +231,35 @@
 
     <!-- MODAL FORMULARIO TRABAJADOR -->
     <div id="worker-modal" class="modal-backdrop">
-        <div class="modal-content">
-            <div class="flex justify-between items-center p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
-                <h3 id="worker-modal-title" class="font-black text-xl text-[#542c1c]">Nuevo Trabajador</h3>
-                <button onclick="document.getElementById('worker-modal').classList.remove('active')" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90">
+        <div class="modal-content w-full sm:w-auto sm:max-w-sm md:max-w-md">
+            <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
+                <h3 id="worker-modal-title" class="font-black text-lg sm:text-xl text-[#542c1c]">Nuevo Trabajador</h3>
+                <button onclick="document.getElementById('worker-modal').classList.remove('active')" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            <div class="p-6 overflow-y-auto flex-1 hide-scrollbar bg-gray-50/60">
-                <form id="worker-form" onsubmit="window.saveWorker(event)" class="space-y-6">
+            <div class="p-4 sm:p-6 overflow-y-auto flex-1 hide-scrollbar bg-gray-50/60">
+                <form id="worker-form" onsubmit="window.saveWorker(event)" class="space-y-4 sm:space-y-6">
                     <input type="hidden" id="w-id">
                     
                     <!-- FOTO -->
-                    <div class="flex flex-col items-center mb-6">
-                        <div class="relative w-24 h-24 rounded-full bg-gray-200 border-4 border-white shadow-md flex items-center justify-center overflow-hidden mb-3">
+                    <div class="flex flex-col items-center mb-4 sm:mb-6">
+                        <div class="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gray-200 border-4 border-white shadow-md flex items-center justify-center overflow-hidden mb-3">
                             <img id="w-photo-preview" src="" class="w-full h-full object-cover hidden">
-                            <i id="w-photo-icon" data-lucide="camera" class="w-8 h-8 text-gray-400"></i>
+                            <i id="w-photo-icon" data-lucide="camera" class="w-6 h-6 sm:w-8 sm:h-8 text-gray-400"></i>
                         </div>
-                        <label class="cursor-pointer text-[#542c1c] text-xs font-bold py-2 px-4 rounded-full bg-white shadow-sm border border-gray-200 hover:bg-gray-50 hover:shadow-md transition-all duration-300 ease-out active:scale-95">
-                            Subir Fotografía
+                        <label class="cursor-pointer text-[#542c1c] text-xs font-bold py-2 px-3 sm:px-4 rounded-full bg-white shadow-sm border border-gray-200 hover:bg-gray-50 hover:shadow-md transition-all duration-300 ease-out active:scale-95">
+                            Subir Foto
                             <input type="file" accept="image/jpeg, image/png" class="hidden" onchange="window.handlePhotoUpload(event)">
                         </label>
                         <input type="hidden" id="w-photo-base64">
                     </div>
 
-                    <div class="bg-white p-5 rounded-2xl card-shadow">
-                        <h4 class="font-bold text-[#542c1c] mb-4 text-sm uppercase tracking-wide">Datos Personales</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="md:col-span-2"><input required id="w-name" placeholder="Nombre Completo" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
-                            <div><input type="number" required id="w-doc" placeholder="Número de Documento" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl card-shadow">
+                        <h4 class="font-bold text-[#542c1c] mb-3 sm:mb-4 text-xs sm:text-sm uppercase tracking-wide">Datos Personales</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                            <div class="sm:col-span-2"><input required id="w-name" placeholder="Nombre" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input type="number" required id="w-doc" placeholder="Cédula" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
                             <div><input type="number" required id="w-phone" placeholder="Teléfono / WhatsApp" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
                             <div class="md:col-span-2"><input id="w-city" placeholder="Ciudad de Residencia" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
                         </div>
@@ -681,18 +693,18 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             const topWorkerPrevPts = topWorkerPrev ? prevScores[topWorkerPrev.id] : 0;
 
             return `
-            <div class="animate-in fade-in space-y-6">
-                <div class="bg-[#542c1c] -mx-6 md:-mx-8 -mt-6 md:-mt-8 pt-12 pb-10 px-6 md:px-10 rounded-b-[2rem] shadow-sm">
-                    <div class="max-w-5xl mx-auto">
-                        <h1 class="text-4xl font-bold text-white tracking-tight mb-1 truncate">Hola, ${firstName}</h1>
-                        <p class="text-[#cab2a2] text-sm font-medium mb-8">Resumen del mes actual</p>
-                        <div class="flex gap-12">
+            <div class="animate-in fade-in space-y-4 sm:space-y-6">
+                <div class="bg-[#542c1c] -mx-3 sm:-mx-4 md:-mx-6 lg:-mx-8 -mt-3 sm:-mt-4 md:-mt-6 lg:-mt-8 pt-8 sm:pt-10 md:pt-12 pb-6 sm:pb-8 md:pb-10 px-4 sm:px-6 md:px-10 rounded-b-[2rem] shadow-sm">
+                    <div class="max-w-7xl mx-auto">
+                        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight mb-1 truncate">Hola, ${firstName}</h1>
+                        <p class="text-[#cab2a2] text-xs sm:text-sm font-medium mb-6 sm:mb-8">Resumen del mes actual</p>
+                        <div class="flex gap-6 sm:gap-12">
                             <div>
-                                <div class="text-4xl font-black text-[#bb7434] mb-1">${activeWorkers}</div>
+                                <div class="text-2xl sm:text-3xl md:text-4xl font-black text-[#bb7434] mb-1">${activeWorkers}</div>
                                 <div class="text-[10px] uppercase text-white font-bold tracking-wider opacity-80 leading-tight">ACTIVOS<br>TOTAL</div>
                             </div>
                             <div>
-                                <div class="text-4xl font-black text-[#bb7434] mb-1">${avgPoints}</div>
+                                <div class="text-2xl sm:text-3xl md:text-4xl font-black text-[#bb7434] mb-1">${avgPoints}</div>
                                 <div class="text-[10px] uppercase text-white font-bold tracking-wider opacity-80 leading-tight">PROM.<br>PUNTOS</div>
                             </div>
                         </div>
@@ -700,33 +712,33 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 </div>
 
                 ${topWorkerPrev ? `
-                <div class="max-w-5xl mx-auto bg-gradient-to-r from-[#bb7434] to-[#a55f25] rounded-[1.5rem] p-6 shadow-lg text-white">
-                    <p class="text-xs font-bold uppercase tracking-widest opacity-90 mb-2">🏆 Trabajador del Mes Anterior</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-4">
-                            ${topWorkerPrev.photo ? `<img src="${topWorkerPrev.photo}" class="w-16 h-16 rounded-2xl object-cover border-2 border-white/20">` : `<div class="w-16 h-16 rounded-2xl bg-white/20 text-white font-bold text-xl flex items-center justify-center">${window.getInitials(topWorkerPrev.name)}</div>`}
-                            <div>
-                                <h3 class="text-lg font-black">${topWorkerPrev.name}</h3>
-                                <p class="text-sm opacity-90">${topWorkerPrev.role}</p>
+                <div class="max-w-7xl mx-auto bg-gradient-to-r from-[#bb7434] to-[#a55f25] rounded-[1.5rem] p-4 sm:p-6 shadow-lg text-white">
+                    <p class="text-xs font-bold uppercase tracking-widest opacity-90 mb-3 sm:mb-4">🏆 Trabajador del Mes Anterior</p>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+                        <div class="flex items-center gap-3 flex-1 min-w-0">
+                            ${topWorkerPrev.photo ? `<img src="${topWorkerPrev.photo}" class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 border-white/20 shrink-0">` : `<div class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-white/20 text-white font-bold text-lg sm:text-xl flex items-center justify-center shrink-0">${window.getInitials(topWorkerPrev.name)}</div>`}
+                            <div class="min-w-0">
+                                <h3 class="text-base sm:text-lg font-black truncate">${topWorkerPrev.name}</h3>
+                                <p class="text-xs sm:text-sm opacity-90 truncate">${topWorkerPrev.role}</p>
                             </div>
                         </div>
                         <div class="text-right">
-                            <p class="text-3xl font-black">${topWorkerPrevPts}</p>
-                            <p class="text-xs font-bold opacity-90">PUNTOS</p>
+                            <p class="text-2xl sm:text-3xl font-black">${topWorkerPrevPts}</p>
+                            <p class="text-xs font-bold opacity-90">PTS</p>
                         </div>
                     </div>
                 </div>
                 ` : ''}
 
-                <div class="max-w-5xl mx-auto">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div onclick="setView('directory')" class="bg-white p-5 rounded-[1.5rem] card-shadow flex items-center gap-4 cursor-pointer hover:border-[#bb7434] transition-colors">
-                            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0"><i data-lucide="users" class="w-6 h-6"></i></div>
-                            <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-lg truncate">Directorio</h3><p class="text-sm text-gray-400 truncate">Gestión de personal</p></div>
+                <div class="max-w-7xl mx-auto">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                        <div onclick="setView('directory')" class="bg-white p-4 sm:p-5 rounded-[1.5rem] card-shadow flex items-center gap-4 cursor-pointer hover:border-[#bb7434] transition-colors">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0"><i data-lucide="users" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                            <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm sm:text-lg truncate">Directorio</h3><p class="text-xs sm:text-sm text-gray-400 truncate">Gestión de personal</p></div>
                         </div>
-                        <div onclick="setView('ranking')" class="bg-white p-5 rounded-[1.5rem] card-shadow flex items-center gap-4 cursor-pointer hover:border-[#bb7434] transition-colors">
-                            <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center shrink-0"><i data-lucide="star" class="w-6 h-6"></i></div>
-                            <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-lg truncate">Rendimiento</h3><p class="text-sm text-gray-400 truncate">Ranking mensual</p></div>
+                        <div onclick="setView('ranking')" class="bg-white p-4 sm:p-5 rounded-[1.5rem] card-shadow flex items-center gap-4 cursor-pointer hover:border-[#bb7434] transition-colors">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center shrink-0"><i data-lucide="star" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                            <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm sm:text-lg truncate">Rendimiento</h3><p class="text-xs sm:text-sm text-gray-400 truncate">Ranking mensual</p></div>
                         </div>
                     </div>
                 </div>
@@ -738,15 +750,15 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             
             let html = `
             <div class="animate-in fade-in h-full flex flex-col max-w-7xl mx-auto">
-                <div class="flex justify-between items-center mb-6">
-                    <div class="flex-1 min-w-0 pr-4">
-                        <h1 class="text-3xl font-black text-gray-800 truncate">Directorio</h1>
-                        <p class="text-gray-500 text-sm truncate">Personal de la empresa.</p>
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                    <div class="flex-1 min-w-0">
+                        <h1 class="text-2xl sm:text-3xl font-black text-gray-800 truncate">Directorio</h1>
+                        <p class="text-gray-500 text-xs sm:text-sm truncate">Personal de la empresa.</p>
                     </div>
-                    ${canEdit ? `<button onclick="openWorkerForm()" class="shrink-0 bg-[#bb7434] text-white px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-sm hover:bg-[#a55f25] transition-colors text-sm"><i data-lucide="user-plus" class="w-4 h-4"></i> <span class="hidden md:inline">Nuevo</span></button>` : ''}
+                    ${canEdit ? `<button onclick="openWorkerForm()" class="shrink-0 bg-[#bb7434] text-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm hover:bg-[#a55f25] transition-colors active:scale-95"><i data-lucide="user-plus" class="w-4 h-4 shrink-0"></i> <span class="hidden sm:inline">Nuevo</span></button>` : ''}
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 pb-4">
             `;
 
             window.appState.dbWorkers.forEach(w => {
@@ -755,16 +767,16 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     const tags = w.specialties.split(',').map(s => s.trim()).filter(s => s);
                     specsHtml = `<div class="flex flex-wrap gap-1 mt-2">` + tags.slice(0,2).map(t => `<span class="bg-gray-100 text-gray-500 text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wide truncate max-w-full">${t}</span>`).join('') + (tags.length>2?`<span class="bg-gray-100 text-gray-500 text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wide shrink-0">+${tags.length-2}</span>`:'') + `</div>`;
                 }
-                const photoHtml = w.photo ? `<img src="${w.photo}" class="w-14 h-14 rounded-2xl object-cover shrink-0">` : `<div class="w-14 h-14 rounded-2xl bg-gray-100 text-gray-400 font-bold text-xl flex items-center justify-center shrink-0">${window.getInitials(w.name)}</div>`;
+                const photoHtml = w.photo ? `<img src="${w.photo}" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl object-cover shrink-0">` : `<div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gray-100 text-gray-400 font-bold text-lg sm:text-xl flex items-center justify-center shrink-0">${window.getInitials(w.name)}</div>`;
                 const isInactive = w.status === 'inactivo';
 
                 html += `
-                <div onclick="viewWorkerProfile('${w.id}')" class="bg-white p-4 rounded-[1.5rem] card-shadow flex items-start gap-4 cursor-pointer hover:border-[#bb7434] transition-colors relative ${isInactive?'opacity-60':''}">
-                    ${isInactive ? `<span class="absolute top-4 right-4 text-[10px] font-bold text-red-400">Inactivo</span>` : `<span class="absolute top-4 right-4 text-[10px] font-bold text-[#34d399]">Activo</span>`}
+                <div onclick="viewWorkerProfile('${w.id}')" class="bg-white p-3 sm:p-4 rounded-[1.5rem] card-shadow flex items-start gap-3 cursor-pointer hover:border-[#bb7434] transition-colors relative ${isInactive?'opacity-60':''}">
+                    ${isInactive ? `<span class="absolute top-3 right-3 text-[10px] font-bold text-red-400">Inactivo</span>` : `<span class="absolute top-3 right-3 text-[10px] font-bold text-[#34d399]">Activo</span>`}
                     ${photoHtml}
                     <div class="flex-1 min-w-0 pr-8">
-                        <h4 class="font-bold text-gray-900 text-[16px] leading-tight truncate">${w.name}</h4>
-                        <p class="text-[13px] text-[#542c1c] font-medium truncate">${w.role}</p>
+                        <h4 class="font-bold text-gray-900 text-sm sm:text-base leading-tight truncate">${w.name}</h4>
+                        <p class="text-[12px] sm:text-[13px] text-[#542c1c] font-medium truncate">${w.role}</p>
                         ${specsHtml}
                     </div>
                 </div>`;
@@ -804,17 +816,17 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
 
             let html = `
             <div class="animate-in fade-in max-w-7xl mx-auto">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
                     <div class="flex-1 min-w-0">
-                        <h1 class="text-3xl font-black text-gray-800 truncate">Ranking Mensual</h1>
-                        <p class="text-gray-500 text-sm truncate">Rendimiento basado en evaluaciones.</p>
+                        <h1 class="text-2xl sm:text-3xl font-black text-gray-800 truncate">Ranking Mensual</h1>
+                        <p class="text-gray-500 text-xs sm:text-sm truncate">Rendimiento basado en evaluaciones.</p>
                     </div>
-                    <input type="month" value="${monthStr}" onchange="changeMonth(event)" class="border border-gray-200 bg-white text-[#542c1c] font-bold px-4 py-2.5 rounded-xl shadow-sm text-sm cursor-pointer hover:bg-gray-50 focus:outline-none shrink-0 w-full md:w-auto">
+                    <input type="month" value="${monthStr}" onchange="changeMonth(event)" class="border border-gray-200 bg-white text-[#542c1c] font-bold px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl shadow-sm text-xs sm:text-sm cursor-pointer hover:bg-gray-50 focus:outline-none shrink-0 w-full sm:w-auto">
                 </div>
                 
-                <div class="space-y-3 pb-4">`;
+                <div class="space-y-2 sm:space-y-3 pb-4">`;
 
-            if(rankedWorkers.length === 0) html += '<p class="text-gray-400 text-center py-10">No hay trabajadores activos</p>';
+            if(rankedWorkers.length === 0) html += '<p class="text-gray-400 text-center py-10 text-sm">No hay trabajadores activos</p>';
 
             rankedWorkers.forEach((w, index) => {
                 const pos = index + 1;
@@ -823,12 +835,12 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 else if(pos === 2) { numClass = "bg-gray-200 text-gray-600"; } else if(pos === 3) { numClass = "bg-[#d97706] text-white"; }
 
                 html += `
-                <div onclick="viewWorkerProfile('${w.id}')" class="p-4 rounded-[1.5rem] card-shadow border ${cardClass} flex items-center justify-between cursor-pointer hover:scale-[1.01] transition-transform gap-3">
-                    <div class="flex items-center gap-3 flex-1 min-w-0">
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center font-black text-lg shrink-0 ${numClass}">${pos}</div>
-                        <div class="flex-1 min-w-0"><h4 class="font-bold text-gray-900 text-[16px] leading-tight truncate">${w.name}</h4><p class="text-[13px] text-gray-400 truncate">${w.role}</p></div>
+                <div onclick="viewWorkerProfile('${w.id}')" class="p-3 sm:p-4 rounded-[1.5rem] card-shadow border ${cardClass} flex items-center justify-between cursor-pointer hover:scale-[1.01] transition-transform gap-2 sm:gap-3">
+                    <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-black text-base sm:text-lg shrink-0 ${numClass}">${pos}</div>
+                        <div class="flex-1 min-w-0"><h4 class="font-bold text-gray-900 text-sm sm:text-base leading-tight truncate">${w.name}</h4><p class="text-[12px] sm:text-[13px] text-gray-400 truncate">${w.role}</p></div>
                     </div>
-                    <div class="px-3 py-1.5 rounded-xl font-black ${ptsClass} text-sm flex items-baseline gap-1 shrink-0">${w.totalPts} <span class="text-[10px] font-bold opacity-70">PTS</span></div>
+                    <div class="px-2 sm:px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm flex items-baseline gap-1 shrink-0 ${ptsClass}">${w.totalPts} <span class="text-[9px] sm:text-[10px] font-bold opacity-70">PTS</span></div>
                 </div>`;
             });
             html += `</div></div>`;
@@ -894,9 +906,9 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
 
                 <!-- TABS -->
                 <div class="flex bg-white px-2 md:px-8 border-b border-gray-200 overflow-x-auto hide-scroll md:rounded-3xl md:mt-4 md:shadow-sm">
-                    <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="flex-shrink-0 px-5 py-4 text-xs font-bold text-[#542c1c] border-b-[3px] border-[#542c1c] transition-colors"><i class="fas fa-star mr-1"></i> Puntos</button>
-                    <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-shrink-0 px-5 py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors"><i class="fas fa-briefcase mr-1"></i> Datos</button>
-                    <button onclick="switchTab('documentos')" id="tab-btn-documentos" class="flex-shrink-0 px-5 py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors"><i class="fas fa-file-pdf mr-1"></i> Docs</button>
+                <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="flex-shrink-0 px-3 sm:px-5 py-3 sm:py-4 text-xs font-bold text-[#542c1c] border-b-[3px] border-[#542c1c] transition-colors"><i class="fas fa-star mr-1"></i> Puntos</button>
+                    <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-shrink-0 px-3 sm:px-5 py-3 sm:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors"><i class="fas fa-briefcase mr-1"></i> Datos</button>
+                    <button onclick="switchTab('documentos')" id="tab-btn-documentos" class="flex-shrink-0 px-3 sm:px-5 py-3 sm:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors"><i class="fas fa-file-pdf mr-1"></i> Docs</button>
                     ${canEdit ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="flex-shrink-0 px-5 py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors"><i class="fas fa-lock mr-1"></i> Banco</button>` : ''}
                 </div>
 
