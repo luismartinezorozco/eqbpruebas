@@ -258,10 +258,18 @@
                     <div class="bg-white p-4 sm:p-5 rounded-2xl card-shadow">
                         <h4 class="font-bold text-[#542c1c] mb-3 sm:mb-4 text-xs sm:text-sm uppercase tracking-wide">Datos Personales</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                            <div class="sm:col-span-2"><input required id="w-name" placeholder="Nombre" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input required id="w-name" placeholder="Nombres" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input required id="w-lastname" placeholder="Apellidos" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input type="date" id="w-birthday" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
                             <div><input type="number" required id="w-doc" placeholder="Cédula" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input type="email" id="w-email" placeholder="Correo electrónico" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
                             <div><input type="number" required id="w-phone" placeholder="Teléfono / WhatsApp" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
-                            <div class="md:col-span-2"><input id="w-city" placeholder="Ciudad de Residencia" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><select id="w-bloodtype" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"><option value="">Tipo de sangre</option><option value="O+">O+</option><option value="O-">O-</option><option value="A+">A+</option><option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option><option value="AB+">AB+</option><option value="AB-">AB-</option></select></div>
+                            <div><input id="w-eps" placeholder="EPS" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div class="sm:col-span-2"><input id="w-address" placeholder="Dirección de Vivienda" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input id="w-city" placeholder="Ciudad de Residencia" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input id="w-emergency-name" placeholder="Contacto de emergencia (nombre)" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input type="number" id="w-emergency-phone" placeholder="Teléfono de emergencia" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
                         </div>
                     </div>
 
@@ -287,7 +295,22 @@
                                 <input id="w-specs" placeholder="Especialidades (Ej: Recreación, Logística, Montaje)" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
                             </div>
                             <div class="md:col-span-2">
-                                <input id="w-availability" placeholder="Disponibilidad (Ej: Lunes a Viernes tardes, Fines de semana completos)" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
+                                <p class="font-bold text-gray-600 text-xs mb-3">Disponibilidad Laboral</p>
+                                <div class="space-y-2">
+                                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-availability-day rounded" value="lunes"> <span class="text-sm text-gray-700">Lunes</span></label>
+                                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-availability-day rounded" value="martes"> <span class="text-sm text-gray-700">Martes</span></label>
+                                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-availability-day rounded" value="miercoles"> <span class="text-sm text-gray-700">Miércoles</span></label>
+                                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-availability-day rounded" value="jueves"> <span class="text-sm text-gray-700">Jueves</span></label>
+                                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-availability-day rounded" value="viernes"> <span class="text-sm text-gray-700">Viernes</span></label>
+                                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-availability-day rounded" value="sabado"> <span class="text-sm text-gray-700">Sábado</span></label>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-200">
+                                        <label class="text-xs text-gray-600 block mb-2">Hora disponible desde:</label>
+                                        <input type="time" id="w-availability-time" class="w-full border border-gray-200 bg-white rounded-lg p-2 text-sm focus:border-[#bb7434] focus:outline-none transition-colors">
+                                    </div>
+                                    <input type="hidden" id="w-availability" value="">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -295,7 +318,37 @@
                     <div id="bank-section-form" class="bg-white p-5 rounded-2xl card-shadow" style="display:none;">
                         <h4 class="font-bold text-gray-500 mb-4 text-sm uppercase tracking-wide flex items-center gap-2"><i data-lucide="shield" class="w-4 h-4"></i> Info. Bancaria Privada</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div><input id="w-bank-name" placeholder="Banco" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div>
+                                <select id="w-bank-name" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
+                                    <option value="">Seleccionar banco</option>
+                                    <option value="Banco de Bogotá">Banco de Bogotá</option>
+                                    <option value="Banco de Occidente">Banco de Occidente</option>
+                                    <option value="Banco Popular">Banco Popular</option>
+                                    <option value="Banco Santander">Banco Santander</option>
+                                    <option value="Scotiabank Colpatria">Scotiabank Colpatria</option>
+                                    <option value="Citibank">Citibank</option>
+                                    <option value="BBVA Colombia">BBVA Colombia</option>
+                                    <option value="BanColombia">BanColombia</option>
+                                    <option value="Davivienda">Davivienda</option>
+                                    <option value="Interbank">Interbank</option>
+                                    <option value="Bre-B">Bre-B</option>
+                                    <option value="Banco AV Villas">Banco AV Villas</option>
+                                    <option value="Banco Patrimonial">Banco Patrimonial</option>
+                                    <option value="Banco W">Banco W</option>
+                                    <option value="Nequi">Nequi</option>
+                                    <option value="Daviplata">Daviplata</option>
+                                    <option value="Bancamía">Bancamía</option>
+                                    <option value="Unibanc">Unibanc</option>
+                                    <option value="Banco Caja Social">Banco Caja Social</option>
+                                    <option value="Confibanco">Confibanco</option>
+                                    <option value="Banco Agrario">Banco Agrario</option>
+                                    <option value="Banco Falabella">Banco Falabella</option>
+                                    <option value="Banco PagaTodo">Banco PagaTodo</option>
+                                    <option value="Banco Finandina">Banco Finandina</option>
+                                    <option value="Banco Crédito e Inversiones">Banco Crédito e Inversiones</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
                             <div>
                                 <select id="w-bank-type" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
                                     <option value="Ahorros">Ahorros</option><option value="Corriente">Corriente</option><option value="Nequi/Daviplata">Nequi/Daviplata</option>
@@ -1031,6 +1084,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             document.getElementById('w-photo-preview').classList.add('hidden'); 
             document.getElementById('w-photo-icon').classList.remove('hidden'); 
             document.getElementById('w-photo-base64').value = '';
+            document.querySelectorAll('.w-availability-day').forEach(cb => cb.checked = false);
             
             const canSeeBank = ['ADMIN', 'HR'].includes(window.appState.currentUser.systemRole); 
             document.getElementById('bank-section-form').style.display = canSeeBank ? 'block' : 'none';
@@ -1039,14 +1093,31 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 const w = window.appState.dbWorkers.find(x => x.id === id);
                 document.getElementById('worker-modal-title').innerText = 'Editar Trabajador'; 
                 document.getElementById('w-id').value = w.id; 
-                document.getElementById('w-name').value = w.name; 
+                document.getElementById('w-name').value = w.name || ''; 
+                document.getElementById('w-lastname').value = w.lastname || '';
+                document.getElementById('w-birthday').value = w.birthday || '';
                 document.getElementById('w-doc').value = w.document; 
+                document.getElementById('w-email').value = w.email || '';
                 document.getElementById('w-phone').value = w.phone || ''; 
+                document.getElementById('w-bloodtype').value = w.bloodType || '';
+                document.getElementById('w-eps').value = w.eps || '';
+                document.getElementById('w-address').value = w.address || '';
                 document.getElementById('w-city').value = w.city || ''; 
+                document.getElementById('w-emergency-name').value = w.emergencyName || '';
+                document.getElementById('w-emergency-phone').value = w.emergencyPhone || '';
                 document.getElementById('w-role').value = w.role; 
                 document.getElementById('w-status').value = w.status; 
-                document.getElementById('w-availability').value = w.availabilityText || ''; 
                 document.getElementById('w-specs').value = w.specialties || '';
+                
+                if(w.availabilityDays) {
+                    w.availabilityDays.forEach(day => {
+                        const checkbox = document.querySelector(`.w-availability-day[value="${day}"]`);
+                        if(checkbox) checkbox.checked = true;
+                    });
+                }
+                if(w.availabilityTime) {
+                    document.getElementById('w-availability-time').value = w.availabilityTime;
+                }
                 
                 if(w.photo){ 
                     document.getElementById('w-photo-base64').value = w.photo; 
@@ -1101,15 +1172,28 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             const formId = document.getElementById('w-id').value; 
             const btn = document.getElementById('save-worker-btn');
             
+            const availableDays = Array.from(document.querySelectorAll('.w-availability-day:checked')).map(cb => cb.value);
+            const availabilityTime = document.getElementById('w-availability-time').value;
+            
             const workerData = { 
                 id: formId || 'w_' + Date.now(), 
                 name: document.getElementById('w-name').value, 
+                lastname: document.getElementById('w-lastname').value,
+                birthday: document.getElementById('w-birthday').value,
                 document: document.getElementById('w-doc').value, 
+                email: document.getElementById('w-email').value,
                 phone: document.getElementById('w-phone').value, 
+                bloodType: document.getElementById('w-bloodtype').value,
+                eps: document.getElementById('w-eps').value,
+                address: document.getElementById('w-address').value,
                 city: document.getElementById('w-city').value, 
+                emergencyName: document.getElementById('w-emergency-name').value,
+                emergencyPhone: document.getElementById('w-emergency-phone').value,
                 role: document.getElementById('w-role').value, 
                 status: document.getElementById('w-status').value, 
-                availabilityText: document.getElementById('w-availability').value, 
+                availabilityDays: availableDays,
+                availabilityTime: availabilityTime,
+                availabilityText: availableDays.length > 0 ? `${availableDays.join(', ')} desde ${availabilityTime}` : '',
                 specialties: document.getElementById('w-specs').value, 
                 photo: document.getElementById('w-photo-base64').value 
             };
