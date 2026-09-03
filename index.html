@@ -253,6 +253,54 @@
                         <input type="hidden" id="w-photo-base64">
                     </div>
 
+                    <!-- 🎯 DISPONIBILIDAD LABORAL - SECCIÓN DESTACADA -->
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 p-4 sm:p-5 rounded-xl sm:rounded-2xl card-shadow">
+                        <h4 class="font-black text-blue-900 mb-3 sm:mb-4 text-sm sm:text-base uppercase tracking-wide flex items-center gap-2">
+                            <i data-lucide="calendar" class="w-5 h-5"></i> Disponibilidad Laboral
+                        </h4>
+                        
+                        <!-- GRID DE DÍAS (Compacto) -->
+                        <div class="bg-white border border-blue-200 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-3 sm:mb-4">
+                            <div class="grid grid-cols-7 gap-1.5 sm:gap-2">
+                                <label class="flex flex-col items-center cursor-pointer">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5" value="lunes" onchange="window.updateAvailabilityUI()">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600">Lun</span>
+                                </label>
+                                <label class="flex flex-col items-center cursor-pointer">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5" value="martes" onchange="window.updateAvailabilityUI()">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600">Mar</span>
+                                </label>
+                                <label class="flex flex-col items-center cursor-pointer">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5" value="miercoles" onchange="window.updateAvailabilityUI()">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600">Mié</span>
+                                </label>
+                                <label class="flex flex-col items-center cursor-pointer">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5" value="jueves" onchange="window.updateAvailabilityUI()">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600">Jue</span>
+                                </label>
+                                <label class="flex flex-col items-center cursor-pointer">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5" value="viernes" onchange="window.updateAvailabilityUI()">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600">Vie</span>
+                                </label>
+                                <label class="flex flex-col items-center cursor-pointer">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5" value="sabado" onchange="window.updateAvailabilityUI()">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600">Sáb</span>
+                                </label>
+                                <label class="flex flex-col items-center cursor-pointer">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5" value="domingo" onchange="window.updateAvailabilityUI()">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600">Dom</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- CAMPOS DE HORARIO TEXTUAL (dinámicos según días seleccionados) -->
+                        <div id="availability-options-container" class="space-y-2 sm:space-y-2.5">
+                            <!-- Se rellena dinámicamente con JavaScript -->
+                        </div>
+
+                        <input type="hidden" id="w-availability" value="">
+                    </div>
+
                     <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl card-shadow">
                         <h4 class="font-bold text-[#542c1c] mb-2.5 sm:mb-3 text-xs sm:text-sm uppercase tracking-wide">Datos Personales</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
@@ -288,50 +336,6 @@
                             </div>
                             <div class="sm:col-span-2">
                                 <input id="w-specs" placeholder="Especialidades" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
-                            </div>
-                            <div class="sm:col-span-2">
-                                <p class="font-bold text-[#542c1c] text-xs mb-3 sm:mb-4 uppercase tracking-wide">Disponibilidad Laboral</p>
-                                
-                                <!-- GRID DE DÍAS (Compacto) -->
-                                <div class="bg-gray-50 border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-3 sm:mb-4">
-                                    <div class="grid grid-cols-7 gap-1.5 sm:gap-2">
-                                        <label class="flex flex-col items-center cursor-pointer">
-                                            <input type="checkbox" class="w-availability-day rounded mb-1.5" value="lunes" onchange="window.updateAvailabilityUI()">
-                                            <span class="text-[10px] sm:text-xs font-bold text-gray-600">Lun</span>
-                                        </label>
-                                        <label class="flex flex-col items-center cursor-pointer">
-                                            <input type="checkbox" class="w-availability-day rounded mb-1.5" value="martes" onchange="window.updateAvailabilityUI()">
-                                            <span class="text-[10px] sm:text-xs font-bold text-gray-600">Mar</span>
-                                        </label>
-                                        <label class="flex flex-col items-center cursor-pointer">
-                                            <input type="checkbox" class="w-availability-day rounded mb-1.5" value="miercoles" onchange="window.updateAvailabilityUI()">
-                                            <span class="text-[10px] sm:text-xs font-bold text-gray-600">Mié</span>
-                                        </label>
-                                        <label class="flex flex-col items-center cursor-pointer">
-                                            <input type="checkbox" class="w-availability-day rounded mb-1.5" value="jueves" onchange="window.updateAvailabilityUI()">
-                                            <span class="text-[10px] sm:text-xs font-bold text-gray-600">Jue</span>
-                                        </label>
-                                        <label class="flex flex-col items-center cursor-pointer">
-                                            <input type="checkbox" class="w-availability-day rounded mb-1.5" value="viernes" onchange="window.updateAvailabilityUI()">
-                                            <span class="text-[10px] sm:text-xs font-bold text-gray-600">Vie</span>
-                                        </label>
-                                        <label class="flex flex-col items-center cursor-pointer">
-                                            <input type="checkbox" class="w-availability-day rounded mb-1.5" value="sabado" onchange="window.updateAvailabilityUI()">
-                                            <span class="text-[10px] sm:text-xs font-bold text-gray-600">Sáb</span>
-                                        </label>
-                                        <label class="flex flex-col items-center cursor-pointer">
-                                            <input type="checkbox" class="w-availability-day rounded mb-1.5" value="domingo" onchange="window.updateAvailabilityUI()">
-                                            <span class="text-[10px] sm:text-xs font-bold text-gray-600">Dom</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <!-- CAMPOS DE HORARIO TEXTUAL (dinámicos según días seleccionados) -->
-                                <div id="availability-options-container" class="space-y-2 sm:space-y-2.5">
-                                    <!-- Se rellena dinámicamente con JavaScript -->
-                                </div>
-
-                                <input type="hidden" id="w-availability" value="">
                             </div>
                         </div>
                     </div>
@@ -843,6 +847,14 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     const tags = w.specialties.split(',').map(s => s.trim()).filter(s => s);
                     specsHtml = `<div class="flex flex-wrap gap-1 mt-2">` + tags.slice(0,2).map(t => `<span class="bg-gray-100 text-gray-500 text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wide truncate max-w-full">${t}</span>`).join('') + (tags.length>2?`<span class="bg-gray-100 text-gray-500 text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wide shrink-0">+${tags.length-2}</span>`:'') + `</div>`;
                 }
+                
+                // Mostrar disponibilidad solo si es admin
+                let availabilityHtml = '';
+                if(canEdit && w.availabilityText && w.availabilityText !== 'No especificada') {
+                    const availParts = w.availabilityText.split(' | ').slice(0, 3); // Máximo 3 líneas
+                    availabilityHtml = `<div class="text-[10px] sm:text-xs text-blue-600 font-bold mt-2 leading-tight">📅 ${availParts.join(' | ')}</div>`;
+                }
+                
                 const photoHtml = w.photo ? `<img src="${w.photo}" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl object-cover shrink-0">` : `<div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gray-100 text-gray-400 font-bold text-lg sm:text-xl flex items-center justify-center shrink-0">${window.getInitials(w.name)}</div>`;
                 const isInactive = w.status === 'inactivo';
 
@@ -854,6 +866,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                         <h4 class="font-bold text-gray-900 text-sm sm:text-base leading-tight truncate">${w.name}</h4>
                         <p class="text-[12px] sm:text-[13px] text-[#542c1c] font-medium truncate">${w.role}</p>
                         ${specsHtml}
+                        ${availabilityHtml}
                     </div>
                 </div>`;
             });
