@@ -746,8 +746,8 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             const topWorkerPrevPts = topWorkerPrev ? prevScores[topWorkerPrev.id] : 0;
 
             return `
-            <div class="animate-in fade-in space-y-4 sm:space-y-6">
-                <div class="bg-[#542c1c] -mx-3 sm:-mx-4 md:-mx-6 lg:-mx-8 -mt-3 sm:-mt-4 md:-mt-6 lg:-mt-8 pt-8 sm:pt-10 md:pt-12 pb-6 sm:pb-8 md:pb-10 px-4 sm:px-6 md:px-10 rounded-b-[2rem] shadow-sm">
+            <div class="animate-in fade-in space-y-5 sm:space-y-7 md:space-y-8">
+                <div class="bg-[#542c1c] -mx-4 sm:-mx-5 md:-mx-6 lg:-mx-8 -mt-4 sm:-mt-5 md:-mt-6 lg:-mt-8 pt-10 sm:pt-12 md:pt-14 pb-8 sm:pb-10 md:pb-12 px-4 sm:px-6 md:px-10 rounded-b-[2rem] shadow-sm">
                     <div class="max-w-7xl mx-auto">
                         <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight mb-1 truncate">Hola, ${firstName}</h1>
                         <p class="text-[#cab2a2] text-xs sm:text-sm font-medium mb-6 sm:mb-8">Resumen del mes actual</p>
@@ -765,9 +765,9 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 </div>
 
                 ${topWorkerPrev ? `
-                <div class="max-w-7xl mx-auto bg-gradient-to-r from-[#bb7434] to-[#a55f25] rounded-lg sm:rounded-[1.5rem] p-3 sm:p-4 md:p-6 shadow-lg text-white">
-                    <p class="text-[11px] font-bold uppercase tracking-widest opacity-90 mb-2 sm:mb-3">🏆 Mes Anterior</p>
-                    <div class="flex items-center justify-between gap-2 sm:gap-3">
+                <div class="max-w-7xl mx-auto bg-gradient-to-r from-[#bb7434] to-[#a55f25] rounded-lg sm:rounded-[1.5rem] p-4 sm:p-5 md:p-7 shadow-lg text-white">
+                    <p class="text-[12px] sm:text-xs font-bold uppercase tracking-widest opacity-90 mb-3 sm:mb-4">🏆 Mes Anterior</p>
+                    <div class="flex items-center justify-between gap-3 sm:gap-4">
                         <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
                             ${topWorkerPrev.photo ? `<img src="${topWorkerPrev.photo}" class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-lg sm:rounded-xl md:rounded-2xl object-cover border-2 border-white/20 shrink-0">` : `<div class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-lg sm:rounded-xl md:rounded-2xl bg-white/20 text-white font-bold text-sm sm:text-base md:text-lg flex items-center justify-center shrink-0">${window.getInitials(topWorkerPrev.name)}</div>`}
                             <div class="min-w-0">
@@ -784,13 +784,13 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 ` : ''}
 
                 <div class="max-w-7xl mx-auto">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                        <div onclick="setView('directory')" class="bg-white p-4 sm:p-5 rounded-[1.5rem] card-shadow flex items-center gap-4 cursor-pointer hover:border-[#bb7434] transition-colors">
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0"><i data-lucide="users" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                        <div onclick="setView('directory')" class="bg-white p-5 sm:p-6 rounded-[1.5rem] card-shadow flex items-center gap-4 cursor-pointer hover:border-[#bb7434] transition-colors">
+                            <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0"><i data-lucide="users" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
                             <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm sm:text-lg truncate">Directorio</h3><p class="text-xs sm:text-sm text-gray-400 truncate">Gestión de personal</p></div>
                         </div>
-                        <div onclick="setView('ranking')" class="bg-white p-4 sm:p-5 rounded-[1.5rem] card-shadow flex items-center gap-4 cursor-pointer hover:border-[#bb7434] transition-colors">
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center shrink-0"><i data-lucide="star" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                        <div onclick="setView('ranking')" class="bg-white p-5 sm:p-6 rounded-[1.5rem] card-shadow flex items-center gap-4 cursor-pointer hover:border-[#bb7434] transition-colors">
+                            <div class="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center shrink-0"><i data-lucide="star" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
                             <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm sm:text-lg truncate">Rendimiento</h3><p class="text-xs sm:text-sm text-gray-400 truncate">Ranking mensual</p></div>
                         </div>
                     </div>
@@ -990,38 +990,38 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     </div>
 
                     <!-- DATOS LABORALES -->
-                    <div id="tab-laboral" class="${window.appState.activeProfileTab === 'laboral' ? 'block' : 'hidden'} space-y-1.5 sm:space-y-2">
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
-                            <div class="grid grid-cols-2 gap-2">
-                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Rol</p><p class="text-xs sm:text-sm font-medium text-[#542c1c]">${w.role || '-'}</p></div>
-                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Estado</p><p class="text-xs sm:text-sm font-medium text-green-600">${w.status || '-'}</p></div>
+                    <div id="tab-laboral" class="${window.appState.activeProfileTab === 'laboral' ? 'block' : 'hidden'} space-y-2.5 sm:space-y-3">
+                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
+                            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                                <div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Rol</p><p class="text-xs sm:text-sm font-medium text-[#542c1c]">${w.role || '-'}</p></div>
+                                <div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Estado</p><p class="text-xs sm:text-sm font-medium text-green-600">${w.status || '-'}</p></div>
                             </div>
                         </div>
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
-                            <div class="grid grid-cols-2 gap-2">
-                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Teléfono</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.phone || '-'}</p></div>
-                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Ciudad</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.city || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
+                            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                                <div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Teléfono</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.phone || '-'}</p></div>
+                                <div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Ciudad</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.city || '-'}</p></div>
                             </div>
                         </div>
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Especialidades</p><p class="text-xs sm:text-sm font-medium text-[#542c1c] break-words">${w.specialties || 'No especificadas'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Disponibilidad</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.availabilityText || 'No especificada'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
-                            <div class="grid grid-cols-2 gap-2">
-                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Cumpleaños</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.birthday || '-'}</p></div>
-                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Email</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.email || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Especialidades</p><p class="text-xs sm:text-sm font-medium text-[#542c1c] break-words">${w.specialties || 'No especificadas'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Disponibilidad</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.availabilityText || 'No especificada'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
+                            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                                <div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Cumpleaños</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.birthday || '-'}</p></div>
+                                <div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Email</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.email || '-'}</p></div>
                             </div>
                         </div>
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
-                            <div class="grid grid-cols-2 gap-2">
-                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Sangre</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.bloodType || '-'}</p></div>
-                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">EPS</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.eps || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
+                            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                                <div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Sangre</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.bloodType || '-'}</p></div>
+                                <div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">EPS</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.eps || '-'}</p></div>
                             </div>
                         </div>
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Dirección</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.address || '-'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
-                            <div class="grid grid-cols-2 gap-2">
-                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Emergencia</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.emergencyName || '-'}</p></div>
-                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Tel. Emerg.</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.emergencyPhone || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Dirección</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.address || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
+                            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                                <div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Emergencia</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.emergencyName || '-'}</p></div>
+                                <div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Tel. Emerg.</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.emergencyPhone || '-'}</p></div>
                             </div>
                         </div>
                     </div>
@@ -1040,14 +1040,14 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
 
                     <!-- BANCO -->
                     ${canEdit ? `
-                    <div id="tab-banco" class="${window.appState.activeProfileTab === 'banco' ? 'block' : 'hidden'} space-y-1.5 sm:space-y-2">
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">Banco</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.bankName || '-'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">Tipo</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.bankType || '-'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100 flex items-center gap-2 sm:gap-3">
-                            <div class="flex-1 min-w-0"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">N° Cuenta</p><p class="text-sm sm:text-base md:text-lg font-black text-[#542c1c] truncate">${w.bankNumber || '-'}</p></div>
-                            ${w.bankNumber ? `<button onclick="copyToClipboard('${w.bankNumber}')" class="bg-gray-100 w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl text-gray-500 hover:bg-gray-200 transition-colors shrink-0 flex items-center justify-center active:scale-90"><i data-lucide="copy" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i></button>` : ''}
+                    <div id="tab-banco" class="${window.appState.activeProfileTab === 'banco' ? 'block' : 'hidden'} space-y-2.5 sm:space-y-3">
+                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs uppercase font-bold text-gray-400 mb-1 tracking-wide">Banco</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.bankName || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs uppercase font-bold text-gray-400 mb-1 tracking-wide">Tipo</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.bankType || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100 flex items-center gap-3 sm:gap-4">
+                            <div class="flex-1 min-w-0"><p class="text-[10px] sm:text-xs uppercase font-bold text-gray-400 mb-1 tracking-wide">N° Cuenta</p><p class="text-sm sm:text-base md:text-lg font-black text-[#542c1c] truncate">${w.bankNumber || '-'}</p></div>
+                            ${w.bankNumber ? `<button onclick="copyToClipboard('${w.bankNumber}')" class="bg-gray-100 w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl text-gray-500 hover:bg-gray-200 transition-colors shrink-0 flex items-center justify-center active:scale-90"><i data-lucide="copy" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i></button>` : ''}
                         </div>
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">Titular</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.bankOwner || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs uppercase font-bold text-gray-400 mb-1 tracking-wide">Titular</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.bankOwner || '-'}</p></div>
                     </div>` : ''}
                 </div>
             </div>`;
