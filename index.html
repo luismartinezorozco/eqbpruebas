@@ -1183,9 +1183,27 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     // Pequeño delay para asegurar que el DOM se actualizó
                     setTimeout(() => {
                         w.availabilityDays.forEach(day => {
-                            // Por defecto marcar "Todo el día"
-                            const typeRadio = document.querySelector(`input[name="${day}-type"][value="allday"]`);
-                            if(typeRadio) typeRadio.checked = true;
+                            const details = w.availabilityDetails && w.availabilityDetails[day];
+                            const type = details ? details.type : 'allday';
+                            
+                            // Marcar el tipo de horario correcto
+                            const typeRadio = document.querySelector(`input[name="${day}-type"][value="${type}"]`);
+                            if(typeRadio) {
+                                typeRadio.checked = true;
+                                
+                                // Llenar los valores de hora si existen
+                                if(type === 'from' && details.fromTime) {
+                                    document.querySelector(`input[name="${day}-type"]`).closest('.bg-white').querySelector('.day-from-time').value = details.fromTime;
+                                } else if(type === 'until' && details.untilTime) {
+                                    document.querySelector(`input[name="${day}-type"]`).closest('.bg-white').querySelector('.day-until-time').value = details.untilTime;
+                                } else if(type === 'range' && details.fromTime && details.toTime) {
+                                    const container = document.querySelector(`input[name="${day}-type"]`).closest('.bg-white');
+                                    container.querySelector('.day-from-range').value = details.fromTime;
+                                    container.querySelector('.day-to-range').value = details.toTime;
+                                }
+                            }
+                            
+                            // Aplicar los cambios de habilitación
                             window.toggleTimeInputs(day);
                         });
                     }, 50);
@@ -1276,18 +1294,37 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
         };
 
         window.toggleTimeInputs = (day) => {
-            const type = document.querySelector(`input[name="${day}-type"]:checked`).value;
-            const container = document.querySelector(`input[name="${day}-type"]`).closest('.bg-white');
+            const typeRadio = document.querySelector(`input[name="${day}-type"]:checked`);
+            if(!typeRadio) return;
             
-            container.querySelectorAll('input[type="time"]').forEach(input => input.disabled = true);
+            const type = typeRadio.value;
+            const container = typeRadio.closest('.bg-white');
             
+            // Deshabilitar todos los inputs de tiempo primero
+            container.querySelectorAll('input[type="time"]').forEach(input => {
+                input.disabled = true;
+                input.classList.add('bg-gray-100', 'cursor-not-allowed');
+                input.classList.remove('bg-gray-50');
+            });
+            
+            // Habilitar solo los relevantes
             if(type === 'from') {
-                container.querySelector('.day-from-time').disabled = false;
+                const input = container.querySelector('.day-from-time');
+                input.disabled = false;
+                input.classList.remove('bg-gray-100', 'cursor-not-allowed');
+                input.classList.add('bg-gray-50');
             } else if(type === 'until') {
-                container.querySelector('.day-until-time').disabled = false;
+                const input = container.querySelector('.day-until-time');
+                input.disabled = false;
+                input.classList.remove('bg-gray-100', 'cursor-not-allowed');
+                input.classList.add('bg-gray-50');
             } else if(type === 'range') {
-                container.querySelector('.day-from-range').disabled = false;
-                container.querySelector('.day-to-range').disabled = false;
+                const inputs = [container.querySelector('.day-from-range'), container.querySelector('.day-to-range')];
+                inputs.forEach(input => {
+                    input.disabled = false;
+                    input.classList.remove('bg-gray-100', 'cursor-not-allowed');
+                    input.classList.add('bg-gray-50');
+                });
             }
         };
 
@@ -1308,6 +1345,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             
             // Recopilar disponibilidad del nuevo formato dinámico
             const availabilityData = [];
+            const availabilityDetails = {}; // Guardar detalles de tipo y horario
             const availableDays = Array.from(document.querySelectorAll('.w-availability-day:checked')).map(cb => cb.value);
             
             if(availableDays.length > 0) {
@@ -1319,19 +1357,26 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     
                     const type = typeRadio.value;
                     const label = dayLabels[day];
+                    const dayContainer = typeRadio.closest('.bg-white');
+                    
+                    // Guardar detalles del tipo de horario
+                    availabilityDetails[day] = { type: type };
                     
                     if(type === 'allday') {
                         availabilityData.push(`${label}`);
                     } else if(type === 'from') {
-                        const time = document.querySelector(`.day-from-time[value]`).value;
-                        const fromTime = document.querySelector(`input[name="${day}-type"]`).closest('.bg-white').querySelector('.day-from-time').value;
+                        const fromTime = dayContainer.querySelector('.day-from-time').value;
+                        availabilityDetails[day].fromTime = fromTime;
                         availabilityData.push(`${label} desde ${fromTime}`);
                     } else if(type === 'until') {
-                        const untilTime = document.querySelector(`input[name="${day}-type"]`).closest('.bg-white').querySelector('.day-until-time').value;
+                        const untilTime = dayContainer.querySelector('.day-until-time').value;
+                        availabilityDetails[day].untilTime = untilTime;
                         availabilityData.push(`${label} hasta ${untilTime}`);
                     } else if(type === 'range') {
-                        const fromRange = document.querySelector(`input[name="${day}-type"]`).closest('.bg-white').querySelector('.day-from-range').value;
-                        const toRange = document.querySelector(`input[name="${day}-type"]`).closest('.bg-white').querySelector('.day-to-range').value;
+                        const fromRange = dayContainer.querySelector('.day-from-range').value;
+                        const toRange = dayContainer.querySelector('.day-to-range').value;
+                        availabilityDetails[day].fromTime = fromRange;
+                        availabilityDetails[day].toTime = toRange;
                         availabilityData.push(`${label} ${fromRange}-${toRange}`);
                     }
                 });
@@ -1354,6 +1399,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 role: document.getElementById('w-role').value, 
                 status: document.getElementById('w-status').value, 
                 availabilityDays: availableDays,
+                availabilityDetails: availabilityDetails,
                 availabilityTime: '',
                 availabilityText: availabilityData.length > 0 ? availabilityData.join(' | ') : 'No especificada',
                 specialties: document.getElementById('w-specs').value, 
