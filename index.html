@@ -238,77 +238,77 @@
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            <div class="p-4 sm:p-6 overflow-y-auto flex-1 hide-scrollbar bg-gray-50/60">
-                <form id="worker-form" onsubmit="window.saveWorker(event)" class="space-y-4 sm:space-y-6">
+            <div class="p-3 sm:p-5 md:p-6 overflow-y-auto flex-1 hide-scrollbar bg-gray-50/60">
+                <form id="worker-form" onsubmit="window.saveWorker(event)" class="space-y-3 sm:space-y-4">
                     <input type="hidden" id="w-id">
                     
                     <!-- FOTO -->
-                    <div class="flex flex-col items-center mb-4 sm:mb-6">
-                        <div class="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gray-200 border-4 border-white shadow-md flex items-center justify-center overflow-hidden mb-3">
+                    <div class="flex flex-col items-center mb-3 sm:mb-4">
+                        <div class="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-200 border-4 border-white shadow-md flex items-center justify-center overflow-hidden mb-2">
                             <img id="w-photo-preview" src="" class="w-full h-full object-cover hidden">
-                            <i id="w-photo-icon" data-lucide="camera" class="w-6 h-6 sm:w-8 sm:h-8 text-gray-400"></i>
+                            <i id="w-photo-icon" data-lucide="camera" class="w-5 h-5 sm:w-6 sm:h-6 text-gray-400"></i>
                         </div>
-                        <label class="cursor-pointer text-[#542c1c] text-xs font-bold py-2 px-3 sm:px-4 rounded-full bg-white shadow-sm border border-gray-200 hover:bg-gray-50 hover:shadow-md transition-all duration-300 ease-out active:scale-95">
+                        <label class="cursor-pointer text-[#542c1c] text-xs font-bold py-1.5 px-2.5 sm:px-3 rounded-full bg-white shadow-sm border border-gray-200 hover:bg-gray-50 hover:shadow-md transition-all duration-300 ease-out active:scale-95">
                             Subir Foto
                             <input type="file" accept="image/jpeg, image/png" class="hidden" onchange="window.handlePhotoUpload(event)">
                         </label>
                         <input type="hidden" id="w-photo-base64">
                     </div>
 
-                    <div class="bg-white p-4 sm:p-5 rounded-2xl card-shadow">
-                        <h4 class="font-bold text-[#542c1c] mb-3 sm:mb-4 text-xs sm:text-sm uppercase tracking-wide">Datos Personales</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                            <div><input required id="w-name" placeholder="Nombres" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
-                            <div><input required id="w-lastname" placeholder="Apellidos" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
-                            <div><input type="date" id="w-birthday" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
-                            <div><input type="number" required id="w-doc" placeholder="Cédula" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
-                            <div><input type="email" id="w-email" placeholder="Correo electrónico" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
-                            <div><input type="number" required id="w-phone" placeholder="Teléfono / WhatsApp" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
-                            <div><select id="w-bloodtype" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"><option value="">Tipo de sangre</option><option value="O+">O+</option><option value="O-">O-</option><option value="A+">A+</option><option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option><option value="AB+">AB+</option><option value="AB-">AB-</option></select></div>
-                            <div><input id="w-eps" placeholder="EPS" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
-                            <div class="sm:col-span-2"><input id="w-address" placeholder="Dirección de Vivienda" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
-                            <div><input id="w-city" placeholder="Ciudad de Residencia" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
-                            <div><input id="w-emergency-name" placeholder="Contacto de emergencia (nombre)" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
-                            <div><input type="number" id="w-emergency-phone" placeholder="Teléfono de emergencia" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                    <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl card-shadow">
+                        <h4 class="font-bold text-[#542c1c] mb-2.5 sm:mb-3 text-xs sm:text-sm uppercase tracking-wide">Datos Personales</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                            <div><input required id="w-name" placeholder="Nombres" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input required id="w-lastname" placeholder="Apellidos" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input type="date" id="w-birthday" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input type="number" required id="w-doc" placeholder="Cédula" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input type="email" id="w-email" placeholder="Email" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input type="number" required id="w-phone" placeholder="Teléfono" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><select id="w-bloodtype" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"><option value="">Sangre</option><option value="O+">O+</option><option value="O-">O-</option><option value="A+">A+</option><option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option><option value="AB+">AB+</option><option value="AB-">AB-</option></select></div>
+                            <div><input id="w-eps" placeholder="EPS" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div class="sm:col-span-2"><input id="w-address" placeholder="Dirección" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input id="w-city" placeholder="Ciudad" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input id="w-emergency-name" placeholder="Emergencia (nombre)" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div><input type="number" id="w-emergency-phone" placeholder="Tel. emergencia" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
                         </div>
                     </div>
 
-                    <div class="bg-white p-5 rounded-2xl card-shadow">
-                        <h4 class="font-bold text-[#542c1c] mb-4 text-sm uppercase tracking-wide">Información Laboral</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl card-shadow">
+                        <h4 class="font-bold text-[#542c1c] mb-2.5 sm:mb-3 text-xs sm:text-sm uppercase tracking-wide">Información Laboral</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                             <div>
-                                <select id="w-role" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm font-bold text-[#542c1c] focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
-                                    <option value="Animador">Animador (Trabajador)</option>
-                                    <option value="DJ">DJ (Trabajador)</option>
+                                <select id="w-role" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-bold text-[#542c1c] focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
+                                    <option value="Animador">Animador</option>
+                                    <option value="DJ">DJ</option>
                                     <option value="Coordinador">Coordinador</option>
-                                    <option value="Recursos Humanos">Recursos Humanos</option>
-                                    <option value="Administrador">Administrador</option>
+                                    <option value="Recursos Humanos">RRHH</option>
+                                    <option value="Administrador">Admin</option>
                                 </select>
                             </div>
                             <div>
-                                <select id="w-status" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm font-bold text-gray-600 focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
+                                <select id="w-status" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-bold text-gray-600 focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
                                     <option value="activo">Activo</option>
                                     <option value="inactivo">Inactivo</option>
                                 </select>
                             </div>
-                            <div class="md:col-span-2">
-                                <input id="w-specs" placeholder="Especialidades (Ej: Recreación, Logística, Montaje)" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
+                            <div class="sm:col-span-2">
+                                <input id="w-specs" placeholder="Especialidades" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
                             </div>
-                            <div class="md:col-span-2">
-                                <p class="font-bold text-gray-600 text-xs mb-3">Disponibilidad Laboral</p>
-                                <div class="space-y-2">
-                                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-availability-day rounded" value="lunes"> <span class="text-xs sm:text-sm text-gray-700">Lun</span></label>
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-availability-day rounded" value="martes"> <span class="text-xs sm:text-sm text-gray-700">Mar</span></label>
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-availability-day rounded" value="miercoles"> <span class="text-xs sm:text-sm text-gray-700">Mié</span></label>
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-availability-day rounded" value="jueves"> <span class="text-xs sm:text-sm text-gray-700">Jue</span></label>
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-availability-day rounded" value="viernes"> <span class="text-xs sm:text-sm text-gray-700">Vie</span></label>
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-availability-day rounded" value="sabado"> <span class="text-xs sm:text-sm text-gray-700">Sáb</span></label>
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-availability-day rounded" value="domingo"> <span class="text-xs sm:text-sm text-gray-700">Dom</span></label>
+                            <div class="sm:col-span-2">
+                                <p class="font-bold text-gray-600 text-xs mb-2">Disponibilidad Laboral</p>
+                                <div class="space-y-1.5 sm:space-y-2">
+                                    <div class="grid grid-cols-3 sm:grid-cols-4 gap-1 sm:gap-2">
+                                        <label class="flex items-center gap-1 cursor-pointer text-xs"><input type="checkbox" class="w-availability-day rounded" value="lunes"> <span class="truncate">Lun</span></label>
+                                        <label class="flex items-center gap-1 cursor-pointer text-xs"><input type="checkbox" class="w-availability-day rounded" value="martes"> <span class="truncate">Mar</span></label>
+                                        <label class="flex items-center gap-1 cursor-pointer text-xs"><input type="checkbox" class="w-availability-day rounded" value="miercoles"> <span class="truncate">Mié</span></label>
+                                        <label class="flex items-center gap-1 cursor-pointer text-xs"><input type="checkbox" class="w-availability-day rounded" value="jueves"> <span class="truncate">Jue</span></label>
+                                        <label class="flex items-center gap-1 cursor-pointer text-xs"><input type="checkbox" class="w-availability-day rounded" value="viernes"> <span class="truncate">Vie</span></label>
+                                        <label class="flex items-center gap-1 cursor-pointer text-xs"><input type="checkbox" class="w-availability-day rounded" value="sabado"> <span class="truncate">Sáb</span></label>
+                                        <label class="flex items-center gap-1 cursor-pointer text-xs"><input type="checkbox" class="w-availability-day rounded" value="domingo"> <span class="truncate">Dom</span></label>
                                     </div>
-                                    <div class="bg-gray-50 p-3 rounded-xl border border-gray-200">
-                                        <label class="text-xs text-gray-600 block mb-2">Hora disponible desde:</label>
-                                        <input type="time" id="w-availability-time" class="w-full border border-gray-200 bg-white rounded-lg p-2 text-sm focus:border-[#bb7434] focus:outline-none transition-colors">
+                                    <div class="bg-gray-50 p-2 sm:p-2.5 rounded-lg sm:rounded-xl border border-gray-200">
+                                        <label class="text-[10px] sm:text-xs text-gray-600 block mb-1">Hora desde:</label>
+                                        <input type="time" id="w-availability-time" class="w-full border border-gray-200 bg-white rounded-lg p-1.5 sm:p-2 text-xs focus:border-[#bb7434] focus:outline-none transition-colors">
                                     </div>
                                     <input type="hidden" id="w-availability" value="">
                                 </div>
@@ -316,9 +316,9 @@
                         </div>
                     </div>
 
-                    <div id="bank-section-form" class="bg-white p-5 rounded-2xl card-shadow" style="display:none;">
-                        <h4 class="font-bold text-gray-500 mb-4 text-sm uppercase tracking-wide flex items-center gap-2"><i data-lucide="shield" class="w-4 h-4"></i> Info. Bancaria Privada</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div id="bank-section-form" class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl card-shadow" style="display:none;">
+                        <h4 class="font-bold text-gray-500 mb-2.5 sm:mb-3 text-xs sm:text-sm uppercase tracking-wide flex items-center gap-2"><i data-lucide="shield" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> Info. Bancaria</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                             <div>
                                 <select id="w-bank-name" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
                                     <option value="">Seleccionar banco</option>
@@ -351,17 +351,17 @@
                                 </select>
                             </div>
                             <div>
-                                <select id="w-bank-type" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
-                                    <option value="Ahorros">Ahorros</option><option value="Corriente">Corriente</option><option value="Nequi/Daviplata">Nequi/Daviplata</option>
+                                <select id="w-bank-type" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
+                                    <option value="Ahorros">Ahorros</option><option value="Corriente">Corriente</option><option value="Nequi/Daviplata">Nequi</option>
                                 </select>
                             </div>
-                            <div class="md:col-span-2"><input type="number" id="w-bank-num" placeholder="Número de Cuenta" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
-                            <div class="md:col-span-2"><input id="w-bank-owner" placeholder="Titular de la cuenta" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div class="sm:col-span-2"><input type="number" id="w-bank-num" placeholder="Número de Cuenta" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
+                            <div class="sm:col-span-2"><input id="w-bank-owner" placeholder="Titular de la cuenta" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"></div>
                         </div>
                     </div>
 
-                    <div class="pt-2 pb-4">
-                        <button type="submit" id="save-worker-btn" class="w-full bg-[#7be4af] text-[#542c1c] py-4 rounded-xl font-black hover:bg-[#66d19c] transition-all duration-300 ease-out shadow-lg shadow-[#7be4af]/25 hover:shadow-xl hover:shadow-[#7be4af]/35 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:opacity-70">Guardar Trabajador</button>
+                    <div class="pt-2 pb-3">
+                        <button type="submit" id="save-worker-btn" class="w-full bg-[#7be4af] text-[#542c1c] py-2.5 sm:py-3 md:py-4 rounded-lg sm:rounded-xl font-black text-sm sm:text-base hover:bg-[#66d19c] transition-all duration-300 ease-out shadow-lg shadow-[#7be4af]/25 hover:shadow-xl hover:shadow-[#7be4af]/35 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:opacity-70">Guardar</button>
                     </div>
                 </form>
             </div>
@@ -771,19 +771,19 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 </div>
 
                 ${topWorkerPrev ? `
-                <div class="max-w-7xl mx-auto bg-gradient-to-r from-[#bb7434] to-[#a55f25] rounded-[1.5rem] p-4 sm:p-6 shadow-lg text-white">
-                    <p class="text-xs font-bold uppercase tracking-widest opacity-90 mb-3 sm:mb-4">🏆 Trabajador del Mes Anterior</p>
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-                        <div class="flex items-center gap-3 flex-1 min-w-0">
-                            ${topWorkerPrev.photo ? `<img src="${topWorkerPrev.photo}" class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl object-cover border-2 border-white/20 shrink-0">` : `<div class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-white/20 text-white font-bold text-lg sm:text-xl flex items-center justify-center shrink-0">${window.getInitials(topWorkerPrev.name)}</div>`}
+                <div class="max-w-7xl mx-auto bg-gradient-to-r from-[#bb7434] to-[#a55f25] rounded-lg sm:rounded-[1.5rem] p-3 sm:p-4 md:p-6 shadow-lg text-white">
+                    <p class="text-[11px] font-bold uppercase tracking-widest opacity-90 mb-2 sm:mb-3">🏆 Mes Anterior</p>
+                    <div class="flex items-center justify-between gap-2 sm:gap-3">
+                        <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                            ${topWorkerPrev.photo ? `<img src="${topWorkerPrev.photo}" class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-lg sm:rounded-xl md:rounded-2xl object-cover border-2 border-white/20 shrink-0">` : `<div class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-lg sm:rounded-xl md:rounded-2xl bg-white/20 text-white font-bold text-sm sm:text-base md:text-lg flex items-center justify-center shrink-0">${window.getInitials(topWorkerPrev.name)}</div>`}
                             <div class="min-w-0">
-                                <h3 class="text-base sm:text-lg font-black truncate">${topWorkerPrev.name}</h3>
-                                <p class="text-xs sm:text-sm opacity-90 truncate">${topWorkerPrev.role}</p>
+                                <h3 class="text-xs sm:text-sm md:text-base font-black truncate">${topWorkerPrev.name}</h3>
+                                <p class="text-[10px] sm:text-[11px] opacity-80 truncate">${topWorkerPrev.role}</p>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <p class="text-2xl sm:text-3xl font-black">${topWorkerPrevPts}</p>
-                            <p class="text-xs font-bold opacity-90">PTS</p>
+                        <div class="text-right shrink-0">
+                            <p class="text-lg sm:text-2xl md:text-3xl font-black">${topWorkerPrevPts}</p>
+                            <p class="text-[9px] font-bold opacity-80">PTS</p>
                         </div>
                     </div>
                 </div>
@@ -875,15 +875,15 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
 
             let html = `
             <div class="animate-in fade-in max-w-7xl mx-auto">
-                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                <div class="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-end mb-4 sm:mb-6">
                     <div class="flex-1 min-w-0">
-                        <h1 class="text-2xl sm:text-3xl font-black text-gray-800 truncate">Ranking Mensual</h1>
-                        <p class="text-gray-500 text-xs sm:text-sm truncate">Rendimiento basado en evaluaciones.</p>
+                        <h1 class="text-xl sm:text-2xl md:text-3xl font-black text-gray-800 truncate">Ranking Mensual</h1>
+                        <p class="text-gray-500 text-xs sm:text-sm truncate">Evaluaciones del mes.</p>
                     </div>
-                    <input type="month" value="${monthStr}" onchange="changeMonth(event)" class="border border-gray-200 bg-white text-[#542c1c] font-bold px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl shadow-sm text-xs sm:text-sm cursor-pointer hover:bg-gray-50 focus:outline-none shrink-0 w-full sm:w-auto">
+                    <input type="month" value="${monthStr}" onchange="changeMonth(event)" class="border border-gray-200 bg-white text-[#542c1c] font-bold px-2.5 sm:px-3 md:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl shadow-sm text-xs sm:text-sm cursor-pointer hover:bg-gray-50 focus:outline-none shrink-0">
                 </div>
                 
-                <div class="space-y-2 sm:space-y-3 pb-4">`;
+                <div class="space-y-1.5 sm:space-y-2 pb-4">`;
 
             if(rankedWorkers.length === 0) html += '<p class="text-gray-400 text-center py-10 text-sm">No hay trabajadores activos</p>';
 
@@ -894,12 +894,12 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 else if(pos === 2) { numClass = "bg-gray-200 text-gray-600"; } else if(pos === 3) { numClass = "bg-[#d97706] text-white"; }
 
                 html += `
-                <div onclick="viewWorkerProfile('${w.id}')" class="p-3 sm:p-4 rounded-[1.5rem] card-shadow border ${cardClass} flex items-center justify-between cursor-pointer hover:scale-[1.01] transition-transform gap-2 sm:gap-3">
-                    <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-black text-base sm:text-lg shrink-0 ${numClass}">${pos}</div>
-                        <div class="flex-1 min-w-0"><h4 class="font-bold text-gray-900 text-sm sm:text-base leading-tight truncate">${w.name}</h4><p class="text-[12px] sm:text-[13px] text-gray-400 truncate">${w.role}</p></div>
+                <div onclick="viewWorkerProfile('${w.id}')" class="p-2 sm:p-3 rounded-lg sm:rounded-xl card-shadow border ${cardClass} flex items-center justify-between cursor-pointer hover:scale-[1.01] transition-transform gap-2">
+                    <div class="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0">
+                        <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-black text-sm sm:text-base shrink-0 ${numClass}">${pos}</div>
+                        <div class="flex-1 min-w-0"><h4 class="font-bold text-gray-900 text-xs sm:text-sm leading-tight truncate">${w.name}</h4><p class="text-[10px] sm:text-[12px] text-gray-400 truncate">${w.role}</p></div>
                     </div>
-                    <div class="px-2 sm:px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm flex items-baseline gap-1 shrink-0 ${ptsClass}">${w.totalPts} <span class="text-[9px] sm:text-[10px] font-bold opacity-70">PTS</span></div>
+                    <div class="px-1.5 sm:px-2.5 py-1 rounded-lg font-bold text-xs flex items-baseline gap-0.5 shrink-0 ${ptsClass}">${w.totalPts}<span class="text-[8px] sm:text-[9px] opacity-70">P</span></div>
                 </div>`;
             });
             html += `</div></div>`;
@@ -961,27 +961,27 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 </div>
 
                 <!-- TABS -->
-                <div class="flex bg-white px-2 md:px-8 border-b border-gray-200 overflow-x-auto hide-scroll md:rounded-3xl md:mt-4 md:shadow-sm">
-                <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="flex-shrink-0 px-3 sm:px-5 py-3 sm:py-4 text-xs font-bold text-[#542c1c] border-b-[3px] border-[#542c1c] transition-colors"><i class="fas fa-star mr-1"></i> Puntos</button>
-                    <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-shrink-0 px-3 sm:px-5 py-3 sm:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors"><i class="fas fa-briefcase mr-1"></i> Datos</button>
-                    <button onclick="switchTab('documentos')" id="tab-btn-documentos" class="flex-shrink-0 px-3 sm:px-5 py-3 sm:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors"><i class="fas fa-file-pdf mr-1"></i> Docs</button>
-                    ${canEdit ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="flex-shrink-0 px-5 py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors"><i class="fas fa-lock mr-1"></i> Banco</button>` : ''}
+                <div class="flex bg-white px-1.5 sm:px-2 md:px-8 border-b border-gray-200 overflow-x-auto hide-scroll md:rounded-3xl md:mt-4 md:shadow-sm">
+                    <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="flex-shrink-0 px-2 sm:px-3 md:px-5 py-2.5 sm:py-3 md:py-4 text-xs font-bold text-[#542c1c] border-b-[3px] border-[#542c1c] transition-colors whitespace-nowrap"><i class="fas fa-star mr-1"></i> Pts</button>
+                    <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-shrink-0 px-2 sm:px-3 md:px-5 py-2.5 sm:py-3 md:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i class="fas fa-briefcase mr-1"></i> Info</button>
+                    <button onclick="switchTab('documentos')" id="tab-btn-documentos" class="flex-shrink-0 px-2 sm:px-3 md:px-5 py-2.5 sm:py-3 md:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i class="fas fa-file-pdf mr-1"></i> Docs</button>
+                    ${canEdit ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="flex-shrink-0 px-2 sm:px-3 md:px-5 py-2.5 sm:py-3 md:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i class="fas fa-lock mr-1"></i> Banco</button>` : ''}
                 </div>
 
-                <div class="p-5 md:p-8 md:bg-white md:mt-4 md:rounded-3xl md:shadow-sm">
+                <div class="p-3 sm:p-5 md:p-8 md:bg-white md:mt-4 md:rounded-3xl md:shadow-sm space-y-2 sm:space-y-3">
                     <!-- PUNTOS -->
-                    <div id="tab-rendimiento" class="${window.appState.activeProfileTab === 'rendimiento' ? 'block' : 'hidden'} space-y-4">
-                        <div class="flex gap-3">
-                            <div class="bg-white md:bg-gray-50 p-4 rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100 flex-1"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Mes Actual</p><p class="text-2xl md:text-3xl font-black text-[#542c1c] mt-1">${monthPts} <span class="text-sm">PTS</span></p></div>
-                            <div class="bg-white md:bg-gray-50 p-4 rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100 flex-1"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Histórico</p><p class="text-2xl md:text-3xl font-black text-gray-800 mt-1">${allPts} <span class="text-sm">PTS</span></p></div>
+                    <div id="tab-rendimiento" class="${window.appState.activeProfileTab === 'rendimiento' ? 'block' : 'hidden'} space-y-2 sm:space-y-3">
+                        <div class="grid grid-cols-2 gap-2 sm:gap-3">
+                            <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] font-bold text-gray-400 uppercase tracking-wide truncate">Mes</p><p class="text-lg sm:text-xl md:text-2xl font-black text-[#542c1c] mt-0.5 sm:mt-1 truncate">${monthPts}</p></div>
+                            <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] font-bold text-gray-400 uppercase tracking-wide truncate">Histórico</p><p class="text-lg sm:text-xl md:text-2xl font-black text-gray-800 mt-0.5 sm:mt-1 truncate">${allPts}</p></div>
                         </div>
                         ${canGrade ? `
-                        <div class="bg-white md:bg-gray-50 p-4 rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
-                            <h4 class="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2"><i data-lucide="plus-circle" class="w-4 h-4 text-[#bb7434]"></i> Agregar Evaluación</h4>
-                            <div class="flex flex-col md:flex-row gap-2">
+                        <div class="bg-white md:bg-gray-50 p-3 sm:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
+                            <h4 class="text-xs sm:text-sm font-bold text-gray-800 mb-2 sm:mb-3 flex items-center gap-2"><i data-lucide="plus-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#bb7434]"></i> Agregar Evaluación</h4>
+                            <div class="flex flex-col sm:flex-row gap-2 text-xs sm:text-sm">
                                 <div class="flex gap-2 shrink-0">
-                                    <input type="number" id="pt-amount" placeholder="Pts" class="w-20 p-2.5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-bold focus:outline-none focus:border-[#bb7434]">
-                                    <select id="pt-type" class="p-2.5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-black focus:outline-none focus:border-[#bb7434]">
+                                    <input type="number" id="pt-amount" placeholder="Pts" class="w-16 sm:w-20 p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-gray-50 border border-gray-200 text-xs sm:text-sm font-bold focus:outline-none focus:border-[#bb7434]">
+                                    <select id="pt-type" class="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-gray-50 border border-gray-200 text-xs sm:text-sm font-black focus:outline-none focus:border-[#bb7434]">
                                         <option value="pos" class="text-green-600">+</option><option value="neg" class="text-red-600">-</option>
                                     </select>
                                 </div>
@@ -996,33 +996,35 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     </div>
 
                     <!-- DATOS LABORALES -->
-                    <div id="tab-laboral" class="${window.appState.activeProfileTab === 'laboral' ? 'block' : 'hidden'} space-y-3">
-                        <div class="bg-white md:bg-gray-50 p-4 rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wide">Contacto / Ciudad</p><p class="text-sm font-medium text-gray-800 break-words">${w.phone || '-'} | ${w.city || '-'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-4 rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wide">Especialidades</p><p class="text-sm font-medium text-[#542c1c] break-words">${w.specialties || '-'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-4 rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wide">Días y Horarios Disponibles</p><p class="text-sm font-medium text-gray-800 break-words">${w.availabilityText || 'No especificada'}</p></div>
+                    <div id="tab-laboral" class="${window.appState.activeProfileTab === 'laboral' ? 'block' : 'hidden'} space-y-1.5 sm:space-y-2">
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">Contacto</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words truncate">${w.phone || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">Ciudad</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.city || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">Especialidades</p><p class="text-xs sm:text-sm font-medium text-[#542c1c] break-words">${w.specialties || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">Disponibilidad</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.availabilityText || 'No especificada'}</p></div>
                     </div>
 
                     <!-- DOCUMENTOS -->
                     <div id="tab-documentos" class="${window.appState.activeProfileTab === 'documentos' ? 'block' : 'hidden'}">
                         ${canEdit ? `
-                        <div class="mb-4 text-right">
-                            <label class="bg-[#146459] text-white px-4 py-2.5 rounded-xl text-sm font-bold cursor-pointer inline-flex items-center gap-2 shadow-sm hover:opacity-90 transition-opacity">
-                                <i data-lucide="upload" class="w-4 h-4"></i> Subir PDF
+                        <div class="mb-2 sm:mb-3 text-right">
+                            <label class="bg-[#146459] text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold cursor-pointer inline-flex items-center gap-1 sm:gap-2 shadow-sm hover:opacity-90 transition-opacity">
+                                <i data-lucide="upload" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> <span class="hidden sm:inline">Subir PDF</span>
                                 <input type="file" accept="application/pdf" class="hidden" onchange="uploadDocument(event)">
                             </label>
                         </div>` : ''}
-                        <div>${dList || '<p class="text-sm text-gray-400 text-center py-6">No hay documentos subidos</p>'}</div>
+                        <div class="space-y-1.5 sm:space-y-2">${dList || '<p class="text-xs sm:text-sm text-gray-400 text-center py-4">Sin documentos</p>'}</div>
                     </div>
 
                     <!-- BANCO -->
                     ${canEdit ? `
-                    <div id="tab-banco" class="${window.appState.activeProfileTab === 'banco' ? 'block' : 'hidden'} space-y-3">
-                        <div class="bg-white md:bg-gray-50 p-4 rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wide">Banco / Tipo</p><p class="text-sm font-medium text-gray-800 break-words">${w.bankName || '-'} / ${w.bankType || '-'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-4 rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100 flex items-center gap-3">
-                            <div class="flex-1 min-w-0"><p class="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wide">N° de Cuenta</p><p class="text-lg md:text-xl font-black text-[#542c1c] truncate">${w.bankNumber || '-'}</p></div>
-                            ${w.bankNumber ? `<button onclick="copyToClipboard('${w.bankNumber}')" class="bg-gray-100 w-10 h-10 rounded-xl text-gray-500 hover:bg-gray-200 transition-colors shrink-0 flex items-center justify-center"><i data-lucide="copy" class="w-4 h-4"></i></button>` : ''}
+                    <div id="tab-banco" class="${window.appState.activeProfileTab === 'banco' ? 'block' : 'hidden'} space-y-1.5 sm:space-y-2">
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">Banco</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.bankName || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">Tipo</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.bankType || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100 flex items-center gap-2 sm:gap-3">
+                            <div class="flex-1 min-w-0"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">N° Cuenta</p><p class="text-sm sm:text-base md:text-lg font-black text-[#542c1c] truncate">${w.bankNumber || '-'}</p></div>
+                            ${w.bankNumber ? `<button onclick="copyToClipboard('${w.bankNumber}')" class="bg-gray-100 w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl text-gray-500 hover:bg-gray-200 transition-colors shrink-0 flex items-center justify-center active:scale-90"><i data-lucide="copy" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i></button>` : ''}
                         </div>
-                        <div class="bg-white md:bg-gray-50 p-4 rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-wide">Titular</p><p class="text-sm font-medium text-gray-800 break-words">${w.bankOwner || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">Titular</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.bankOwner || '-'}</p></div>
                     </div>` : ''}
                 </div>
             </div>`;
