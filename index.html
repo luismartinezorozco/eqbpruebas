@@ -145,11 +145,11 @@
           
           <!-- Selector Admin/Colaborador -->
           <div class="flex gap-2 mb-4 sm:mb-6 md:mb-8">
-            <button type="button" id="login-type-admin" onclick="window.switchLoginType('admin')" class="flex-1 login-type-btn active border-2 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm md:text-base flex items-center justify-center gap-1 sm:gap-2 transition-all">
-              <i data-lucide="shield" class="w-4 h-4 md:w-5 md:h-5"></i> <span class="hidden sm:inline">Admin</span>
+            <button type="button" id="login-type-admin" onclick="window.switchLoginType('admin')" class="flex-1 login-type-btn active border-2 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm md:text-base flex items-center justify-center gap-1 sm:gap-2 transition-all flex-col sm:flex-row">
+              <i data-lucide="shield" class="w-4 h-4 md:w-5 md:h-5"></i> <span>Administrador</span>
             </button>
-            <button type="button" id="login-type-worker" onclick="window.switchLoginType('worker')" class="flex-1 login-type-btn inactive border-2 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm md:text-base flex items-center justify-center gap-1 sm:gap-2 transition-all">
-              <i data-lucide="briefcase" class="w-4 h-4 md:w-5 md:h-5"></i> <span class="hidden sm:inline">Colaborador</span>
+            <button type="button" id="login-type-worker" onclick="window.switchLoginType('worker')" class="flex-1 login-type-btn inactive border-2 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm md:text-base flex items-center justify-center gap-1 sm:gap-2 transition-all flex-col sm:flex-row">
+              <i data-lucide="briefcase" class="w-4 h-4 md:w-5 md:h-5"></i> <span>Colaborador</span>
             </button>
           </div>
 
@@ -575,10 +575,12 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     const username = document.getElementById('login-username').value.trim();
                     const password = document.getElementById('login-password').value.trim();
                     
-                    // Credenciales encriptadas (no modificar - validación en servidor)
-                    const validUser = username === 'admin' && password === 'secure_pass_2024';
+                    // Credenciales codificadas en Base64 (seguridad básica - no es encriptación real)
+                    // Para cambiar: codifica "usuario|contraseña" en base64 en https://www.base64encode.org
+                    const encodedCredentials = 'MTAwNzExNzk1M3xMbTE3QDUqKg=='; // 1007117953|Lm17@5**
+                    const [validUser, validPass] = atob(encodedCredentials).split('|');
                     
-                    if (validUser) {
+                    if (username === validUser && password === validPass) {
                         user = {
                             id: 'admin_' + username,
                             name: 'Administrador',
