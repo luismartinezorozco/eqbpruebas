@@ -395,33 +395,6 @@
     <!-- Contenedor para Notificaciones Tipo Toast -->
     <div id="toast-container" class="fixed bottom-24 md:bottom-10 left-1/2 transform -translate-x-1/2 z-[1500] flex flex-col gap-2 pointer-events-none w-11/12 max-w-sm items-center"></div>
 
-    <script>
-        // Wrapper que espera a que las funciones estén disponibles
-        async function waitForFunction(name, maxWait = 5000) {
-            const start = Date.now();
-            while (Date.now() - start < maxWait) {
-                if (typeof window[name] === 'function') return true;
-                await new Promise(r => setTimeout(r, 100));
-            }
-            console.error(`Function ${name} no cargó en ${maxWait}ms`);
-            return false;
-        }
-
-        // Esperar a que handleLogin esté disponible antes de permitir submit
-        document.addEventListener('submit', async (e) => {
-            if (e.target.id === 'login-form-admin' || e.target.id === 'login-form-worker') {
-                if (!window.handleLogin) {
-                    const ready = await waitForFunction('handleLogin');
-                    if (!ready) {
-                        e.preventDefault();
-                        alert('Sistema cargando... intenta de nuevo');
-                        return;
-                    }
-                }
-            }
-        }, true);
-    </script>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
         import { getFirestore, collection, getDocs, setDoc, doc, query, where, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
@@ -447,6 +420,7 @@
             selectedMonth: new Date().toISOString().slice(0, 7),
             dbWorkers: [],
             points: [],
+            messages: [],
             currentProfileDocs: [],
             activeProfileTab: 'rendimiento',
             loginType: 'admin'
@@ -457,6 +431,11 @@
             if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
             if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
             return 'US';
+        };
+
+        window.escapeHtml = (str) => {
+            if(!str) return '';
+            return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
         };
 
         window.showToast = (message, type = 'success') => {
@@ -494,6 +473,9 @@
                 
                 const pSnap = await getDocs(collection(db, "points"));
                 window.appState.points = pSnap.docs.map(doc => ({dbId: doc.id, ...doc.data()}));
+                
+                const mSnap = await getDocs(collection(db, "messages"));
+                window.appState.messages = mSnap.docs.map(doc => doc.data());
             } catch (e) { console.error(e); }
         }
 
@@ -713,11 +695,23 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             
             const main = document.getElementById('main-content');
             if (viewName === 'dashboard') { main.innerHTML = window.renderDashboard(); lucide.createIcons(); }
-            if (viewName === 'directory') { main.innerHTML = window.renderDirectory(); lucide.createIcons(); }
+            if (viewName === 'directory') {
+                // Refresca datos antes de pintar para no mostrar información desactualizada
+                main.innerHTML = showSkeletonDirectory();
+                await fetchAllData();
+                main.innerHTML = window.renderDirectory(); lucide.createIcons();
+            }
             if (viewName === 'ranking') { main.innerHTML = window.renderRanking(); lucide.createIcons(); }
+            if (viewName === 'messages') {
+                await fetchAllData();
+                main.innerHTML = window.renderMessages(); lucide.createIcons();
+            }
             if (viewName === 'profile') {
                 main.innerHTML = '<div class="flex justify-center items-center h-full pt-20"><i data-lucide="loader-2" class="w-10 h-10 text-[#bb7434]"></i></div>';
                 lucide.createIcons();
+                
+                await fetchAllData();
+                window.appState.selectedWorker = window.appState.dbWorkers.find(w => w.id === window.appState.selectedWorker.id) || window.appState.selectedWorker;
                 
                 const qDocs = query(collection(db, "documents"), where("workerId", "==", window.appState.selectedWorker.id));
                 const snapDocs = await getDocs(qDocs);
@@ -738,6 +732,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 { id: 'dashboard', icon: 'layout-dashboard', label: 'Inicio', roles: ['ADMIN', 'HR', 'COORD'] },
                 { id: 'directory', icon: 'users', label: 'Directorio', roles: ['ADMIN', 'HR', 'COORD'] },
                 { id: 'ranking', icon: 'star', label: 'Ranking', roles: ['ADMIN', 'HR', 'COORD'] },
+                { id: 'messages', icon: 'message-square', label: 'Mensajes', roles: ['ADMIN', 'HR', 'COORD'] },
                 { id: 'profile', icon: 'user', label: 'Mi Perfil', roles: ['WORKER'] }
             ];
 
@@ -878,8 +873,11 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 // Mostrar disponibilidad solo si es admin
                 let availabilityHtml = '';
                 if(canEdit && w.availabilityText && w.availabilityText !== 'No especificada') {
-                    const availParts = w.availabilityText.split(' | ').slice(0, 3); // Máximo 3 líneas
-                    availabilityHtml = `<div class="text-[10px] sm:text-xs text-blue-600 font-bold mt-2 leading-tight">${availParts.join(' | ')}</div>`;
+                    const availParts = w.availabilityText.split(' | ');
+                    const shown = availParts.slice(0, 3);
+                    const remaining = availParts.length - shown.length;
+                    const remainingHtml = remaining > 0 ? ` <span class="text-gray-400">+${remaining} más</span>` : '';
+                    availabilityHtml = `<div class="text-[10px] sm:text-xs text-blue-600 font-bold mt-2 leading-tight">${shown.join(' | ')}${remainingHtml}</div>`;
                 }
                 
                 const photoHtml = w.photo ? `<img src="${w.photo}" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl object-cover shrink-0">` : `<div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gray-100 text-gray-400 font-bold text-lg sm:text-xl flex items-center justify-center shrink-0">${window.getInitials(w.name)}</div>`;
@@ -963,6 +961,99 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             return html;
         };
 
+        window.renderMessages = () => {
+            const workersOptions = window.appState.dbWorkers
+                .filter(w => w.status === 'activo')
+                .map(w => `<option value="${w.id}">${window.escapeHtml(w.name)}</option>`).join('');
+
+            const sorted = [...(window.appState.messages || [])].sort((a,b) => b.timestamp - a.timestamp);
+
+            let listHtml = sorted.map(m => {
+                const targetWorker = m.targetWorkerId ? window.appState.dbWorkers.find(w => w.id === m.targetWorkerId) : null;
+                const targetLabel = m.targetWorkerId ? (targetWorker ? targetWorker.name : 'Colaborador eliminado') : 'Todos';
+                const badgeClass = m.targetWorkerId ? 'bg-purple-50 text-purple-700' : 'bg-blue-50 text-blue-700';
+                return `
+                <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl card-shadow flex items-start gap-3">
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                            <span class="text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide ${badgeClass}">${window.escapeHtml(targetLabel)}</span>
+                            <span class="text-[10px] text-gray-400">${new Date(m.timestamp).toLocaleString()}</span>
+                        </div>
+                        <p class="text-sm text-gray-800 break-words whitespace-pre-wrap">${window.escapeHtml(m.text)}</p>
+                    </div>
+                    <button onclick="window.deleteMessage('${m.id}')" class="w-8 h-8 rounded-lg bg-gray-50 shadow-sm flex items-center justify-center text-red-400 hover:bg-red-50 shrink-0"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </div>`;
+            }).join('');
+
+            if(!listHtml) listHtml = '<p class="text-gray-400 text-center py-10 text-sm">Aún no hay mensajes publicados</p>';
+
+            return `
+            <div class="max-w-4xl mx-auto pb-6">
+                <div class="mb-4 sm:mb-6">
+                    <h1 class="text-2xl sm:text-3xl font-black text-gray-800 truncate">Mensajes</h1>
+                    <p class="text-gray-500 text-xs sm:text-sm">Publica notas generales o dirigidas a un colaborador.</p>
+                </div>
+
+                <form onsubmit="window.saveMessage(event)" class="bg-white p-4 sm:p-5 rounded-xl sm:rounded-2xl card-shadow mb-4 sm:mb-6 space-y-3">
+                    <div>
+                        <label class="block text-[10px] sm:text-xs font-bold text-gray-400 mb-1.5 uppercase tracking-wide">Destinatario</label>
+                        <select id="msg-target" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-bold text-[#542c1c] focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
+                            <option value="">Todos (mensaje general)</option>
+                            ${workersOptions}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] sm:text-xs font-bold text-gray-400 mb-1.5 uppercase tracking-wide">Mensaje</label>
+                        <textarea id="msg-text" rows="3" placeholder="Escribe una nota..." class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors resize-none"></textarea>
+                    </div>
+                    <button type="submit" id="save-message-btn" class="w-full sm:w-auto bg-[#bb7434] text-white px-5 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-black text-xs sm:text-sm hover:bg-[#a55f25] transition-colors active:scale-95">Publicar</button>
+                </form>
+
+                <div class="space-y-2 sm:space-y-3">
+                    ${listHtml}
+                </div>
+            </div>`;
+        };
+
+        window.saveMessage = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('save-message-btn');
+            const targetWorkerId = document.getElementById('msg-target').value || null;
+            const text = document.getElementById('msg-text').value.trim();
+
+            if(!text) { window.showToast('Escribe un mensaje', 'error'); return; }
+
+            btn.disabled = true;
+            try {
+                const newMessage = {
+                    id: 'msg_' + Date.now(),
+                    text,
+                    targetWorkerId,
+                    authorName: window.appState.currentUser.name,
+                    timestamp: Date.now()
+                };
+                await setDoc(doc(db, "messages", newMessage.id), newMessage);
+                window.showToast('Mensaje publicado');
+                await window.setView('messages');
+            } catch(err) {
+                console.error('Error al publicar mensaje:', err);
+                window.showToast('Error al publicar: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        };
+
+        window.deleteMessage = async (id) => {
+            if(!confirm('¿Eliminar este mensaje?')) return;
+            try {
+                await deleteDoc(doc(db, "messages", id));
+                window.appState.messages = window.appState.messages.filter(m => m.id !== id);
+                window.showToast('Mensaje eliminado');
+                if(window.appState.currentView === 'messages') await window.setView('messages');
+                if(window.appState.currentView === 'profile') await window.setView('profile');
+            } catch (e) { window.showToast('Error al eliminar', 'error'); }
+        };
+
         window.viewWorkerProfile = (id) => { window.appState.selectedWorker = window.appState.dbWorkers.find(w => w.id === id); window.setView('profile'); };
 
         window.renderProfile = () => {
@@ -1002,6 +1093,27 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                           </div>`;
             });
 
+            const relevantMessages = (window.appState.messages || [])
+                .filter(m => !m.targetWorkerId || m.targetWorkerId === w.id)
+                .sort((a,b) => b.timestamp - a.timestamp);
+
+            let announcementsHtml = '';
+            if(relevantMessages.length > 0) {
+                announcementsHtml = `
+                <div class="max-w-4xl mx-auto mt-3 sm:mt-4 space-y-2 sm:space-y-2.5">
+                    ${relevantMessages.map(m => `
+                        <div class="bg-amber-50 border border-amber-200 p-3 sm:p-4 rounded-lg sm:rounded-2xl flex items-start gap-3">
+                            <i data-lucide="megaphone" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0 mt-0.5"></i>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs sm:text-sm text-amber-900 font-medium break-words whitespace-pre-wrap">${window.escapeHtml(m.text)}</p>
+                                <p class="text-[10px] text-amber-600 font-bold mt-1">${m.targetWorkerId ? 'Nota directa' : 'Anuncio general'} · ${window.escapeHtml(m.authorName)} · ${new Date(m.timestamp).toLocaleDateString()}</p>
+                            </div>
+                            ${canEdit ? `<button onclick="window.deleteMessage('${m.id}')" class="w-7 h-7 rounded-lg bg-white/60 flex items-center justify-center text-amber-700 hover:bg-white shrink-0"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>` : ''}
+                        </div>
+                    `).join('')}
+                </div>`;
+            }
+
             return `
             <div class="max-w-4xl mx-auto pb-6">
                 <div class="bg-white px-4 sm:px-6 md:px-10 pt-6 sm:pt-8 pb-4 sm:pb-6 shadow-sm z-10 relative md:rounded-3xl md:mt-2">
@@ -1016,6 +1128,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                         </div>
                     </div>
                 </div>
+                ${announcementsHtml}
 
                 <!-- TABS -->
                 <div class="flex bg-white px-1.5 sm:px-2 md:px-8 border-b border-gray-200 overflow-x-auto hide-scroll md:rounded-3xl md:mt-4 md:shadow-sm">
@@ -1218,15 +1331,30 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     document.getElementById('w-bank-owner').value = w.bankOwner||'';
                 }
                 
-                // Cargar disponibilidad
-                if(w.availabilityDays && w.availabilityDays.length > 0) {
-                    console.log('Cargando disponibilidad:', w.availabilityDays);
-                    w.availabilityDays.forEach(day => {
+                // Cargar disponibilidad (usa availabilityDays y, como respaldo, deriva los días desde availabilityText por si el registro es de un formato anterior)
+                const dayMap = {
+                    'Lunes': 'lunes', 'Martes': 'martes', 'Miércoles': 'miercoles',
+                    'Jueves': 'jueves', 'Viernes': 'viernes', 'Sábado': 'sabado', 'Domingo': 'domingo'
+                };
+                const dayNames = Object.keys(dayMap);
+                const hasText = w.availabilityText && w.availabilityText !== 'No especificada';
+                const textParts = hasText ? w.availabilityText.split(' | ').map(p => p.trim()) : [];
+
+                let daysToCheck = (w.availabilityDays && w.availabilityDays.length > 0) ? [...w.availabilityDays] : [];
+                // Si el texto menciona días que no están en availabilityDays, se agregan (evita perder horarios de registros antiguos)
+                textParts.forEach(part => {
+                    const foundDayName = dayNames.find(dn => part.startsWith(dn));
+                    if(foundDayName) {
+                        const dayValue = dayMap[foundDayName];
+                        if(!daysToCheck.includes(dayValue)) daysToCheck.push(dayValue);
+                    }
+                });
+
+                if(daysToCheck.length > 0) {
+                    console.log('Cargando disponibilidad:', daysToCheck);
+                    daysToCheck.forEach(day => {
                         const checkbox = document.querySelector(`.w-availability-day[value="${day}"]`);
-                        if(checkbox) {
-                            checkbox.checked = true;
-                            console.log('Checkbox marcado:', day);
-                        }
+                        if(checkbox) checkbox.checked = true;
                     });
                     
                     // Generar los campos de texto
@@ -1234,49 +1362,22 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     
                     // Esperar a que el DOM se actualice y luego llenar los valores
                     setTimeout(() => {
-                        console.log('Cargando disponibilidad, availabilityText:', w.availabilityText);
-                        if(w.availabilityText && w.availabilityText !== 'No especificada') {
-                            const parts = w.availabilityText.split(' | ');
-                            
-                            // Mapeo de días completos a valores internos
-                            const dayMap = {
-                                'Lunes': 'lunes', 'Martes': 'martes', 'Miércoles': 'miercoles',
-                                'Jueves': 'jueves', 'Viernes': 'viernes', 'Sábado': 'sabado', 'Domingo': 'domingo'
-                            };
-                            const dayNames = Object.keys(dayMap);
-                            
-                            parts.forEach(part => {
-                                const trimmed = part.trim();
-                                console.log('Procesando parte:', trimmed);
-                                
-                                // Buscar qué día contiene este string
-                                let foundDay = null;
-                                for(let dayName of dayNames) {
-                                    if(trimmed.startsWith(dayName)) {
-                                        foundDay = dayName;
-                                        break;
-                                    }
-                                }
-                                
-                                if(foundDay) {
-                                    const dayFull = dayMap[foundDay];
-                                    const input = document.getElementById(`availability-${dayFull}`);
-                                    if(input) {
-                                        // Extraer solo la parte del horario (sin el nombre del día)
-                                        const horario = trimmed.substring(foundDay.length).trim();
-                                        input.value = horario;
-                                        console.log(`✓ Cargado ${dayFull}: "${horario}"`);
-                                    } else {
-                                        console.error(`✗ Input no encontrado para ${dayFull}`);
-                                    }
+                        textParts.forEach(part => {
+                            const foundDayName = dayNames.find(dn => part.startsWith(dn));
+                            if(foundDayName) {
+                                const dayValue = dayMap[foundDayName];
+                                const input = document.getElementById(`availability-${dayValue}`);
+                                if(input) {
+                                    input.value = part.substring(foundDayName.length).trim();
                                 } else {
-                                    console.warn(`✗ No se encontró día en: "${trimmed}"`);
+                                    console.error(`✗ Input no encontrado para ${dayValue}`);
                                 }
-                            });
-                        }
+                            } else {
+                                console.warn(`✗ No se encontró día en: "${part}"`);
+                            }
+                        });
                         
                         // Abrir modal
-                        console.log('Abriendo modal');
                         document.getElementById('worker-modal').classList.add('active');
                     }, 150);
                 } else {
@@ -1316,7 +1417,6 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
         };
 
         window.updateAvailabilityUI = () => {
-            console.log('updateAvailabilityUI llamado');
             const container = document.getElementById('availability-options-container');
             if (!container) {
                 console.error('Container no encontrado');
@@ -1324,7 +1424,6 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             }
             
             const selectedDays = Array.from(document.querySelectorAll('.w-availability-day:checked')).map(cb => cb.value);
-            console.log('Días seleccionados:', selectedDays);
             
             const dayLabels = { 
                 lunes: 'Lunes', 
@@ -1336,9 +1435,14 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 domingo: 'Domingo' 
             };
             
+            // Guardar los valores ya escritos antes de reconstruir el HTML (evita perder horarios al marcar/desmarcar otro día)
+            const existingValues = {};
+            container.querySelectorAll('input[data-day]').forEach(input => {
+                existingValues[input.dataset.day] = input.value;
+            });
+            
             if(selectedDays.length === 0) {
                 container.innerHTML = '';
-                console.log('Sin días seleccionados, limpiando container');
                 return;
             }
             
@@ -1356,12 +1460,19 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                         >
                     </div>
                 `;
-                `;
             });
             
             container.innerHTML = html;
-            console.log('Container actualizado con', selectedDays.length, 'días');
+            
+            // Restaurar los valores previos en los días que siguen seleccionados
+            selectedDays.forEach(day => {
+                if(existingValues[day]) {
+                    const input = document.getElementById(`availability-${day}`);
+                    if(input) input.value = existingValues[day];
+                }
+            });
         };
+
 
         window.toggleTimeInputs = (day) => {
             // Ya no necesaria con interfaz textual
@@ -1385,10 +1496,10 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             // Validar campos requeridos
             const name = document.getElementById('w-name').value.trim();
             const lastname = document.getElementById('w-lastname').value.trim();
-            const doc = document.getElementById('w-doc').value.trim();
+            const docNumber = document.getElementById('w-doc').value.trim();
             const phone = document.getElementById('w-phone').value.trim();
             
-            if(!name || !lastname || !doc || !phone) {
+            if(!name || !lastname || !docNumber || !phone) {
                 window.showToast('Completa: Nombres, Apellidos, Cédula y Teléfono', 'error');
                 return;
             }
@@ -1425,7 +1536,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 name: name, 
                 lastname: lastname,
                 birthday: document.getElementById('w-birthday').value,
-                document: doc, 
+                document: docNumber, 
                 email: document.getElementById('w-email').value.trim(),
                 phone: phone, 
                 bloodType: document.getElementById('w-bloodtype').value,
@@ -1468,7 +1579,8 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             
             try { 
                 console.log('Guardando colaborador:', workerData);
-                await setDoc(doc(db, "workers", workerData.id), workerData); 
+                // merge:true evita borrar campos del documento que este formulario no gestiona
+                await setDoc(doc(db, "workers", workerData.id), workerData, { merge: true }); 
                 console.log('Colaborador guardado exitosamente');
                 window.closeWorkerModal(); 
                 window.showToast('Colaborador guardado con éxito'); 
