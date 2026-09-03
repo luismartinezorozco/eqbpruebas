@@ -327,7 +327,7 @@
                                 </div>
 
                                 <!-- OPCIONES DE HORARIO (dinámicas según días seleccionados) -->
-                                <div id="availability-options-container" class="space-y-2 sm:space-y-2.5">
+                                <div id="availability-options-container" class="space-y-2.5 sm:space-y-3">
                                     <!-- Se rellena dinámicamente con JavaScript -->
                                 </div>
 
@@ -1027,7 +1027,15 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                             </div>
                         </div>
                         <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Especialidades</p><p class="text-xs sm:text-sm font-medium text-[#542c1c] break-words">${w.specialties || 'No especificadas'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Disponibilidad</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.availabilityText || 'No especificada'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
+                            <p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Disponibilidad</p>
+                            <div class="flex flex-wrap gap-1.5 sm:gap-2">
+                                ${w.availabilityText ? (() => {
+                                    const parts = w.availabilityText.split(' | ');
+                                    return parts.map(part => `<span class="inline-flex items-center px-2.5 sm:px-3 py-1 sm:py-1.5 bg-blue-50 text-blue-700 text-[10px] sm:text-xs font-bold rounded-full border border-blue-200">${part.trim()}</span>`).join('');
+                                })() : '<span class="text-xs text-gray-400 italic">No especificada</span>'}
+                            </div>
+                        </div>
                         <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
                             <div class="grid grid-cols-2 gap-3 sm:gap-4">
                                 <div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Cumpleaños</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.birthday || '-'}</p></div>
@@ -1172,24 +1180,15 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     // Llamar a updateAvailabilityUI para que genere las opciones
                     window.updateAvailabilityUI();
                     
-                    // Luego llenar los valores de horario si existen
-                    if(w.availabilityTime) {
-                        // Parsear availabilityTime para cada día
+                    // Pequeño delay para asegurar que el DOM se actualizó
+                    setTimeout(() => {
                         w.availabilityDays.forEach(day => {
-                            const radio = document.querySelector(`input[name="${day}-availability"][value="partial"]`);
-                            const timeInput = document.querySelector(`input[name="${day}-availability"][value="partial"]`).parentElement.querySelector('.day-time-input');
-                            if(radio && timeInput) {
-                                radio.checked = true;
-                                timeInput.value = w.availabilityTime;
-                            }
+                            // Por defecto marcar "Todo el día"
+                            const typeRadio = document.querySelector(`input[name="${day}-type"][value="allday"]`);
+                            if(typeRadio) typeRadio.checked = true;
+                            window.toggleTimeInputs(day);
                         });
-                    } else {
-                        // Por defecto marcar "Todo el día"
-                        w.availabilityDays.forEach(day => {
-                            const radio = document.querySelector(`input[name="${day}-availability"][value="allday"]`);
-                            if(radio) radio.checked = true;
-                        });
-                    }
+                    }, 50);
                 }
                 
                 if(w.photo){ 
@@ -1245,16 +1244,28 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             selectedDays.forEach(day => {
                 html += `
                     <div class="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-3.5">
-                        <p class="font-bold text-sm text-[#542c1c] mb-2">${dayLabels[day]}</p>
-                        <div class="space-y-1.5">
+                        <p class="font-bold text-sm text-[#542c1c] mb-2.5">${dayLabels[day]}</p>
+                        <div class="space-y-2">
                             <label class="flex items-center gap-2 cursor-pointer text-xs sm:text-sm">
-                                <input type="radio" name="${day}-availability" class="day-availability-radio" value="allday" checked>
+                                <input type="radio" name="${day}-type" class="day-type-radio" value="allday" checked onchange="window.toggleTimeInputs('${day}')">
                                 <span class="text-gray-600">Todo el día</span>
                             </label>
                             <label class="flex items-center gap-2 cursor-pointer text-xs sm:text-sm">
-                                <input type="radio" name="${day}-availability" class="day-availability-radio" value="partial">
+                                <input type="radio" name="${day}-type" class="day-type-radio" value="from" onchange="window.toggleTimeInputs('${day}')">
                                 <span class="text-gray-600">Desde las</span>
-                                <input type="time" class="w-14 sm:w-16 border border-gray-200 bg-gray-50 rounded px-1.5 py-0.5 text-xs focus:border-[#bb7434] focus:outline-none day-time-input" value="09:00">
+                                <input type="time" class="w-14 sm:w-16 border border-gray-200 bg-gray-50 rounded px-1 py-0.5 text-xs focus:border-[#bb7434] focus:outline-none day-from-time" value="09:00" disabled>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer text-xs sm:text-sm">
+                                <input type="radio" name="${day}-type" class="day-type-radio" value="until" onchange="window.toggleTimeInputs('${day}')">
+                                <span class="text-gray-600">Hasta las</span>
+                                <input type="time" class="w-14 sm:w-16 border border-gray-200 bg-gray-50 rounded px-1 py-0.5 text-xs focus:border-[#bb7434] focus:outline-none day-until-time" value="17:00" disabled>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer text-xs sm:text-sm">
+                                <input type="radio" name="${day}-type" class="day-type-radio" value="range" onchange="window.toggleTimeInputs('${day}')">
+                                <span class="text-gray-600">De</span>
+                                <input type="time" class="w-14 sm:w-16 border border-gray-200 bg-gray-50 rounded px-1 py-0.5 text-xs focus:border-[#bb7434] focus:outline-none day-from-range" value="09:00" disabled>
+                                <span class="text-gray-500">a</span>
+                                <input type="time" class="w-14 sm:w-16 border border-gray-200 bg-gray-50 rounded px-1 py-0.5 text-xs focus:border-[#bb7434] focus:outline-none day-to-range" value="17:00" disabled>
                             </label>
                         </div>
                     </div>
@@ -1262,6 +1273,22 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             });
             
             container.innerHTML = html;
+        };
+
+        window.toggleTimeInputs = (day) => {
+            const type = document.querySelector(`input[name="${day}-type"]:checked`).value;
+            const container = document.querySelector(`input[name="${day}-type"]`).closest('.bg-white');
+            
+            container.querySelectorAll('input[type="time"]').forEach(input => input.disabled = true);
+            
+            if(type === 'from') {
+                container.querySelector('.day-from-time').disabled = false;
+            } else if(type === 'until') {
+                container.querySelector('.day-until-time').disabled = false;
+            } else if(type === 'range') {
+                container.querySelector('.day-from-range').disabled = false;
+                container.querySelector('.day-to-range').disabled = false;
+            }
         };
 
         window.deleteWorker = async (id) => {
@@ -1284,16 +1311,28 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             const availableDays = Array.from(document.querySelectorAll('.w-availability-day:checked')).map(cb => cb.value);
             
             if(availableDays.length > 0) {
-                const dayLabels = { lunes: 'Lunes', martes: 'Martes', miercoles: 'Miércoles', jueves: 'Jueves', viernes: 'Viernes', sabado: 'Sábado', domingo: 'Domingo' };
+                const dayLabels = { lunes: 'Lun', martes: 'Mar', miercoles: 'Mié', jueves: 'Jue', viernes: 'Vie', sabado: 'Sáb', domingo: 'Dom' };
                 
                 availableDays.forEach(day => {
-                    const radioGroup = document.querySelector(`input[name="${day}-availability"]:checked`);
-                    const timeInput = document.querySelector(`input[name="${day}-availability"][value="partial"]`).parentElement.querySelector('.day-time-input');
+                    const typeRadio = document.querySelector(`input[name="${day}-type"]:checked`);
+                    if(!typeRadio) return;
                     
-                    if(radioGroup && radioGroup.value === 'allday') {
-                        availabilityData.push(`${dayLabels[day]}`);
-                    } else if(radioGroup && radioGroup.value === 'partial' && timeInput) {
-                        availabilityData.push(`${dayLabels[day]} desde ${timeInput.value}`);
+                    const type = typeRadio.value;
+                    const label = dayLabels[day];
+                    
+                    if(type === 'allday') {
+                        availabilityData.push(`${label}`);
+                    } else if(type === 'from') {
+                        const time = document.querySelector(`.day-from-time[value]`).value;
+                        const fromTime = document.querySelector(`input[name="${day}-type"]`).closest('.bg-white').querySelector('.day-from-time').value;
+                        availabilityData.push(`${label} desde ${fromTime}`);
+                    } else if(type === 'until') {
+                        const untilTime = document.querySelector(`input[name="${day}-type"]`).closest('.bg-white').querySelector('.day-until-time').value;
+                        availabilityData.push(`${label} hasta ${untilTime}`);
+                    } else if(type === 'range') {
+                        const fromRange = document.querySelector(`input[name="${day}-type"]`).closest('.bg-white').querySelector('.day-from-range').value;
+                        const toRange = document.querySelector(`input[name="${day}-type"]`).closest('.bg-white').querySelector('.day-to-range').value;
+                        availabilityData.push(`${label} ${fromRange}-${toRange}`);
                     }
                 });
             }
