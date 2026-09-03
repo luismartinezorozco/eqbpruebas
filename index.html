@@ -253,10 +253,10 @@
                         <input type="hidden" id="w-photo-base64">
                     </div>
 
-                    <!-- 🎯 DISPONIBILIDAD LABORAL - SECCIÓN DESTACADA -->
+                    <!-- DISPONIBILIDAD LABORAL - SECCIÓN DESTACADA -->
                     <div class="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 p-4 sm:p-5 rounded-xl sm:rounded-2xl card-shadow">
                         <h4 class="font-black text-blue-900 mb-3 sm:mb-4 text-sm sm:text-base uppercase tracking-wide flex items-center gap-2">
-                            <i data-lucide="calendar" class="w-5 h-5"></i> Disponibilidad Laboral
+                            <i data-lucide="calendar" class="w-5 h-5 text-blue-600"></i> Disponibilidad Laboral
                         </h4>
                         
                         <!-- GRID DE DÍAS (Compacto) -->
@@ -394,6 +394,33 @@
 
     <!-- Contenedor para Notificaciones Tipo Toast -->
     <div id="toast-container" class="fixed bottom-24 md:bottom-10 left-1/2 transform -translate-x-1/2 z-[1500] flex flex-col gap-2 pointer-events-none w-11/12 max-w-sm items-center"></div>
+
+    <script>
+        // Wrapper que espera a que las funciones estén disponibles
+        async function waitForFunction(name, maxWait = 5000) {
+            const start = Date.now();
+            while (Date.now() - start < maxWait) {
+                if (typeof window[name] === 'function') return true;
+                await new Promise(r => setTimeout(r, 100));
+            }
+            console.error(`Function ${name} no cargó en ${maxWait}ms`);
+            return false;
+        }
+
+        // Esperar a que handleLogin esté disponible antes de permitir submit
+        document.addEventListener('submit', async (e) => {
+            if (e.target.id === 'login-form-admin' || e.target.id === 'login-form-worker') {
+                if (!window.handleLogin) {
+                    const ready = await waitForFunction('handleLogin');
+                    if (!ready) {
+                        e.preventDefault();
+                        alert('Sistema cargando... intenta de nuevo');
+                        return;
+                    }
+                }
+            }
+        }, true);
+    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
@@ -852,7 +879,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 let availabilityHtml = '';
                 if(canEdit && w.availabilityText && w.availabilityText !== 'No especificada') {
                     const availParts = w.availabilityText.split(' | ').slice(0, 3); // Máximo 3 líneas
-                    availabilityHtml = `<div class="text-[10px] sm:text-xs text-blue-600 font-bold mt-2 leading-tight">📅 ${availParts.join(' | ')}</div>`;
+                    availabilityHtml = `<div class="text-[10px] sm:text-xs text-blue-600 font-bold mt-2 leading-tight">${availParts.join(' | ')}</div>`;
                 }
                 
                 const photoHtml = w.photo ? `<img src="${w.photo}" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl object-cover shrink-0">` : `<div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gray-100 text-gray-400 font-bold text-lg sm:text-xl flex items-center justify-center shrink-0">${window.getInitials(w.name)}</div>`;
@@ -1041,12 +1068,12 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                         </div>
                         <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Especialidades</p><p class="text-xs sm:text-sm font-medium text-[#542c1c] break-words">${w.specialties || 'No especificadas'}</p></div>
                         <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
-                            <p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Disponibilidad</p>
-                            <div class="flex flex-wrap gap-1.5 sm:gap-2">
-                                ${w.availabilityText ? (() => {
+                            <p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-3 uppercase tracking-wide flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4"></i> Horarios Disponibles</p>
+                            <div class="space-y-2">
+                                ${w.availabilityText && w.availabilityText !== 'No especificada' ? (() => {
                                     const parts = w.availabilityText.split(' | ');
-                                    return parts.map(part => `<span class="inline-flex items-center px-2.5 sm:px-3 py-1 sm:py-1.5 bg-blue-50 text-blue-700 text-[10px] sm:text-xs font-bold rounded-full border border-blue-200">${part.trim()}</span>`).join('');
-                                })() : '<span class="text-xs text-gray-400 italic">No especificada</span>'}
+                                    return parts.map(part => `<div class="bg-blue-50 border border-blue-200 px-3 py-2.5 rounded-lg text-sm font-semibold text-blue-900">${part.trim()}</div>`).join('');
+                                })() : '<p class="text-sm text-gray-400 italic">No especificada</p>'}
                             </div>
                         </div>
                         <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
@@ -1207,37 +1234,48 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     
                     // Esperar a que el DOM se actualice y luego llenar los valores
                     setTimeout(() => {
-                        console.log('Rellenando valores de horarios, availabilityText:', w.availabilityText);
+                        console.log('Cargando disponibilidad, availabilityText:', w.availabilityText);
                         if(w.availabilityText && w.availabilityText !== 'No especificada') {
                             const parts = w.availabilityText.split(' | ');
-                            console.log('Partes de disponibilidad:', parts);
                             
-                            // Mapeo de días abreviados a completos
-                            const dayAbbrevMap = {
-                                'Lun': 'lunes', 'Mar': 'martes', 'Mié': 'miercoles',
-                                'Jue': 'jueves', 'Vie': 'viernes', 'Sáb': 'sabado', 'Dom': 'domingo'
+                            // Mapeo de días completos a valores internos
+                            const dayMap = {
+                                'Lunes': 'lunes', 'Martes': 'martes', 'Miércoles': 'miercoles',
+                                'Jueves': 'jueves', 'Viernes': 'viernes', 'Sábado': 'sabado', 'Domingo': 'domingo'
                             };
+                            const dayNames = Object.keys(dayMap);
                             
                             parts.forEach(part => {
                                 const trimmed = part.trim();
-                                const firstWord = trimmed.split(' ')[0];
-                                const dayFull = dayAbbrevMap[firstWord];
+                                console.log('Procesando parte:', trimmed);
                                 
-                                if(dayFull) {
+                                // Buscar qué día contiene este string
+                                let foundDay = null;
+                                for(let dayName of dayNames) {
+                                    if(trimmed.startsWith(dayName)) {
+                                        foundDay = dayName;
+                                        break;
+                                    }
+                                }
+                                
+                                if(foundDay) {
+                                    const dayFull = dayMap[foundDay];
                                     const input = document.getElementById(`availability-${dayFull}`);
                                     if(input) {
-                                        input.value = trimmed;
-                                        console.log(`Rellenado ${dayFull} con:`, trimmed);
+                                        // Extraer solo la parte del horario (sin el nombre del día)
+                                        const horario = trimmed.substring(foundDay.length).trim();
+                                        input.value = horario;
+                                        console.log(`✓ Cargado ${dayFull}: "${horario}"`);
                                     } else {
-                                        console.error(`Input no encontrado para ${dayFull}`);
+                                        console.error(`✗ Input no encontrado para ${dayFull}`);
                                     }
                                 } else {
-                                    console.warn('Día no reconocido:', firstWord);
+                                    console.warn(`✗ No se encontró día en: "${trimmed}"`);
                                 }
                             });
                         }
                         
-                        // Ahora abrir el modal
+                        // Abrir modal
                         console.log('Abriendo modal');
                         document.getElementById('worker-modal').classList.add('active');
                     }, 150);
@@ -1307,17 +1345,17 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             let html = '';
             selectedDays.forEach(day => {
                 html += `
-                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center bg-blue-50 p-3 sm:p-4 rounded-lg border border-blue-200">
-                        <label class="font-bold text-sm text-[#542c1c] w-20 sm:w-24 flex-shrink-0">${dayLabels[day]}:</label>
+                    <div class="bg-white p-3 sm:p-4 rounded-lg border border-blue-300 mb-2">
+                        <label class="font-bold text-sm text-[#542c1c] mb-2 block">${dayLabels[day]}</label>
                         <input 
                             type="text" 
-                            class="flex-1 border border-blue-300 bg-white rounded-lg sm:rounded-lg px-3 py-2 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none focus:ring-2 focus:ring-[#bb7434]/30 transition-colors"
-                            placeholder="ej: 09:00 / desde 14:00 / hasta 17:00 / 09:00-18:00 / Todo el día"
+                            class="w-full border border-blue-300 bg-blue-50 rounded-lg px-3 py-2.5 text-sm sm:text-base focus:bg-white focus:border-[#bb7434] focus:outline-none focus:ring-2 focus:ring-[#bb7434]/30 transition-colors"
+                            placeholder="Ej: 9:00 am - 2:00 pm / 09:00-17:00 / Desde 14:00 / Todo el dia"
                             data-day="${day}"
                             id="availability-${day}"
-                            onchange="console.log('Cambio en', '${day}')"
                         >
                     </div>
+                `;
                 `;
             });
             
@@ -1344,50 +1382,63 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             const formId = document.getElementById('w-id').value; 
             const btn = document.getElementById('save-worker-btn');
             
+            // Validar campos requeridos
+            const name = document.getElementById('w-name').value.trim();
+            const lastname = document.getElementById('w-lastname').value.trim();
+            const doc = document.getElementById('w-doc').value.trim();
+            const phone = document.getElementById('w-phone').value.trim();
+            
+            if(!name || !lastname || !doc || !phone) {
+                window.showToast('Completa: Nombres, Apellidos, Cédula y Teléfono', 'error');
+                return;
+            }
+            
             // Recopilar disponibilidad
             const availableDays = Array.from(document.querySelectorAll('.w-availability-day:checked')).map(cb => cb.value);
-            const dayLabels = { lunes: 'Lun', martes: 'Mar', miercoles: 'Mié', jueves: 'Jue', viernes: 'Vie', sabado: 'Sáb', domingo: 'Dom' };
+            const dayLabels = { lunes: 'Lunes', martes: 'Martes', miercoles: 'Miércoles', jueves: 'Jueves', viernes: 'Viernes', sabado: 'Sábado', domingo: 'Domingo' };
             
             let availabilityText = 'No especificada';
             if(availableDays.length > 0) {
                 const parts = [];
                 availableDays.forEach(day => {
                     const input = document.getElementById(`availability-${day}`);
-                    const value = input ? input.value.trim() : '';
-                    if(value) {
-                        // Si el valor ya empieza con el día (ej "Lun 09:00"), úsalo tal cual
-                        // Si no, agrega el día abreviado
-                        if(value.startsWith(dayLabels[day])) {
-                            parts.push(value);
-                        } else {
+                    if(input) {
+                        const value = input.value.trim();
+                        if(value) {
                             parts.push(`${dayLabels[day]} ${value}`);
+                        } else {
+                            // Si el día está seleccionado pero sin valor, mostrar error
+                            window.showToast(`Completa el horario para ${dayLabels[day]}`, 'error');
+                            return;
                         }
                     }
                 });
+                // Si hubo error, no continuar
+                if(parts.length !== availableDays.length) return;
                 if(parts.length > 0) availabilityText = parts.join(' | ');
             }
             
-            console.log('Disponibilidad guardando - Días:', availableDays, 'Texto:', availabilityText);
+            console.log('Guardando - Disponibilidad:', { días: availableDays, texto: availabilityText });
             
             const workerData = { 
                 id: formId || 'w_' + Date.now(), 
-                name: document.getElementById('w-name').value, 
-                lastname: document.getElementById('w-lastname').value,
+                name: name, 
+                lastname: lastname,
                 birthday: document.getElementById('w-birthday').value,
-                document: document.getElementById('w-doc').value, 
-                email: document.getElementById('w-email').value,
-                phone: document.getElementById('w-phone').value, 
+                document: doc, 
+                email: document.getElementById('w-email').value.trim(),
+                phone: phone, 
                 bloodType: document.getElementById('w-bloodtype').value,
-                eps: document.getElementById('w-eps').value,
-                address: document.getElementById('w-address').value,
-                city: document.getElementById('w-city').value, 
-                emergencyName: document.getElementById('w-emergency-name').value,
-                emergencyPhone: document.getElementById('w-emergency-phone').value,
+                eps: document.getElementById('w-eps').value.trim(),
+                address: document.getElementById('w-address').value.trim(),
+                city: document.getElementById('w-city').value.trim(), 
+                emergencyName: document.getElementById('w-emergency-name').value.trim(),
+                emergencyPhone: document.getElementById('w-emergency-phone').value.trim(),
                 role: document.getElementById('w-role').value, 
                 status: document.getElementById('w-status').value, 
                 availabilityDays: availableDays,
                 availabilityText: availabilityText,
-                specialties: document.getElementById('w-specs').value, 
+                specialties: document.getElementById('w-specs').value.trim(), 
                 photo: document.getElementById('w-photo-base64').value 
             };
             
