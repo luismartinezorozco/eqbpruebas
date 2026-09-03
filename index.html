@@ -1186,27 +1186,49 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                             const details = w.availabilityDetails && w.availabilityDetails[day];
                             const type = details ? details.type : 'allday';
                             
-                            // Marcar el tipo de horario correcto
+                            // Obtener el radio button para este tipo
                             const typeRadio = document.querySelector(`input[name="${day}-type"][value="${type}"]`);
+                            console.log(`[DEBUG] Day: ${day}, Type: ${type}, Radio found:`, typeRadio);
                             if(typeRadio) {
                                 typeRadio.checked = true;
                                 
+                                // Obtener el contenedor del día
+                                const dayContainer = typeRadio.closest('.bg-white');
+                                if(!dayContainer) {
+                                    console.log(`[DEBUG] Container not found for day: ${day}`);
+                                    return;
+                                }
+                                
                                 // Llenar los valores de hora si existen
-                                if(type === 'from' && details.fromTime) {
-                                    document.querySelector(`input[name="${day}-type"]`).closest('.bg-white').querySelector('.day-from-time').value = details.fromTime;
-                                } else if(type === 'until' && details.untilTime) {
-                                    document.querySelector(`input[name="${day}-type"]`).closest('.bg-white').querySelector('.day-until-time').value = details.untilTime;
-                                } else if(type === 'range' && details.fromTime && details.toTime) {
-                                    const container = document.querySelector(`input[name="${day}-type"]`).closest('.bg-white');
-                                    container.querySelector('.day-from-range').value = details.fromTime;
-                                    container.querySelector('.day-to-range').value = details.toTime;
+                                if(type === 'from' && details && details.fromTime) {
+                                    const fromInput = dayContainer.querySelector('.day-from-time');
+                                    if(fromInput) {
+                                        fromInput.value = details.fromTime;
+                                        console.log(`[DEBUG] Set ${day} from time to ${details.fromTime}`);
+                                    }
+                                } else if(type === 'until' && details && details.untilTime) {
+                                    const untilInput = dayContainer.querySelector('.day-until-time');
+                                    if(untilInput) {
+                                        untilInput.value = details.untilTime;
+                                        console.log(`[DEBUG] Set ${day} until time to ${details.untilTime}`);
+                                    }
+                                } else if(type === 'range' && details && details.fromTime && details.toTime) {
+                                    const fromRangeInput = dayContainer.querySelector('.day-from-range');
+                                    const toRangeInput = dayContainer.querySelector('.day-to-range');
+                                    if(fromRangeInput) fromRangeInput.value = details.fromTime;
+                                    if(toRangeInput) toRangeInput.value = details.toTime;
+                                    console.log(`[DEBUG] Set ${day} range to ${details.fromTime}-${details.toTime}`);
                                 }
                             }
                             
                             // Aplicar los cambios de habilitación
                             window.toggleTimeInputs(day);
                         });
-                    }, 50);
+                        
+                        // Abrir el modal después de cargar todo
+                        document.getElementById('worker-modal').classList.add('active');
+                    }, 100);
+                    return; // Importante: No abrir el modal aquí, se abre en el setTimeout
                 }
                 
                 if(w.photo){ 
@@ -1222,11 +1244,14 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     document.getElementById('w-bank-num').value = w.bankNumber||''; 
                     document.getElementById('w-bank-owner').value = w.bankOwner||'';
                 }
+                
+                // Si no hay disponibilidad guardada, abrir modal directamente
+                document.getElementById('worker-modal').classList.add('active');
             } else { 
                 document.getElementById('worker-modal-title').innerText = 'Nuevo Colaborador'; 
                 document.getElementById('w-id').value = ''; 
+                document.getElementById('worker-modal').classList.add('active');
             }
-            document.getElementById('worker-modal').classList.add('active');
         };
 
         window.closeWorkerModal = () => { document.getElementById('worker-modal').classList.remove('active'); };
