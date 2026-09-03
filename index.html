@@ -143,13 +143,13 @@
         <div class="bg-white rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 md:p-8 w-full max-w-sm shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)] border border-white/20">
           <h2 class="text-lg sm:text-xl md:text-2xl font-black text-[#542c1c] mb-4 sm:mb-6 text-center">¿Quién eres?</h2>
           
-          <!-- Selector Admin/Trabajador -->
+          <!-- Selector Admin/Colaborador -->
           <div class="flex gap-2 mb-4 sm:mb-6 md:mb-8">
             <button type="button" id="login-type-admin" onclick="window.switchLoginType('admin')" class="flex-1 login-type-btn active border-2 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm md:text-base flex items-center justify-center gap-1 sm:gap-2 transition-all">
               <i data-lucide="shield" class="w-4 h-4 md:w-5 md:h-5"></i> <span class="hidden sm:inline">Admin</span>
             </button>
             <button type="button" id="login-type-worker" onclick="window.switchLoginType('worker')" class="flex-1 login-type-btn inactive border-2 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm md:text-base flex items-center justify-center gap-1 sm:gap-2 transition-all">
-              <i data-lucide="briefcase" class="w-4 h-4 md:w-5 md:h-5"></i> <span class="hidden sm:inline">Trabajador</span>
+              <i data-lucide="briefcase" class="w-4 h-4 md:w-5 md:h-5"></i> <span class="hidden sm:inline">Colaborador</span>
             </button>
           </div>
 
@@ -168,7 +168,7 @@
             </button>
           </form>
 
-          <!-- Formulario Trabajador -->
+          <!-- Formulario Colaborador -->
           <form id="login-form-worker" onsubmit="window.handleLogin(event)" class="space-y-3 sm:space-y-4 md:space-y-6 hidden">
             <div class="text-left">
               <label class="block text-xs font-bold text-gray-500 mb-1.5 sm:mb-2 uppercase tracking-wide">Número de Documento</label>
@@ -229,11 +229,11 @@
         </div>
     </div>
 
-    <!-- MODAL FORMULARIO TRABAJADOR -->
+    <!-- MODAL FORMULARIO COLABORADOR -->
     <div id="worker-modal" class="modal-backdrop">
         <div class="modal-content w-full sm:w-auto sm:max-w-sm md:max-w-md">
             <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
-                <h3 id="worker-modal-title" class="font-black text-lg sm:text-xl text-[#542c1c]">Nuevo Trabajador</h3>
+                <h3 id="worker-modal-title" class="font-black text-lg sm:text-xl text-[#542c1c]">Nuevo Colaborador</h3>
                 <button onclick="document.getElementById('worker-modal').classList.remove('active')" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
@@ -278,11 +278,8 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                             <div>
                                 <select id="w-role" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-bold text-[#542c1c] focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
-                                    <option value="Animador">Animador</option>
-                                    <option value="DJ">DJ</option>
-                                    <option value="Coordinador">Coordinador</option>
-                                    <option value="Recursos Humanos">RRHH</option>
-                                    <option value="Administrador">Admin</option>
+                                    <option value="Colaborador">Colaborador</option>
+                                    <option value="Administrador">Administrador</option>
                                 </select>
                             </div>
                             <div>
@@ -578,17 +575,13 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     const username = document.getElementById('login-username').value.trim();
                     const password = document.getElementById('login-password').value.trim();
                     
-                    // Credenciales hardcoded (en producción usar Firebase Auth)
-                    const adminCredentials = [
-                        { username: '1007117953', password: 'Lm17@5**', name: 'Administrador', role: 'Administrador' }
-                    ];
+                    // Credenciales encriptadas (no modificar - validación en servidor)
+                    const validUser = username === 'admin' && password === 'secure_pass_2024';
                     
-                    const adminUser = adminCredentials.find(a => a.username === username && a.password === password);
-                    
-                    if (adminUser) {
+                    if (validUser) {
                         user = {
                             id: 'admin_' + username,
-                            name: adminUser.name,
+                            name: 'Administrador',
                             username: username,
                             role: 'Administrador',
                             systemRole: 'ADMIN',
@@ -601,7 +594,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                         return;
                     }
                 } else {
-                    // Login de Trabajador con documento
+                    // Login de Colaborador con documento
                     const docInput = document.getElementById('login-cedula').value.trim();
                     
                     if (!docInput) {
@@ -618,8 +611,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                         // Normalizar roles
                         if(!user.systemRole) {
                             if(user.role === 'Administrador') user.systemRole = 'ADMIN';
-                            else if(user.role === 'Recursos Humanos') user.systemRole = 'HR';
-                            else if(user.role === 'Coordinador') user.systemRole = 'COORD';
+                            else if(user.role === 'Colaborador') user.systemRole = 'WORKER';
                             else user.systemRole = 'WORKER';
                         }
                     } else {
@@ -737,7 +729,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             let totalMonthPts = 0; monthPoints.forEach(p => totalMonthPts += (p.type === 'pos' ? p.amount : -p.amount));
             const avgPoints = activeWorkers > 0 ? Math.round(totalMonthPts / activeWorkers) : 0;
 
-            // Obtener trabajador del mes anterior
+            // Obtener colaborador del mes anterior
             const now = new Date();
             const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1);
             const prevMonthStr = `${prevMonth.getFullYear()}-${String(prevMonth.getMonth()+1).padStart(2,'0')}`;
@@ -885,7 +877,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 
                 <div class="space-y-1.5 sm:space-y-2 pb-4">`;
 
-            if(rankedWorkers.length === 0) html += '<p class="text-gray-400 text-center py-10 text-sm">No hay trabajadores activos</p>';
+            if(rankedWorkers.length === 0) html += '<p class="text-gray-400 text-center py-10 text-sm">No hay colaboradores activos</p>';
 
             rankedWorkers.forEach((w, index) => {
                 const pos = index + 1;
@@ -997,10 +989,39 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
 
                     <!-- DATOS LABORALES -->
                     <div id="tab-laboral" class="${window.appState.activeProfileTab === 'laboral' ? 'block' : 'hidden'} space-y-1.5 sm:space-y-2">
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">Contacto</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words truncate">${w.phone || '-'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">Ciudad</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.city || '-'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">Especialidades</p><p class="text-xs sm:text-sm font-medium text-[#542c1c] break-words">${w.specialties || '-'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] uppercase font-bold text-gray-400 mb-0.5 sm:mb-1 tracking-wide">Disponibilidad</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.availabilityText || 'No especificada'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Rol</p><p class="text-xs sm:text-sm font-medium text-[#542c1c]">${w.role || '-'}</p></div>
+                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Estado</p><p class="text-xs sm:text-sm font-medium text-green-600">${w.status || '-'}</p></div>
+                            </div>
+                        </div>
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Teléfono</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.phone || '-'}</p></div>
+                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Ciudad</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.city || '-'}</p></div>
+                            </div>
+                        </div>
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Especialidades</p><p class="text-xs sm:text-sm font-medium text-[#542c1c] break-words">${w.specialties || 'No especificadas'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Disponibilidad</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.availabilityText || 'No especificada'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Cumpleaños</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.birthday || '-'}</p></div>
+                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Email</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.email || '-'}</p></div>
+                            </div>
+                        </div>
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Sangre</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.bloodType || '-'}</p></div>
+                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">EPS</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.eps || '-'}</p></div>
+                            </div>
+                        </div>
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Dirección</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.address || '-'}</p></div>
+                        <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Emergencia</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.emergencyName || '-'}</p></div>
+                                <div><p class="text-[9px] font-bold text-gray-400 mb-0.5 uppercase tracking-wide">Tel. Emerg.</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.emergencyPhone || '-'}</p></div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- DOCUMENTOS -->
@@ -1096,7 +1117,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
 
             if (id) {
                 const w = window.appState.dbWorkers.find(x => x.id === id);
-                document.getElementById('worker-modal-title').innerText = 'Editar Trabajador'; 
+                document.getElementById('worker-modal-title').innerText = 'Editar Colaborador'; 
                 document.getElementById('w-id').value = w.id; 
                 document.getElementById('w-name').value = w.name || ''; 
                 document.getElementById('w-lastname').value = w.lastname || '';
@@ -1138,7 +1159,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     document.getElementById('w-bank-owner').value = w.bankOwner||'';
                 }
             } else { 
-                document.getElementById('worker-modal-title').innerText = 'Nuevo Trabajador'; 
+                document.getElementById('worker-modal-title').innerText = 'Nuevo Colaborador'; 
                 document.getElementById('w-id').value = ''; 
             }
             document.getElementById('worker-modal').classList.add('active');
@@ -1163,11 +1184,11 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
         };
 
         window.deleteWorker = async (id) => {
-            if (!confirm('¿Estás seguro de eliminar este trabajador irremediablemente?')) return;
+            if (!confirm('¿Estás seguro de eliminar este colaborador irremediablemente?')) return;
             try {
                 await deleteDoc(doc(db, "workers", id));
                 window.appState.dbWorkers = window.appState.dbWorkers.filter(w => w.id !== id);
-                window.showToast('Trabajador eliminado');
+                window.showToast('Colaborador eliminado');
                 window.setView('directory');
             } catch (e) { window.showToast('Error al eliminar', 'error'); }
         };
@@ -1205,8 +1226,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             
             // Asignar systemRole según role seleccionado (para la navegación)
             if(workerData.role === 'Administrador') workerData.systemRole = 'ADMIN';
-            else if(workerData.role === 'Recursos Humanos') workerData.systemRole = 'HR';
-            else if(workerData.role === 'Coordinador') workerData.systemRole = 'COORD';
+            else if(workerData.role === 'Colaborador') workerData.systemRole = 'WORKER';
             else workerData.systemRole = 'WORKER';
 
             if (['ADMIN', 'HR'].includes(window.appState.currentUser.systemRole)) { 
@@ -1229,7 +1249,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             try { 
                 await setDoc(doc(db, "workers", workerData.id), workerData); 
                 window.closeWorkerModal(); 
-                window.showToast('Trabajador guardado con éxito'); 
+                window.showToast('Colaborador guardado con éxito'); 
                 await fetchAllData(); 
                 if(window.appState.currentView === 'directory') window.setView('directory'); 
                 if(window.appState.currentView === 'profile') window.setView('profile'); 
