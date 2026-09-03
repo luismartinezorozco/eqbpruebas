@@ -262,33 +262,33 @@
                         <!-- GRID DE DÍAS (Compacto) -->
                         <div class="bg-white border border-blue-200 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-3 sm:mb-4">
                             <div class="grid grid-cols-7 gap-1.5 sm:gap-2">
-                                <label class="flex flex-col items-center cursor-pointer">
-                                    <input type="checkbox" class="w-availability-day rounded mb-1.5" value="lunes" onchange="window.updateAvailabilityUI()">
-                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600">Lun</span>
+                                <label class="flex flex-col items-center cursor-pointer group">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5 cursor-pointer accent-blue-500" value="lunes" onclick="setTimeout(() => window.updateAvailabilityUI(), 10)">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-blue-600">Lun</span>
                                 </label>
-                                <label class="flex flex-col items-center cursor-pointer">
-                                    <input type="checkbox" class="w-availability-day rounded mb-1.5" value="martes" onchange="window.updateAvailabilityUI()">
-                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600">Mar</span>
+                                <label class="flex flex-col items-center cursor-pointer group">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5 cursor-pointer accent-blue-500" value="martes" onclick="setTimeout(() => window.updateAvailabilityUI(), 10)">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-blue-600">Mar</span>
                                 </label>
-                                <label class="flex flex-col items-center cursor-pointer">
-                                    <input type="checkbox" class="w-availability-day rounded mb-1.5" value="miercoles" onchange="window.updateAvailabilityUI()">
-                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600">Mié</span>
+                                <label class="flex flex-col items-center cursor-pointer group">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5 cursor-pointer accent-blue-500" value="miercoles" onclick="setTimeout(() => window.updateAvailabilityUI(), 10)">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-blue-600">Mié</span>
                                 </label>
-                                <label class="flex flex-col items-center cursor-pointer">
-                                    <input type="checkbox" class="w-availability-day rounded mb-1.5" value="jueves" onchange="window.updateAvailabilityUI()">
-                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600">Jue</span>
+                                <label class="flex flex-col items-center cursor-pointer group">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5 cursor-pointer accent-blue-500" value="jueves" onclick="setTimeout(() => window.updateAvailabilityUI(), 10)">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-blue-600">Jue</span>
                                 </label>
-                                <label class="flex flex-col items-center cursor-pointer">
-                                    <input type="checkbox" class="w-availability-day rounded mb-1.5" value="viernes" onchange="window.updateAvailabilityUI()">
-                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600">Vie</span>
+                                <label class="flex flex-col items-center cursor-pointer group">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5 cursor-pointer accent-blue-500" value="viernes" onclick="setTimeout(() => window.updateAvailabilityUI(), 10)">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-blue-600">Vie</span>
                                 </label>
-                                <label class="flex flex-col items-center cursor-pointer">
-                                    <input type="checkbox" class="w-availability-day rounded mb-1.5" value="sabado" onchange="window.updateAvailabilityUI()">
-                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600">Sáb</span>
+                                <label class="flex flex-col items-center cursor-pointer group">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5 cursor-pointer accent-blue-500" value="sabado" onclick="setTimeout(() => window.updateAvailabilityUI(), 10)">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-blue-600">Sáb</span>
                                 </label>
-                                <label class="flex flex-col items-center cursor-pointer">
-                                    <input type="checkbox" class="w-availability-day rounded mb-1.5" value="domingo" onchange="window.updateAvailabilityUI()">
-                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600">Dom</span>
+                                <label class="flex flex-col items-center cursor-pointer group">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5 cursor-pointer accent-blue-500" value="domingo" onclick="setTimeout(() => window.updateAvailabilityUI(), 10)">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-blue-600">Dom</span>
                                 </label>
                             </div>
                         </div>
@@ -1184,49 +1184,63 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 document.getElementById('w-status').value = w.status; 
                 document.getElementById('w-specs').value = w.specialties || '';
                 
+                if(canSeeBank){ 
+                    document.getElementById('w-bank-name').value = w.bankName||''; 
+                    document.getElementById('w-bank-type').value = w.bankType||'Ahorros'; 
+                    document.getElementById('w-bank-num').value = w.bankNumber||''; 
+                    document.getElementById('w-bank-owner').value = w.bankOwner||'';
+                }
+                
+                // Cargar disponibilidad
                 if(w.availabilityDays && w.availabilityDays.length > 0) {
+                    console.log('Cargando disponibilidad:', w.availabilityDays);
                     w.availabilityDays.forEach(day => {
                         const checkbox = document.querySelector(`.w-availability-day[value="${day}"]`);
-                        if(checkbox) checkbox.checked = true;
+                        if(checkbox) {
+                            checkbox.checked = true;
+                            console.log('Checkbox marcado:', day);
+                        }
                     });
                     
-                    // Llamar a updateAvailabilityUI para que genere los campos de texto
+                    // Generar los campos de texto
                     window.updateAvailabilityUI();
                     
-                    // Pequeño delay para asegurar que el DOM se actualizó
+                    // Esperar a que el DOM se actualice y luego llenar los valores
                     setTimeout(() => {
-                        // Procesar availabilityText si existe (ej: "Lun 09:00 | Mar desde 14:00 | Mié")
+                        console.log('Rellenando valores de horarios, availabilityText:', w.availabilityText);
                         if(w.availabilityText && w.availabilityText !== 'No especificada') {
-                            const availabilityParts = w.availabilityText.split(' | ');
+                            const parts = w.availabilityText.split(' | ');
+                            console.log('Partes de disponibilidad:', parts);
                             
-                            // Mapeo simplificado de días cortos a largos
-                            const dayMap = {
-                                'Lun': 'lunes',
-                                'Mar': 'martes',
-                                'Mié': 'miercoles',
-                                'Jue': 'jueves',
-                                'Vie': 'viernes',
-                                'Sáb': 'sabado',
-                                'Dom': 'domingo'
+                            // Mapeo de días abreviados a completos
+                            const dayAbbrevMap = {
+                                'Lun': 'lunes', 'Mar': 'martes', 'Mié': 'miercoles',
+                                'Jue': 'jueves', 'Vie': 'viernes', 'Sáb': 'sabado', 'Dom': 'domingo'
                             };
                             
-                            availabilityParts.forEach(part => {
-                                const trimmedPart = part.trim();
-                                const firstWord = trimmedPart.split(' ')[0];
+                            parts.forEach(part => {
+                                const trimmed = part.trim();
+                                const firstWord = trimmed.split(' ')[0];
+                                const dayFull = dayAbbrevMap[firstWord];
                                 
-                                if(dayMap[firstWord]) {
-                                    const dayFull = dayMap[firstWord];
+                                if(dayFull) {
                                     const input = document.getElementById(`availability-${dayFull}`);
                                     if(input) {
-                                        input.value = trimmedPart;
+                                        input.value = trimmed;
+                                        console.log(`Rellenado ${dayFull} con:`, trimmed);
+                                    } else {
+                                        console.error(`Input no encontrado para ${dayFull}`);
                                     }
+                                } else {
+                                    console.warn('Día no reconocido:', firstWord);
                                 }
                             });
                         }
                         
-                        // Abrir modal
+                        // Ahora abrir el modal
+                        console.log('Abriendo modal');
                         document.getElementById('worker-modal').classList.add('active');
-                    }, 100);
+                    }, 150);
                 } else {
                     // Sin disponibilidad, abrir directamente
                     document.getElementById('worker-modal').classList.add('active');
@@ -1237,13 +1251,6 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     document.getElementById('w-photo-preview').src = w.photo; 
                     document.getElementById('w-photo-preview').classList.remove('hidden'); 
                     document.getElementById('w-photo-icon').classList.add('hidden');
-                }
-                
-                if(canSeeBank){ 
-                    document.getElementById('w-bank-name').value = w.bankName||''; 
-                    document.getElementById('w-bank-type').value = w.bankType||'Ahorros'; 
-                    document.getElementById('w-bank-num').value = w.bankNumber||''; 
-                    document.getElementById('w-bank-owner').value = w.bankOwner||'';
                 }
             } else { 
                 document.getElementById('worker-modal-title').innerText = 'Nuevo Colaborador'; 
@@ -1271,8 +1278,15 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
         };
 
         window.updateAvailabilityUI = () => {
+            console.log('updateAvailabilityUI llamado');
             const container = document.getElementById('availability-options-container');
+            if (!container) {
+                console.error('Container no encontrado');
+                return;
+            }
+            
             const selectedDays = Array.from(document.querySelectorAll('.w-availability-day:checked')).map(cb => cb.value);
+            console.log('Días seleccionados:', selectedDays);
             
             const dayLabels = { 
                 lunes: 'Lunes', 
@@ -1286,26 +1300,29 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             
             if(selectedDays.length === 0) {
                 container.innerHTML = '';
+                console.log('Sin días seleccionados, limpiando container');
                 return;
             }
             
             let html = '';
             selectedDays.forEach(day => {
                 html += `
-                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center">
+                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center bg-blue-50 p-3 sm:p-4 rounded-lg border border-blue-200">
                         <label class="font-bold text-sm text-[#542c1c] w-20 sm:w-24 flex-shrink-0">${dayLabels[day]}:</label>
                         <input 
                             type="text" 
-                            class="w-full sm:flex-1 border border-gray-200 bg-gray-50 rounded-lg px-3 py-2 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"
-                            placeholder="ej: Todo el día / 09:00 / desde 14:00 / hasta 17:00 / 09:00-18:00"
+                            class="flex-1 border border-blue-300 bg-white rounded-lg sm:rounded-lg px-3 py-2 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none focus:ring-2 focus:ring-[#bb7434]/30 transition-colors"
+                            placeholder="ej: 09:00 / desde 14:00 / hasta 17:00 / 09:00-18:00 / Todo el día"
                             data-day="${day}"
                             id="availability-${day}"
+                            onchange="console.log('Cambio en', '${day}')"
                         >
                     </div>
                 `;
             });
             
             container.innerHTML = html;
+            console.log('Container actualizado con', selectedDays.length, 'días');
         };
 
         window.toggleTimeInputs = (day) => {
@@ -1327,20 +1344,30 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             const formId = document.getElementById('w-id').value; 
             const btn = document.getElementById('save-worker-btn');
             
-            // Recopilar disponibilidad del formato textual
-            const availabilityData = [];
+            // Recopilar disponibilidad
             const availableDays = Array.from(document.querySelectorAll('.w-availability-day:checked')).map(cb => cb.value);
+            const dayLabels = { lunes: 'Lun', martes: 'Mar', miercoles: 'Mié', jueves: 'Jue', viernes: 'Vie', sabado: 'Sáb', domingo: 'Dom' };
             
+            let availabilityText = 'No especificada';
             if(availableDays.length > 0) {
+                const parts = [];
                 availableDays.forEach(day => {
                     const input = document.getElementById(`availability-${day}`);
-                    if(input && input.value && input.value.trim()) {
-                        availabilityData.push(`${input.value.trim()}`);
+                    const value = input ? input.value.trim() : '';
+                    if(value) {
+                        // Si el valor ya empieza con el día (ej "Lun 09:00"), úsalo tal cual
+                        // Si no, agrega el día abreviado
+                        if(value.startsWith(dayLabels[day])) {
+                            parts.push(value);
+                        } else {
+                            parts.push(`${dayLabels[day]} ${value}`);
+                        }
                     }
                 });
+                if(parts.length > 0) availabilityText = parts.join(' | ');
             }
             
-            console.log('Availability data collected:', availabilityData);
+            console.log('Disponibilidad guardando - Días:', availableDays, 'Texto:', availabilityText);
             
             const workerData = { 
                 id: formId || 'w_' + Date.now(), 
@@ -1359,13 +1386,12 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 role: document.getElementById('w-role').value, 
                 status: document.getElementById('w-status').value, 
                 availabilityDays: availableDays,
-                availabilityTime: '',
-                availabilityText: availabilityData.length > 0 ? availabilityData.join(' | ') : 'No especificada',
+                availabilityText: availabilityText,
                 specialties: document.getElementById('w-specs').value, 
                 photo: document.getElementById('w-photo-base64').value 
             };
             
-            // Asignar systemRole según role seleccionado (para la navegación)
+            // Asignar systemRole según role seleccionado
             if(workerData.role === 'Administrador') workerData.systemRole = 'ADMIN';
             else if(workerData.role === 'Colaborador') workerData.systemRole = 'WORKER';
             else workerData.systemRole = 'WORKER';
@@ -1385,22 +1411,27 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 } 
             }
             
-            btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 mx-auto"></i>'; lucide.createIcons();
+            btn.disabled = true; 
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 mx-auto"></i>'; 
+            lucide.createIcons();
             
             try { 
-                console.log('Saving worker data:', workerData);
+                console.log('Guardando colaborador:', workerData);
                 await setDoc(doc(db, "workers", workerData.id), workerData); 
-                console.log('Worker saved successfully');
+                console.log('Colaborador guardado exitosamente');
                 window.closeWorkerModal(); 
                 window.showToast('Colaborador guardado con éxito'); 
                 await fetchAllData(); 
                 if(window.appState.currentView === 'directory') window.setView('directory'); 
                 if(window.appState.currentView === 'profile') window.setView('profile'); 
             } catch(e) { 
-                console.error('Error saving worker:', e);
-                window.showToast('Error al guardar: ' + e.message, 'error'); 
+                console.error('Error al guardar:', e);
+                window.showToast('Error: ' + e.message, 'error'); 
             } 
-            finally { btn.disabled = false; btn.innerText = 'Guardar'; }
+            finally { 
+                btn.disabled = false; 
+                btn.innerText = 'Guardar'; 
+            }
         };
     </script>
 </body>
