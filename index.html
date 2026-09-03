@@ -326,8 +326,8 @@
                                     </div>
                                 </div>
 
-                                <!-- OPCIONES DE HORARIO (dinámicas según días seleccionados) -->
-                                <div id="availability-options-container" class="space-y-2.5 sm:space-y-3">
+                                <!-- CAMPOS DE HORARIO TEXTUAL (dinámicos según días seleccionados) -->
+                                <div id="availability-options-container" class="space-y-2 sm:space-y-2.5">
                                     <!-- Se rellena dinámicamente con JavaScript -->
                                 </div>
 
@@ -1177,58 +1177,46 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                         if(checkbox) checkbox.checked = true;
                     });
                     
-                    // Llamar a updateAvailabilityUI para que genere las opciones
+                    // Llamar a updateAvailabilityUI para que genere los campos de texto
                     window.updateAvailabilityUI();
                     
                     // Pequeño delay para asegurar que el DOM se actualizó
                     setTimeout(() => {
-                        w.availabilityDays.forEach(day => {
-                            const details = w.availabilityDetails && w.availabilityDetails[day];
-                            const type = details ? details.type : 'allday';
+                        // Procesar availabilityText si existe (ej: "Lun 09:00 | Mar desde 14:00 | Mié")
+                        if(w.availabilityText && w.availabilityText !== 'No especificada') {
+                            const availabilityParts = w.availabilityText.split(' | ');
                             
-                            // Obtener el radio button para este tipo
-                            const typeRadio = document.querySelector(`input[name="${day}-type"][value="${type}"]`);
-                            console.log(`[DEBUG] Day: ${day}, Type: ${type}, Radio found:`, typeRadio);
-                            if(typeRadio) {
-                                typeRadio.checked = true;
-                                
-                                // Obtener el contenedor del día
-                                const dayContainer = typeRadio.closest('.bg-white');
-                                if(!dayContainer) {
-                                    console.log(`[DEBUG] Container not found for day: ${day}`);
-                                    return;
-                                }
-                                
-                                // Llenar los valores de hora si existen
-                                if(type === 'from' && details && details.fromTime) {
-                                    const fromInput = dayContainer.querySelector('.day-from-time');
-                                    if(fromInput) {
-                                        fromInput.value = details.fromTime;
-                                        console.log(`[DEBUG] Set ${day} from time to ${details.fromTime}`);
-                                    }
-                                } else if(type === 'until' && details && details.untilTime) {
-                                    const untilInput = dayContainer.querySelector('.day-until-time');
-                                    if(untilInput) {
-                                        untilInput.value = details.untilTime;
-                                        console.log(`[DEBUG] Set ${day} until time to ${details.untilTime}`);
-                                    }
-                                } else if(type === 'range' && details && details.fromTime && details.toTime) {
-                                    const fromRangeInput = dayContainer.querySelector('.day-from-range');
-                                    const toRangeInput = dayContainer.querySelector('.day-to-range');
-                                    if(fromRangeInput) fromRangeInput.value = details.fromTime;
-                                    if(toRangeInput) toRangeInput.value = details.toTime;
-                                    console.log(`[DEBUG] Set ${day} range to ${details.fromTime}-${details.toTime}`);
-                                }
-                            }
+                            // Mapeo simplificado de días cortos a largos
+                            const dayMap = {
+                                'Lun': 'lunes',
+                                'Mar': 'martes',
+                                'Mié': 'miercoles',
+                                'Jue': 'jueves',
+                                'Vie': 'viernes',
+                                'Sáb': 'sabado',
+                                'Dom': 'domingo'
+                            };
                             
-                            // Aplicar los cambios de habilitación
-                            window.toggleTimeInputs(day);
-                        });
+                            availabilityParts.forEach(part => {
+                                const trimmedPart = part.trim();
+                                const firstWord = trimmedPart.split(' ')[0];
+                                
+                                if(dayMap[firstWord]) {
+                                    const dayFull = dayMap[firstWord];
+                                    const input = document.getElementById(`availability-${dayFull}`);
+                                    if(input) {
+                                        input.value = trimmedPart;
+                                    }
+                                }
+                            });
+                        }
                         
-                        // Abrir el modal después de cargar todo
+                        // Abrir modal
                         document.getElementById('worker-modal').classList.add('active');
                     }, 100);
-                    return; // Importante: No abrir el modal aquí, se abre en el setTimeout
+                } else {
+                    // Sin disponibilidad, abrir directamente
+                    document.getElementById('worker-modal').classList.add('active');
                 }
                 
                 if(w.photo){ 
@@ -1244,12 +1232,9 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                     document.getElementById('w-bank-num').value = w.bankNumber||''; 
                     document.getElementById('w-bank-owner').value = w.bankOwner||'';
                 }
-                
-                // Si no hay disponibilidad guardada, abrir modal directamente
-                document.getElementById('worker-modal').classList.add('active');
             } else { 
                 document.getElementById('worker-modal-title').innerText = 'Nuevo Colaborador'; 
-                document.getElementById('w-id').value = ''; 
+                document.getElementById('w-id').value = '';
                 document.getElementById('worker-modal').classList.add('active');
             }
         };
@@ -1276,7 +1261,15 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             const container = document.getElementById('availability-options-container');
             const selectedDays = Array.from(document.querySelectorAll('.w-availability-day:checked')).map(cb => cb.value);
             
-            const dayLabels = { lunes: 'Lunes', martes: 'Martes', miercoles: 'Miércoles', jueves: 'Jueves', viernes: 'Viernes', sabado: 'Sábado', domingo: 'Domingo' };
+            const dayLabels = { 
+                lunes: 'Lunes', 
+                martes: 'Martes', 
+                miercoles: 'Miércoles', 
+                jueves: 'Jueves', 
+                viernes: 'Viernes', 
+                sabado: 'Sábado', 
+                domingo: 'Domingo' 
+            };
             
             if(selectedDays.length === 0) {
                 container.innerHTML = '';
@@ -1286,31 +1279,15 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             let html = '';
             selectedDays.forEach(day => {
                 html += `
-                    <div class="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-3.5">
-                        <p class="font-bold text-sm text-[#542c1c] mb-2.5">${dayLabels[day]}</p>
-                        <div class="space-y-2">
-                            <label class="flex items-center gap-2 cursor-pointer text-xs sm:text-sm">
-                                <input type="radio" name="${day}-type" class="day-type-radio" value="allday" checked onchange="window.toggleTimeInputs('${day}')">
-                                <span class="text-gray-600">Todo el día</span>
-                            </label>
-                            <label class="flex items-center gap-2 cursor-pointer text-xs sm:text-sm">
-                                <input type="radio" name="${day}-type" class="day-type-radio" value="from" onchange="window.toggleTimeInputs('${day}')">
-                                <span class="text-gray-600">Desde las</span>
-                                <input type="time" class="w-14 sm:w-16 border border-gray-200 bg-gray-50 rounded px-1 py-0.5 text-xs focus:border-[#bb7434] focus:outline-none day-from-time" value="09:00" disabled>
-                            </label>
-                            <label class="flex items-center gap-2 cursor-pointer text-xs sm:text-sm">
-                                <input type="radio" name="${day}-type" class="day-type-radio" value="until" onchange="window.toggleTimeInputs('${day}')">
-                                <span class="text-gray-600">Hasta las</span>
-                                <input type="time" class="w-14 sm:w-16 border border-gray-200 bg-gray-50 rounded px-1 py-0.5 text-xs focus:border-[#bb7434] focus:outline-none day-until-time" value="17:00" disabled>
-                            </label>
-                            <label class="flex items-center gap-2 cursor-pointer text-xs sm:text-sm">
-                                <input type="radio" name="${day}-type" class="day-type-radio" value="range" onchange="window.toggleTimeInputs('${day}')">
-                                <span class="text-gray-600">De</span>
-                                <input type="time" class="w-14 sm:w-16 border border-gray-200 bg-gray-50 rounded px-1 py-0.5 text-xs focus:border-[#bb7434] focus:outline-none day-from-range" value="09:00" disabled>
-                                <span class="text-gray-500">a</span>
-                                <input type="time" class="w-14 sm:w-16 border border-gray-200 bg-gray-50 rounded px-1 py-0.5 text-xs focus:border-[#bb7434] focus:outline-none day-to-range" value="17:00" disabled>
-                            </label>
-                        </div>
+                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center">
+                        <label class="font-bold text-sm text-[#542c1c] w-20 sm:w-24 flex-shrink-0">${dayLabels[day]}:</label>
+                        <input 
+                            type="text" 
+                            class="w-full sm:flex-1 border border-gray-200 bg-gray-50 rounded-lg px-3 py-2 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors"
+                            placeholder="ej: Todo el día / 09:00 / desde 14:00 / hasta 17:00 / 09:00-18:00"
+                            data-day="${day}"
+                            id="availability-${day}"
+                        >
                     </div>
                 `;
             });
@@ -1319,38 +1296,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
         };
 
         window.toggleTimeInputs = (day) => {
-            const typeRadio = document.querySelector(`input[name="${day}-type"]:checked`);
-            if(!typeRadio) return;
-            
-            const type = typeRadio.value;
-            const container = typeRadio.closest('.bg-white');
-            
-            // Deshabilitar todos los inputs de tiempo primero
-            container.querySelectorAll('input[type="time"]').forEach(input => {
-                input.disabled = true;
-                input.classList.add('bg-gray-100', 'cursor-not-allowed');
-                input.classList.remove('bg-gray-50');
-            });
-            
-            // Habilitar solo los relevantes
-            if(type === 'from') {
-                const input = container.querySelector('.day-from-time');
-                input.disabled = false;
-                input.classList.remove('bg-gray-100', 'cursor-not-allowed');
-                input.classList.add('bg-gray-50');
-            } else if(type === 'until') {
-                const input = container.querySelector('.day-until-time');
-                input.disabled = false;
-                input.classList.remove('bg-gray-100', 'cursor-not-allowed');
-                input.classList.add('bg-gray-50');
-            } else if(type === 'range') {
-                const inputs = [container.querySelector('.day-from-range'), container.querySelector('.day-to-range')];
-                inputs.forEach(input => {
-                    input.disabled = false;
-                    input.classList.remove('bg-gray-100', 'cursor-not-allowed');
-                    input.classList.add('bg-gray-50');
-                });
-            }
+            // Ya no necesaria con interfaz textual
         };
 
         window.deleteWorker = async (id) => {
@@ -1368,44 +1314,20 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             const formId = document.getElementById('w-id').value; 
             const btn = document.getElementById('save-worker-btn');
             
-            // Recopilar disponibilidad del nuevo formato dinámico
+            // Recopilar disponibilidad del formato textual
             const availabilityData = [];
-            const availabilityDetails = {}; // Guardar detalles de tipo y horario
             const availableDays = Array.from(document.querySelectorAll('.w-availability-day:checked')).map(cb => cb.value);
             
             if(availableDays.length > 0) {
-                const dayLabels = { lunes: 'Lun', martes: 'Mar', miercoles: 'Mié', jueves: 'Jue', viernes: 'Vie', sabado: 'Sáb', domingo: 'Dom' };
-                
                 availableDays.forEach(day => {
-                    const typeRadio = document.querySelector(`input[name="${day}-type"]:checked`);
-                    if(!typeRadio) return;
-                    
-                    const type = typeRadio.value;
-                    const label = dayLabels[day];
-                    const dayContainer = typeRadio.closest('.bg-white');
-                    
-                    // Guardar detalles del tipo de horario
-                    availabilityDetails[day] = { type: type };
-                    
-                    if(type === 'allday') {
-                        availabilityData.push(`${label}`);
-                    } else if(type === 'from') {
-                        const fromTime = dayContainer.querySelector('.day-from-time').value;
-                        availabilityDetails[day].fromTime = fromTime;
-                        availabilityData.push(`${label} desde ${fromTime}`);
-                    } else if(type === 'until') {
-                        const untilTime = dayContainer.querySelector('.day-until-time').value;
-                        availabilityDetails[day].untilTime = untilTime;
-                        availabilityData.push(`${label} hasta ${untilTime}`);
-                    } else if(type === 'range') {
-                        const fromRange = dayContainer.querySelector('.day-from-range').value;
-                        const toRange = dayContainer.querySelector('.day-to-range').value;
-                        availabilityDetails[day].fromTime = fromRange;
-                        availabilityDetails[day].toTime = toRange;
-                        availabilityData.push(`${label} ${fromRange}-${toRange}`);
+                    const input = document.getElementById(`availability-${day}`);
+                    if(input && input.value && input.value.trim()) {
+                        availabilityData.push(`${input.value.trim()}`);
                     }
                 });
             }
+            
+            console.log('Availability data collected:', availabilityData);
             
             const workerData = { 
                 id: formId || 'w_' + Date.now(), 
@@ -1424,7 +1346,6 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 role: document.getElementById('w-role').value, 
                 status: document.getElementById('w-status').value, 
                 availabilityDays: availableDays,
-                availabilityDetails: availabilityDetails,
                 availabilityTime: '',
                 availabilityText: availabilityData.length > 0 ? availabilityData.join(' | ') : 'No especificada',
                 specialties: document.getElementById('w-specs').value, 
@@ -1454,13 +1375,18 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 mx-auto"></i>'; lucide.createIcons();
             
             try { 
+                console.log('Saving worker data:', workerData);
                 await setDoc(doc(db, "workers", workerData.id), workerData); 
+                console.log('Worker saved successfully');
                 window.closeWorkerModal(); 
                 window.showToast('Colaborador guardado con éxito'); 
                 await fetchAllData(); 
                 if(window.appState.currentView === 'directory') window.setView('directory'); 
                 if(window.appState.currentView === 'profile') window.setView('profile'); 
-            } catch(e) { window.showToast('Error al guardar', 'error'); } 
+            } catch(e) { 
+                console.error('Error saving worker:', e);
+                window.showToast('Error al guardar: ' + e.message, 'error'); 
+            } 
             finally { btn.disabled = false; btn.innerText = 'Guardar'; }
         };
     </script>
