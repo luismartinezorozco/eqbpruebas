@@ -292,20 +292,77 @@
                                 <input id="w-specs" placeholder="Especialidades" class="w-full border border-gray-200 bg-gray-50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm focus:bg-white focus:border-[#bb7434] focus:outline-none transition-colors">
                             </div>
                             <div class="sm:col-span-2">
-                                <p class="font-bold text-gray-600 text-xs mb-2">Disponibilidad Laboral</p>
-                                <div class="space-y-1.5 sm:space-y-2">
-                                    <div class="grid grid-cols-3 sm:grid-cols-4 gap-1 sm:gap-2">
-                                        <label class="flex items-center gap-1 cursor-pointer text-xs"><input type="checkbox" class="w-availability-day rounded" value="lunes"> <span class="truncate">Lun</span></label>
-                                        <label class="flex items-center gap-1 cursor-pointer text-xs"><input type="checkbox" class="w-availability-day rounded" value="martes"> <span class="truncate">Mar</span></label>
-                                        <label class="flex items-center gap-1 cursor-pointer text-xs"><input type="checkbox" class="w-availability-day rounded" value="miercoles"> <span class="truncate">Mié</span></label>
-                                        <label class="flex items-center gap-1 cursor-pointer text-xs"><input type="checkbox" class="w-availability-day rounded" value="jueves"> <span class="truncate">Jue</span></label>
-                                        <label class="flex items-center gap-1 cursor-pointer text-xs"><input type="checkbox" class="w-availability-day rounded" value="viernes"> <span class="truncate">Vie</span></label>
-                                        <label class="flex items-center gap-1 cursor-pointer text-xs"><input type="checkbox" class="w-availability-day rounded" value="sabado"> <span class="truncate">Sáb</span></label>
-                                        <label class="flex items-center gap-1 cursor-pointer text-xs"><input type="checkbox" class="w-availability-day rounded" value="domingo"> <span class="truncate">Dom</span></label>
+                                <p class="font-bold text-[#542c1c] text-xs mb-3 sm:mb-4 uppercase tracking-wide">Disponibilidad Laboral</p>
+                                <div class="space-y-2 sm:space-y-3">
+                                    <!-- LUNES -->
+                                    <div class="border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden">
+                                        <div class="bg-gray-50 p-3 sm:p-3.5 flex items-center justify-between">
+                                            <label class="flex items-center gap-2.5 cursor-pointer flex-1"><input type="checkbox" class="w-availability-day rounded" value="lunes" onchange="window.toggleDayOptions(this)"> <span class="font-bold text-sm text-gray-700">Lunes</span></label>
+                                        </div>
+                                        <div class="day-options hidden bg-white p-3 sm:p-3.5 space-y-2">
+                                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm"><input type="radio" name="lunes-time" class="day-time-option" value="allday"> <span class="text-gray-600">Todo el día</span></label>
+                                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm"><input type="radio" name="lunes-time" class="day-time-option" value="partial"> <span class="text-gray-600">Desde las</span> <input type="time" class="w-16 sm:w-20 border border-gray-200 bg-gray-50 rounded p-1 sm:p-1.5 text-xs focus:border-[#bb7434] focus:outline-none"></label>
+                                        </div>
                                     </div>
-                                    <div class="bg-gray-50 p-2 sm:p-2.5 rounded-lg sm:rounded-xl border border-gray-200">
-                                        <label class="text-[10px] sm:text-xs text-gray-600 block mb-1">Hora desde:</label>
-                                        <input type="time" id="w-availability-time" class="w-full border border-gray-200 bg-white rounded-lg p-1.5 sm:p-2 text-xs focus:border-[#bb7434] focus:outline-none transition-colors">
+                                    <!-- MARTES -->
+                                    <div class="border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden">
+                                        <div class="bg-gray-50 p-3 sm:p-3.5 flex items-center justify-between">
+                                            <label class="flex items-center gap-2.5 cursor-pointer flex-1"><input type="checkbox" class="w-availability-day rounded" value="martes" onchange="window.toggleDayOptions(this)"> <span class="font-bold text-sm text-gray-700">Martes</span></label>
+                                        </div>
+                                        <div class="day-options hidden bg-white p-3 sm:p-3.5 space-y-2">
+                                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm"><input type="radio" name="martes-time" class="day-time-option" value="allday"> <span class="text-gray-600">Todo el día</span></label>
+                                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm"><input type="radio" name="martes-time" class="day-time-option" value="partial"> <span class="text-gray-600">Desde las</span> <input type="time" class="w-16 sm:w-20 border border-gray-200 bg-gray-50 rounded p-1 sm:p-1.5 text-xs focus:border-[#bb7434] focus:outline-none"></label>
+                                        </div>
+                                    </div>
+                                    <!-- MIÉRCOLES -->
+                                    <div class="border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden">
+                                        <div class="bg-gray-50 p-3 sm:p-3.5 flex items-center justify-between">
+                                            <label class="flex items-center gap-2.5 cursor-pointer flex-1"><input type="checkbox" class="w-availability-day rounded" value="miercoles" onchange="window.toggleDayOptions(this)"> <span class="font-bold text-sm text-gray-700">Miércoles</span></label>
+                                        </div>
+                                        <div class="day-options hidden bg-white p-3 sm:p-3.5 space-y-2">
+                                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm"><input type="radio" name="miercoles-time" class="day-time-option" value="allday"> <span class="text-gray-600">Todo el día</span></label>
+                                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm"><input type="radio" name="miercoles-time" class="day-time-option" value="partial"> <span class="text-gray-600">Desde las</span> <input type="time" class="w-16 sm:w-20 border border-gray-200 bg-gray-50 rounded p-1 sm:p-1.5 text-xs focus:border-[#bb7434] focus:outline-none"></label>
+                                        </div>
+                                    </div>
+                                    <!-- JUEVES -->
+                                    <div class="border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden">
+                                        <div class="bg-gray-50 p-3 sm:p-3.5 flex items-center justify-between">
+                                            <label class="flex items-center gap-2.5 cursor-pointer flex-1"><input type="checkbox" class="w-availability-day rounded" value="jueves" onchange="window.toggleDayOptions(this)"> <span class="font-bold text-sm text-gray-700">Jueves</span></label>
+                                        </div>
+                                        <div class="day-options hidden bg-white p-3 sm:p-3.5 space-y-2">
+                                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm"><input type="radio" name="jueves-time" class="day-time-option" value="allday"> <span class="text-gray-600">Todo el día</span></label>
+                                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm"><input type="radio" name="jueves-time" class="day-time-option" value="partial"> <span class="text-gray-600">Desde las</span> <input type="time" class="w-16 sm:w-20 border border-gray-200 bg-gray-50 rounded p-1 sm:p-1.5 text-xs focus:border-[#bb7434] focus:outline-none"></label>
+                                        </div>
+                                    </div>
+                                    <!-- VIERNES -->
+                                    <div class="border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden">
+                                        <div class="bg-gray-50 p-3 sm:p-3.5 flex items-center justify-between">
+                                            <label class="flex items-center gap-2.5 cursor-pointer flex-1"><input type="checkbox" class="w-availability-day rounded" value="viernes" onchange="window.toggleDayOptions(this)"> <span class="font-bold text-sm text-gray-700">Viernes</span></label>
+                                        </div>
+                                        <div class="day-options hidden bg-white p-3 sm:p-3.5 space-y-2">
+                                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm"><input type="radio" name="viernes-time" class="day-time-option" value="allday"> <span class="text-gray-600">Todo el día</span></label>
+                                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm"><input type="radio" name="viernes-time" class="day-time-option" value="partial"> <span class="text-gray-600">Desde las</span> <input type="time" class="w-16 sm:w-20 border border-gray-200 bg-gray-50 rounded p-1 sm:p-1.5 text-xs focus:border-[#bb7434] focus:outline-none"></label>
+                                        </div>
+                                    </div>
+                                    <!-- SÁBADO -->
+                                    <div class="border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden">
+                                        <div class="bg-gray-50 p-3 sm:p-3.5 flex items-center justify-between">
+                                            <label class="flex items-center gap-2.5 cursor-pointer flex-1"><input type="checkbox" class="w-availability-day rounded" value="sabado" onchange="window.toggleDayOptions(this)"> <span class="font-bold text-sm text-gray-700">Sábado</span></label>
+                                        </div>
+                                        <div class="day-options hidden bg-white p-3 sm:p-3.5 space-y-2">
+                                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm"><input type="radio" name="sabado-time" class="day-time-option" value="allday"> <span class="text-gray-600">Todo el día</span></label>
+                                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm"><input type="radio" name="sabado-time" class="day-time-option" value="partial"> <span class="text-gray-600">Desde las</span> <input type="time" class="w-16 sm:w-20 border border-gray-200 bg-gray-50 rounded p-1 sm:p-1.5 text-xs focus:border-[#bb7434] focus:outline-none"></label>
+                                        </div>
+                                    </div>
+                                    <!-- DOMINGO -->
+                                    <div class="border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden">
+                                        <div class="bg-gray-50 p-3 sm:p-3.5 flex items-center justify-between">
+                                            <label class="flex items-center gap-2.5 cursor-pointer flex-1"><input type="checkbox" class="w-availability-day rounded" value="domingo" onchange="window.toggleDayOptions(this)"> <span class="font-bold text-sm text-gray-700">Domingo</span></label>
+                                        </div>
+                                        <div class="day-options hidden bg-white p-3 sm:p-3.5 space-y-2">
+                                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm"><input type="radio" name="domingo-time" class="day-time-option" value="allday"> <span class="text-gray-600">Todo el día</span></label>
+                                            <label class="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm"><input type="radio" name="domingo-time" class="day-time-option" value="partial"> <span class="text-gray-600">Desde las</span> <input type="time" class="w-16 sm:w-20 border border-gray-200 bg-gray-50 rounded p-1 sm:p-1.5 text-xs focus:border-[#bb7434] focus:outline-none"></label>
+                                        </div>
                                     </div>
                                     <input type="hidden" id="w-availability" value="">
                                 </div>
@@ -1112,7 +1169,18 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             document.getElementById('w-photo-preview').classList.add('hidden'); 
             document.getElementById('w-photo-icon').classList.remove('hidden'); 
             document.getElementById('w-photo-base64').value = '';
-            document.querySelectorAll('.w-availability-day').forEach(cb => cb.checked = false);
+            
+            // Reset disponibilidad
+            document.querySelectorAll('.w-availability-day').forEach(cb => {
+                cb.checked = false;
+                const container = cb.closest('.border');
+                const dayOptions = container.querySelector('.day-options');
+                dayOptions.classList.add('hidden');
+                dayOptions.querySelectorAll('input[type="radio"], input[type="time"]').forEach(el => {
+                    if(el.type === 'radio') el.checked = false;
+                    if(el.type === 'time') el.value = '';
+                });
+            });
             
             const canSeeBank = ['ADMIN', 'HR'].includes(window.appState.currentUser.systemRole); 
             document.getElementById('bank-section-form').style.display = canSeeBank ? 'block' : 'none';
@@ -1137,14 +1205,31 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 document.getElementById('w-status').value = w.status; 
                 document.getElementById('w-specs').value = w.specialties || '';
                 
-                if(w.availabilityDays) {
-                    w.availabilityDays.forEach(day => {
+                if(w.availabilityDays && w.availabilityDays.length > 0) {
+                    w.availabilityDays.forEach((day, index) => {
                         const checkbox = document.querySelector(`.w-availability-day[value="${day}"]`);
-                        if(checkbox) checkbox.checked = true;
+                        if(checkbox) {
+                            checkbox.checked = true;
+                            // Mostrar opciones
+                            const container = checkbox.closest('.border');
+                            const dayOptions = container.querySelector('.day-options');
+                            dayOptions.classList.remove('hidden');
+                            
+                            // Seleccionar opción de horario (por defecto "Todo el día")
+                            const firstRadio = dayOptions.querySelector('input[type="radio"][value="allday"]');
+                            if(firstRadio) firstRadio.checked = true;
+                            
+                            // Si es el primer día y hay availabilityTime, usar eso
+                            if(index === 0 && w.availabilityTime) {
+                                const partialRadio = dayOptions.querySelector('input[type="radio"][value="partial"]');
+                                const timeInput = dayOptions.querySelector('input[type="time"]');
+                                if(partialRadio && timeInput) {
+                                    partialRadio.checked = true;
+                                    timeInput.value = w.availabilityTime;
+                                }
+                            }
+                        }
                     });
-                }
-                if(w.availabilityTime) {
-                    document.getElementById('w-availability-time').value = w.availabilityTime;
                 }
                 
                 if(w.photo){ 
@@ -1185,6 +1270,22 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             }
         };
 
+        window.toggleDayOptions = (checkbox) => {
+            const container = checkbox.closest('.border');
+            const dayOptions = container.querySelector('.day-options');
+            if(checkbox.checked) {
+                dayOptions.classList.remove('hidden');
+                const firstRadio = dayOptions.querySelector('input[type="radio"]');
+                if(firstRadio) firstRadio.checked = true;
+            } else {
+                dayOptions.classList.add('hidden');
+                dayOptions.querySelectorAll('input[type="radio"], input[type="time"]').forEach(el => {
+                    if(el.type === 'radio') el.checked = false;
+                    if(el.type === 'time') el.value = '';
+                });
+            }
+        };
+
         window.deleteWorker = async (id) => {
             if (!confirm('¿Estás seguro de eliminar este colaborador irremediablemente?')) return;
             try {
@@ -1200,8 +1301,26 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             const formId = document.getElementById('w-id').value; 
             const btn = document.getElementById('save-worker-btn');
             
+            // Recopilar disponibilidad con el nuevo formato (días con opciones de horario)
+            const availabilityData = [];
+            document.querySelectorAll('.w-availability-day:checked').forEach(checkbox => {
+                const dayName = checkbox.value;
+                const dayContainer = checkbox.closest('.border');
+                const dayOptions = dayContainer.querySelector('.day-options');
+                const selectedRadio = dayOptions.querySelector('input[type="radio"]:checked');
+                
+                if(selectedRadio) {
+                    if(selectedRadio.value === 'allday') {
+                        availabilityData.push(`${dayName.charAt(0).toUpperCase() + dayName.slice(1)} - Todo el día`);
+                    } else {
+                        const timeInput = selectedRadio.parentElement.querySelector('input[type="time"]');
+                        const time = timeInput ? timeInput.value : '09:00';
+                        availabilityData.push(`${dayName.charAt(0).toUpperCase() + dayName.slice(1)} desde ${time}`);
+                    }
+                }
+            });
+            
             const availableDays = Array.from(document.querySelectorAll('.w-availability-day:checked')).map(cb => cb.value);
-            const availabilityTime = document.getElementById('w-availability-time').value;
             
             const workerData = { 
                 id: formId || 'w_' + Date.now(), 
@@ -1220,8 +1339,8 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                 role: document.getElementById('w-role').value, 
                 status: document.getElementById('w-status').value, 
                 availabilityDays: availableDays,
-                availabilityTime: availabilityTime,
-                availabilityText: availableDays.length > 0 ? `${availableDays.join(', ')} desde ${availabilityTime}` : '',
+                availabilityTime: '',
+                availabilityText: availabilityData.length > 0 ? availabilityData.join(' | ') : 'No especificada',
                 specialties: document.getElementById('w-specs').value, 
                 photo: document.getElementById('w-photo-base64').value 
             };
