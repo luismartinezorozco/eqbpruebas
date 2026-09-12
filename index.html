@@ -1143,28 +1143,32 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             return `
             <div class="max-w-4xl mx-auto pb-6">
                 <div class="bg-white px-4 sm:px-6 md:px-10 pt-6 sm:pt-8 pb-4 sm:pb-6 shadow-sm z-10 relative md:rounded-3xl md:mt-2">
-                    ${role !== 'WORKER' ? `<button onclick="setView('directory')" class="text-gray-400 hover:text-gray-600 mb-4 sm:mb-6 font-bold text-sm flex items-center gap-2 transition-colors\"><i data-lucide="chevron-left" class="w-4 h-4"></i> <span class="hidden sm:inline\">Volver</span></button>` : ''}
+                    ${role !== 'WORKER' ? `<button onclick="setView('directory')" class="text-gray-400 hover:text-gray-600 mb-4 sm:mb-6 font-bold text-sm flex items-center gap-2 transition-colors"><i data-lucide="chevron-left" class="w-4 h-4"></i> <span class="hidden sm:inline">Volver</span></button>` : ''}
                     <div class="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 md:gap-6">
                         ${photo}
                         <div class="flex-1 min-w-0">
                             <h2 class="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 leading-tight mb-1 truncate">${w.name}</h2>
                             <p class="text-xs sm:text-sm font-medium text-[#542c1c] truncate mb-3">${w.role} | CC. ${w.document}</p>
                             <div class="flex gap-2 flex-wrap">
-                                ${canEdit ? `<button onclick="openWorkerForm('${w.id}')" class="bg-gray-100 text-gray-600 px-2.5 sm:px-4 py-2 rounded-lg sm:rounded-xl flex items-center justify-center shadow-sm text-xs font-bold hover:bg-gray-200 transition-colors shrink-0 active:scale-95\"><i data-lucide="edit-3" class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1\"></i> <span class="hidden sm:inline\">Editar</span></button>` : ''}\n                                ${role === 'ADMIN' ? `<button onclick="window.deleteWorker('${w.id}')" class="bg-red-50 text-red-500 px-2.5 sm:px-4 py-2 rounded-lg sm:rounded-xl flex items-center justify-center shadow-sm text-xs font-bold hover:bg-red-100 transition-colors shrink-0 active:scale-95\"><i data-lucide="trash-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1\"></i> <span class="hidden sm:inline\">Eliminar</span></button>` : ''}\n                            </div>
+                                ${canEdit ? `<button onclick="openWorkerForm('${w.id}')" class="bg-gray-100 text-gray-600 px-2.5 sm:px-4 py-2 rounded-lg sm:rounded-xl flex items-center justify-center shadow-sm text-xs font-bold hover:bg-gray-200 transition-colors shrink-0 active:scale-95"><i data-lucide="edit-3" class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1"></i> <span class="hidden sm:inline">Editar</span></button>` : ''}
+                                ${role === 'ADMIN' ? `<button onclick="window.deleteWorker('${w.id}')" class="bg-red-50 text-red-500 px-2.5 sm:px-4 py-2 rounded-lg sm:rounded-xl flex items-center justify-center shadow-sm text-xs font-bold hover:bg-red-100 transition-colors shrink-0 active:scale-95"><i data-lucide="trash-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1"></i> <span class="hidden sm:inline">Eliminar</span></button>` : ''}
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- TABS -->
-                <div class="flex bg-white px-1.5 sm:px-2 md:px-8 border-b border-gray-200 overflow-x-auto hide-scroll md:rounded-3xl md:mt-4 md:shadow-sm">
-                    <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="flex-shrink-0 px-2 sm:px-3 md:px-5 py-2.5 sm:py-3 md:py-4 text-xs font-bold text-[#542c1c] border-b-[3px] border-[#542c1c] transition-colors whitespace-nowrap"><i class="fas fa-star mr-1"></i> Pts</button>
-                    <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-shrink-0 px-2 sm:px-3 md:px-5 py-2.5 sm:py-3 md:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i class="fas fa-briefcase mr-1"></i> Info</button>
-                    <button onclick="switchTab('documentos')" id="tab-btn-documentos" class="flex-shrink-0 px-2 sm:px-3 md:px-5 py-2.5 sm:py-3 md:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i class="fas fa-file-pdf mr-1"></i> Docs</button>
-                    <button onclick="switchTab('anuncios')" id="tab-btn-anuncios" class="flex-shrink-0 px-2 sm:px-3 md:px-5 py-2.5 sm:py-3 md:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i class="fas fa-bullhorn mr-1"></i> Anuncios</button>
-                    ${canEdit ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="flex-shrink-0 px-2 sm:px-3 md:px-5 py-2.5 sm:py-3 md:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i class="fas fa-lock mr-1"></i> Banco</button>` : ''}
+                <!-- TABS NAVEGACIÓN -->
+                <div class="flex gap-2 sm:gap-4 bg-white px-3 sm:px-5 md:px-8 border-b border-gray-200 overflow-x-auto hide-scrollbar md:rounded-3xl md:mt-4 md:shadow-sm">
+                    <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="flex-shrink-0 flex items-center justify-center px-2 sm:px-3 md:px-5 py-3 md:py-4 text-[11px] sm:text-xs font-bold text-[#542c1c] border-b-[3px] border-[#542c1c] transition-colors whitespace-nowrap"><i data-lucide="star" class="w-4 h-4 mr-1.5"></i> Pts</button>
+                    <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-shrink-0 flex items-center justify-center px-2 sm:px-3 md:px-5 py-3 md:py-4 text-[11px] sm:text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i data-lucide="briefcase" class="w-4 h-4 mr-1.5"></i> Info</button>
+                    <button onclick="switchTab('documentos')" id="tab-btn-documentos" class="flex-shrink-0 flex items-center justify-center px-2 sm:px-3 md:px-5 py-3 md:py-4 text-[11px] sm:text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i data-lucide="file-text" class="w-4 h-4 mr-1.5"></i> Docs</button>
+                    <button onclick="switchTab('anuncios')" id="tab-btn-anuncios" class="flex-shrink-0 flex items-center justify-center px-2 sm:px-3 md:px-5 py-3 md:py-4 text-[11px] sm:text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i data-lucide="megaphone" class="w-4 h-4 mr-1.5"></i> Anuncios</button>
+                    ${canEdit ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="flex-shrink-0 flex items-center justify-center px-2 sm:px-3 md:px-5 py-3 md:py-4 text-[11px] sm:text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i data-lucide="lock" class="w-4 h-4 mr-1.5"></i> Banco</button>` : ''}
                 </div>
 
+                <!-- CONTENIDO TABS -->
                 <div class="p-3 sm:p-5 md:p-8 md:bg-white md:mt-4 md:rounded-3xl md:shadow-sm space-y-2 sm:space-y-3">
+                    
                     <!-- PUNTOS -->
                     <div id="tab-rendimiento" class="${window.appState.activeProfileTab === 'rendimiento' ? 'block' : 'hidden'} space-y-2 sm:space-y-3">
                         <div class="grid grid-cols-2 gap-2 sm:gap-3">
