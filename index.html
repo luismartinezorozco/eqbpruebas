@@ -1124,7 +1124,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
             let announcementsHtml = '';
             if(relevantMessages.length > 0) {
                 announcementsHtml = `
-                <div class="max-w-4xl mx-auto mt-3 sm:mt-4 space-y-2 sm:space-y-2.5">
+                <div class="space-y-2 sm:space-y-2.5">
                     ${relevantMessages.map(m => `
                         <div class="bg-amber-50 border border-amber-200 p-3 sm:p-4 rounded-lg sm:rounded-2xl flex items-start gap-3">
                             <i data-lucide="megaphone" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0 mt-0.5"></i>
@@ -1136,6 +1136,8 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                         </div>
                     `).join('')}
                 </div>`;
+            } else {
+                announcementsHtml = '<p class="text-xs sm:text-sm text-gray-400 text-center py-4">No hay anuncios ni notas</p>';
             }
 
             return `
@@ -1152,13 +1154,13 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                         </div>
                     </div>
                 </div>
-                ${announcementsHtml}
 
                 <!-- TABS -->
                 <div class="flex bg-white px-1.5 sm:px-2 md:px-8 border-b border-gray-200 overflow-x-auto hide-scroll md:rounded-3xl md:mt-4 md:shadow-sm">
                     <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="flex-shrink-0 px-2 sm:px-3 md:px-5 py-2.5 sm:py-3 md:py-4 text-xs font-bold text-[#542c1c] border-b-[3px] border-[#542c1c] transition-colors whitespace-nowrap"><i class="fas fa-star mr-1"></i> Pts</button>
                     <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-shrink-0 px-2 sm:px-3 md:px-5 py-2.5 sm:py-3 md:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i class="fas fa-briefcase mr-1"></i> Info</button>
                     <button onclick="switchTab('documentos')" id="tab-btn-documentos" class="flex-shrink-0 px-2 sm:px-3 md:px-5 py-2.5 sm:py-3 md:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i class="fas fa-file-pdf mr-1"></i> Docs</button>
+                    <button onclick="switchTab('anuncios')" id="tab-btn-anuncios" class="flex-shrink-0 px-2 sm:px-3 md:px-5 py-2.5 sm:py-3 md:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i class="fas fa-bullhorn mr-1"></i> Anuncios</button>
                     ${canEdit ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="flex-shrink-0 px-2 sm:px-3 md:px-5 py-2.5 sm:py-3 md:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap"><i class="fas fa-lock mr-1"></i> Banco</button>` : ''}
                 </div>
 
@@ -1246,6 +1248,11 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
                         <div class="space-y-1.5 sm:space-y-2">${dList || '<p class="text-xs sm:text-sm text-gray-400 text-center py-4">Sin documentos</p>'}</div>
                     </div>
 
+                    <!-- ANUNCIOS -->
+                    <div id="tab-anuncios" class="${window.appState.activeProfileTab === 'anuncios' ? 'block' : 'hidden'}">
+                        ${announcementsHtml}
+                    </div>
+
                     <!-- BANCO -->
                     ${canEdit ? `
                     <div id="tab-banco" class="${window.appState.activeProfileTab === 'banco' ? 'block' : 'hidden'} space-y-2.5 sm:space-y-3">
@@ -1263,7 +1270,7 @@ mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex item
 
         window.switchTab = (tabId) => {
             window.appState.activeProfileTab = tabId;
-            ['rendimiento', 'laboral', 'documentos', 'banco'].forEach(t => {
+            ['rendimiento', 'laboral', 'documentos', 'anuncios', 'banco'].forEach(t => {
                 const content = document.getElementById(`tab-${t}`); const btn = document.getElementById(`tab-btn-${t}`);
                 if(content && btn) {
                     if(t === tabId) { 
