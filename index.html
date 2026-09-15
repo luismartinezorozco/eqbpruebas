@@ -384,6 +384,52 @@
             loginType: 'admin'
         };
 
+        window.evaluationCriteria = [
+            // POSITIVOS
+            { reason: "Llegar puntualmente al evento", amount: 5, type: "pos" },
+            { reason: "Foto de evidencia al llegar", amount: 5, type: "pos" },
+            { reason: "Foto de evidencia al finalizar", amount: 5, type: "pos" },
+            { reason: "Realizar un show espectacular y de calidad", amount: 5, type: "pos" },
+            { reason: "Ser recursivo ante situaciones inesperadas", amount: 5, type: "pos" },
+            { reason: "Realizar video de la utilería que entra y sale de la casa", amount: 5, type: "pos" },
+            { reason: "Recibir felicitación o reconocimiento especial de un cliente", amount: 10, type: "pos" },
+            { reason: "Mostrar disposición para apoyar al equipo", amount: 5, type: "pos" },
+            // NEGATIVOS
+            { reason: "Llegar tarde sin justificación", amount: 10, type: "neg" },
+            { reason: "No enviar foto de llegada", amount: 5, type: "neg" },
+            { reason: "No enviar foto de finalización", amount: 5, type: "neg" },
+            { reason: "Olvidar algún implemento del evento", amount: 10, type: "neg" },
+            { reason: "No revisar los elementos recibidos y reportar faltantes", amount: 10, type: "neg" },
+            { reason: "No realizar video de la utilería cuando sea solicitado", amount: 5, type: "neg" },
+            { reason: "No confirmar una información importante", amount: 5, type: "neg" },
+            { reason: "Incumplir una regla de la empresa", amount: 10, type: "neg" },
+            { reason: "Queja o reclamo de un cliente por comportamiento o incumplimiento", amount: 15, type: "neg" },
+            { reason: "Brindar su número personal a un cliente", amount: 30, type: "neg" },
+            { reason: "Solicitar el número personal del cliente", amount: 30, type: "neg" },
+            { reason: "Conducta que afecte gravemente la imagen de la empresa", amount: 40, type: "neg" },
+            { reason: "Mal de presentación personal, no aretes, no gorras que no sean de las asignadas, mal peinado, Jean rotos, camisa rotas", amount: 15, type: "neg" }
+        ];
+
+        window.handlePresetChange = (selectElement) => {
+            const val = selectElement.value;
+            const amountInput = document.getElementById('pt-amount');
+            const typeSelect = document.getElementById('pt-type');
+            const reasonInput = document.getElementById('pt-reason');
+
+            if (val === 'custom') {
+                amountInput.value = '';
+                reasonInput.value = '';
+                reasonInput.focus();
+            } else {
+                const criteria = window.evaluationCriteria[val];
+                if (criteria) {
+                    amountInput.value = criteria.amount;
+                    typeSelect.value = criteria.type;
+                    reasonInput.value = criteria.reason;
+                }
+            }
+        };
+
         window.getInitials = (name) => {
             const parts = name.trim().split(' ');
             if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
@@ -967,6 +1013,21 @@
                 </div>`;
             }
 
+            const posOptions = window.evaluationCriteria.map((c, index) => c.type === 'pos' ? `<option value="${index}">${c.reason} (+${c.amount})</option>` : '').join('');
+            const negOptions = window.evaluationCriteria.map((c, index) => c.type === 'neg' ? `<option value="${index}">${c.reason} (-${c.amount})</option>` : '').join('');
+            
+            const presetSelectHtml = `
+                <select id="pt-preset" onchange="window.handlePresetChange(this)" class="w-full mb-2 p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white md:bg-gray-50 border border-gray-200 text-xs sm:text-sm font-medium text-gray-700 focus:outline-none focus:border-[#bb7434] transition-colors cursor-pointer">
+                    <option value="custom">✍️ Otro (Ingreso manual de evaluación)</option>
+                    <optgroup label="✅ PUNTOS POSITIVOS">
+                        ${posOptions}
+                    </optgroup>
+                    <optgroup label="🚫 PENALIZACIONES">
+                        ${negOptions}
+                    </optgroup>
+                </select>
+            `;
+
             return `
             <div class="max-w-4xl mx-auto pb-6">
                 <div class="bg-white px-4 sm:px-6 md:px-10 pt-6 sm:pt-8 pb-4 sm:pb-6 shadow-sm z-10 relative md:rounded-3xl md:mt-2">
@@ -1004,13 +1065,14 @@
                         ${canGrade ? `
                         <div class="bg-white md:bg-gray-50 p-3 sm:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
                             <h4 class="text-xs sm:text-sm font-bold text-gray-800 mb-2 sm:mb-3 flex items-center gap-2"><i data-lucide="plus-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#bb7434]"></i> Agregar Evaluación</h4>
-                            <div class="flex flex-col sm:flex-row gap-2 text-xs sm:text-sm">
+                            ${presetSelectHtml}
+                            <div class="flex flex-col sm:flex-row gap-2 text-xs sm:text-sm mt-2">
                                 <div class="flex gap-2 shrink-0">
-                                    <input type="number" id="pt-amount" placeholder="Pts" class="w-16 sm:w-20 p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-gray-50 border border-gray-200 text-xs sm:text-sm font-bold focus:outline-none focus:border-[#bb7434]">
-                                    <select id="pt-type" class="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-gray-50 border border-gray-200 text-xs sm:text-sm font-black focus:outline-none focus:border-[#bb7434]"><option value="pos" class="text-green-600">+</option><option value="neg" class="text-red-600">-</option></select>
+                                    <input type="number" id="pt-amount" placeholder="Pts" class="w-16 sm:w-20 p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white md:bg-gray-50 border border-gray-200 text-xs sm:text-sm font-bold focus:outline-none focus:border-[#bb7434]">
+                                    <select id="pt-type" class="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white md:bg-gray-50 border border-gray-200 text-xs sm:text-sm font-black focus:outline-none focus:border-[#bb7434]"><option value="pos" class="text-green-600">+</option><option value="neg" class="text-red-600">-</option></select>
                                 </div>
-                                <input type="text" id="pt-reason" placeholder="Motivo o labor..." class="flex-1 p-2.5 rounded-xl bg-gray-50 border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#bb7434]">
-                                <button onclick="savePoint()" class="bg-[#542c1c] text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm hover:opacity-90 shrink-0 mt-2 md:mt-0">Guardar</button>
+                                <input type="text" id="pt-reason" placeholder="Motivo o labor (editable)..." class="flex-1 p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white md:bg-gray-50 border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#bb7434]">
+                                <button onclick="savePoint()" class="bg-[#542c1c] text-white px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold shadow-sm hover:opacity-90 shrink-0 mt-2 sm:mt-0 transition-opacity">Guardar</button>
                             </div>
                         </div>` : ''}
                         <div class="bg-white md:bg-gray-50 p-4 rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
