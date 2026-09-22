@@ -1062,13 +1062,10 @@
 
         window.viewWorkerProfile = (id) => { window.appState.selectedWorker = window.appState.dbWorkers.find(w => w.id === id); window.setView('profile'); };
 
-        // ============ RENDER PERFIL CON PESTAÑAS ARREGLADAS ============
+        // ============ RENDER PERFIL REDISEÑADO (MODO DASHBOARD PERSONAL) ============
         window.renderProfile = () => {
             const w = window.appState.selectedWorker;
             const role = window.appState.currentUser.systemRole;
-            // OPTIMIZACIÓN: Imagen lazy loading
-            const photo = w.photo ? `<img src="${w.photo}" loading="lazy" decoding="async" class="w-20 h-20 md:w-28 md:h-28 rounded-2xl md:rounded-3xl object-cover shrink-0">` : `<div class="w-20 h-20 md:w-28 md:h-28 rounded-2xl md:rounded-3xl bg-gray-100 text-gray-400 font-bold text-3xl md:text-4xl flex items-center justify-center shrink-0">${window.getInitials(w.name)}</div>`;
-            
             const canEdit = ['ADMIN', 'HR'].includes(role);
             const canGrade = ['ADMIN', 'HR', 'COORD'].includes(role);
 
@@ -1081,146 +1078,265 @@
                 const pMonth = `${new Date(p.timestamp).getFullYear()}-${String(new Date(p.timestamp).getMonth()+1).padStart(2,'0')}`;
                 if(pMonth === monthStr) monthPts += pAmt;
                 const color = p.type === 'pos' ? 'text-green-600 bg-green-50' : 'text-red-500 bg-red-50';
-                pList += `<div class="flex items-center gap-3 py-3 border-b border-gray-50 last:border-0 hover:bg-gray-50 px-2 rounded-lg transition-colors"><div class="flex-1 min-w-0"><p class="font-bold text-sm text-gray-800 break-words">${p.reason}</p><p class="text-[11px] text-gray-400 truncate">${new Date(p.timestamp).toLocaleDateString()} por ${p.evaluator}</p></div><span class="font-bold text-sm px-2 py-1 rounded-lg ${color} shrink-0">${p.type==='pos'?'+':'-'}${p.amount}</span></div>`;
+                const sign = p.type === 'pos' ? '+' : '-';
+                pList += `
+                <div class="flex items-center gap-3 py-3 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 px-3 rounded-xl transition-colors">
+                    <div class="flex-1 min-w-0">
+                        <p class="font-bold text-sm text-gray-800 break-words">${p.reason}</p>
+                        <p class="text-[11px] text-gray-400 mt-0.5 truncate flex items-center gap-1"><i data-lucide="calendar-clock" class="w-3 h-3"></i> ${new Date(p.timestamp).toLocaleDateString()} · Eval: ${p.evaluator}</p>
+                    </div>
+                    <span class="font-black text-sm px-2.5 py-1.5 rounded-lg ${color} shadow-sm shrink-0">${sign}${p.amount}</span>
+                </div>`;
             });
 
             let dList = '';
             window.appState.currentProfileDocs.forEach(d => {
-                dList += `<div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl mb-3 border border-gray-100 hover:border-gray-200 transition-all"><i data-lucide="file-text" class="w-5 h-5 text-red-400 shrink-0"></i><div class="flex-1 min-w-0"><p class="font-bold text-sm text-gray-700 truncate">${d.name}</p></div><div class="flex gap-2 shrink-0"><a href="${d.file}" download="${d.name}.pdf" class="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-[#542c1c] hover:bg-gray-100"><i data-lucide="download" class="w-4 h-4"></i></a>${canEdit ? `<button onclick="deleteDocFile('${d.dbId}')" class="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-red-400 hover:bg-red-50"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`:''}</div></div>`;
+                dList += `
+                <div class="flex items-center gap-3 p-3.5 bg-white rounded-2xl mb-3 card-shadow hover:border-[#bb7434]/30 transition-all group">
+                    <div class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i data-lucide="file-text" class="w-5 h-5"></i></div>
+                    <div class="flex-1 min-w-0"><p class="font-bold text-sm text-gray-800 truncate">${d.name}</p><p class="text-[10px] text-gray-400">Documento PDF</p></div>
+                    <div class="flex gap-2 shrink-0">
+                        <a href="${d.file}" download="${d.name}.pdf" class="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-[#542c1c] hover:bg-gray-200 active:scale-90 transition-all"><i data-lucide="download" class="w-4 h-4"></i></a>
+                        ${canEdit ? `<button onclick="deleteDocFile('${d.dbId}')" class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100 active:scale-90 transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`:''}
+                    </div>
+                </div>`;
             });
 
-            // Preparar Anuncios
             const relevantMessages = (window.appState.messages || []).filter(m => !m.targetWorkerId || m.targetWorkerId === w.id).sort((a,b) => b.timestamp - a.timestamp);
-            let announcementsHtml = '';
-            if(relevantMessages.length > 0) {
-                announcementsHtml = `
-                <div id="tab-anuncios" class="${window.appState.activeProfileTab === 'anuncios' ? 'block' : 'hidden'} space-y-2 sm:space-y-2.5">
+            let announcementsHtml = relevantMessages.length > 0 ? `
+                <div id="tab-anuncios" class="${window.appState.activeProfileTab === 'anuncios' ? 'block' : 'hidden'} space-y-3">
                     ${relevantMessages.map(m => `
-                        <div class="bg-amber-50 border border-amber-200 p-3 sm:p-4 rounded-lg sm:rounded-2xl flex items-start gap-3">
-                            <i data-lucide="megaphone" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0 mt-0.5"></i>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-xs sm:text-sm text-amber-900 font-medium break-words whitespace-pre-wrap">${window.escapeHtml(m.text)}</p>
-                                <p class="text-[10px] text-amber-600 font-bold mt-1">${m.targetWorkerId ? 'Nota directa' : 'Anuncio general'} · ${window.escapeHtml(m.authorName)} · ${new Date(m.timestamp).toLocaleDateString()}</p>
+                        <div class="bg-gradient-to-br from-amber-50 to-orange-50/50 border border-amber-200/60 p-4 sm:p-5 rounded-2xl shadow-sm flex items-start gap-3 sm:gap-4 relative overflow-hidden group">
+                            <div class="absolute -right-4 -top-4 opacity-[0.03] group-hover:scale-110 transition-transform duration-500 pointer-events-none"><i data-lucide="megaphone" class="w-32 h-32 text-amber-600"></i></div>
+                            <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 z-10"><i data-lucide="megaphone" class="w-5 h-5"></i></div>
+                            <div class="flex-1 min-w-0 z-10">
+                                <div class="flex justify-between items-start gap-2 mb-1">
+                                    <span class="text-[10px] font-black uppercase tracking-widest text-amber-600 bg-amber-100/50 px-2 py-0.5 rounded-md">${m.targetWorkerId ? 'Mensaje Directo' : 'Anuncio General'}</span>
+                                    <span class="text-[10px] font-bold text-gray-400">${new Date(m.timestamp).toLocaleDateString()}</span>
+                                </div>
+                                <p class="text-sm sm:text-base text-gray-800 font-medium break-words whitespace-pre-wrap leading-relaxed">${window.escapeHtml(m.text)}</p>
+                                <p class="text-[11px] text-gray-500 font-medium mt-3 flex items-center gap-1.5"><i data-lucide="user-circle" class="w-3.5 h-3.5"></i> Escrito por ${window.escapeHtml(m.authorName)}</p>
                             </div>
-                            ${canEdit ? `<button onclick="window.deleteMessage('${m.id}')" class="w-7 h-7 rounded-lg bg-white/60 flex items-center justify-center text-amber-700 hover:bg-white shrink-0"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>` : ''}
+                            ${canEdit ? `<button onclick="window.deleteMessage('${m.id}')" class="w-8 h-8 rounded-lg bg-white/60 flex items-center justify-center text-amber-700 hover:bg-white shrink-0 z-10 transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
                         </div>
                     `).join('')}
+                </div>` : `
+                <div id="tab-anuncios" class="${window.appState.activeProfileTab === 'anuncios' ? 'block' : 'hidden'} text-center py-10">
+                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="bell-off" class="w-8 h-8"></i></div>
+                    <p class="text-sm font-bold text-gray-400">No hay avisos por el momento</p>
                 </div>`;
-            } else {
-                announcementsHtml = `
-                <div id="tab-anuncios" class="${window.appState.activeProfileTab === 'anuncios' ? 'block' : 'hidden'}">
-                    <p class="text-sm text-gray-400 text-center py-4">No hay anuncios para mostrar</p>
-                </div>`;
-            }
 
             const posOptions = window.evaluationCriteria.map((c, index) => c.type === 'pos' ? `<option value="${index}">${c.reason} (+${c.amount})</option>` : '').join('');
             const negOptions = window.evaluationCriteria.map((c, index) => c.type === 'neg' ? `<option value="${index}">${c.reason} (-${c.amount})</option>` : '').join('');
             
-            const presetSelectHtml = `
-                <select id="pt-preset" onchange="window.handlePresetChange(this)" class="w-full mb-2 p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white md:bg-gray-50 border border-gray-200 text-xs sm:text-sm font-medium text-gray-700 focus:outline-none focus:border-[#bb7434] transition-colors cursor-pointer">
-                    <option value="custom">✍️ Otro (Ingreso manual de evaluación)</option>
-                    <optgroup label="✅ PUNTOS POSITIVOS">
-                        ${posOptions}
-                    </optgroup>
-                    <optgroup label="🚫 PENALIZACIONES">
-                        ${negOptions}
-                    </optgroup>
-                </select>
-            `;
-
             return `
-            <div class="max-w-4xl mx-auto pb-6">
-                <div class="bg-white px-4 sm:px-6 md:px-10 pt-6 sm:pt-8 pb-4 sm:pb-6 shadow-sm z-10 relative md:rounded-3xl md:mt-2">
-                    ${role !== 'WORKER' ? `<button onclick="setView('directory')" class="text-gray-400 hover:text-gray-600 mb-4 sm:mb-6 font-bold text-sm flex items-center gap-2 transition-colors"><i data-lucide="chevron-left" class="w-4 h-4"></i> <span class="hidden sm:inline">Volver</span></button>` : ''}
-                    <div class="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 md:gap-6">
-                        ${photo}
-                        <div class="flex-1 min-w-0">
-                            <h2 class="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 leading-tight mb-1 truncate">${w.name}</h2>
-                            <p class="text-xs sm:text-sm font-medium text-[#542c1c] truncate mb-3">${w.role} | CC. ${w.document}</p>
-                            <div class="flex gap-2 flex-wrap">
-                                ${canEdit ? `<button onclick="openWorkerForm('${w.id}')" class="bg-gray-100 text-gray-600 px-2.5 sm:px-4 py-2 rounded-lg sm:rounded-xl flex items-center justify-center shadow-sm text-xs font-bold hover:bg-gray-200 transition-colors shrink-0 active:scale-95"><i data-lucide="edit-3" class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1"></i> <span class="hidden sm:inline">Editar</span></button>` : ''}
-                                ${role === 'ADMIN' ? `<button onclick="window.deleteWorker('${w.id}')" class="bg-red-50 text-red-500 px-2.5 sm:px-4 py-2 rounded-lg sm:rounded-xl flex items-center justify-center shadow-sm text-xs font-bold hover:bg-red-100 transition-colors shrink-0 active:scale-95"><i data-lucide="trash-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1"></i> <span class="hidden sm:inline">Eliminar</span></button>` : ''}
-                            </div>
+            <div class="max-w-4xl mx-auto pb-10">
+                
+                <!-- CABECERA PREMIUM MODO DASHBOARD -->
+                <div class="bg-gradient-to-br from-[#542c1c] via-[#6b3c2a] to-[#bb7434] px-4 sm:px-6 md:px-10 pt-8 sm:pt-10 pb-20 sm:pb-24 rounded-b-[2.5rem] md:rounded-3xl md:mt-2 shadow-lg relative z-0 overflow-hidden">
+                    <!-- Patrón de fondo sutil -->
+                    <div class="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdHRlcm4gaWQ9InAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0iI2ZmZiIvPjwvcGF0dGVybj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3ApIi8+PC9zdmc+')]"></div>
+                    
+                    ${role !== 'WORKER' ? `<button onclick="setView('directory')" class="text-white/80 hover:text-white mb-4 sm:mb-6 font-bold text-xs sm:text-sm flex items-center gap-2 transition-all active:scale-95 relative z-10"><i data-lucide="chevron-left" class="w-4 h-4 sm:w-5 sm:h-5"></i> Volver</button>` : `<div class="mb-4 sm:mb-6 relative z-10"><p class="text-white/70 text-xs font-black uppercase tracking-widest flex items-center gap-2"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Mi Espacio</p></div>`}
+                    
+                    <div class="flex justify-between items-start gap-4 relative z-10">
+                        <div class="text-white flex-1 min-w-0">
+                            <h2 class="text-2xl sm:text-3xl md:text-4xl font-black leading-tight mb-1 truncate drop-shadow-md">${w.name}</h2>
+                            <p class="text-white/90 text-xs sm:text-sm font-medium mb-3 flex items-center gap-2 flex-wrap"><span class="bg-white/20 px-2.5 py-1 rounded-lg backdrop-blur-md shadow-sm border border-white/10">${w.role}</span> <span class="opacity-80">CC. ${w.document}</span></p>
+                        </div>
+                        ${canEdit ? `
+                        <div class="flex flex-col sm:flex-row gap-2 shrink-0">
+                            <button onclick="openWorkerForm('${w.id}')" class="bg-white text-[#542c1c] p-2.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl hover:bg-gray-50 transition-all active:scale-95"><i data-lucide="edit-3" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i><span class="hidden sm:inline ml-2 text-xs sm:text-sm font-bold">Editar</span></button>
+                            ${role === 'ADMIN' ? `<button onclick="window.deleteWorker('${w.id}')" class="bg-red-500/90 text-white p-2.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl hover:bg-red-500 border border-white/10 transition-all active:scale-95"><i data-lucide="trash-2" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i></button>` : ''}
+                        </div>` : ''}
+                    </div>
+                </div>
+
+                <!-- WIDGETS Y AVATAR SUPERPUESTOS -->
+                <div class="px-4 sm:px-6 md:px-10 -mt-12 sm:-mt-14 relative z-10 flex flex-col sm:flex-row gap-4 items-center sm:items-end">
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-[1.5rem] sm:rounded-[2rem] border-4 sm:border-[6px] border-[#f3ebe3] md:border-white bg-white shadow-xl overflow-hidden shrink-0 flex items-center justify-center text-[#bb7434] text-3xl md:text-5xl font-black relative group">
+                        ${w.photo ? `<img src="${w.photo}" loading="lazy" decoding="async" class="w-full h-full object-cover">` : window.getInitials(w.name)}
+                        ${w.status === 'activo' ? `<div class="absolute bottom-2 right-2 w-3 h-3 md:w-4 md:h-4 bg-green-500 border-2 border-white rounded-full shadow-sm"></div>` : `<div class="absolute bottom-2 right-2 w-3 h-3 md:w-4 md:h-4 bg-red-400 border-2 border-white rounded-full shadow-sm"></div>`}
+                    </div>
+                    
+                    <div class="flex-1 w-full grid grid-cols-2 gap-3 sm:gap-4 pb-2 sm:pb-0">
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] card-shadow flex items-center justify-between group cursor-default hover:border-[#bb7434]/40 transition-colors">
+                            <div><p class="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Mes Actual</p><p class="text-2xl sm:text-3xl font-black text-[#bb7434] leading-none">${monthPts}</p></div>
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform shadow-inner"><i data-lucide="calendar-days" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                        </div>
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] card-shadow flex items-center justify-between group cursor-default hover:border-gray-300 transition-colors">
+                            <div><p class="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Histórico</p><p class="text-2xl sm:text-3xl font-black text-gray-800 leading-none">${allPts}</p></div>
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-500 group-hover:scale-110 transition-transform shadow-inner"><i data-lucide="award" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- PESTAÑAS (CORREGIDAS: Iconos Lucide y Scrollbar Oculta) -->
-                <div class="flex bg-white px-1.5 sm:px-2 md:px-8 border-b border-gray-200 overflow-x-auto hide-scrollbar md:rounded-3xl md:mt-4 md:shadow-sm">
-                    <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="flex-shrink-0 px-3 sm:px-4 py-3 sm:py-4 text-xs font-bold text-[#542c1c] border-b-[3px] border-[#542c1c] transition-colors whitespace-nowrap flex items-center gap-1.5"><i data-lucide="star" class="w-4 h-4"></i> Pts</button>
-                    <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-shrink-0 px-3 sm:px-4 py-3 sm:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap flex items-center gap-1.5"><i data-lucide="briefcase" class="w-4 h-4"></i> Info</button>
-                    <button onclick="switchTab('documentos')" id="tab-btn-documentos" class="flex-shrink-0 px-3 sm:px-4 py-3 sm:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap flex items-center gap-1.5"><i data-lucide="file-text" class="w-4 h-4"></i> Docs</button>
-                    <button onclick="switchTab('anuncios')" id="tab-btn-anuncios" class="flex-shrink-0 px-3 sm:px-4 py-3 sm:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap flex items-center gap-1.5"><i data-lucide="megaphone" class="w-4 h-4"></i> Anuncios</button>
-                    ${canEdit ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="flex-shrink-0 px-3 sm:px-4 py-3 sm:py-4 text-xs font-bold text-gray-400 border-b-[3px] border-transparent hover:text-gray-600 transition-colors whitespace-nowrap flex items-center gap-1.5"><i data-lucide="lock" class="w-4 h-4"></i> Banco</button>` : ''}
+                <!-- TABS MODERNOS ESTILO APP -->
+                <div class="px-4 sm:px-6 md:px-10 mt-6 sm:mt-8">
+                    <div class="bg-gray-200/60 p-1.5 rounded-2xl sm:rounded-[1.25rem] flex overflow-x-auto hide-scrollbar gap-1 relative shadow-inner">
+                        <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'rendimiento' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="star" class="w-4 h-4"></i> <span class="hidden sm:inline">Puntos</span></button>
+                        <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'laboral' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="user" class="w-4 h-4"></i> <span class="hidden sm:inline">Info</span></button>
+                        <button onclick="switchTab('documentos')" id="tab-btn-documentos" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'documentos' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="file-text" class="w-4 h-4"></i> <span class="hidden sm:inline">Docs</span></button>
+                        <button onclick="switchTab('anuncios')" id="tab-btn-anuncios" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'anuncios' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="bell" class="w-4 h-4"></i> <span class="hidden sm:inline">Avisos</span></button>
+                        ${canEdit ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'banco' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="credit-card" class="w-4 h-4"></i> <span class="hidden sm:inline">Banco</span></button>` : ''}
+                    </div>
                 </div>
 
-                <div class="p-3 sm:p-5 md:p-8 md:bg-white md:mt-4 md:rounded-3xl md:shadow-sm space-y-2 sm:space-y-3">
+                <div class="px-4 sm:px-6 md:px-10 mt-5 space-y-4">
                     
-                    <!-- TAB RENDIMIENTO -->
-                    <div id="tab-rendimiento" class="${window.appState.activeProfileTab === 'rendimiento' ? 'block' : 'hidden'} space-y-2 sm:space-y-3">
-                        <div class="grid grid-cols-2 gap-2 sm:gap-3">
-                            <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] font-bold text-gray-400 uppercase tracking-wide truncate">Mes</p><p class="text-lg sm:text-xl md:text-2xl font-black text-[#542c1c] mt-0.5 sm:mt-1 truncate">${monthPts}</p></div>
-                            <div class="bg-white md:bg-gray-50 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[9px] font-bold text-gray-400 uppercase tracking-wide truncate">Histórico</p><p class="text-lg sm:text-xl md:text-2xl font-black text-gray-800 mt-0.5 sm:mt-1 truncate">${allPts}</p></div>
-                        </div>
+                    <!-- TAB: RENDIMIENTO -->
+                    <div id="tab-rendimiento" class="${window.appState.activeProfileTab === 'rendimiento' ? 'block' : 'hidden'} space-y-4">
                         ${canGrade ? `
-                        <div class="bg-white md:bg-gray-50 p-3 sm:p-4 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
-                            <h4 class="text-xs sm:text-sm font-bold text-gray-800 mb-2 sm:mb-3 flex items-center gap-2"><i data-lucide="plus-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#bb7434]"></i> Agregar Evaluación</h4>
-                            ${presetSelectHtml}
-                            <div class="flex flex-col sm:flex-row gap-2 text-xs sm:text-sm mt-2">
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl card-shadow border border-gray-100 relative overflow-hidden">
+                            <div class="absolute right-0 top-0 w-24 h-24 bg-orange-50 rounded-bl-full opacity-50 pointer-events-none"></div>
+                            <h4 class="text-sm font-black text-gray-800 mb-3 flex items-center gap-2 relative z-10"><i data-lucide="plus-circle" class="w-4 h-4 text-[#bb7434]"></i> Nueva Evaluación</h4>
+                            <select id="pt-preset" onchange="window.handlePresetChange(this)" class="w-full mb-3 p-3 rounded-xl bg-gray-50 border border-gray-200 text-sm font-semibold text-gray-700 focus:outline-none focus:border-[#bb7434] transition-colors cursor-pointer relative z-10 shadow-sm">
+                                <option value="custom">✍️ Otro (Ingreso manual)</option>
+                                <optgroup label="✅ PUNTOS POSITIVOS">${posOptions}</optgroup>
+                                <optgroup label="🚫 PENALIZACIONES">${negOptions}</optgroup>
+                            </select>
+                            <div class="flex flex-col sm:flex-row gap-2 relative z-10">
                                 <div class="flex gap-2 shrink-0">
-                                    <input type="number" id="pt-amount" placeholder="Pts" class="w-16 sm:w-20 p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white md:bg-gray-50 border border-gray-200 text-xs sm:text-sm font-bold focus:outline-none focus:border-[#bb7434]">
-                                    <select id="pt-type" class="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white md:bg-gray-50 border border-gray-200 text-xs sm:text-sm font-black focus:outline-none focus:border-[#bb7434]"><option value="pos" class="text-green-600">+</option><option value="neg" class="text-red-600">-</option></select>
+                                    <input type="number" id="pt-amount" placeholder="Pts" class="w-20 p-3 rounded-xl bg-gray-50 border border-gray-200 text-sm font-black focus:outline-none focus:border-[#bb7434] text-center shadow-sm">
+                                    <select id="pt-type" class="p-3 rounded-xl bg-gray-50 border border-gray-200 text-sm font-black focus:outline-none focus:border-[#bb7434] shadow-sm cursor-pointer"><option value="pos" class="text-green-600">Sumar (+)</option><option value="neg" class="text-red-600">Restar (-)</option></select>
                                 </div>
-                                <input type="text" id="pt-reason" placeholder="Motivo o labor (editable)..." class="flex-1 p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white md:bg-gray-50 border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#bb7434]">
-                                <button onclick="savePoint()" class="bg-[#542c1c] text-white px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold shadow-sm hover:opacity-90 shrink-0 mt-2 sm:mt-0 transition-opacity">Guardar</button>
+                                <input type="text" id="pt-reason" placeholder="Escribe el motivo aquí..." class="flex-1 p-3 rounded-xl bg-gray-50 border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#bb7434] shadow-sm">
+                                <button onclick="savePoint()" class="bg-[#bb7434] text-white px-6 py-3 rounded-xl text-sm font-black shadow-md hover:bg-[#a55f25] active:scale-95 shrink-0 transition-all flex items-center justify-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> Guardar</button>
                             </div>
                         </div>` : ''}
-                        <div class="bg-white md:bg-gray-50 p-4 rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100">
-                            <h4 class="text-sm font-bold text-gray-400 mb-2 uppercase tracking-wider">Historial</h4>
-                            ${pList || '<p class="text-sm text-gray-400 text-center py-4">No hay evaluaciones registradas</p>'}
+                        
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl card-shadow border border-gray-100">
+                            <h4 class="text-xs font-black text-gray-400 mb-3 uppercase tracking-widest flex items-center gap-2"><i data-lucide="history" class="w-4 h-4"></i> Historial de Puntos</h4>
+                            <div class="space-y-1">
+                                ${pList || `
+                                <div class="text-center py-8">
+                                    <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-2 text-gray-300"><i data-lucide="inbox" class="w-6 h-6"></i></div>
+                                    <p class="text-sm font-bold text-gray-400">Sin historial de evaluaciones</p>
+                                </div>`}
+                            </div>
                         </div>
                     </div>
 
-                    <!-- TAB INFO LABORAL -->
-                    <div id="tab-laboral" class="${window.appState.activeProfileTab === 'laboral' ? 'block' : 'hidden'} space-y-2.5 sm:space-y-3">
-                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><div class="grid grid-cols-2 gap-3 sm:gap-4"><div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Rol</p><p class="text-xs sm:text-sm font-medium text-[#542c1c]">${w.role || '-'}</p></div><div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Estado</p><p class="text-xs sm:text-sm font-medium text-green-600">${w.status || '-'}</p></div></div></div>
-                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><div class="grid grid-cols-2 gap-3 sm:gap-4"><div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Teléfono</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.phone || '-'}</p></div><div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Ciudad</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.city || '-'}</p></div></div></div>
-                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Especialidades</p><p class="text-xs sm:text-sm font-medium text-[#542c1c] break-words">${w.specialties || 'No especificadas'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-3 uppercase tracking-wide flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4"></i> Horarios Disponibles</p><div class="space-y-2">${w.availabilityText && w.availabilityText !== 'No especificada' ? (() => { const parts = w.availabilityText.split(' | '); return parts.map(part => `<div class="bg-blue-50 border border-blue-200 px-3 py-2.5 rounded-lg text-sm font-semibold text-blue-900">${part.trim()}</div>`).join(''); })() : '<p class="text-sm text-gray-400 italic">No especificada</p>'}</div></div>
-                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><div class="grid grid-cols-2 gap-3 sm:gap-4"><div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Cumpleaños</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.birthday || '-'}</p></div><div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Email</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.email || '-'}</p></div></div></div>
-                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><div class="grid grid-cols-2 gap-3 sm:gap-4"><div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Sangre</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.bloodType || '-'}</p></div><div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">EPS</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.eps || '-'}</p></div></div></div>
-                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Dirección</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.address || '-'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><div class="grid grid-cols-2 gap-3 sm:gap-4"><div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Emergencia</p><p class="text-xs sm:text-sm font-medium text-gray-800">${w.emergencyName || '-'}</p></div><div><p class="text-[10px] sm:text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">Tel. Emerg.</p><p class="text-xs sm:text-sm font-medium text-gray-800 truncate">${w.emergencyPhone || '-'}</p></div></div></div>
+                    <!-- TAB: INFORMACIÓN LABORAL (GRILLA CON ICONOS) -->
+                    <div id="tab-laboral" class="${window.appState.activeProfileTab === 'laboral' ? 'block' : 'hidden'}">
+                        <!-- Card Principal: Disponibilidad -->
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50/50 p-4 sm:p-5 rounded-2xl card-shadow border border-blue-100 mb-4">
+                            <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-3 flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4"></i> Horarios Disponibles</p>
+                            <div class="flex flex-wrap gap-2">
+                                ${w.availabilityText && w.availabilityText !== 'No especificada' ? (() => { 
+                                    const parts = w.availabilityText.split(' | '); 
+                                    return parts.map(part => `<div class="bg-white border border-blue-200 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-blue-900 shadow-sm flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-blue-400"></i> ${part.trim()}</div>`).join(''); 
+                                })() : '<p class="text-sm font-bold text-gray-400 italic px-2">Horario no especificado</p>'}
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                            <!-- Items Cuadrícula -->
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center shrink-0"><i data-lucide="award" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Rol</p><p class="text-sm font-black text-gray-800 truncate">${w.role || '-'}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0"><i data-lucide="activity" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Estado</p><p class="text-sm font-black text-emerald-600 capitalize truncate">${w.status || '-'}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center shrink-0"><i data-lucide="phone" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Teléfono</p><p class="text-sm font-black text-gray-800 truncate">${w.phone || '-'}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center shrink-0"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Ciudad</p><p class="text-sm font-black text-gray-800 truncate">${w.city || '-'}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center shrink-0"><i data-lucide="gift" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Cumpleaños</p><p class="text-sm font-black text-gray-800 truncate">${w.birthday || '-'}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-sky-50 text-sky-500 flex items-center justify-center shrink-0"><i data-lucide="mail" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Email</p><p class="text-sm font-black text-gray-800 truncate">${w.email || '-'}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-red-50 text-red-500 flex items-center justify-center shrink-0"><i data-lucide="droplet" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Sangre / EPS</p><p class="text-sm font-black text-gray-800 truncate">${w.bloodType || '-'} | ${w.eps || '-'}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center shrink-0"><i data-lucide="heart-pulse" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Emergencia</p><p class="text-sm font-black text-gray-800 truncate">${w.emergencyName || '-'}</p><p class="text-[11px] text-gray-500 truncate">${w.emergencyPhone || ''}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex gap-3.5 sm:col-span-2 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Especialidades</p><p class="text-sm font-black text-[#542c1c] break-words mt-1">${w.specialties || 'No especificadas'}</p></div>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- TAB DOCS -->
+                    <!-- TAB: DOCUMENTOS -->
                     <div id="tab-documentos" class="${window.appState.activeProfileTab === 'documentos' ? 'block' : 'hidden'}">
-                        ${canEdit ? `<div class="mb-2 sm:mb-3 text-right"><label class="bg-[#146459] text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold cursor-pointer inline-flex items-center gap-1 sm:gap-2 shadow-sm hover:opacity-90 transition-opacity"><i data-lucide="upload" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> <span class="hidden sm:inline">Subir PDF</span><input type="file" accept="application/pdf" class="hidden" onchange="uploadDocument(event)"></label></div>` : ''}
-                        <div class="space-y-1.5 sm:space-y-2">${dList || '<p class="text-xs sm:text-sm text-gray-400 text-center py-4">Sin documentos</p>'}</div>
+                        ${canEdit ? `
+                        <div class="mb-4 text-right">
+                            <label class="bg-gray-800 text-white px-5 py-3 rounded-xl text-sm font-black cursor-pointer inline-flex items-center gap-2 shadow-lg hover:bg-gray-700 active:scale-95 transition-all">
+                                <i data-lucide="upload-cloud" class="w-4 h-4"></i> Subir PDF
+                                <input type="file" accept="application/pdf" class="hidden" onchange="uploadDocument(event)">
+                            </label>
+                        </div>` : ''}
+                        
+                        ${dList || `
+                        <div class="text-center py-10 bg-white rounded-3xl border border-gray-100 border-dashed">
+                            <div class="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="file-x-2" class="w-8 h-8"></i></div>
+                            <p class="text-sm font-bold text-gray-400">Carpeta vacía</p>
+                        </div>`}
                     </div>
 
-                    <!-- TAB ANUNCIOS -->
+                    <!-- TAB: ANUNCIOS -->
                     ${announcementsHtml}
 
-                    <!-- TAB BANCO -->
+                    <!-- TAB: BANCO -->
                     ${canEdit ? `
-                    <div id="tab-banco" class="${window.appState.activeProfileTab === 'banco' ? 'block' : 'hidden'} space-y-2.5 sm:space-y-3">
-                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs uppercase font-bold text-gray-400 mb-1 tracking-wide">Banco</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.bankName || '-'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs uppercase font-bold text-gray-400 mb-1 tracking-wide">Tipo</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.bankType || '-'}</p></div>
-                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100 flex items-center gap-3 sm:gap-4"><div class="flex-1 min-w-0"><p class="text-[10px] sm:text-xs uppercase font-bold text-gray-400 mb-1 tracking-wide">N° Cuenta</p><p class="text-sm sm:text-base md:text-lg font-black text-[#542c1c] truncate">${w.bankNumber || '-'}</p></div>${w.bankNumber ? `<button onclick="copyToClipboard('${w.bankNumber}')" class="bg-gray-100 w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl text-gray-500 hover:bg-gray-200 transition-colors shrink-0 flex items-center justify-center active:scale-90"><i data-lucide="copy" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i></button>` : ''}</div>
-                        <div class="bg-white md:bg-gray-50 p-3.5 sm:p-4 md:p-5 rounded-lg sm:rounded-2xl card-shadow md:shadow-none md:border md:border-gray-100"><p class="text-[10px] sm:text-xs uppercase font-bold text-gray-400 mb-1 tracking-wide">Titular</p><p class="text-xs sm:text-sm font-medium text-gray-800 break-words">${w.bankOwner || '-'}</p></div>
+                    <div id="tab-banco" class="${window.appState.activeProfileTab === 'banco' ? 'block' : 'hidden'}">
+                        <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 sm:p-6 rounded-[1.5rem] shadow-xl text-white relative overflow-hidden">
+                            <div class="absolute -right-6 -bottom-6 opacity-10 pointer-events-none"><i data-lucide="credit-card" class="w-48 h-48"></i></div>
+                            
+                            <div class="flex items-center gap-2 mb-6">
+                                <i data-lucide="building-2" class="w-5 h-5 text-gray-400"></i>
+                                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Información Bancaria</p>
+                            </div>
+                            
+                            <p class="text-xl sm:text-2xl font-black mb-1">${w.bankName || 'Banco no definido'}</p>
+                            <p class="text-sm text-gray-400 font-medium mb-6">${w.bankType || '-'}</p>
+                            
+                            <div class="flex items-center justify-between bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10 mb-4 group hover:bg-white/20 transition-colors">
+                                <div>
+                                    <p class="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-widest">N° Cuenta</p>
+                                    <p class="text-lg sm:text-xl font-black tracking-wider truncate">${w.bankNumber || '---'}</p>
+                                </div>
+                                ${w.bankNumber ? `<button onclick="copyToClipboard('${w.bankNumber}')" class="w-10 h-10 rounded-full bg-white text-gray-900 hover:bg-gray-200 transition-transform active:scale-90 flex items-center justify-center shadow-lg"><i data-lucide="copy" class="w-4 h-4"></i></button>` : ''}
+                            </div>
+                            
+                            <p class="text-[10px] uppercase font-bold text-gray-400 mb-0.5 tracking-widest">Titular</p>
+                            <p class="text-sm font-bold text-white break-words">${w.bankOwner || '-'}</p>
+                        </div>
                     </div>` : ''}
+
                 </div>
             </div>`;
         };
 
         window.switchTab = (tabId) => {
             window.appState.activeProfileTab = tabId;
-            ['rendimiento', 'laboral', 'documentos', 'anuncios', 'banco'].forEach(t => {
-                const content = document.getElementById(`tab-${t}`); const btn = document.getElementById(`tab-btn-${t}`);
+            const tabs = ['rendimiento', 'laboral', 'documentos', 'anuncios', 'banco'];
+            
+            tabs.forEach(t => {
+                const content = document.getElementById(`tab-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
                 if(content && btn) {
-                    if(t === tabId) { content.classList.remove('hidden'); content.classList.add('block'); btn.classList.add('text-[#542c1c]', 'border-[#542c1c]'); btn.classList.remove('text-gray-400', 'border-transparent'); } 
-                    else { content.classList.remove('block'); content.classList.add('hidden'); btn.classList.remove('text-[#542c1c]', 'border-[#542c1c]'); btn.classList.add('text-gray-400', 'border-transparent'); }
+                    if(t === tabId) { 
+                        content.classList.remove('hidden'); content.classList.add('block'); 
+                        btn.className = `flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 bg-white text-[#542c1c] shadow-sm`;
+                    } else { 
+                        content.classList.remove('block'); content.classList.add('hidden'); 
+                        btn.className = `flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 text-gray-500 hover:bg-white/50`;
+                    }
                 }
             });
         };
