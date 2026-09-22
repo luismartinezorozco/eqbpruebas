@@ -317,7 +317,6 @@
                             <div>
                                 <select id="w-role" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm font-bold text-[#542c1c] focus:bg-white focus:border-[#bb7434] outline-none">
                                     <option value="Colaborador">Colaborador</option>
-                                    <option value="Administrador">Administrador</option>
                                 </select>
                             </div>
                             <div>
@@ -345,6 +344,35 @@
                     <div class="pt-2 pb-3">
                         <button type="submit" id="save-worker-btn" class="w-full bg-[#7be4af] text-[#542c1c] py-3 rounded-xl font-black text-sm sm:text-base hover:bg-[#66d19c] active:scale-95 transition-all shadow-lg shadow-[#7be4af]/25">Guardar</button>
                     </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FORMULARIO ADMIN -->
+    <div id="admin-modal" class="modal-backdrop">
+        <div class="modal-content w-full sm:max-w-sm">
+            <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
+                <h3 class="font-black text-lg sm:text-xl text-[#542c1c]">Nuevo Administrador</h3>
+                <button onclick="window.closeAdminModal()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-4 sm:p-6 bg-gray-50/60">
+                <form id="admin-form" onsubmit="window.saveAdmin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Nombre a mostrar</label>
+                        <input required id="a-name" placeholder="Ej: Laly Admin" class="w-full border border-gray-200 bg-white rounded-lg p-3 text-sm focus:border-[#bb7434] focus:ring-2 focus:ring-[#bb7434]/20 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Usuario</label>
+                        <input required id="a-user" placeholder="Usuario para ingresar" class="w-full border border-gray-200 bg-white rounded-lg p-3 text-sm focus:border-[#bb7434] focus:ring-2 focus:ring-[#bb7434]/20 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Contraseña</label>
+                        <input required type="password" id="a-pass" placeholder="Contraseña" class="w-full border border-gray-200 bg-white rounded-lg p-3 text-sm focus:border-[#bb7434] focus:ring-2 focus:ring-[#bb7434]/20 outline-none transition-all">
+                    </div>
+                    <button type="submit" id="save-admin-btn" class="w-full bg-[#bb7434] text-white py-3 rounded-xl font-black text-sm hover:bg-[#a55f25] active:scale-95 transition-all shadow-md mt-2">Crear Administrador</button>
                 </form>
             </div>
         </div>
@@ -556,10 +584,17 @@
                     const [validUser, validPass] = atob(encodedCredentials).split('|');
                     
                     if (username === validUser && password === validPass) {
-                        user = { id: 'admin_' + username, name: 'Administrador', username: username, role: 'Administrador', systemRole: 'ADMIN', status: 'activo', isAdmin: true };
+                        user = { id: 'admin_' + username, name: 'Administrador Principal', username: username, role: 'Administrador', systemRole: 'ADMIN', status: 'activo', isAdmin: true };
                     } else {
-                        window.showToast('Usuario o contraseña incorrectos', 'error');
-                        btn.innerHTML = 'Ingresar'; btn.disabled = false; return;
+                        const q = query(collection(db, "workers"), where("username", "==", username), where("password", "==", password), where("systemRole", "==", "ADMIN"), where("status", "==", "activo"));
+                        const querySnapshot = await getDocs(q);
+                        
+                        if (!querySnapshot.empty) {
+                            user = querySnapshot.docs[0].data();
+                        } else {
+                            window.showToast('Usuario o contraseña incorrectos', 'error');
+                            btn.innerHTML = 'Ingresar'; btn.disabled = false; return;
+                        }
                     }
                 } else {
                     const docInput = document.getElementById('login-cedula').value.trim();
@@ -868,7 +903,11 @@
                             <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
                             <input type="text" oninput="window.filterDirectory(this.value)" placeholder="Buscar colaborador..." class="w-full pl-9 pr-3 py-2.5 sm:py-3 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm focus:outline-none focus:border-[#bb7434] shadow-sm transition-colors">
                         </div>
-                        ${canEdit ? `<button onclick="openWorkerForm()" class="shrink-0 bg-[#bb7434] text-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm hover:bg-[#a55f25] transition-colors active:scale-95"><i data-lucide="user-plus" class="w-4 h-4 shrink-0"></i> <span class="hidden sm:inline">Nuevo</span></button>` : ''}
+                        ${canEdit ? `
+                        <div class="flex gap-2 shrink-0">
+                            <button onclick="openWorkerForm()" class="bg-[#bb7434] text-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm hover:bg-[#a55f25] transition-colors active:scale-95"><i data-lucide="user-plus" class="w-4 h-4 shrink-0"></i> <span class="hidden sm:inline">Colaborador</span></button>
+                            ${window.appState.currentUser.systemRole === 'ADMIN' ? `<button onclick="window.openAdminModal()" title="Nuevo Administrador" class="bg-[#542c1c] text-[#cab2a2] px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm hover:text-white transition-colors active:scale-95"><i data-lucide="shield" class="w-4 h-4 shrink-0"></i> <span class="hidden sm:inline">+ Admin</span></button>` : ''}
+                        </div>` : ''}
                     </div>
                 </div>
                 
@@ -1309,6 +1348,33 @@
 
         window.closeWorkerModal = () => { document.getElementById('worker-modal').classList.remove('active'); };
         
+        window.openAdminModal = () => { document.getElementById('admin-form').reset(); document.getElementById('admin-modal').classList.add('active'); };
+        window.closeAdminModal = () => { document.getElementById('admin-modal').classList.remove('active'); };
+
+        window.saveAdmin = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('save-admin-btn');
+            const name = document.getElementById('a-name').value.trim();
+            const username = document.getElementById('a-user').value.trim();
+            const password = document.getElementById('a-pass').value.trim();
+            
+            if(!name || !username || !password) return window.showToast('Completa todos los campos', 'error');
+            
+            btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 mx-auto animate-spin"></i>'; lucide.createIcons();
+            
+            try {
+                const q = query(collection(db, "workers"), where("username", "==", username));
+                const snap = await getDocs(q);
+                if(!snap.empty) { window.showToast('El usuario ya existe', 'error'); btn.innerHTML = 'Crear Administrador'; btn.disabled = false; return; }
+
+                const adminData = { id: 'admin_' + Date.now(), name, username, password, role: 'Administrador', systemRole: 'ADMIN', status: 'activo' };
+                await setDoc(doc(db, "workers", adminData.id), adminData);
+                
+                window.closeAdminModal(); window.showToast('Administrador creado exitosamente'); await fetchAllData();
+            } catch(e) { window.showToast('Error: ' + e.message, 'error'); } 
+            finally { btn.disabled = false; btn.innerText = 'Crear Administrador'; }
+        };
+
         window.handlePhotoUpload = (e) => { 
             const file = e.target.files[0]; 
             if(file && file.size < 800000) { 
@@ -1393,7 +1459,7 @@
                 photo: document.getElementById('w-photo-base64').value 
             };
             
-            if(workerData.role === 'Administrador') workerData.systemRole = 'ADMIN'; else workerData.systemRole = 'WORKER';
+            workerData.systemRole = 'WORKER';
 
             if (['ADMIN', 'HR'].includes(window.appState.currentUser.systemRole)) { 
                 workerData.bankName = document.getElementById('w-bank-name').value; workerData.bankType = document.getElementById('w-bank-type').value; 
