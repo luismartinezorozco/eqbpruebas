@@ -764,10 +764,6 @@
         window.renderDashboard = () => {
             const activeWorkers = window.appState.dbWorkers.filter(w => w.status === 'activo' && w.role !== 'Administrador').length;
             const firstName = window.appState.currentUser.name.split(' ')[0];
-            const monthStr = window.appState.selectedMonth;
-            const monthPoints = window.appState.points.filter(p => { const d = new Date(p.timestamp); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}` === monthStr; });
-            let totalMonthPts = 0; monthPoints.forEach(p => totalMonthPts += (p.type === 'pos' ? p.amount : -p.amount));
-            const avgPoints = activeWorkers > 0 ? Math.round(totalMonthPts / activeWorkers) : 0;
 
             const now = new Date();
             const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1);
@@ -791,7 +787,6 @@
                     const day = parseInt(bDay, 10);
                     
                     let nextBdayYear = today.getFullYear();
-                    // Si el mes ya pasó, o es el mes actual pero el día ya pasó, sumamos 1 año
                     if (month < currentMonth || (month === currentMonth && day < currentDay)) {
                         nextBdayYear++;
                     }
@@ -810,80 +805,81 @@
             return `
             <div class="space-y-4 sm:space-y-6 max-w-7xl mx-auto pb-8">
                 
-                <!-- HEADER MODERNO -->
-                <div class="bg-gradient-to-br from-[#542c1c] via-[#6b3c2a] to-[#7a4a35] -mx-4 sm:-mx-6 md:-mx-8 -mt-4 sm:-mt-6 md:-mt-8 pt-10 sm:pt-12 md:pt-14 pb-20 sm:pb-24 px-4 sm:px-6 md:px-10 rounded-b-[2rem] shadow-lg relative overflow-hidden">
+                <!-- HEADER MODERNO Y RESPONSIVO -->
+                <div class="bg-gradient-to-br from-[#542c1c] via-[#6b3c2a] to-[#7a4a35] -mx-4 sm:-mx-6 md:-mx-8 -mt-4 sm:-mt-6 md:-mt-8 pt-10 sm:pt-12 md:pt-14 pb-24 sm:pb-28 px-4 sm:px-6 md:px-10 rounded-b-[2rem] shadow-lg relative overflow-hidden">
                     <div class="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdHRlcm4gaWQ9InAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0iI2ZmZiIvPjwvcGF0dGVybj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3ApIi8+PC9zdmc+')]"></div>
-                    <div class="relative z-10">
-                        <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight mb-1">Hola, ${firstName} 👋</h1>
-                        <p class="text-[#cab2a2] text-xs sm:text-sm font-medium">Panel general de administración</p>
-                    </div>
-                </div>
-
-                <!-- ESTADÍSTICAS SUPERPUESTAS -->
-                <div class="-mt-14 sm:-mt-16 relative z-20 px-1 sm:px-0 grid grid-cols-2 gap-3 sm:gap-4">
-                    <div class="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] card-shadow flex items-center gap-3 sm:gap-4 group border border-gray-100">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-orange-50 text-[#bb7434] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-inner border border-orange-100/50"><i data-lucide="users" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
-                        <div class="min-w-0"><p class="text-xl sm:text-2xl md:text-3xl font-black text-gray-800 leading-none truncate">${activeWorkers}</p><p class="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1 truncate">Activos</p></div>
-                <div class="bg-[#542c1c] -mx-4 sm:-mx-5 md:-mx-6 lg:-mx-8 -mt-4 sm:-mt-5 md:-mt-6 lg:-mt-8 pt-10 sm:pt-12 md:pt-14 pb-8 sm:pb-10 md:pb-12 px-4 sm:px-6 md:px-10 rounded-b-[2rem] shadow-sm">
-                    <div class="max-w-7xl mx-auto">
-                        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight mb-1 truncate">Hola, ${firstName}</h1>
-                        <p class="text-[#cab2a2] text-xs sm:text-sm font-medium mb-6 sm:mb-8">Resumen del mes actual</p>
-                        <div class="flex gap-6 sm:gap-12">
-                            <div><div class="text-2xl sm:text-3xl md:text-4xl font-black text-[#bb7434] mb-1">${activeWorkers}</div><div class="text-[10px] uppercase text-white font-bold tracking-wider opacity-80 leading-tight">COLABORADORES<br>ACTIVOS</div></div>
+                    <div class="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div class="w-full min-w-0">
+                            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight mb-1 truncate">Hola, ${firstName} 👋</h1>
+                            <p class="text-[#cab2a2] text-xs sm:text-sm md:text-base font-medium truncate">Panel general de administración</p>
                         </div>
                     </div>
                 </div>
 
-                ${topWorkerPrev ? `
-                    <div onclick="viewWorkerProfile('${topWorkerPrev.id}')" class="bg-gradient-to-br from-[#bb7434] to-[#995922] rounded-2xl sm:rounded-[1.5rem] p-4 sm:p-5 md:p-6 shadow-lg shadow-[#bb7434]/20 text-white flex items-center gap-4 relative overflow-hidden cursor-pointer hover:shadow-xl transition-all active:scale-[0.98] group">
+                <!-- WIDGETS SUPERPUESTOS Y ADAPTABLES -->
+                <div class="-mt-16 sm:-mt-20 relative z-20 px-0 grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                    
+                    <!-- Tarjeta: Empleados Activos -->
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] card-shadow flex items-center gap-3 sm:gap-4 group border border-gray-100 hover:border-[#bb7434]/30 transition-all">
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-orange-50 text-[#bb7434] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-inner border border-orange-100/50"><i data-lucide="users" class="w-6 h-6 sm:w-7 sm:h-7"></i></div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 truncate">Total Equipo</p>
+                            <p class="text-2xl sm:text-3xl font-black text-gray-800 leading-none truncate">${activeWorkers} <span class="text-xs sm:text-sm font-bold text-gray-400">Activos</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta: Destacado Mes Anterior -->
+                    ${topWorkerPrev ? `
+                    <div onclick="viewWorkerProfile('${topWorkerPrev.id}')" class="bg-gradient-to-br from-[#bb7434] to-[#995922] rounded-2xl sm:rounded-[1.5rem] p-4 sm:p-5 shadow-lg shadow-[#bb7434]/20 text-white flex items-center gap-3 sm:gap-4 relative overflow-hidden cursor-pointer hover:shadow-xl transition-all active:scale-[0.98] group">
                         <div class="absolute -right-4 -top-4 opacity-[0.05] group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500 pointer-events-none"><i data-lucide="trophy" class="w-32 h-32 text-white"></i></div>
                         <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/10 flex items-center justify-center shrink-0 z-10 backdrop-blur-sm border border-white/20 group-hover:bg-white/20 transition-colors"><i data-lucide="trophy" class="w-6 h-6 sm:w-7 sm:h-7 text-[#fde047]"></i></div>
-                        <div class="flex-1 min-w-0 z-10">
-                            <p class="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-[#fde047] mb-0.5">Destacado · Mes Anterior</p>
-                            <h3 class="text-sm sm:text-base md:text-lg font-black truncate">${topWorkerPrev.name}</h3>
-                            <p class="text-[11px] sm:text-xs font-medium text-white/80 truncate mt-0.5">${topWorkerPrevPts} Puntos logrados</p>
+                        <div class="flex-1 min-w-0 z-10 pr-2">
+                            <p class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#fde047] mb-0.5 truncate">Top Mensual</p>
+                            <h3 class="text-sm sm:text-base font-black truncate">${topWorkerPrev.name}</h3>
+                            <p class="text-[10px] sm:text-[11px] font-medium text-white/80 truncate mt-0.5">${topWorkerPrevPts} Puntos alcanzados</p>
                         </div>
                         ${topWorkerPrev.photo ? 
-                            `<img src="${topWorkerPrev.photo}" loading="lazy" decoding="async" class="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-white/30 shrink-0 z-10 shadow-md">` : 
-                            `<div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/20 text-white font-black text-sm sm:text-base flex items-center justify-center shrink-0 z-10 shadow-md border border-white/30">${window.getInitials(topWorkerPrev.name)}</div>`
+                            `<img src="${topWorkerPrev.photo}" loading="lazy" decoding="async" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white/30 shrink-0 z-10 shadow-md">` : 
+                            `<div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 text-white font-black text-xs sm:text-sm flex items-center justify-center shrink-0 z-10 shadow-md border border-white/30">${window.getInitials(topWorkerPrev.name)}</div>`
                         }
                     </div>` : ''}
 
+                    <!-- Tarjeta: Próximo Cumpleaños -->
                     ${nextBdayWorker ? `
-                    <div onclick="viewWorkerProfile('${nextBdayWorker.id}')" class="bg-white border border-[#f3ebe3] rounded-2xl sm:rounded-[1.5rem] p-4 sm:p-5 md:p-6 card-shadow flex items-center gap-4 relative overflow-hidden cursor-pointer hover:border-pink-200 transition-all active:scale-[0.98] group">
+                    <div onclick="viewWorkerProfile('${nextBdayWorker.id}')" class="${!topWorkerPrev ? 'md:col-span-2' : 'md:col-span-2 lg:col-span-1'} bg-white border border-[#f3ebe3] rounded-2xl sm:rounded-[1.5rem] p-4 sm:p-5 card-shadow flex items-center gap-3 sm:gap-4 relative overflow-hidden cursor-pointer hover:border-pink-200 transition-all active:scale-[0.98] group">
                         <div class="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:scale-110 group-hover:-rotate-12 transition-transform duration-500 pointer-events-none"><i data-lucide="cake" class="w-32 h-32 text-pink-600"></i></div>
                         <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-pink-50 text-pink-500 flex items-center justify-center shrink-0 z-10 shadow-sm border border-pink-100 group-hover:bg-pink-100 transition-colors"><i data-lucide="gift" class="w-6 h-6 sm:w-7 sm:h-7"></i></div>
-                        <div class="flex-1 min-w-0 z-10">
-                            <p class="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-pink-500 mb-0.5">Próximo Cumpleaños</p>
-                            <h3 class="text-sm sm:text-base md:text-lg font-black text-gray-800 truncate">${nextBdayWorker.name} ${sharedBdaysCount > 0 ? `<span class="text-xs font-bold text-gray-400 font-medium">y ${sharedBdaysCount} más</span>` : ''}</h3>
-                            <p class="text-[11px] sm:text-xs font-bold text-gray-500 truncate mt-0.5">
+                        <div class="flex-1 min-w-0 z-10 pr-2">
+                            <p class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-pink-500 mb-0.5 truncate">Próximo Cumpleaños</p>
+                            <h3 class="text-sm sm:text-base font-black text-gray-800 truncate">${nextBdayWorker.name} ${sharedBdaysCount > 0 ? `<span class="text-[9px] sm:text-[10px] font-bold text-gray-400">y ${sharedBdaysCount} más</span>` : ''}</h3>
+                            <p class="text-[10px] sm:text-[11px] font-bold text-gray-500 truncate mt-0.5">
                                 ${nextBdayWorker.daysUntil === 0 ? '<span class="text-pink-500 font-black animate-pulse">¡Es hoy! 🎉</span>' : 
                                   nextBdayWorker.daysUntil === 1 ? '<span class="text-pink-400 font-black">Mañana 🎈</span>' : 
                                   `En <span class="text-pink-500">${nextBdayWorker.daysUntil}</span> días (${nextBdayWorker.bDay} de ${monthNames[nextBdayWorker.bMonth - 1]})`}
                             </p>
                         </div>
                         ${nextBdayWorker.photo ? 
-                            `<img src="${nextBdayWorker.photo}" loading="lazy" decoding="async" class="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-pink-100 shrink-0 z-10 shadow-sm">` : 
-                            `<div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-pink-100 text-pink-600 font-black text-sm sm:text-base flex items-center justify-center shrink-0 z-10 shadow-sm border border-pink-200">${window.getInitials(nextBdayWorker.name)}</div>`
+                            `<img src="${nextBdayWorker.photo}" loading="lazy" decoding="async" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-pink-100 shrink-0 z-10 shadow-sm">` : 
+                            `<div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-pink-100 text-pink-600 font-black text-xs sm:text-sm flex items-center justify-center shrink-0 z-10 shadow-sm border border-pink-200">${window.getInitials(nextBdayWorker.name)}</div>`
                         }
                     </div>` : ''}
                 </div>
 
-                <!-- ACCESOS RÁPIDOS -->
-                <div class="mt-4 sm:mt-6">
-                    <h3 class="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest mb-3 px-2">Accesos Rápidos</h3>
+                <!-- ACCESOS RÁPIDOS MÓVIL/DESKTOP -->
+                <div class="mt-2 sm:mt-4">
+                    <h3 class="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest mb-3 px-1 sm:px-2">Accesos Rápidos</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                        <div onclick="setView('directory')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3 cursor-pointer hover:border-[#bb7434]/40 hover:shadow-lg transition-all group border border-gray-100">
+                        <div onclick="setView('directory')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3 sm:gap-4 cursor-pointer hover:border-[#bb7434]/40 hover:shadow-lg transition-all group border border-gray-100">
                             <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0 group-hover:bg-blue-500 group-hover:text-white transition-colors"><i data-lucide="users" class="w-5 h-5"></i></div>
-                            <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm truncate">Directorio</h3><p class="text-[11px] text-gray-400 truncate">Gestión de personal</p></div>
+                            <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm truncate">Directorio</h3><p class="text-[10px] sm:text-[11px] text-gray-400 truncate">Gestión de personal</p></div>
                         </div>
-                        <div onclick="setView('ranking')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3 cursor-pointer hover:border-[#bb7434]/40 hover:shadow-lg transition-all group border border-gray-100">
+                        <div onclick="setView('ranking')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3 sm:gap-4 cursor-pointer hover:border-[#bb7434]/40 hover:shadow-lg transition-all group border border-gray-100">
                             <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-purple-50 text-purple-500 flex items-center justify-center shrink-0 group-hover:bg-purple-500 group-hover:text-white transition-colors"><i data-lucide="star" class="w-5 h-5"></i></div>
-                            <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm truncate">Rendimiento</h3><p class="text-[11px] text-gray-400 truncate">Ranking mensual</p></div>
+                            <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm truncate">Rendimiento</h3><p class="text-[10px] sm:text-[11px] text-gray-400 truncate">Ranking mensual</p></div>
                         </div>
-                        <div onclick="setView('messages')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3 cursor-pointer hover:border-[#bb7434]/40 hover:shadow-lg transition-all group border border-gray-100">
+                        <div onclick="setView('messages')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3 sm:gap-4 cursor-pointer hover:border-[#bb7434]/40 hover:shadow-lg transition-all group border border-gray-100">
                             <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0 group-hover:bg-indigo-500 group-hover:text-white transition-colors"><i data-lucide="message-square" class="w-5 h-5"></i></div>
-                            <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm truncate">Mensajes</h3><p class="text-[11px] text-gray-400 truncate">Avisos y notas</p></div>
+                            <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm truncate">Mensajes</h3><p class="text-[10px] sm:text-[11px] text-gray-400 truncate">Avisos y notas</p></div>
                         </div>
                     </div>
                 </div>
@@ -1003,20 +999,22 @@
 
             let html = `
             <div class="max-w-7xl mx-auto pb-10">
-                <!-- Header Moderno -->
-                <div class="bg-white p-4 sm:p-5 md:p-6 rounded-[2rem] card-shadow mb-4 sm:mb-6 border border-gray-100/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div class="flex-1 min-w-0">
-                        <h1 class="text-2xl sm:text-3xl font-black text-gray-800 tracking-tight">Ranking Mensual</h1>
-                        <p class="text-gray-500 text-xs sm:text-sm font-medium mt-1">Desempeño y evaluaciones del mes.</p>
+                <!-- Header Moderno y Responsivo -->
+                <div class="bg-white p-4 sm:p-5 md:p-6 rounded-[1.5rem] sm:rounded-[2rem] card-shadow mb-4 sm:mb-6 border border-gray-100/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
+                    <div class="flex-1 min-w-0 w-full">
+                        <h1 class="text-2xl sm:text-3xl font-black text-gray-800 tracking-tight truncate">Ranking Mensual</h1>
+                        <p class="text-gray-500 text-xs sm:text-sm font-medium mt-1 truncate">Desempeño y evaluaciones del mes.</p>
                     </div>
-                    <div class="relative w-full sm:w-auto shrink-0">
+                    <div class="relative w-full md:w-auto shrink-0">
                         <i data-lucide="calendar" class="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
-                        <input type="month" value="${monthStr}" onchange="window.changeMonth(event)" class="w-full pl-10 pr-4 py-3 rounded-2xl border border-gray-200 bg-gray-50 text-[#542c1c] text-sm font-black focus:outline-none focus:ring-2 focus:ring-[#bb7434]/20 focus:border-[#bb7434] shadow-sm cursor-pointer transition-all">
+                        <input type="month" value="${monthStr}" onchange="window.changeMonth(event)" class="w-full pl-10 pr-4 py-3 rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 text-[#542c1c] text-xs sm:text-sm font-black focus:outline-none focus:ring-2 focus:ring-[#bb7434]/20 focus:border-[#bb7434] shadow-sm cursor-pointer transition-all">
                     </div>
                 </div>
-                <div class="space-y-3">`;
+                
+                <!-- Lista de Ranking (Podio + Normales) -->
+                <div class="space-y-3 sm:space-y-4">`;
 
-            if(rankedWorkers.length === 0) html += '<div class="text-center py-12 bg-white rounded-[2rem] border border-gray-100"><div class="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="bar-chart-2" class="w-8 h-8"></i></div><p class="text-sm font-bold text-gray-400">No hay colaboradores activos</p></div>';
+            if(rankedWorkers.length === 0) html += '<div class="text-center py-12 bg-white rounded-[1.5rem] border border-gray-100"><div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="bar-chart-2" class="w-6 h-6 sm:w-8 sm:h-8"></i></div><p class="text-xs sm:text-sm font-bold text-gray-400">No hay colaboradores activos</p></div>';
 
             rankedWorkers.forEach((w, index) => {
                 const pos = index + 1;
@@ -1030,7 +1028,7 @@
                     cardClass = "bg-gradient-to-r from-amber-50 to-white border-amber-200 shadow-md"; 
                     numClass = "bg-gradient-to-br from-yellow-400 to-amber-500 text-white shadow-lg shadow-amber-500/30"; 
                     ptsClass = "bg-yellow-100 text-amber-700 border border-yellow-200";
-                    crownIcon = '<i data-lucide="crown" class="absolute -top-3 -left-2 w-6 h-6 sm:w-7 sm:h-7 text-yellow-500 drop-shadow-md rotate-[-15deg]"></i>';
+                    crownIcon = '<i data-lucide="crown" class="absolute -top-2 -left-1.5 sm:-top-3 sm:-left-2 w-5 h-5 sm:w-7 sm:h-7 text-yellow-500 drop-shadow-md rotate-[-15deg] z-10"></i>';
                     avatarRing = "ring-4 ring-yellow-400/30";
                 } else if(pos === 2) { 
                     cardClass = "bg-gradient-to-r from-slate-50 to-white border-slate-200 shadow-sm";
@@ -1044,22 +1042,22 @@
                     avatarRing = "ring-4 ring-orange-400/30";
                 }
 
-                const photoHtml = w.photo ? `<img src="${w.photo}" loading="lazy" decoding="async" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl object-cover shrink-0 ${avatarRing}">` : `<div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gray-100 text-gray-400 font-black text-xl flex items-center justify-center shrink-0 border border-gray-200 ${avatarRing}">${window.getInitials(w.name)}</div>`;
+                const photoHtml = w.photo ? `<img src="${w.photo}" loading="lazy" decoding="async" class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl object-cover shrink-0 ${avatarRing}">` : `<div class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gray-100 text-gray-400 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 border border-gray-200 ${avatarRing}">${window.getInitials(w.name)}</div>`;
 
                 html += `
-                <div onclick="viewWorkerProfile('${w.id}')" class="p-3.5 sm:p-4 rounded-[1.5rem] card-shadow border ${cardClass} flex items-center justify-between cursor-pointer hover:-translate-y-0.5 transition-all gap-3 relative group">
+                <div onclick="viewWorkerProfile('${w.id}')" class="p-3 sm:p-4 rounded-2xl sm:rounded-[1.5rem] card-shadow border ${cardClass} flex items-center justify-between cursor-pointer hover:-translate-y-0.5 transition-all gap-2 sm:gap-3 relative group">
                     ${crownIcon}
-                    <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 pl-1">
-                        <div class="relative flex items-center justify-center">
-                            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-black text-sm sm:text-lg shrink-0 z-10 ${numClass}">${pos}</div>
+                    <div class="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
+                        <div class="relative flex items-center justify-center shrink-0">
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-black text-xs sm:text-lg shrink-0 z-10 ${numClass}">${pos}</div>
                         </div>
                         ${photoHtml}
-                        <div class="flex-1 min-w-0">
+                        <div class="flex-1 min-w-0 px-1">
                             <h4 class="font-black text-gray-900 text-sm sm:text-base leading-tight truncate group-hover:text-[#bb7434] transition-colors">${w.name}</h4>
-                            <p class="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest truncate mt-0.5">${w.role}</p>
+                            <p class="text-[9px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest truncate mt-0.5 sm:mt-1">${w.role}</p>
                         </div>
                     </div>
-                    <div class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-sm sm:text-base flex items-baseline gap-1.5 shrink-0 ${ptsClass}">${w.totalPts} <span class="text-[9px] sm:text-[10px] font-bold opacity-70 uppercase tracking-widest">Pts</span></div>
+                    <div class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-base flex items-baseline gap-1 sm:gap-1.5 shrink-0 ${ptsClass}">${w.totalPts} <span class="text-[8px] sm:text-[10px] font-bold opacity-70 uppercase tracking-widest">Pts</span></div>
                 </div>`;
             });
             html += `</div></div>`;
