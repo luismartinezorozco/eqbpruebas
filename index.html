@@ -501,31 +501,35 @@
                 const mSnap = await getDocs(collection(db, "messages"));
                 window.appState.messages = mSnap.docs.map(doc => doc.data());
                 localStorage.setItem('laly_messages', JSON.stringify(window.appState.messages));
-            } catch (e) { console.error("Error sincronizando BD:", e); }
+            } catch (e) { console.error("Error sincronizando BD en segundo plano:", e); }
         }
 
         async function checkSession() {
-            const session = localStorage.getItem('hr_v2_session');
+            // Sesión permanente en localStorage
+            const session = localStorage.getItem('hr_v2_session') || sessionStorage.getItem('hr_v2_session');
             if (session) {
                 window.appState.currentUser = JSON.parse(session);
-                performLoginUIFast();
                 
+                // 1. CARGA ULTRA-RÁPIDA DESDE MEMORIA CACHÉ (0 LAG)
                 const cW = localStorage.getItem('laly_workers');
                 const cP = localStorage.getItem('laly_points');
                 const cM = localStorage.getItem('laly_messages');
                 
+                performLoginUIFast();
+                
+                // Si ya hay datos guardados, mostramos la interfaz real instantáneamente
                 if(cW && cP && cM) {
                     window.appState.dbWorkers = JSON.parse(cW);
                     window.appState.points = JSON.parse(cP);
                     window.appState.messages = JSON.parse(cM);
-                    renderViewAfterLogin();
+                    renderViewAfterLogin(); 
                 }
 
+                // 2. SINCRONIZACIÓN FANTASMA EN SEGUNDO PLANO
                 fetchAllData().then(() => {
+                    // Actualiza la vista silenciosamente con los datos frescos de Firebase
                     if (window.appState.currentView) {
                         window.setView(window.appState.currentView);
-                    } else if (!cW) {
-                        renderViewAfterLogin();
                     }
                 }).catch(e => console.error(e));
             }
@@ -633,10 +637,9 @@
 
                 if (user) {
                     window.appState.currentUser = user;
-                    localStorage.setItem('hr_v2_session', JSON.stringify(user));
+                    localStorage.setItem('hr_v2_session', JSON.stringify(user)); // Guarda sesión permanentemente
                     performLoginUIFast();
-                    await fetchAllData();
-                    renderViewAfterLogin();
+                    fetchAllData().then(() => renderViewAfterLogin()).catch(e => console.error(e));
                 }
             } catch (error) { 
                 console.error(error); window.showToast('Error de conexión', 'error'); btn.innerHTML = 'Ingresar'; btn.disabled = false; 
@@ -645,6 +648,7 @@
 
         window.appSignOut = () => {
             localStorage.removeItem('hr_v2_session');
+            sessionStorage.removeItem('hr_v2_session'); // Limpieza doble
             window.appState.currentUser = null;
             document.getElementById('app-layout').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
