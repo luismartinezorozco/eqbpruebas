@@ -2,15 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- Preconexiones para acelerar Firebase y Fuentes -->
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="https://www.image2url.com/r2/default/images/1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg">
-    <!-- Bloqueo de zoom para móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>LALY TALENTO</title>
     
@@ -32,47 +29,41 @@
         .card-shadow { 
             box-shadow: 0 8px 30px rgb(0, 0, 0, 0.04), 0 1px 2px rgb(0, 0, 0, 0.02); 
             border: 1px solid rgba(243, 244, 246, 0.7); 
+            will-change: transform;
         }
 
         /* ============ Aceleración GPU para 60fps (Fluidez nativa) ============ */
-        #main-content, #app-layout, .modal-content, #worker-modal, #admin-modal {
+        #main-content, #app-layout, .modal-content, #worker-modal, #admin-modal, .directory-card {
             -webkit-transform: translateZ(0);
             transform: translateZ(0);
             backface-visibility: hidden;
             perspective: 1000px;
         }
         #main-content {
-            -webkit-overflow-scrolling: touch; /* Scroll suave y elástico en iOS */
-            overscroll-behavior-y: contain; /* Evita tirones al recargar página hacia arriba */
+            -webkit-overflow-scrolling: touch; 
+            overscroll-behavior-y: contain; 
         }
 
         /* ============ Micro-interacciones globales ============ */
         #login-screen button, #app-layout button, #worker-modal button,
-        #worker-modal label, #main-content label { transition: none; }
+        #worker-modal label, #main-content label { transition: transform 0.1s ease-out; }
         #login-screen button:active, #app-layout button:active, #worker-modal button:active,
         #worker-modal label:active, #main-content label:active { transform: scale(0.95); }
 
-        #main-content .card-shadow { transition: none; }
         #main-content .card-shadow.cursor-pointer:hover {
-            transform: none;
+            transform: translateY(-2px);
             box-shadow: 0 16px 40px -12px rgba(84, 44, 28, 0.15), 0 4px 12px rgb(0, 0, 0, 0.04);
             border-color: rgba(187, 116, 52, 0.6);
         }
         #main-content .card-shadow.cursor-pointer:active { transform: scale(0.97); }
 
         /* ============ Navegación ============ */
-        #desktop-nav button { transition: none; }
-        #desktop-nav button:hover { transform: none; }
         #desktop-nav button:active { transform: scale(0.97); }
-        #mobile-nav button { transition: none; }
         #mobile-nav button:active { transform: scale(0.9); }
-        #mobile-nav button > div { transition: none; }
         #mobile-nav button[class*="text-[#542c1c]"] > div { transform: scale(1.08); }
         .nav-safe { bottom: calc(0.85rem + env(safe-area-inset-bottom, 0px)); }
 
         /* ============ Formularios modernos ============ */
-        #worker-modal input:not([type="hidden"]):not([type="file"]), #worker-modal select,
-        #main-content input, #main-content select { transition: none; }
         #worker-modal input:not([type="hidden"]):not([type="file"]), #worker-modal select {
             background-color: rgba(249, 250, 251, 0.55); border-color: transparent;
         }
@@ -96,19 +87,13 @@
             box-shadow: 0 14px 34px -14px rgba(84, 44, 28, 0.4);
         }
 
-        /* ============ Perfil ============ */
-        #main-content [class*="md:rounded-3xl"][class*="shadow-sm"] {
-            border-radius: 1.5rem; background: #ffffff;
-            border: 1px solid rgba(243, 244, 246, 0.7);
-            box-shadow: 0 8px 30px rgb(0, 0, 0, 0.04);
-        }
-
         /* ============ Modal ============ */
         .modal-backdrop {
             position: fixed; inset: 0; background-color: rgba(84, 44, 28, 0.45);
             backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
             z-index: 1000; display: flex; align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none; transition: none; padding: 1rem;
+            opacity: 0; pointer-events: none; padding: 1rem;
+            transition: opacity 0.2s ease-out;
         }
         .modal-backdrop.active { opacity: 1; pointer-events: auto; }
         .modal-content {
@@ -116,8 +101,8 @@
             backdrop-filter: blur(24px) saturate(1.5); -webkit-backdrop-filter: blur(24px) saturate(1.5);
             border: 1px solid rgba(255, 255, 255, 0.6);
             width: 100%; max-width: 36rem; border-radius: 1.75rem; max-height: 90vh;
-            display: flex; flex-direction: column; transform: scale(1) translateY(0);
-            transition: none;
+            display: flex; flex-direction: column; transform: scale(0.95) translateY(10px);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             overflow: hidden;
             box-shadow: 0 24px 60px -12px rgba(84, 44, 28, 0.28), 0 8px 24px rgba(0, 0, 0, 0.08);
         }
@@ -126,16 +111,12 @@
 
         /* ============ Skeleton Loading Animation ============ */
         .skeleton-base { background: #f0f0f0; border-radius: 0.75rem; }
-        .skeleton-text { height: 1rem; margin-bottom: 0.5rem; }
         .skeleton-card { padding: 1.25rem; margin-bottom: 1rem; border-radius: 1.5rem; background: white; border: 1px solid rgba(243, 244, 246, 0.7); }
-        .skeleton-card .skeleton-base { height: 2rem; margin-bottom: 0.75rem; }
-
-        /* ============ Elementos UI ============ */
+        
         button, input, select, textarea { min-height: 44px; }
         .login-type-btn { transition: all 0.3s ease-out; border-width: 2px; }
         .login-type-btn.active { background-color: #bb7434; border-color: #bb7434; color: #fff; }
         .login-type-btn.inactive { background-color: transparent; border-color: #ddd; color: #999; }
-        .login-type-btn:hover:not(.inactive) { transform: translateY(-2px); }
     </style>
 </head>
 <body class="overflow-hidden">
@@ -201,9 +182,7 @@
                 </div>
             </div>
 
-            <nav id="desktop-nav" class="flex-1 space-y-1 md:space-y-2">
-                <!-- Nav items inyectados por JS -->
-            </nav>
+            <nav id="desktop-nav" class="flex-1 space-y-1 md:space-y-2"></nav>
 
             <div class="mt-auto bg-white/5 backdrop-blur-sm p-3 md:p-4 rounded-3xl border border-white/10">
                 <div class="flex items-center gap-3 mb-3 min-w-0">
@@ -221,17 +200,13 @@
 
         <!-- MAIN CONTENT AREA -->
         <div class="flex-1 flex flex-col h-[100dvh] bg-[#f3ebe3] lg:rounded-l-[2.5rem] overflow-hidden relative shadow-2xl lg:border-l lg:border-white/10">
-            
-            <!-- EL PADDING pb-36 ES LA SOLUCIÓN AL MENÚ MÓVIL SUPERPUESTO -->
             <div id="main-content" class="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 lg:p-8 relative pb-36 sm:pb-40 md:pb-40 lg:pb-12 hide-scrollbar">
                 <!-- Vistas dinámicas inyectadas aquí -->
             </div>
 
             <!-- BOTTOM NAV (Móvil + Tablet) -->
-            <div class="lg:hidden fixed nav-safe left-3 right-3 sm:left-4 sm:right-4 bg-white/75 backdrop-blur-xl border border-white/60 px-2 py-2 sm:py-3 rounded-[2rem] shadow-[0_12px_40px_-8px_rgba(84,44,28,0.18),0_4px_12px_rgba(84,44,28,0.06)] z-[200]">
-                <div id="mobile-nav" class="flex justify-around items-center w-full">
-                    <!-- Nav items inyectados por JS -->
-                </div>
+            <div class="lg:hidden fixed nav-safe left-3 right-3 sm:left-4 sm:right-4 bg-white/75 backdrop-blur-md border border-white/60 px-2 py-2 sm:py-3 rounded-[2rem] shadow-[0_12px_40px_-8px_rgba(84,44,28,0.18),0_4px_12px_rgba(84,44,28,0.06)] z-[200]">
+                <div id="mobile-nav" class="flex justify-around items-center w-full"></div>
             </div>
         </div>
     </div>
@@ -519,13 +494,11 @@
         }
 
         async function checkSession() {
-            // USAR LOCALSTORAGE: Mantiene la sesión iniciada aunque cierres la app
             const session = localStorage.getItem('hr_v2_session');
             if (session) {
                 window.appState.currentUser = JSON.parse(session);
                 performLoginUIFast();
                 
-                // RENDIMIENTO: Carga instantánea de caché local (0 ms de espera)
                 const cW = localStorage.getItem('laly_workers');
                 const cP = localStorage.getItem('laly_points');
                 const cM = localStorage.getItem('laly_messages');
@@ -537,7 +510,6 @@
                     renderViewAfterLogin();
                 }
 
-                // Sincronización en 2do plano sin interrumpir al usuario
                 fetchAllData().then(() => {
                     if (window.appState.currentView) {
                         window.setView(window.appState.currentView);
@@ -560,7 +532,6 @@
             const user = window.appState.currentUser;
             document.getElementById('user-name').innerText = user.name;
             const photoEl = document.getElementById('user-avatar');
-            // OPTIMIZACIÓN: Carga diferida y asíncrona de imagen de perfil
             if(user.photo) photoEl.innerHTML = `<img src="${user.photo}" loading="lazy" decoding="async" class="w-full h-full object-cover">`;
             else photoEl.innerText = window.getInitials(user.name);
             
@@ -620,7 +591,6 @@
                     if (username === validUser && password === validPass) {
                         user = { id: 'admin_' + username, name: 'Administrador Principal', username: username, role: 'Administrador', systemRole: 'ADMIN', status: 'activo', isAdmin: true };
                     } else {
-                        // BUG CORREGIDO: Permite iniciar sesión a los administradores creados desde el botón "+ Admin"
                         const q = query(collection(db, "workers"), where("username", "==", username), where("password", "==", password), where("systemRole", "==", "ADMIN"), where("status", "==", "activo"));
                         const querySnapshot = await getDocs(q);
                         
@@ -652,7 +622,6 @@
 
                 if (user) {
                     window.appState.currentUser = user;
-                    // GUARDAR EN LOCALSTORAGE para sesión permanente
                     localStorage.setItem('hr_v2_session', JSON.stringify(user));
                     performLoginUIFast();
                     await fetchAllData();
@@ -664,7 +633,6 @@
         };
 
         window.appSignOut = () => {
-            // LIMPIEZA CORRECTA: Borramos la sesión permanente al cerrar cuenta
             localStorage.removeItem('hr_v2_session');
             window.appState.currentUser = null;
             document.getElementById('app-layout').classList.add('hidden');
@@ -683,83 +651,44 @@
             
             const main = document.getElementById('main-content');
             
-            // ==========================================
-            // RENDERIZADO INSTANTÁNEO DESDE CACHÉ (RAM)
-            // ==========================================
-            
-            if (viewName === 'dashboard') { 
-                main.innerHTML = window.renderDashboard(); 
-                lucide.createIcons(); 
-            }
-            
+            if (viewName === 'dashboard') { main.innerHTML = window.renderDashboard(); lucide.createIcons(); }
             if (viewName === 'directory') {
-                main.innerHTML = window.renderDirectory(); 
-                lucide.createIcons();
-                // Sincronización silenciosa en segundo plano
-                fetchAllData().then(() => {
-                    if (window.appState.currentView === 'directory') {
-                        main.innerHTML = window.renderDirectory();
-                        lucide.createIcons();
-                    }
-                });
+                main.innerHTML = window.renderDirectory(); lucide.createIcons();
+                fetchAllData().then(() => { if (window.appState.currentView === 'directory') { main.innerHTML = window.renderDirectory(); lucide.createIcons(); } });
             }
-            
-            if (viewName === 'ranking') { 
-                main.innerHTML = window.renderRanking(); 
-                lucide.createIcons(); 
-            }
-            
+            if (viewName === 'ranking') { main.innerHTML = window.renderRanking(); lucide.createIcons(); }
             if (viewName === 'messages') {
-                main.innerHTML = window.renderMessages(); 
-                lucide.createIcons();
-                // Sincronización silenciosa en segundo plano
-                fetchAllData().then(() => {
-                    if (window.appState.currentView === 'messages') {
-                        main.innerHTML = window.renderMessages();
-                        lucide.createIcons();
-                    }
-                });
+                main.innerHTML = window.renderMessages(); lucide.createIcons();
+                fetchAllData().then(() => { if (window.appState.currentView === 'messages') { main.innerHTML = window.renderMessages(); lucide.createIcons(); } });
             }
-            
             if (viewName === 'profile') {
                 const wId = window.appState.selectedWorker.id;
-                window.appState.activeProfileTab = 'rendimiento'; // Por defecto
+                window.appState.activeProfileTab = 'rendimiento'; 
                 
-                // Si no existe el caché de documentos, lo inicializamos
                 if (!window.appState.cachedDocs) window.appState.cachedDocs = {};
                 
-                // Si ya tenemos los documentos en memoria, renderizar todo inmediatamente
                 if (window.appState.cachedDocs[wId]) {
                     window.appState.currentProfileDocs = window.appState.cachedDocs[wId];
-                    main.innerHTML = window.renderProfile();
-                    lucide.createIcons();
+                    main.innerHTML = window.renderProfile(); lucide.createIcons();
                 } else {
-                    // Renderizamos el perfil al instante sin documentos, y mostramos los docs cuando lleguen
                     window.appState.currentProfileDocs = [];
-                    main.innerHTML = window.renderProfile();
-                    lucide.createIcons();
+                    main.innerHTML = window.renderProfile(); lucide.createIcons();
                 }
 
-                // Descargar documentos específicos del trabajador en 2do plano
                 const qDocs = query(collection(db, "documents"), where("workerId", "==", wId));
                 getDocs(qDocs).then(snapDocs => {
                     const docs = snapDocs.docs.map(doc => ({dbId: doc.id, ...doc.data()})).sort((a,b) => b.timestamp - a.timestamp);
                     window.appState.cachedDocs[wId] = docs;
                     window.appState.currentProfileDocs = docs;
-                    
-                    // Si el usuario sigue viendo el mismo perfil, actualizamos la pantalla silenciosamente
                     if (window.appState.currentView === 'profile' && window.appState.selectedWorker.id === wId) {
-                        main.innerHTML = window.renderProfile();
-                        lucide.createIcons();
+                        main.innerHTML = window.renderProfile(); lucide.createIcons();
                     }
                 });
                 
-                // Sincronizar puntos y datos del trabajador en 2do plano
                 fetchAllData().then(() => {
                     window.appState.selectedWorker = window.appState.dbWorkers.find(w => w.id === wId) || window.appState.selectedWorker;
                     if (window.appState.currentView === 'profile' && window.appState.selectedWorker.id === wId) {
-                        main.innerHTML = window.renderProfile(); 
-                        lucide.createIcons();
+                        main.innerHTML = window.renderProfile(); lucide.createIcons();
                     }
                 });
             }
@@ -842,9 +771,6 @@
 
             return `
             <div class="space-y-4 sm:space-y-6 max-w-7xl mx-auto pb-8">
-                
-                <!-- HEADER MODERNO Y RESPONSIVO -->
-                <!-- SOLUCIÓN DE SCROLL HORIZONTAL: Ajuste matemático de márgenes negativos (-mx-3 en lugar de -mx-4 para móvil) -->
                 <div class="bg-gradient-to-br from-[#542c1c] via-[#6b3c2a] to-[#7a4a35] -mx-3 sm:-mx-4 md:-mx-6 lg:-mx-8 -mt-3 sm:-mt-4 md:-mt-6 lg:-mt-8 pt-10 sm:pt-12 md:pt-14 pb-24 sm:pb-28 px-4 sm:px-6 md:px-10 rounded-b-[2rem] shadow-lg relative overflow-hidden">
                     <div class="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdHRlcm4gaWQ9InAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0iI2ZmZiIvPjwvcGF0dGVybj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3ApIi8+PC9zdmc+')]"></div>
                     <div class="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
@@ -855,10 +781,7 @@
                     </div>
                 </div>
 
-                <!-- WIDGETS SUPERPUESTOS Y ADAPTABLES -->
                 <div class="-mt-16 sm:-mt-20 relative z-20 px-0 grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                    
-                    <!-- Tarjeta: Empleados Activos -->
                     <div class="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] card-shadow flex items-center gap-3 sm:gap-4 group border border-gray-100 hover:border-[#bb7434]/30 transition-all">
                         <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-orange-50 text-[#bb7434] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-inner border border-orange-100/50"><i data-lucide="users" class="w-6 h-6 sm:w-7 sm:h-7"></i></div>
                         <div class="flex-1 min-w-0">
@@ -867,7 +790,6 @@
                         </div>
                     </div>
 
-                    <!-- Tarjeta: Destacado Mes Anterior -->
                     ${topWorkerPrev ? `
                     <div onclick="viewWorkerProfile('${topWorkerPrev.id}')" class="bg-gradient-to-br from-[#bb7434] to-[#995922] rounded-2xl sm:rounded-[1.5rem] p-4 sm:p-5 shadow-lg shadow-[#bb7434]/20 text-white flex items-center gap-3 sm:gap-4 relative overflow-hidden cursor-pointer hover:shadow-xl transition-all active:scale-[0.98] group">
                         <div class="absolute -right-4 -top-4 opacity-[0.05] group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500 pointer-events-none"><i data-lucide="trophy" class="w-32 h-32 text-white"></i></div>
@@ -883,7 +805,6 @@
                         }
                     </div>` : ''}
 
-                    <!-- Tarjeta: Próximo Cumpleaños -->
                     ${nextBdayWorker ? `
                     <div onclick="viewWorkerProfile('${nextBdayWorker.id}')" class="${!topWorkerPrev ? 'md:col-span-2' : 'md:col-span-2 lg:col-span-1'} bg-white border border-[#f3ebe3] rounded-2xl sm:rounded-[1.5rem] p-4 sm:p-5 card-shadow flex items-center gap-3 sm:gap-4 relative overflow-hidden cursor-pointer hover:border-pink-200 transition-all active:scale-[0.98] group">
                         <div class="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:scale-110 group-hover:-rotate-12 transition-transform duration-500 pointer-events-none"><i data-lucide="cake" class="w-32 h-32 text-pink-600"></i></div>
@@ -904,7 +825,6 @@
                     </div>` : ''}
                 </div>
 
-                <!-- ACCESOS RÁPIDOS MÓVIL/DESKTOP -->
                 <div class="mt-2 sm:mt-4">
                     <h3 class="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest mb-3 px-1 sm:px-2">Accesos Rápidos</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
@@ -925,7 +845,6 @@
             </div>`;
         };
 
-        // ============ BUSCADOR EN DIRECTORIO ============
         window.filterDirectory = (term) => {
             const lowerTerm = term.toLowerCase();
             document.querySelectorAll('.directory-card').forEach(card => {
@@ -941,14 +860,12 @@
             
             let html = `
             <div class="h-full flex flex-col max-w-7xl mx-auto pb-8">
-                <!-- Header Moderno -->
                 <div class="bg-white p-4 sm:p-5 md:p-6 rounded-[2rem] card-shadow mb-4 sm:mb-6 border border-gray-100/50">
                     <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                         <div class="w-full md:w-auto">
                             <h1 class="text-2xl sm:text-3xl font-black text-gray-800 tracking-tight">Directorio</h1>
                             <p class="text-gray-500 text-xs sm:text-sm font-medium mt-1">Gestión del equipo de talento</p>
                         </div>
-                        
                         <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                             <div class="relative flex-1 sm:w-72">
                                 <i data-lucide="search" class="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
@@ -963,57 +880,34 @@
                     </div>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4" id="directory-grid">
-            `;
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4" id="directory-grid">`;
 
             window.appState.dbWorkers.forEach(w => {
                 if (w.role === 'Administrador') return;
-
                 const isInactive = w.status === 'inactivo';
-                
-                // Optimización de la imagen
                 const photoHtml = w.photo ? `<img src="${w.photo}" loading="lazy" decoding="async" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl object-cover shrink-0">` : `<div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gray-100 text-gray-400 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 border border-gray-200 shadow-inner">${window.getInitials(w.name)}</div>`;
                 
-                // Extraer solo la primera especialidad para no ensuciar la tarjeta
                 let firstSpecHtml = '';
                 if(w.specialties) {
                     const firstSpec = w.specialties.split(',')[0].trim();
                     if(firstSpec) firstSpecHtml = `<span class="bg-indigo-50 text-indigo-600 text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-lg flex items-center gap-1 shrink-0 border border-indigo-100/50"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> ${firstSpec}</span>`;
                 }
-
                 const cityHtml = w.city ? `<span class="bg-gray-50 text-gray-500 text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-lg truncate border border-gray-100"><i data-lucide="map-pin" class="w-2.5 h-2.5 inline mr-1"></i>${w.city}</span>` : '';
-
-                // Texto para filtrar dinámicamente
                 const searchData = `${w.name} ${w.role} ${w.document || ''} ${w.specialties || ''}`.toLowerCase();
 
                 html += `
                 <div onclick="viewWorkerProfile('${w.id}')" data-search="${searchData}" class="directory-card bg-white p-3.5 sm:p-4 rounded-[1.5rem] card-shadow cursor-pointer hover:border-[#bb7434]/40 hover:shadow-xl transition-all border border-gray-100 flex items-center gap-3.5 sm:gap-4 relative overflow-hidden group ${isInactive?'opacity-60 grayscale-[0.2] hover:grayscale-0':''}">
-                    
-                    <!-- Barra decorativa lateral al hacer hover -->
                     <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-[#bb7434] scale-y-0 group-hover:scale-y-100 transition-transform origin-center"></div>
-
                     <div class="relative shrink-0">
                         ${photoHtml}
-                        <!-- Punto de Estado Moderno -->
-                        ${isInactive 
-                            ? `<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-red-400 border-[3px] border-white rounded-full shadow-sm"></div>` 
-                            : `<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-[3px] border-white rounded-full shadow-sm"></div>`}
+                        ${isInactive ? `<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-red-400 border-[3px] border-white rounded-full shadow-sm"></div>` : `<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-[3px] border-white rounded-full shadow-sm"></div>`}
                     </div>
-
                     <div class="flex-1 min-w-0">
                         <h4 class="font-black text-gray-800 text-sm sm:text-base leading-tight truncate mb-0.5 group-hover:text-[#bb7434] transition-colors">${w.name}</h4>
                         <p class="text-[10px] sm:text-[11px] font-black text-gray-400 uppercase tracking-wider truncate mb-2">${w.role}</p>
-                        
-                        <div class="flex items-center gap-1.5 overflow-hidden">
-                            ${firstSpecHtml}
-                            ${cityHtml}
-                        </div>
+                        <div class="flex items-center gap-1.5 overflow-hidden">${firstSpecHtml}${cityHtml}</div>
                     </div>
-                    
-                    <!-- Flecha para invitar al click -->
-                    <div class="shrink-0 text-gray-200 group-hover:text-[#bb7434] transition-colors pr-1">
-                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
-                    </div>
+                    <div class="shrink-0 text-gray-200 group-hover:text-[#bb7434] transition-colors pr-1"><i data-lucide="chevron-right" class="w-5 h-5"></i></div>
                 </div>`;
             });
             html += `</div></div>`;
@@ -1038,20 +932,16 @@
 
             let html = `
             <div class="max-w-7xl mx-auto pb-10">
-                <!-- Header Moderno y Responsivo -->
                 <div class="bg-white p-4 sm:p-5 md:p-6 rounded-[1.5rem] sm:rounded-[2rem] card-shadow mb-4 sm:mb-6 border border-gray-100/50 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-4 overflow-hidden">
                     <div class="flex-1 min-w-0 w-full">
                         <h1 class="text-2xl sm:text-3xl font-black text-gray-800 tracking-tight truncate">Ranking Mensual</h1>
                         <p class="text-gray-500 text-xs sm:text-sm font-medium mt-1 truncate">Desempeño y evaluaciones del mes.</p>
                     </div>
-                    <!-- SOLUCIÓN CASILLA SOBRESALIDA: flex-col adaptativo, box-border y w-full bloqueado -->
                     <div class="relative w-full sm:w-auto shrink-0">
                         <i data-lucide="calendar" class="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#bb7434]"></i>
                         <input type="month" value="${monthStr}" onchange="window.changeMonth(event)" class="w-full sm:max-w-[220px] m-0 box-border pl-10 pr-4 py-3 rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 text-[#542c1c] text-xs sm:text-sm font-black focus:outline-none focus:ring-2 focus:ring-[#bb7434]/20 focus:border-[#bb7434] shadow-sm cursor-pointer transition-all appearance-none">
                     </div>
                 </div>
-                
-                <!-- Lista de Ranking (Podio + Normales) -->
                 <div class="space-y-3 sm:space-y-4">`;
 
             if(rankedWorkers.length === 0) html += '<div class="text-center py-12 bg-white rounded-[1.5rem] border border-gray-100"><div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="bar-chart-2" class="w-6 h-6 sm:w-8 sm:h-8"></i></div><p class="text-xs sm:text-sm font-bold text-gray-400">No hay colaboradores activos</p></div>';
@@ -1137,16 +1027,13 @@
 
             return `
             <div class="max-w-4xl mx-auto pb-10">
-                <!-- Header -->
                 <div class="bg-white p-4 sm:p-5 md:p-6 rounded-[2rem] card-shadow mb-4 sm:mb-6 border border-gray-100/50">
                     <h1 class="text-2xl sm:text-3xl font-black text-gray-800 tracking-tight mb-1">Mensajes</h1>
                     <p class="text-gray-500 text-xs sm:text-sm font-medium">Comunícate con el equipo o envía notas individuales.</p>
                 </div>
 
-                <!-- Formulario de Nuevo Mensaje -->
                 <form onsubmit="window.saveMessage(event)" class="bg-white p-4 sm:p-5 md:p-6 rounded-[2rem] card-shadow mb-6 sm:mb-8 border border-gray-100/50">
                     <h3 class="text-xs sm:text-sm font-black text-[#542c1c] uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="edit-3" class="w-4 h-4 text-[#bb7434]"></i> Nuevo Mensaje</h3>
-                    
                     <div class="space-y-4">
                         <div>
                             <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Destinatario</label>
@@ -1171,7 +1058,6 @@
                     </div>
                 </form>
 
-                <!-- Muro de Mensajes -->
                 <div class="space-y-3 sm:space-y-4">
                     <h3 class="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest mb-3 px-2">Muro de Publicaciones</h3>
                     ${listHtml}
@@ -1179,33 +1065,6 @@
             </div>`;
         };
 
-        window.saveMessage = async (e) => {
-            e.preventDefault(); const btn = document.getElementById('save-message-btn');
-            const targetWorkerId = document.getElementById('msg-target').value || null; const text = document.getElementById('msg-text').value.trim();
-            if(!text) { window.showToast('Escribe un mensaje', 'error'); return; }
-            btn.disabled = true;
-            try {
-                const newMessage = { id: 'msg_' + Date.now(), text, targetWorkerId, authorName: window.appState.currentUser.name, timestamp: Date.now() };
-                await setDoc(doc(db, "messages", newMessage.id), newMessage);
-                window.showToast('Mensaje publicado'); await window.setView('messages');
-            } catch(err) { window.showToast('Error al publicar: ' + err.message, 'error'); } 
-            finally { btn.disabled = false; }
-        };
-
-        window.deleteMessage = async (id) => {
-            if(!confirm('¿Eliminar este mensaje?')) return;
-            try {
-                await deleteDoc(doc(db, "messages", id));
-                window.appState.messages = window.appState.messages.filter(m => m.id !== id);
-                window.showToast('Mensaje eliminado');
-                if(window.appState.currentView === 'messages') await window.setView('messages');
-                if(window.appState.currentView === 'profile') await window.setView('profile');
-            } catch (e) { window.showToast('Error al eliminar', 'error'); }
-        };
-
-        window.viewWorkerProfile = (id) => { window.appState.selectedWorker = window.appState.dbWorkers.find(w => w.id === id); window.setView('profile'); };
-
-        // ============ RENDER PERFIL REDISEÑADO (MODO DASHBOARD PERSONAL) ============
         window.renderProfile = () => {
             const w = window.appState.selectedWorker;
             const role = window.appState.currentUser.systemRole;
@@ -1274,10 +1133,7 @@
             
             return `
             <div class="max-w-4xl mx-auto pb-10">
-                
-                <!-- CABECERA PREMIUM MODO DASHBOARD -->
                 <div class="bg-gradient-to-br from-[#542c1c] via-[#6b3c2a] to-[#bb7434] px-4 sm:px-6 md:px-10 pt-8 sm:pt-10 pb-20 sm:pb-24 rounded-b-[2.5rem] md:rounded-3xl md:mt-2 shadow-lg relative z-0 overflow-hidden">
-                    <!-- Patrón de fondo sutil -->
                     <div class="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdHRlcm4gaWQ9InAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0iI2ZmZiIvPjwvcGF0dGVybj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3ApIi8+PC9zdmc+')]"></div>
                     
                     ${role !== 'WORKER' ? `<button onclick="setView('directory')" class="text-white/80 hover:text-white mb-4 sm:mb-6 font-bold text-xs sm:text-sm flex items-center gap-2 transition-all active:scale-95 relative z-10"><i data-lucide="chevron-left" class="w-4 h-4 sm:w-5 sm:h-5"></i> Volver</button>` : `<div class="mb-4 sm:mb-6 relative z-10"><p class="text-white/70 text-xs font-black uppercase tracking-widest flex items-center gap-2"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Mi Espacio</p></div>`}
@@ -1295,7 +1151,6 @@
                     </div>
                 </div>
 
-                <!-- WIDGETS Y AVATAR SUPERPUESTOS -->
                 <div class="px-4 sm:px-6 md:px-10 -mt-12 sm:-mt-14 relative z-10 flex flex-col sm:flex-row gap-4 items-center sm:items-end">
                     <div class="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-[1.5rem] sm:rounded-[2rem] border-4 sm:border-[6px] border-[#f3ebe3] md:border-white bg-white shadow-xl overflow-hidden shrink-0 flex items-center justify-center text-[#bb7434] text-3xl md:text-5xl font-black relative group">
                         ${w.photo ? `<img src="${w.photo}" loading="lazy" decoding="async" class="w-full h-full object-cover">` : window.getInitials(w.name)}
@@ -1314,12 +1169,10 @@
                     </div>
                 </div>
 
-                <!-- TABS MODERNOS ESTILO APP -->
                 <div class="px-4 sm:px-6 md:px-10 mt-6 sm:mt-8">
                     <div class="bg-gray-200/60 p-1.5 rounded-2xl sm:rounded-[1.25rem] flex overflow-x-auto hide-scrollbar gap-1 relative shadow-inner">
                         <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'rendimiento' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="star" class="w-4 h-4"></i> <span class="hidden sm:inline">Puntos</span></button>
-                        <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'laboral' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="user" class="w-4 h-4"></i> <span class="hidden sm:inline">Info</span></button>
-                        <button onclick="switchTab('documentos')" id="tab-btn-documentos" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'documentos' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="file-text" class="w-4 h-4"></i> <span class="hidden sm:inline">Docs</span></button>
+                        <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'laboral' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="user" class="w-4 h-4"></i> <span class="hidden sm:inline">Info & Docs</span></button>
                         <button onclick="switchTab('anuncios')" id="tab-btn-anuncios" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'anuncios' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="bell" class="w-4 h-4"></i> <span class="hidden sm:inline">Avisos</span></button>
                         ${canEdit ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'banco' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="credit-card" class="w-4 h-4"></i> <span class="hidden sm:inline">Banco</span></button>` : ''}
                     </div>
@@ -1360,9 +1213,9 @@
                         </div>
                     </div>
 
-                    <!-- TAB: INFORMACIÓN LABORAL (GRILLA CON ICONOS) -->
+                    <!-- TAB: INFORMACIÓN LABORAL Y DOCS -->
                     <div id="tab-laboral" class="${window.appState.activeProfileTab === 'laboral' ? 'block' : 'hidden'}">
-                        <!-- Card Principal: Disponibilidad -->
+                        
                         <div class="bg-gradient-to-r from-blue-50 to-indigo-50/50 p-4 sm:p-5 rounded-2xl card-shadow border border-blue-100 mb-4">
                             <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-3 flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4"></i> Horarios Disponibles</p>
                             <div class="flex flex-wrap gap-2">
@@ -1373,8 +1226,7 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                            <!-- Items Cuadrícula -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-8">
                             <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
                                 <div class="w-10 h-10 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center shrink-0"><i data-lucide="award" class="w-5 h-5"></i></div>
                                 <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Rol</p><p class="text-sm font-black text-gray-800 truncate">${w.role || '-'}</p></div>
@@ -1412,23 +1264,25 @@
                                 <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Especialidades</p><p class="text-sm font-black text-[#542c1c] break-words mt-1">${w.specialties || 'No especificadas'}</p></div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- TAB: DOCUMENTOS -->
-                    <div id="tab-documentos" class="${window.appState.activeProfileTab === 'documentos' ? 'block' : 'hidden'}">
-                        ${canEdit ? `
-                        <div class="mb-4 text-right">
-                            <label class="bg-gray-800 text-white px-5 py-3 rounded-xl text-sm font-black cursor-pointer inline-flex items-center gap-2 shadow-lg hover:bg-gray-700 active:scale-95 transition-all">
-                                <i data-lucide="upload-cloud" class="w-4 h-4"></i> Subir PDF
-                                <input type="file" accept="application/pdf" class="hidden" onchange="uploadDocument(event)">
-                            </label>
-                        </div>` : ''}
-                        
-                        ${dList || `
-                        <div class="text-center py-10 bg-white rounded-3xl border border-gray-100 border-dashed">
-                            <div class="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="file-x-2" class="w-8 h-8"></i></div>
-                            <p class="text-sm font-bold text-gray-400">Carpeta vacía</p>
-                        </div>`}
+                        <!-- SECCIÓN DOCUMENTOS MOVIDA AQUÍ DENTRO DE INFO -->
+                        <div class="pt-6 border-t border-gray-200/60">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="font-black text-gray-800 text-sm flex items-center gap-2"><i data-lucide="folder-open" class="w-5 h-5 text-[#bb7434]"></i> Documentos Anexos</h4>
+                                ${canEdit ? `
+                                <label class="bg-gray-800 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-black cursor-pointer inline-flex items-center gap-2 shadow-lg hover:bg-gray-700 active:scale-95 transition-all">
+                                    <i data-lucide="upload-cloud" class="w-4 h-4"></i> Subir PDF
+                                    <input type="file" accept="application/pdf" class="hidden" onchange="uploadDocument(event)">
+                                </label>` : ''}
+                            </div>
+                            
+                            ${dList || `
+                            <div class="text-center py-8 bg-white rounded-3xl border border-gray-100 border-dashed card-shadow">
+                                <div class="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="file-x-2" class="w-6 h-6"></i></div>
+                                <p class="text-sm font-bold text-gray-400">Carpeta vacía</p>
+                            </div>`}
+                        </div>
+
                     </div>
 
                     <!-- TAB: ANUNCIOS -->
@@ -1467,7 +1321,7 @@
 
         window.switchTab = (tabId) => {
             window.appState.activeProfileTab = tabId;
-            const tabs = ['rendimiento', 'laboral', 'documentos', 'anuncios', 'banco'];
+            const tabs = ['rendimiento', 'laboral', 'anuncios', 'banco'];
             
             tabs.forEach(t => {
                 const content = document.getElementById(`tab-${t}`);
@@ -1484,7 +1338,6 @@
             });
         };
 
-        // ============ OPERACIONES AUXILIARES ============
         window.savePoint = async () => {
             const amount = parseInt(document.getElementById('pt-amount').value);
             const type = document.getElementById('pt-type').value;
@@ -1497,6 +1350,32 @@
                 window.showToast('Evaluación guardada'); window.setView('profile'); 
             } catch (e) { window.showToast('Error', 'error'); }
         };
+
+        window.saveMessage = async (e) => {
+            e.preventDefault(); const btn = document.getElementById('save-message-btn');
+            const targetWorkerId = document.getElementById('msg-target').value || null; const text = document.getElementById('msg-text').value.trim();
+            if(!text) { window.showToast('Escribe un mensaje', 'error'); return; }
+            btn.disabled = true;
+            try {
+                const newMessage = { id: 'msg_' + Date.now(), text, targetWorkerId, authorName: window.appState.currentUser.name, timestamp: Date.now() };
+                await setDoc(doc(db, "messages", newMessage.id), newMessage);
+                window.showToast('Mensaje publicado'); await window.setView('messages');
+            } catch(err) { window.showToast('Error al publicar: ' + err.message, 'error'); } 
+            finally { btn.disabled = false; }
+        };
+
+        window.deleteMessage = async (id) => {
+            if(!confirm('¿Eliminar este mensaje?')) return;
+            try {
+                await deleteDoc(doc(db, "messages", id));
+                window.appState.messages = window.appState.messages.filter(m => m.id !== id);
+                window.showToast('Mensaje eliminado');
+                if(window.appState.currentView === 'messages') await window.setView('messages');
+                if(window.appState.currentView === 'profile') await window.setView('profile');
+            } catch (e) { window.showToast('Error al eliminar', 'error'); }
+        };
+
+        window.viewWorkerProfile = (id) => { window.appState.selectedWorker = window.appState.dbWorkers.find(w => w.id === id); window.setView('profile'); };
 
         window.uploadDocument = (e) => {
             const file = e.target.files[0];
@@ -1525,7 +1404,6 @@
             }
         };
 
-        // ============ GESTIÓN DE COLABORADOR ============
         window.openWorkerForm = (id = null) => {
             document.getElementById('worker-form').reset(); 
             document.getElementById('w-photo-preview').classList.add('hidden'); 
