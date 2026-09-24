@@ -8,6 +8,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <link rel="icon" type="image/svg+xml" href="https://www.image2url.com/r2/default/images/1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg">
+    
+    <!-- Configuraciones PWA para iOS y Android (Icono de aplicación y pantalla completa) -->
+    <meta name="theme-color" content="#542c1c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="LALY Talento">
+    <link rel="apple-touch-icon" href="https://www.image2url.com/r2/default/images/1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg">
+    <!-- Manifest integrado para Android -->
+    <link rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22LALY%20Talento%22%2C%22short_name%22%3A%22LALY%20Talento%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23542c1c%22%2C%22theme_color%22%3A%22%23542c1c%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fwww.image2url.com%2Fr2%2Fdefault%2Fimages%2F1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D'>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>LALY TALENTO</title>
     
@@ -123,8 +133,8 @@
 
     <!-- LOGIN -->
     <div id="login-screen" class="fixed inset-0 min-h-[100dvh] bg-[#542c1c] flex flex-col items-center justify-center p-4 md:p-6 fade-in z-[300] overflow-y-auto">
-        <div class="w-16 h-16 md:w-20 md:h-20 bg-[#bb7434] rounded-3xl flex items-center justify-center text-white mb-6 md:mb-8 shadow-[0_0_40px_rgba(187,116,52,0.3)] ring-4 ring-[#bb7434]/20">
-           <i data-lucide="briefcase" style="width: 32px; height: 32px; min-width: 32px;"></i>
+        <div class="w-24 h-24 md:w-32 md:h-32 bg-white/10 backdrop-blur-md rounded-[2rem] flex items-center justify-center mb-6 md:mb-8 shadow-[0_0_40px_rgba(0,0,0,0.3)] border border-white/20 p-4">
+           <img src="https://www.image2url.com/r2/default/images/1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg" alt="LALY Logo" class="w-full h-full object-contain filter drop-shadow-lg">
         </div>
         <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-1 sm:mb-2 tracking-tight text-center">LALY TALENTO</h1>
         <p class="text-[#cab2a2] font-medium mb-6 sm:mb-8 text-center max-w-sm text-xs sm:text-sm md:text-base">Sistema de gestión de talento y rendimiento.</p>
