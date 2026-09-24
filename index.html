@@ -32,8 +32,18 @@
         .card-shadow { 
             box-shadow: 0 8px 30px rgb(0, 0, 0, 0.04), 0 1px 2px rgb(0, 0, 0, 0.02); 
             border: 1px solid rgba(243, 244, 246, 0.7); 
-            content-visibility: auto;
-            contain-intrinsic-size: auto 120px;
+        }
+
+        /* ============ Aceleración GPU para 60fps (Fluidez nativa) ============ */
+        #main-content, #app-layout, .modal-content, #worker-modal, #admin-modal {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+        #main-content {
+            -webkit-overflow-scrolling: touch; /* Scroll suave y elástico en iOS */
+            overscroll-behavior-y: contain; /* Evita tirones al recargar página hacia arriba */
         }
 
         /* ============ Micro-interacciones globales ============ */
@@ -496,21 +506,45 @@
             try {
                 const wSnap = await getDocs(collection(db, "workers"));
                 window.appState.dbWorkers = wSnap.docs.map(doc => doc.data());
+                localStorage.setItem('laly_workers', JSON.stringify(window.appState.dbWorkers));
                 
                 const pSnap = await getDocs(collection(db, "points"));
                 window.appState.points = pSnap.docs.map(doc => ({dbId: doc.id, ...doc.data()}));
+                localStorage.setItem('laly_points', JSON.stringify(window.appState.points));
                 
                 const mSnap = await getDocs(collection(db, "messages"));
                 window.appState.messages = mSnap.docs.map(doc => doc.data());
-            } catch (e) { console.error(e); }
+                localStorage.setItem('laly_messages', JSON.stringify(window.appState.messages));
+            } catch (e) { console.error("Error sincronizando BD:", e); }
         }
 
         async function checkSession() {
-            const session = sessionStorage.getItem('hr_v2_session');
+            // USAR LOCALSTORAGE: Mantiene la sesión iniciada aunque cierres la app
+            const session = localStorage.getItem('hr_v2_session');
             if (session) {
                 window.appState.currentUser = JSON.parse(session);
                 performLoginUIFast();
-                fetchAllData().then(() => renderViewAfterLogin()).catch(e => console.error(e));
+                
+                // RENDIMIENTO: Carga instantánea de caché local (0 ms de espera)
+                const cW = localStorage.getItem('laly_workers');
+                const cP = localStorage.getItem('laly_points');
+                const cM = localStorage.getItem('laly_messages');
+                
+                if(cW && cP && cM) {
+                    window.appState.dbWorkers = JSON.parse(cW);
+                    window.appState.points = JSON.parse(cP);
+                    window.appState.messages = JSON.parse(cM);
+                    renderViewAfterLogin();
+                }
+
+                // Sincronización en 2do plano sin interrumpir al usuario
+                fetchAllData().then(() => {
+                    if (window.appState.currentView) {
+                        window.setView(window.appState.currentView);
+                    } else if (!cW) {
+                        renderViewAfterLogin();
+                    }
+                }).catch(e => console.error(e));
             }
         }
 
@@ -586,6 +620,7 @@
                     if (username === validUser && password === validPass) {
                         user = { id: 'admin_' + username, name: 'Administrador Principal', username: username, role: 'Administrador', systemRole: 'ADMIN', status: 'activo', isAdmin: true };
                     } else {
+                        // BUG CORREGIDO: Permite iniciar sesión a los administradores creados desde el botón "+ Admin"
                         const q = query(collection(db, "workers"), where("username", "==", username), where("password", "==", password), where("systemRole", "==", "ADMIN"), where("status", "==", "activo"));
                         const querySnapshot = await getDocs(q);
                         
@@ -617,9 +652,11 @@
 
                 if (user) {
                     window.appState.currentUser = user;
-                    sessionStorage.setItem('hr_v2_session', JSON.stringify(user));
+                    // GUARDAR EN LOCALSTORAGE para sesión permanente
+                    localStorage.setItem('hr_v2_session', JSON.stringify(user));
                     performLoginUIFast();
-                    fetchAllData().then(() => renderViewAfterLogin()).catch(e => console.error(e));
+                    await fetchAllData();
+                    renderViewAfterLogin();
                 }
             } catch (error) { 
                 console.error(error); window.showToast('Error de conexión', 'error'); btn.innerHTML = 'Ingresar'; btn.disabled = false; 
@@ -627,7 +664,8 @@
         };
 
         window.appSignOut = () => {
-            sessionStorage.removeItem('hr_v2_session');
+            // LIMPIEZA CORRECTA: Borramos la sesión permanente al cerrar cuenta
+            localStorage.removeItem('hr_v2_session');
             window.appState.currentUser = null;
             document.getElementById('app-layout').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
