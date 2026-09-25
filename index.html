@@ -374,21 +374,6 @@
         </div>
     </div>
 
-    <!-- MODAL VISTA PREVIA PDF -->
-    <div id="pdf-preview-modal" class="modal-backdrop">
-        <div class="modal-content w-full h-[90vh] sm:max-w-4xl flex flex-col">
-            <div class="flex justify-between items-center p-3 sm:p-4 border-b border-gray-100/80 bg-white/90 backdrop-blur-xl shrink-0">
-                <h3 id="pdf-preview-title" class="font-black text-base sm:text-lg text-[#542c1c] truncate flex-1 pr-4">Vista Previa</h3>
-                <button onclick="window.closePreviewModal()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <div class="flex-1 bg-[#525659] relative w-full h-full overflow-hidden">
-                <iframe id="pdf-preview-iframe" src="" class="absolute inset-0 w-full h-full border-0"></iframe>
-            </div>
-        </div>
-    </div>
-
     <!-- TOAST NOTIFICATIONS -->
     <div id="toast-container" class="fixed bottom-24 md:bottom-10 left-1/2 transform -translate-x-1/2 z-[1500] flex flex-col gap-2 pointer-events-none w-11/12 max-w-sm items-center"></div>
 
@@ -1128,7 +1113,6 @@
                     <div class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i data-lucide="file-text" class="w-5 h-5"></i></div>
                     <div class="flex-1 min-w-0"><p class="font-bold text-sm text-gray-800 truncate">${d.name}</p><p class="text-[10px] text-gray-400">Documento PDF</p></div>
                     <div class="flex gap-2 shrink-0">
-                        <button onclick="window.previewDoc('${d.dbId}')" title="Vista Previa" class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 hover:bg-blue-100 active:scale-90 transition-all"><i data-lucide="eye" class="w-4 h-4"></i></button>
                         <button onclick="window.shareDoc('${d.dbId}')" title="Compartir" class="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-[#542c1c] hover:bg-gray-200 active:scale-90 transition-all"><i data-lucide="share-2" class="w-4 h-4"></i></button>
                         ${canEdit ? `<button onclick="deleteDocFile('${d.dbId}')" title="Eliminar" class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100 active:scale-90 transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`:''}
                     </div>
@@ -1419,25 +1403,6 @@
                     window.showToast('Documento guardado'); window.setView('profile'); 
                 } catch (er) { window.showToast('Error al subir', 'error'); }
             }; reader.readAsDataURL(file);
-        };
-
-        window.previewDoc = (dbId) => {
-            const docData = window.appState.currentProfileDocs.find(d => d.dbId === dbId);
-            if(docData && docData.file) {
-                document.getElementById('pdf-preview-title').innerText = docData.name;
-                document.getElementById('pdf-preview-iframe').src = docData.file;
-                document.getElementById('pdf-preview-modal').classList.add('active');
-            } else {
-                window.showToast('Error al cargar el documento', 'error');
-            }
-        };
-
-        window.closePreviewModal = () => {
-            document.getElementById('pdf-preview-modal').classList.remove('active');
-            // Retrasar un poco la limpieza para que no se vea feo mientras hace la animación de cierre
-            setTimeout(() => {
-                document.getElementById('pdf-preview-iframe').src = ''; 
-            }, 300);
         };
 
         window.shareDoc = async (dbId) => {
