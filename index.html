@@ -19,6 +19,7 @@
     <!-- Manifest integrado para Android (Incluye tanto el SVG original como el PNG convertido) -->
     <link rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22LALY%20Talento%22%2C%22short_name%22%3A%22LALY%20Talento%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23542c1c%22%2C%22theme_color%22%3A%22%23542c1c%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fwww.image2url.com%2Fr2%2Fdefault%2Fimages%2F1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22https%3A%2F%2Fwsrv.nl%2F%3Furl%3Dhttps%3A%2F%2Fwww.image2url.com%2Fr2%2Fdefault%2Fimages%2F1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg%26output%3Dpng%26w%3D512%26h%3D512%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D'>
     
+    <!-- Configuración Viewport optimizada para iOS y PWA -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=0">
     <title>LALY TALENTO</title>
     
@@ -27,28 +28,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f3ebe3; -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; }
+        /* ============ Configuración Base Segura para Scroll ============ */
+        html, body { 
+            width: 100%; 
+            min-height: 100%; 
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden; 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f3ebe3; 
+            -webkit-tap-highlight-color: transparent; 
+            -webkit-font-smoothing: antialiased; 
+        }
+
+        /* Clase maestra para los contenedores que SI deben desplazarse */
+        .scroll-y-safe {
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch; /* Habilita inercia en iOS */
+            overscroll-behavior-y: contain; /* Aísla el scroll para que no genere conflicto/rebote con el body en iOS */
+        }
+
         ::selection { background: rgba(187, 116, 52, 0.35); }
         h1, h2 { letter-spacing: -0.025em; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .fade-in { opacity: 1; }
         .animate-in { opacity: 1; }
-
-        /* ============ Scroll Base Móvil ============ */
-        html, body {
-            width: 100%;
-            min-height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-
-        .scroll-y-safe {
-            overflow-y: auto;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
-        }
 
         /* ============ Optimizaciones de Rendimiento ============ */
         img { content-visibility: auto; }
@@ -180,7 +186,7 @@
         </div>
     </div>
 
-    <!-- MAIN APP LAYOUT (fixed inset-0 guarantees full width/height mapping) -->
+    <!-- MAIN APP LAYOUT (fixed inset-0 guarantees full screen bounding) -->
     <div id="app-layout" class="hidden fixed inset-0 flex bg-[#542c1c] overflow-hidden">
         
         <!-- SIDEBAR (PC) -->
@@ -214,7 +220,7 @@
         <!-- MAIN CONTENT AREA -->
         <div class="flex-1 flex flex-col min-w-0 bg-[#f3ebe3] lg:rounded-l-[2.5rem] overflow-hidden relative shadow-2xl lg:border-l lg:border-white/10">
             
-            <!-- EL PADDING pb-36 ES LA SOLUCIÓN AL MENÚ MÓVIL SUPERPUESTO -->
+            <!-- CONTENEDOR PRINCIPAL DE SCROLL -->
             <div id="main-content" class="flex-1 min-h-0 p-3 sm:p-4 md:p-6 lg:p-8 relative pb-36 sm:pb-40 md:pb-40 lg:pb-12 hide-scrollbar scroll-y-safe">
                 <!-- Vistas dinámicas inyectadas aquí -->
             </div>
@@ -235,6 +241,7 @@
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
+            <!-- CONTENEDOR DE SCROLL DEL MODAL -->
             <div class="p-3 sm:p-5 md:p-6 flex-1 min-h-0 hide-scrollbar bg-gray-50/60 scroll-y-safe">
                 <form id="worker-form" onsubmit="window.saveWorker(event)" class="space-y-3 sm:space-y-4">
                     <input type="hidden" id="w-id">
