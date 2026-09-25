@@ -1114,7 +1114,7 @@
                     <div class="flex-1 min-w-0"><p class="font-bold text-sm text-gray-800 truncate">${d.name}</p><p class="text-[10px] text-gray-400">Documento PDF</p></div>
                     <div class="flex gap-2 shrink-0">
                         <button onclick="window.previewDoc('${d.dbId}')" title="Vista Previa" class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 hover:bg-blue-100 active:scale-90 transition-all"><i data-lucide="eye" class="w-4 h-4"></i></button>
-                        <a href="${d.file}" download="${d.name}.pdf" title="Descargar" class="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-[#542c1c] hover:bg-gray-200 active:scale-90 transition-all"><i data-lucide="download" class="w-4 h-4"></i></a>
+                        <button onclick="window.shareDoc('${d.dbId}')" title="Compartir" class="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-[#542c1c] hover:bg-gray-200 active:scale-90 transition-all"><i data-lucide="share-2" class="w-4 h-4"></i></button>
                         ${canEdit ? `<button onclick="deleteDocFile('${d.dbId}')" title="Eliminar" class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100 active:scale-90 transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`:''}
                     </div>
                 </div>`;
@@ -1414,6 +1414,37 @@
                     newWin.document.write(`<title>${window.escapeHtml(docData.name)} - Vista Previa</title><body style="margin:0; background:#333;"><iframe src="${docData.file}" width="100%" height="100%" style="border:none; height: 100vh;"></iframe></body>`);
                 } else {
                     window.showToast('Permite las ventanas emergentes para ver el documento', 'error');
+                }
+            }
+        };
+
+        window.shareDoc = async (dbId) => {
+            const docData = window.appState.currentProfileDocs.find(d => d.dbId === dbId);
+            if (!docData || !docData.file) return window.showToast('Documento no encontrado', 'error');
+
+            try {
+                // Convertimos el base64 a un objeto File compatible con la API de compartir
+                const response = await fetch(docData.file);
+                const blob = await response.blob();
+                const file = new File([blob], `${docData.name}.pdf`, { type: 'application/pdf' });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        title: docData.name,
+                        files: [file]
+                    });
+                } else {
+                    // Fallback: Si el dispositivo no lo soporta (Ej: Chrome en Windows sin configurar), lo descarga.
+                    const a = document.createElement('a');
+                    a.href = docData.file;
+                    a.download = `${docData.name}.pdf`;
+                    a.click();
+                    window.showToast('Compartir no soportado. Descargando...', 'success');
+                }
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    console.error('Error al compartir:', error);
+                    window.showToast('Error al compartir el archivo', 'error');
                 }
             }
         };
