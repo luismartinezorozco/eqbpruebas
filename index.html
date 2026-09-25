@@ -124,10 +124,10 @@
         .login-type-btn.inactive { background-color: transparent; border-color: #ddd; color: #999; }
     </style>
 </head>
-<body class="fixed inset-0 w-full h-full overflow-hidden bg-[#542c1c]">
+<body class="fixed inset-0 w-full h-[100dvh] overflow-hidden bg-[#542c1c] overscroll-none">
 
     <!-- LOGIN -->
-    <div id="login-screen" class="absolute inset-0 w-full h-full bg-[#542c1c] flex flex-col items-center justify-center p-4 md:p-6 fade-in z-[300] overflow-y-auto" style="-webkit-overflow-scrolling: touch;">
+    <div id="login-screen" class="absolute inset-0 w-full h-full bg-[#542c1c] flex flex-col items-center justify-center p-4 md:p-6 fade-in z-[300] overflow-y-auto overscroll-contain" style="-webkit-overflow-scrolling: touch;">
         <div class="w-24 h-24 md:w-32 md:h-32 bg-white/10 backdrop-blur-md rounded-[2rem] flex items-center justify-center mb-6 md:mb-8 shadow-[0_0_40px_rgba(0,0,0,0.3)] border border-white/20 p-4 shrink-0 mt-8">
            <img src="https://www.image2url.com/r2/default/images/1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg" alt="LALY Logo" class="w-full h-full object-contain filter drop-shadow-lg">
         </div>
@@ -207,7 +207,7 @@
         <div class="flex-1 flex flex-col h-full w-full bg-[#f3ebe3] lg:rounded-l-[2.5rem] overflow-hidden relative shadow-2xl lg:border-l lg:border-white/10">
             
             <!-- EL PADDING pb-36 ES LA SOLUCIÓN AL MENÚ MÓVIL SUPERPUESTO -->
-            <div id="main-content" class="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-4 md:p-6 lg:p-8 relative pb-36 sm:pb-40 md:pb-40 lg:pb-12 hide-scrollbar" style="-webkit-overflow-scrolling: touch;">
+            <div id="main-content" class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-3 sm:p-4 md:p-6 lg:p-8 relative pb-36 sm:pb-40 md:pb-40 lg:pb-12 hide-scrollbar overscroll-contain" style="-webkit-overflow-scrolling: touch;">
                 <!-- Vistas dinámicas inyectadas aquí -->
             </div>
 
@@ -227,7 +227,7 @@
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            <div class="p-3 sm:p-5 md:p-6 overflow-y-auto flex-1 hide-scrollbar bg-gray-50/60" style="-webkit-overflow-scrolling: touch;">
+            <div class="p-3 sm:p-5 md:p-6 overflow-y-auto flex-1 min-h-0 hide-scrollbar bg-gray-50/60 overscroll-contain" style="-webkit-overflow-scrolling: touch;">
                 <form id="worker-form" onsubmit="window.saveWorker(event)" class="space-y-3 sm:space-y-4">
                     <input type="hidden" id="w-id">
                     
