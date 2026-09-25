@@ -374,6 +374,21 @@
         </div>
     </div>
 
+    <!-- MODAL VISTA PREVIA PDF -->
+    <div id="pdf-modal" class="modal-backdrop z-[1100]">
+        <div class="modal-content w-full max-w-4xl h-[85vh] flex flex-col bg-gray-50">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 bg-white shrink-0">
+                <h3 class="font-black text-lg text-[#542c1c] flex items-center gap-2"><i data-lucide="file-text" class="w-5 h-5 text-red-500"></i> Vista Previa</h3>
+                <button onclick="window.closePdfModal()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all active:scale-90 shrink-0">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-hidden p-2">
+                <iframe id="pdf-iframe" class="w-full h-full rounded-xl border border-gray-200 bg-white" src=""></iframe>
+            </div>
+        </div>
+    </div>
+
     <!-- TOAST NOTIFICATIONS -->
     <div id="toast-container" class="fixed bottom-24 md:bottom-10 left-1/2 transform -translate-x-1/2 z-[1500] flex flex-col gap-2 pointer-events-none w-11/12 max-w-sm items-center"></div>
 
@@ -1113,6 +1128,7 @@
                     <div class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i data-lucide="file-text" class="w-5 h-5"></i></div>
                     <div class="flex-1 min-w-0"><p class="font-bold text-sm text-gray-800 truncate">${d.name}</p><p class="text-[10px] text-gray-400">Documento PDF</p></div>
                     <div class="flex gap-2 shrink-0">
+                        ${canEdit ? `<button onclick="window.previewDocument('${d.file}')" class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 hover:bg-blue-100 active:scale-90 transition-all"><i data-lucide="eye" class="w-4 h-4"></i></button>` : ''}
                         <a href="${d.file}" download="${d.name}.pdf" class="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-[#542c1c] hover:bg-gray-200 active:scale-90 transition-all"><i data-lucide="download" class="w-4 h-4"></i></a>
                         ${canEdit ? `<button onclick="deleteDocFile('${d.dbId}')" class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100 active:scale-90 transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`:''}
                     </div>
@@ -1189,7 +1205,7 @@
                         <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'rendimiento' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="star" class="w-4 h-4"></i> <span class="hidden sm:inline">Puntos</span></button>
                         <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'laboral' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="user" class="w-4 h-4"></i> <span class="hidden sm:inline">Info & Docs</span></button>
                         <button onclick="switchTab('anuncios')" id="tab-btn-anuncios" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'anuncios' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="bell" class="w-4 h-4"></i> <span class="hidden sm:inline">Avisos</span></button>
-                        ${canEdit ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'banco' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="credit-card" class="w-4 h-4"></i> <span class="hidden sm:inline">Banco</span></button>` : ''}
+                        <button onclick="switchTab('banco')" id="tab-btn-banco" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'banco' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="credit-card" class="w-4 h-4"></i> <span class="hidden sm:inline">Banco</span></button>
                     </div>
                 </div>
 
@@ -1304,7 +1320,6 @@
                     ${announcementsHtml}
 
                     <!-- TAB: BANCO -->
-                    ${canEdit ? `
                     <div id="tab-banco" class="${window.appState.activeProfileTab === 'banco' ? 'block' : 'hidden'}">
                         <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 sm:p-6 rounded-[1.5rem] shadow-xl text-white relative overflow-hidden">
                             <div class="absolute -right-6 -bottom-6 opacity-10 pointer-events-none"><i data-lucide="credit-card" class="w-48 h-48"></i></div>
@@ -1328,7 +1343,7 @@
                             <p class="text-[10px] uppercase font-bold text-gray-400 mb-0.5 tracking-widest">Titular</p>
                             <p class="text-sm font-bold text-white break-words">${w.bankOwner || '-'}</p>
                         </div>
-                    </div>` : ''}
+                    </div>
 
                 </div>
             </div>`;
@@ -1403,6 +1418,17 @@
                     window.showToast('Documento guardado'); window.setView('profile'); 
                 } catch (er) { window.showToast('Error al subir', 'error'); }
             }; reader.readAsDataURL(file);
+        };
+
+        window.previewDocument = (base64) => {
+            const iframe = document.getElementById('pdf-iframe');
+            iframe.src = base64;
+            document.getElementById('pdf-modal').classList.add('active');
+        };
+
+        window.closePdfModal = () => {
+            document.getElementById('pdf-modal').classList.remove('active');
+            document.getElementById('pdf-iframe').src = '';
         };
 
         window.deleteDocFile = async (id) => { if(!confirm('¿Eliminar este documento?')) return; await deleteDoc(doc(db, "documents", id)); window.setView('profile'); };
