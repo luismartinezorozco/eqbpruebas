@@ -16,7 +16,7 @@
     <meta name="apple-mobile-web-app-title" content="LALY Talento">
     <!-- iOS Safari NO soporta SVG. Usamos un proxy que convierte tu SVG a PNG 180x180 automáticamente -->
     <link rel="apple-touch-icon" href="https://wsrv.nl/?url=https://www.image2url.com/r2/default/images/1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg&output=png&w=180&h=180">
-    <!-- Manifest integrado para Android -->
+    <!-- Manifest integrado para Android (Incluye tanto el SVG original como el PNG convertido) -->
     <link rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22LALY%20Talento%22%2C%22short_name%22%3A%22LALY%20Talento%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23542c1c%22%2C%22theme_color%22%3A%22%23542c1c%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fwww.image2url.com%2Fr2%2Fdefault%2Fimages%2F1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22https%3A%2F%2Fwsrv.nl%2F%3Furl%3Dhttps%3A%2F%2Fwww.image2url.com%2Fr2%2Fdefault%2Fimages%2F1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg%26output%3Dpng%26w%3D512%26h%3D512%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D'>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -33,53 +33,102 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .fade-in { opacity: 1; }
-        
-        /* Optimizaciones de Rendimiento */
+        .animate-in { opacity: 1; }
+
+        /* ============ Optimizaciones de Rendimiento ============ */
         img { content-visibility: auto; }
-        .card-shadow { box-shadow: 0 8px 30px rgb(0, 0, 0, 0.04), 0 1px 2px rgb(0, 0, 0, 0.02); border: 1px solid rgba(243, 244, 246, 0.7); }
+        .card-shadow { 
+            box-shadow: 0 8px 30px rgb(0, 0, 0, 0.04), 0 1px 2px rgb(0, 0, 0, 0.02); 
+            border: 1px solid rgba(243, 244, 246, 0.7); 
+        }
 
-        /* Aceleración por Hardware y fluidez */
-        .modal-content { -webkit-transform: translateZ(0); transform: translateZ(0); backface-visibility: hidden; }
+        /* ============ Scroll Móvil & Fluidez ============ */
+        .modal-content {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        
+        /* ============ Micro-interacciones globales ============ */
+        #login-screen button, #app-layout button, #worker-modal button,
+        #worker-modal label, #main-content label { transition: transform 0.1s ease-out; }
+        #login-screen button:active, #app-layout button:active, #worker-modal button:active,
+        #worker-modal label:active, #main-content label:active { transform: scale(0.95); }
 
-        /* Micro-interacciones globales */
-        button, label { transition: transform 0.1s ease-out; }
-        button:active, label:active { transform: scale(0.95); }
-        #main-content .card-shadow.cursor-pointer:hover { transform: translateY(-2px); box-shadow: 0 16px 40px -12px rgba(84, 44, 28, 0.15), 0 4px 12px rgb(0, 0, 0, 0.04); border-color: rgba(187, 116, 52, 0.6); }
+        #main-content .card-shadow.cursor-pointer:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 40px -12px rgba(84, 44, 28, 0.15), 0 4px 12px rgb(0, 0, 0, 0.04);
+            border-color: rgba(187, 116, 52, 0.6);
+        }
         #main-content .card-shadow.cursor-pointer:active { transform: scale(0.97); }
 
+        /* ============ Navegación ============ */
+        #desktop-nav button:active { transform: scale(0.97); }
         #mobile-nav button:active { transform: scale(0.9); }
         #mobile-nav button[class*="text-[#542c1c]"] > div { transform: scale(1.08); }
+        .nav-safe { bottom: calc(0.85rem + env(safe-area-inset-bottom, 0px)); }
 
-        /* Formularios modernos */
-        input:not([type="hidden"]):not([type="file"]), select { background-color: rgba(249, 250, 251, 0.55); border-color: transparent; }
-        input:not([type="hidden"]):not([type="file"]):focus, select:focus { background-color: #ffffff; border-color: transparent; box-shadow: 0 0 0 3px rgba(187, 116, 52, 0.45); outline: none; }
+        /* ============ Formularios modernos ============ */
+        #worker-modal input:not([type="hidden"]):not([type="file"]), #worker-modal select {
+            background-color: rgba(249, 250, 251, 0.55); border-color: transparent;
+        }
+        #worker-modal input:not([type="hidden"]):not([type="file"]):focus, #worker-modal select:focus,
+        #main-content input:focus, #main-content select:focus {
+            background-color: #ffffff; border-color: transparent;
+            box-shadow: 0 0 0 3px rgba(187, 116, 52, 0.45); outline: none;
+        }
 
-        /* Estilos específicos */
-        #login-screen { background: radial-gradient(55rem 32rem at 12% 8%, rgba(187, 116, 52, 0.16), transparent 55%), radial-gradient(45rem 30rem at 92% 95%, rgba(187, 116, 52, 0.10), transparent 55%), #542c1c; }
-        #main-content [class*="bg-[#542c1c]"]:not(button) { background: linear-gradient(135deg, #542c1c 0%, #6b3c2a 55%, #7a4a35 100%); box-shadow: 0 14px 34px -14px rgba(84, 44, 28, 0.4); }
+        /* ============ Login premium ============ */
+        #login-screen {
+            background:
+                radial-gradient(55rem 32rem at 12% 8%, rgba(187, 116, 52, 0.16), transparent 55%),
+                radial-gradient(45rem 30rem at 92% 95%, rgba(187, 116, 52, 0.10), transparent 55%),
+                #542c1c;
+        }
 
-        /* Modal Base */
-        .modal-backdrop { position: fixed; inset: 0; background-color: rgba(84, 44, 28, 0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; padding: 1rem; transition: opacity 0.2s ease-out; }
+        /* ============ Cabecera marrón de impacto (Dashboard) ============ */
+        #main-content [class*="bg-[#542c1c]"]:not(button) {
+            background: linear-gradient(135deg, #542c1c 0%, #6b3c2a 55%, #7a4a35 100%);
+            box-shadow: 0 14px 34px -14px rgba(84, 44, 28, 0.4);
+        }
+
+        /* ============ Modal ============ */
+        .modal-backdrop {
+            position: fixed; inset: 0; background-color: rgba(84, 44, 28, 0.45);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 1000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; padding: 1rem;
+            transition: opacity 0.2s ease-out;
+        }
         .modal-backdrop.active { opacity: 1; pointer-events: auto; }
-        .modal-content { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(24px) saturate(1.5); -webkit-backdrop-filter: blur(24px) saturate(1.5); border: 1px solid rgba(255, 255, 255, 0.6); width: 100%; max-width: 36rem; border-radius: 1.75rem; max-height: 90vh; display: flex; flex-direction: column; transform: scale(0.95) translateY(10px); transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); overflow: hidden; box-shadow: 0 24px 60px -12px rgba(84, 44, 28, 0.28), 0 8px 24px rgba(0, 0, 0, 0.08); }
+        .modal-content {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(24px) saturate(1.5); -webkit-backdrop-filter: blur(24px) saturate(1.5);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            width: 100%; max-width: 36rem; border-radius: 1.75rem; max-height: 90vh;
+            display: flex; flex-direction: column; transform: scale(0.95) translateY(10px);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+            box-shadow: 0 24px 60px -12px rgba(84, 44, 28, 0.28), 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
         .modal-backdrop.active .modal-content { transform: scale(1) translateY(0); }
-        
-        /* Skeleton */
+        #worker-modal .card-shadow { background-color: rgba(255, 255, 255, 0.85); }
+
+        /* ============ Skeleton Loading Animation ============ */
         .skeleton-base { background: #f0f0f0; border-radius: 0.75rem; }
         .skeleton-card { padding: 1.25rem; margin-bottom: 1rem; border-radius: 1.5rem; background: white; border: 1px solid rgba(243, 244, 246, 0.7); }
+        
         button, input, select, textarea { min-height: 44px; }
         .login-type-btn { transition: all 0.3s ease-out; border-width: 2px; }
         .login-type-btn.active { background-color: #bb7434; border-color: #bb7434; color: #fff; }
         .login-type-btn.inactive { background-color: transparent; border-color: #ddd; color: #999; }
     </style>
 </head>
-
-<!-- ESTRUCTURA MAESTRA BLOQUEADA: fixed inset-0 fuerza al celular a respetar el lienzo completo sin rebotes nativos -->
-<body class="fixed inset-0 w-full h-full overflow-hidden bg-[#542c1c] overscroll-none">
+<body class="fixed inset-0 w-full h-full overflow-hidden bg-[#542c1c]">
 
     <!-- LOGIN -->
-    <div id="login-screen" class="absolute inset-0 w-full h-full overflow-y-auto overflow-x-hidden bg-[#542c1c] flex flex-col items-center justify-center p-4 md:p-6 fade-in z-[300]" style="-webkit-overflow-scrolling: touch;">
-        <div class="w-24 h-24 md:w-32 md:h-32 bg-white/10 backdrop-blur-md rounded-[2rem] flex items-center justify-center mb-6 md:mb-8 shadow-[0_0_40px_rgba(0,0,0,0.3)] border border-white/20 p-4 shrink-0">
+    <div id="login-screen" class="absolute inset-0 w-full h-full bg-[#542c1c] flex flex-col items-center justify-center p-4 md:p-6 fade-in z-[300] overflow-y-auto" style="-webkit-overflow-scrolling: touch;">
+        <div class="w-24 h-24 md:w-32 md:h-32 bg-white/10 backdrop-blur-md rounded-[2rem] flex items-center justify-center mb-6 md:mb-8 shadow-[0_0_40px_rgba(0,0,0,0.3)] border border-white/20 p-4 shrink-0 mt-8">
            <img src="https://www.image2url.com/r2/default/images/1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg" alt="LALY Logo" class="w-full h-full object-contain filter drop-shadow-lg">
         </div>
         <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-1 sm:mb-2 tracking-tight text-center shrink-0">LALY TALENTO</h1>
@@ -123,8 +172,8 @@
         </div>
     </div>
 
-    <!-- MAIN APP LAYOUT: Estructura robusta mediante "absolute inset-0" para evitar bugs de Safari -->
-    <div id="app-layout" class="hidden absolute inset-0 z-10 flex w-full h-full bg-[#542c1c] overflow-hidden">
+    <!-- MAIN APP LAYOUT (absolute inset-0 guarantees full width/height mapping) -->
+    <div id="app-layout" class="hidden absolute inset-0 w-full h-full flex bg-[#542c1c] overflow-hidden">
         
         <!-- SIDEBAR (PC) -->
         <div class="hidden lg:flex flex-col w-64 xl:w-72 bg-[#542c1c] text-white pt-6 md:pt-8 pb-4 md:pb-6 px-4 md:px-6 border-r border-[#7a4a35] relative z-20 shrink-0 h-full">
@@ -140,7 +189,7 @@
 
             <nav id="desktop-nav" class="flex-1 space-y-1 md:space-y-2"></nav>
 
-            <div class="mt-auto bg-white/5 backdrop-blur-sm p-3 md:p-4 rounded-3xl border border-white/10 shrink-0">
+            <div class="mt-auto bg-white/5 backdrop-blur-sm p-3 md:p-4 rounded-3xl border border-white/10">
                 <div class="flex items-center gap-3 mb-3 min-w-0">
                     <div id="user-avatar" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#542c1c] font-bold overflow-hidden ring-2 ring-[#bb7434]/40 shadow-md shrink-0">U</div>
                     <div class="flex-1 min-w-0">
@@ -154,16 +203,16 @@
             </div>
         </div>
 
-        <!-- ENVOLTORIO DE CONTENIDO RELATIVO: Mantiene exactas las medidas para el área deslizable -->
-        <div class="flex-1 relative w-full h-full bg-[#f3ebe3] lg:rounded-l-[2.5rem] overflow-hidden shadow-2xl lg:border-l lg:border-white/10">
+        <!-- MAIN CONTENT AREA -->
+        <div class="flex-1 flex flex-col h-full w-full bg-[#f3ebe3] lg:rounded-l-[2.5rem] overflow-hidden relative shadow-2xl lg:border-l lg:border-white/10">
             
-            <!-- EL ÁREA DE SCROLL ABSOLUTA: Aquí ocurre la magia táctil. Corta 100% exacto los bordes. -->
-            <div id="main-content" class="absolute inset-0 w-full h-full overflow-y-auto overflow-x-hidden p-3 sm:p-4 md:p-6 lg:p-8 pb-36 sm:pb-40 md:pb-40 lg:pb-12 hide-scrollbar" style="-webkit-overflow-scrolling: touch; overscroll-behavior-y: contain;">
+            <!-- EL PADDING pb-36 ES LA SOLUCIÓN AL MENÚ MÓVIL SUPERPUESTO -->
+            <div id="main-content" class="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-4 md:p-6 lg:p-8 relative pb-36 sm:pb-40 md:pb-40 lg:pb-12 hide-scrollbar" style="-webkit-overflow-scrolling: touch;">
                 <!-- Vistas dinámicas inyectadas aquí -->
             </div>
 
             <!-- BOTTOM NAV (Móvil + Tablet) -->
-            <div class="lg:hidden fixed left-3 right-3 sm:left-4 sm:right-4 bg-white/75 backdrop-blur-md border border-white/60 px-2 py-2 sm:py-3 rounded-[2rem] shadow-[0_12px_40px_-8px_rgba(84,44,28,0.18),0_4px_12px_rgba(84,44,28,0.06)] z-[200]" style="bottom: calc(1rem + env(safe-area-inset-bottom, 0px));">
+            <div class="lg:hidden fixed nav-safe left-3 right-3 sm:left-4 sm:right-4 bg-white/75 backdrop-blur-md border border-white/60 px-2 py-2 sm:py-3 rounded-[2rem] shadow-[0_12px_40px_-8px_rgba(84,44,28,0.18),0_4px_12px_rgba(84,44,28,0.06)] z-[200]">
                 <div id="mobile-nav" class="flex justify-around items-center w-full"></div>
             </div>
         </div>
@@ -171,16 +220,14 @@
 
     <!-- MODAL FORMULARIO COLABORADOR -->
     <div id="worker-modal" class="modal-backdrop">
-        <div class="modal-content w-full sm:w-auto sm:max-w-sm md:max-w-md max-h-[90vh] flex flex-col">
+        <div class="modal-content w-full sm:w-auto sm:max-w-sm md:max-w-md">
             <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
                 <h3 id="worker-modal-title" class="font-black text-lg sm:text-xl text-[#542c1c]">Nuevo Colaborador</h3>
                 <button onclick="document.getElementById('worker-modal').classList.remove('active')" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            
-            <!-- ÁREA DE SCROLL INTERNA DEL MODAL -->
-            <div class="flex-1 w-full overflow-y-auto overflow-x-hidden p-3 sm:p-5 md:p-6 bg-gray-50/60 hide-scrollbar" style="-webkit-overflow-scrolling: touch;">
+            <div class="p-3 sm:p-5 md:p-6 overflow-y-auto flex-1 hide-scrollbar bg-gray-50/60" style="-webkit-overflow-scrolling: touch;">
                 <form id="worker-form" onsubmit="window.saveWorker(event)" class="space-y-3 sm:space-y-4">
                     <input type="hidden" id="w-id">
                     
@@ -296,15 +343,14 @@
 
     <!-- MODAL FORMULARIO ADMIN -->
     <div id="admin-modal" class="modal-backdrop">
-        <div class="modal-content w-full sm:max-w-sm max-h-[90vh] flex flex-col">
+        <div class="modal-content w-full sm:max-w-sm">
             <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
                 <h3 class="font-black text-lg sm:text-xl text-[#542c1c]">Nuevo Administrador</h3>
                 <button onclick="window.closeAdminModal()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            
-            <div class="flex-1 w-full overflow-y-auto overflow-x-hidden p-4 sm:p-6 bg-gray-50/60" style="-webkit-overflow-scrolling: touch;">
+            <div class="p-4 sm:p-6 bg-gray-50/60">
                 <form id="admin-form" onsubmit="window.saveAdmin(event)" class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Nombre a mostrar</label>
@@ -333,8 +379,8 @@
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            <div class="flex-1 w-full overflow-hidden p-2 relative">
-                <iframe id="pdf-iframe" class="absolute inset-0 w-full h-full rounded-b-xl border border-gray-200 bg-white" src=""></iframe>
+            <div class="flex-1 overflow-hidden p-2">
+                <iframe id="pdf-iframe" class="w-full h-full rounded-xl border border-gray-200 bg-white" src=""></iframe>
             </div>
         </div>
     </div>
@@ -374,6 +420,7 @@
         };
 
         window.evaluationCriteria = [
+            // POSITIVOS
             { reason: "Llegar puntualmente al evento", amount: 5, type: "pos" },
             { reason: "Foto de evidencia al llegar", amount: 5, type: "pos" },
             { reason: "Foto de evidencia al finalizar", amount: 5, type: "pos" },
@@ -382,6 +429,7 @@
             { reason: "Realizar video de la utilería que entra y sale de la casa", amount: 5, type: "pos" },
             { reason: "Recibir felicitación o reconocimiento especial de un cliente", amount: 10, type: "pos" },
             { reason: "Mostrar disposición para apoyar al equipo", amount: 5, type: "pos" },
+            // NEGATIVOS
             { reason: "Llegar tarde sin justificación", amount: 10, type: "neg" },
             { reason: "No enviar foto de llegada", amount: 5, type: "neg" },
             { reason: "No enviar foto de finalización", amount: 5, type: "neg" },
@@ -468,15 +516,19 @@
         }
 
         async function checkSession() {
+            // Sesión permanente en localStorage
             const session = localStorage.getItem('hr_v2_session') || sessionStorage.getItem('hr_v2_session');
             if (session) {
                 window.appState.currentUser = JSON.parse(session);
+                
+                // 1. CARGA ULTRA-RÁPIDA DESDE MEMORIA CACHÉ (0 LAG)
                 const cW = localStorage.getItem('laly_workers');
                 const cP = localStorage.getItem('laly_points');
                 const cM = localStorage.getItem('laly_messages');
                 
                 performLoginUIFast();
                 
+                // Si ya hay datos guardados, mostramos la interfaz real instantáneamente
                 if(cW && cP && cM) {
                     window.appState.dbWorkers = JSON.parse(cW);
                     window.appState.points = JSON.parse(cP);
@@ -484,12 +536,17 @@
                     renderViewAfterLogin(); 
                 }
 
+                // 2. SINCRONIZACIÓN FANTASMA EN SEGUNDO PLANO
                 fetchAllData().then(() => {
-                    if (window.appState.currentView) window.setView(window.appState.currentView);
+                    // Actualiza la vista silenciosamente con los datos frescos de Firebase
+                    if (window.appState.currentView) {
+                        window.setView(window.appState.currentView);
+                    }
                 }).catch(e => console.error(e));
             }
         }
 
+        // Skeletons
         function showSkeletonDashboard() { return `<div class="space-y-6"><div class="bg-gradient-to-r from-[#542c1c] to-[#146459] -mx-6 md:-mx-8 -mt-6 md:-mt-8 pt-12 pb-10 px-6 md:px-10 rounded-b-[2rem]"><div class="max-w-5xl mx-auto"><div class="skeleton-base h-10 mb-3" style="width: 200px;"></div><div class="skeleton-base h-6 mb-8" style="width: 150px;"></div></div></div></div>`; }
         function showSkeletonDirectory() { return `<div class="space-y-6"><div class="skeleton-base h-10 w-1/3 mb-6"></div><div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">${Array(6).fill(0).map(() => `<div class="skeleton-card"><div class="skeleton-base h-20"></div></div>`).join('')}</div></div>`; }
         function showSkeletonRanking() { return `<div class="space-y-6"><div class="skeleton-base h-10 w-1/3 mb-6"></div><div class="space-y-3">${Array(5).fill(0).map(() => `<div class="skeleton-card h-16"></div>`).join('')}</div></div>`; }
@@ -591,7 +648,7 @@
 
                 if (user) {
                     window.appState.currentUser = user;
-                    localStorage.setItem('hr_v2_session', JSON.stringify(user)); 
+                    localStorage.setItem('hr_v2_session', JSON.stringify(user)); // Guarda sesión permanentemente
                     performLoginUIFast();
                     fetchAllData().then(() => renderViewAfterLogin()).catch(e => console.error(e));
                 }
@@ -602,7 +659,7 @@
 
         window.appSignOut = () => {
             localStorage.removeItem('hr_v2_session');
-            sessionStorage.removeItem('hr_v2_session'); 
+            sessionStorage.removeItem('hr_v2_session'); // Limpieza doble
             window.appState.currentUser = null;
             document.getElementById('app-layout').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
@@ -777,7 +834,7 @@
                     ${nextBdayWorker ? `
                     <div onclick="viewWorkerProfile('${nextBdayWorker.id}')" class="${!topWorkerPrev ? 'md:col-span-2' : 'md:col-span-2 lg:col-span-1'} bg-white border border-[#f3ebe3] rounded-2xl sm:rounded-[1.5rem] p-4 sm:p-5 card-shadow flex items-center gap-3 sm:gap-4 relative overflow-hidden cursor-pointer hover:border-pink-200 transition-all active:scale-[0.98] group">
                         <div class="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:scale-110 group-hover:-rotate-12 transition-transform duration-500 pointer-events-none"><i data-lucide="cake" class="w-32 h-32 text-pink-600"></i></div>
-                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-pink-50 text-pink-50 flex items-center justify-center shrink-0 z-10 shadow-sm border border-pink-100 group-hover:bg-pink-100 transition-colors"><i data-lucide="gift" class="w-6 h-6 sm:w-7 sm:h-7 text-pink-500"></i></div>
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-pink-50 text-pink-500 flex items-center justify-center shrink-0 z-10 shadow-sm border border-pink-100 group-hover:bg-pink-100 transition-colors"><i data-lucide="gift" class="w-6 h-6 sm:w-7 sm:h-7"></i></div>
                         <div class="flex-1 min-w-0 z-10 pr-2">
                             <p class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-pink-500 mb-0.5 truncate">Próximo Cumpleaños</p>
                             <h3 class="text-sm sm:text-base font-black text-gray-800 truncate">${nextBdayWorker.name} ${sharedBdaysCount > 0 ? `<span class="text-[9px] sm:text-[10px] font-bold text-gray-400">y ${sharedBdaysCount} más</span>` : ''}</h3>
