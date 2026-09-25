@@ -40,18 +40,16 @@
         .card-shadow { 
             box-shadow: 0 8px 30px rgb(0, 0, 0, 0.04), 0 1px 2px rgb(0, 0, 0, 0.02); 
             border: 1px solid rgba(243, 244, 246, 0.7); 
-            will-change: transform;
         }
 
-        /* ============ Aceleración GPU para 60fps (Fluidez nativa) ============ */
-        .modal-content, .directory-card {
+        /* ============ Scroll Móvil & Fluidez ============ */
+        .modal-content {
             -webkit-transform: translateZ(0);
             transform: translateZ(0);
             backface-visibility: hidden;
         }
         #main-content {
             -webkit-overflow-scrolling: touch; 
-            overscroll-behavior-y: contain; 
         }
 
         /* ============ Micro-interacciones globales ============ */
@@ -210,7 +208,9 @@
 
         <!-- MAIN CONTENT AREA -->
         <div class="flex-1 flex flex-col h-[100dvh] bg-[#f3ebe3] lg:rounded-l-[2.5rem] overflow-hidden relative shadow-2xl lg:border-l lg:border-white/10">
-            <div id="main-content" class="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 lg:p-8 relative pb-36 sm:pb-40 md:pb-40 lg:pb-12 hide-scrollbar">
+            
+            <!-- EL PADDING pb-36 ES LA SOLUCIÓN AL MENÚ MÓVIL SUPERPUESTO -->
+            <div id="main-content" class="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 md:p-6 lg:p-8 relative pb-36 sm:pb-40 md:pb-40 lg:pb-12 hide-scrollbar">
                 <!-- Vistas dinámicas inyectadas aquí -->
             </div>
 
