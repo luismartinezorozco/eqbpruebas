@@ -374,6 +374,21 @@
         </div>
     </div>
 
+    <!-- MODAL VISTA PREVIA PDF -->
+    <div id="pdf-preview-modal" class="modal-backdrop">
+        <div class="modal-content w-full h-[90vh] sm:max-w-4xl flex flex-col">
+            <div class="flex justify-between items-center p-3 sm:p-4 border-b border-gray-100/80 bg-white/90 backdrop-blur-xl shrink-0">
+                <h3 id="pdf-preview-title" class="font-black text-base sm:text-lg text-[#542c1c] truncate flex-1 pr-4">Vista Previa</h3>
+                <button onclick="window.closePreviewModal()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="flex-1 bg-[#525659] relative w-full h-full overflow-hidden">
+                <iframe id="pdf-preview-iframe" src="" class="absolute inset-0 w-full h-full border-0"></iframe>
+            </div>
+        </div>
+    </div>
+
     <!-- TOAST NOTIFICATIONS -->
     <div id="toast-container" class="fixed bottom-24 md:bottom-10 left-1/2 transform -translate-x-1/2 z-[1500] flex flex-col gap-2 pointer-events-none w-11/12 max-w-sm items-center"></div>
 
@@ -1409,13 +1424,20 @@
         window.previewDoc = (dbId) => {
             const docData = window.appState.currentProfileDocs.find(d => d.dbId === dbId);
             if(docData && docData.file) {
-                const newWin = window.open();
-                if(newWin) {
-                    newWin.document.write(`<title>${window.escapeHtml(docData.name)} - Vista Previa</title><body style="margin:0; background:#333;"><iframe src="${docData.file}" width="100%" height="100%" style="border:none; height: 100vh;"></iframe></body>`);
-                } else {
-                    window.showToast('Permite las ventanas emergentes para ver el documento', 'error');
-                }
+                document.getElementById('pdf-preview-title').innerText = docData.name;
+                document.getElementById('pdf-preview-iframe').src = docData.file;
+                document.getElementById('pdf-preview-modal').classList.add('active');
+            } else {
+                window.showToast('Error al cargar el documento', 'error');
             }
+        };
+
+        window.closePreviewModal = () => {
+            document.getElementById('pdf-preview-modal').classList.remove('active');
+            // Retrasar un poco la limpieza para que no se vea feo mientras hace la animación de cierre
+            setTimeout(() => {
+                document.getElementById('pdf-preview-iframe').src = ''; 
+            }, 300);
         };
 
         window.shareDoc = async (dbId) => {
