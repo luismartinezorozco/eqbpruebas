@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <link rel="icon" type="image/svg+xml" href="https://www.image2url.com/r2/default/images/1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg">
+    
+    <!-- Configuraciones PWA para iOS y Android (Icono de aplicación y pantalla completa) -->
+    <meta name="theme-color" content="#542c1c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="LALY Talento">
+    <!-- iOS Safari NO soporta SVG. Usamos un proxy que convierte tu SVG a PNG 180x180 automáticamente -->
+    <link rel="apple-touch-icon" href="https://wsrv.nl/?url=https://www.image2url.com/r2/default/images/1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg&output=png&w=180&h=180">
+    <!-- Manifest integrado para Android (Incluye tanto el SVG original como el PNG convertido) -->
+    <link rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22LALY%20Talento%22%2C%22short_name%22%3A%22LALY%20Talento%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23542c1c%22%2C%22theme_color%22%3A%22%23542c1c%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fwww.image2url.com%2Fr2%2Fdefault%2Fimages%2F1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22https%3A%2F%2Fwsrv.nl%2F%3Furl%3Dhttps%3A%2F%2Fwww.image2url.com%2Fr2%2Fdefault%2Fimages%2F1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg%26output%3Dpng%26w%3D512%26h%3D512%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D'>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>LALY TALENTO</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3ebe3; -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; }
+        ::selection { background: rgba(187, 116, 52, 0.35); }
+        h1, h2 { letter-spacing: -0.025em; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .fade-in { opacity: 1; }
+        .animate-in { opacity: 1; }
+
+        /* ============ Optimizaciones de Rendimiento ============ */
+        img { content-visibility: auto; }
+        .card-shadow { 
+            box-shadow: 0 8px 30px rgb(0, 0, 0, 0.04), 0 1px 2px rgb(0, 0, 0, 0.02); 
+            border: 1px solid rgba(243, 244, 246, 0.7); 
+            will-change: transform;
+        }
+
+        /* ============ Aceleración GPU para 60fps (Fluidez nativa) ============ */
+        #main-content, #app-layout, .modal-content, #worker-modal, #admin-modal, .directory-card {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+        #main-content {
+            -webkit-overflow-scrolling: touch; 
+            overscroll-behavior-y: contain; 
+        }
+
+        /* ============ Micro-interacciones globales ============ */
+        #login-screen button, #app-layout button, #worker-modal button,
+        #worker-modal label, #main-content label { transition: transform 0.1s ease-out; }
+        #login-screen button:active, #app-layout button:active, #worker-modal button:active,
+        #worker-modal label:active, #main-content label:active { transform: scale(0.95); }
+
+        #main-content .card-shadow.cursor-pointer:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 40px -12px rgba(84, 44, 28, 0.15), 0 4px 12px rgb(0, 0, 0, 0.04);
+            border-color: rgba(187, 116, 52, 0.6);
+        }
+        #main-content .card-shadow.cursor-pointer:active { transform: scale(0.97); }
+
+        /* ============ Navegación ============ */
+        #desktop-nav button:active { transform: scale(0.97); }
+        #mobile-nav button:active { transform: scale(0.9); }
+        #mobile-nav button[class*="text-[#542c1c]"] > div { transform: scale(1.08); }
+        .nav-safe { bottom: calc(0.85rem + env(safe-area-inset-bottom, 0px)); }
+
+        /* ============ Formularios modernos ============ */
+        #worker-modal input:not([type="hidden"]):not([type="file"]), #worker-modal select {
+            background-color: rgba(249, 250, 251, 0.55); border-color: transparent;
+        }
+        #worker-modal input:not([type="hidden"]):not([type="file"]):focus, #worker-modal select:focus,
+        #main-content input:focus, #main-content select:focus {
+            background-color: #ffffff; border-color: transparent;
+            box-shadow: 0 0 0 3px rgba(187, 116, 52, 0.45); outline: none;
+        }
+
+        /* ============ Login premium ============ */
+        #login-screen {
+            background:
+                radial-gradient(55rem 32rem at 12% 8%, rgba(187, 116, 52, 0.16), transparent 55%),
+                radial-gradient(45rem 30rem at 92% 95%, rgba(187, 116, 52, 0.10), transparent 55%),
+                #542c1c;
+        }
+
+        /* ============ Cabecera marrón de impacto (Dashboard) ============ */
+        #main-content [class*="bg-[#542c1c]"]:not(button) {
+            background: linear-gradient(135deg, #542c1c 0%, #6b3c2a 55%, #7a4a35 100%);
+            box-shadow: 0 14px 34px -14px rgba(84, 44, 28, 0.4);
+        }
+
+        /* ============ Modal ============ */
+        .modal-backdrop {
+            position: fixed; inset: 0; background-color: rgba(84, 44, 28, 0.45);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 1000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; padding: 1rem;
+            transition: opacity 0.2s ease-out;
+        }
+        .modal-backdrop.active { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(24px) saturate(1.5); -webkit-backdrop-filter: blur(24px) saturate(1.5);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            width: 100%; max-width: 36rem; border-radius: 1.75rem; max-height: 90vh;
+            display: flex; flex-direction: column; transform: scale(0.95) translateY(10px);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+            box-shadow: 0 24px 60px -12px rgba(84, 44, 28, 0.28), 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+        .modal-backdrop.active .modal-content { transform: scale(1) translateY(0); }
+        #worker-modal .card-shadow { background-color: rgba(255, 255, 255, 0.85); }
+
+        /* ============ Skeleton Loading Animation ============ */
+        .skeleton-base { background: #f0f0f0; border-radius: 0.75rem; }
+        .skeleton-card { padding: 1.25rem; margin-bottom: 1rem; border-radius: 1.5rem; background: white; border: 1px solid rgba(243, 244, 246, 0.7); }
+        
+        button, input, select, textarea { min-height: 44px; }
+        .login-type-btn { transition: all 0.3s ease-out; border-width: 2px; }
+        .login-type-btn.active { background-color: #bb7434; border-color: #bb7434; color: #fff; }
+        .login-type-btn.inactive { background-color: transparent; border-color: #ddd; color: #999; }
+    </style>
+</head>
+<body class="overflow-hidden">
+
+    <!-- LOGIN -->
+    <div id="login-screen" class="fixed inset-0 min-h-[100dvh] bg-[#542c1c] flex flex-col items-center justify-center p-4 md:p-6 fade-in z-[300] overflow-y-auto">
+        <div class="w-24 h-24 md:w-32 md:h-32 bg-white/10 backdrop-blur-md rounded-[2rem] flex items-center justify-center mb-6 md:mb-8 shadow-[0_0_40px_rgba(0,0,0,0.3)] border border-white/20 p-4">
+           <img src="https://www.image2url.com/r2/default/images/1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg" alt="LALY Logo" class="w-full h-full object-contain filter drop-shadow-lg">
+        </div>
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-1 sm:mb-2 tracking-tight text-center">LALY TALENTO</h1>
+        <p class="text-[#cab2a2] font-medium mb-6 sm:mb-8 text-center max-w-sm text-xs sm:text-sm md:text-base">Sistema de gestión de talento y rendimiento.</p>
+        
+        <div class="bg-white rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 md:p-8 w-full max-w-sm shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)] border border-white/20">
+          <h2 class="text-lg sm:text-xl md:text-2xl font-black text-[#542c1c] mb-4 sm:mb-6 text-center">¿Quién eres?</h2>
+          
+          <div class="flex gap-2 mb-4 sm:mb-6 md:mb-8">
+            <button type="button" id="login-type-admin" onclick="window.switchLoginType('admin')" class="flex-1 login-type-btn active border-2 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm md:text-base flex items-center justify-center gap-1 sm:gap-2 transition-all flex-col sm:flex-row">
+              <i data-lucide="shield" class="w-4 h-4 md:w-5 md:h-5"></i> <span>Administrador</span>
+            </button>
+            <button type="button" id="login-type-worker" onclick="window.switchLoginType('worker')" class="flex-1 login-type-btn inactive border-2 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm md:text-base flex items-center justify-center gap-1 sm:gap-2 transition-all flex-col sm:flex-row">
+              <i data-lucide="briefcase" class="w-4 h-4 md:w-5 md:h-5"></i> <span>Colaborador</span>
+            </button>
+          </div>
+
+          <form id="login-form-admin" onsubmit="window.handleLogin(event)" class="space-y-3 sm:space-y-4 md:space-y-6">
+            <div class="text-left">
+              <label class="block text-xs font-bold text-gray-500 mb-1.5 sm:mb-2 uppercase tracking-wide">Usuario</label>
+              <input type="text" id="login-username" placeholder="Usuario" class="w-full border border-transparent bg-gray-50/50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-[#bb7434]/50 focus:border-transparent font-medium transition-all duration-300 ease-out" />
+            </div>
+            <div class="text-left">
+              <label class="block text-xs font-bold text-gray-500 mb-1.5 sm:mb-2 uppercase tracking-wide">Contraseña</label>
+              <input type="password" id="login-password" placeholder="Contraseña" class="w-full border border-transparent bg-gray-50/50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-[#bb7434]/50 focus:border-transparent font-medium transition-all duration-300 ease-out" />
+            </div>
+            <button type="submit" id="login-btn" class="w-full bg-[#bb7434] text-white py-2.5 sm:py-3 md:py-3.5 rounded-lg sm:rounded-xl font-black text-xs sm:text-sm md:text-base hover:bg-[#a55f25] transition-all duration-300 ease-out shadow-lg shadow-[#bb7434]/30 active:scale-[0.98]">
+              Ingresar
+            </button>
+          </form>
+
+          <form id="login-form-worker" onsubmit="window.handleLogin(event)" class="space-y-3 sm:space-y-4 md:space-y-6 hidden">
+            <div class="text-left">
+              <label class="block text-xs font-bold text-gray-500 mb-1.5 sm:mb-2 uppercase tracking-wide">Número de Documento</label>
+              <input type="number" id="login-cedula" placeholder="Cédula" class="w-full border border-transparent bg-gray-50/50 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-[#bb7434]/50 focus:border-transparent font-medium transition-all duration-300 ease-out" />
+            </div>
+            <button type="submit" id="login-btn-w" class="w-full bg-[#bb7434] text-white py-2.5 sm:py-3 md:py-3.5 rounded-lg sm:rounded-xl font-black text-xs sm:text-sm md:text-base hover:bg-[#a55f25] transition-all duration-300 ease-out shadow-lg shadow-[#bb7434]/30 active:scale-[0.98]">
+              Ingresar
+            </button>
+          </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP LAYOUT -->
+    <div id="app-layout" class="hidden flex h-[100dvh] w-full bg-[#542c1c] overflow-hidden relative">
+        
+        <!-- SIDEBAR (PC) -->
+        <div class="hidden lg:flex flex-col w-64 xl:w-72 bg-[#542c1c] text-white pt-6 md:pt-8 pb-4 md:pb-6 px-4 md:px-6 border-r border-[#7a4a35] relative z-20 shrink-0">
+            <div class="mb-8 md:mb-10 flex items-center gap-3">
+                <div class="w-10 h-10 bg-[#bb7434] rounded-xl flex items-center justify-center text-white shadow-lg shadow-[#bb7434]/25 shrink-0">
+                    <i data-lucide="briefcase" class="w-6 h-6"></i>
+                </div>
+                <div class="min-w-0">
+                    <h2 class="text-lg md:text-xl font-black tracking-tight leading-tight truncate">LALY</h2>
+                    <p class="text-[10px] text-[#cab2a2] uppercase font-bold tracking-widest">Talento</p>
+                </div>
+            </div>
+
+            <nav id="desktop-nav" class="flex-1 space-y-1 md:space-y-2"></nav>
+
+            <div class="mt-auto bg-white/5 backdrop-blur-sm p-3 md:p-4 rounded-3xl border border-white/10">
+                <div class="flex items-center gap-3 mb-3 min-w-0">
+                    <div id="user-avatar" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#542c1c] font-bold overflow-hidden ring-2 ring-[#bb7434]/40 shadow-md shrink-0">U</div>
+                    <div class="flex-1 min-w-0">
+                      <p id="user-name" class="text-sm font-bold truncate">Usuario</p>
+                      <p id="user-role" class="text-[10px] text-[#cab2a2] font-black uppercase tracking-wider">Rol</p>
+                    </div>
+                </div>
+                <button onclick="window.appSignOut()" class="w-full flex items-center justify-center gap-2 text-xs font-bold text-gray-300 hover:text-white bg-white/10 hover:bg-white/20 py-2 px-2 md:py-2.5 md:px-3 rounded-xl transition-all duration-300 ease-out active:scale-95">
+                    <i data-lucide="log-out" class="w-4 h-4 shrink-0"></i> <span class="hidden sm:inline">Cerrar</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="flex-1 flex flex-col h-[100dvh] bg-[#f3ebe3] lg:rounded-l-[2.5rem] overflow-hidden relative shadow-2xl lg:border-l lg:border-white/10">
+            <div id="main-content" class="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 lg:p-8 relative pb-36 sm:pb-40 md:pb-40 lg:pb-12 hide-scrollbar">
+                <!-- Vistas dinámicas inyectadas aquí -->
+            </div>
+
+            <!-- BOTTOM NAV (Móvil + Tablet) -->
+            <div class="lg:hidden fixed nav-safe left-3 right-3 sm:left-4 sm:right-4 bg-white/75 backdrop-blur-md border border-white/60 px-2 py-2 sm:py-3 rounded-[2rem] shadow-[0_12px_40px_-8px_rgba(84,44,28,0.18),0_4px_12px_rgba(84,44,28,0.06)] z-[200]">
+                <div id="mobile-nav" class="flex justify-around items-center w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FORMULARIO COLABORADOR -->
+    <div id="worker-modal" class="modal-backdrop">
+        <div class="modal-content w-full sm:w-auto sm:max-w-sm md:max-w-md">
+            <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
+                <h3 id="worker-modal-title" class="font-black text-lg sm:text-xl text-[#542c1c]">Nuevo Colaborador</h3>
+                <button onclick="document.getElementById('worker-modal').classList.remove('active')" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-3 sm:p-5 md:p-6 overflow-y-auto flex-1 hide-scrollbar bg-gray-50/60">
+                <form id="worker-form" onsubmit="window.saveWorker(event)" class="space-y-3 sm:space-y-4">
+                    <input type="hidden" id="w-id">
+                    
+                    <div class="flex flex-col items-center mb-3 sm:mb-4">
+                        <div class="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-200 border-4 border-white shadow-md flex items-center justify-center overflow-hidden mb-2">
+                            <img id="w-photo-preview" src="" loading="lazy" decoding="async" class="w-full h-full object-cover hidden">
+                            <i id="w-photo-icon" data-lucide="camera" class="w-5 h-5 sm:w-6 sm:h-6 text-gray-400"></i>
+                        </div>
+                        <label class="cursor-pointer text-[#542c1c] text-xs font-bold py-1.5 px-2.5 sm:px-3 rounded-full bg-white shadow-sm border border-gray-200 hover:bg-gray-50 transition-all active:scale-95">
+                            Subir Foto
+                            <input type="file" accept="image/jpeg, image/png" class="hidden" onchange="window.handlePhotoUpload(event)">
+                        </label>
+                        <input type="hidden" id="w-photo-base64">
+                    </div>
+
+                    <!-- DISPONIBILIDAD LABORAL -->
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 p-4 sm:p-5 rounded-xl sm:rounded-2xl card-shadow">
+                        <h4 class="font-black text-blue-900 mb-3 sm:mb-4 text-sm sm:text-base uppercase tracking-wide flex items-center gap-2">
+                            <i data-lucide="calendar" class="w-5 h-5 text-blue-600"></i> Disponibilidad
+                        </h4>
+                        
+                        <div class="bg-white border border-blue-200 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-3 sm:mb-4">
+                            <div class="grid grid-cols-7 gap-1.5 sm:gap-2">
+                                <label class="flex flex-col items-center cursor-pointer group">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5 cursor-pointer accent-blue-500" value="lunes" onclick="setTimeout(() => window.updateAvailabilityUI(), 10)">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-blue-600">Lun</span>
+                                </label>
+                                <label class="flex flex-col items-center cursor-pointer group">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5 cursor-pointer accent-blue-500" value="martes" onclick="setTimeout(() => window.updateAvailabilityUI(), 10)">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-blue-600">Mar</span>
+                                </label>
+                                <label class="flex flex-col items-center cursor-pointer group">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5 cursor-pointer accent-blue-500" value="miercoles" onclick="setTimeout(() => window.updateAvailabilityUI(), 10)">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-blue-600">Mié</span>
+                                </label>
+                                <label class="flex flex-col items-center cursor-pointer group">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5 cursor-pointer accent-blue-500" value="jueves" onclick="setTimeout(() => window.updateAvailabilityUI(), 10)">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-blue-600">Jue</span>
+                                </label>
+                                <label class="flex flex-col items-center cursor-pointer group">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5 cursor-pointer accent-blue-500" value="viernes" onclick="setTimeout(() => window.updateAvailabilityUI(), 10)">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-blue-600">Vie</span>
+                                </label>
+                                <label class="flex flex-col items-center cursor-pointer group">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5 cursor-pointer accent-blue-500" value="sabado" onclick="setTimeout(() => window.updateAvailabilityUI(), 10)">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-blue-600">Sáb</span>
+                                </label>
+                                <label class="flex flex-col items-center cursor-pointer group">
+                                    <input type="checkbox" class="w-availability-day rounded mb-1.5 cursor-pointer accent-blue-500" value="domingo" onclick="setTimeout(() => window.updateAvailabilityUI(), 10)">
+                                    <span class="text-[10px] sm:text-xs font-bold text-gray-600 group-hover:text-blue-600">Dom</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="availability-options-container" class="space-y-2 sm:space-y-2.5"></div>
+                    </div>
+
+                    <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl card-shadow">
+                        <h4 class="font-bold text-[#542c1c] mb-2.5 sm:mb-3 text-xs sm:text-sm uppercase tracking-wide">Datos Personales</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                            <div><input required id="w-name" placeholder="Nombres" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"></div>
+                            <div><input required id="w-lastname" placeholder="Apellidos" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"></div>
+                            <div><input type="date" id="w-birthday" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"></div>
+                            <div><input type="number" required id="w-doc" placeholder="Cédula" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"></div>
+                            <div><input type="email" id="w-email" placeholder="Email" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"></div>
+                            <div><input type="number" required id="w-phone" placeholder="Teléfono" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"></div>
+                            <div><select id="w-bloodtype" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"><option value="">Sangre</option><option value="O+">O+</option><option value="O-">O-</option><option value="A+">A+</option><option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option><option value="AB+">AB+</option><option value="AB-">AB-</option></select></div>
+                            <div><input id="w-eps" placeholder="EPS" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"></div>
+                            <div class="sm:col-span-2"><input id="w-address" placeholder="Dirección" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"></div>
+                            <div><input id="w-city" placeholder="Ciudad" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"></div>
+                            <div><input id="w-emergency-name" placeholder="Emergencia (nombre)" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"></div>
+                            <div><input type="number" id="w-emergency-phone" placeholder="Tel. emergencia" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl card-shadow">
+                        <h4 class="font-bold text-[#542c1c] mb-2.5 sm:mb-3 text-xs sm:text-sm uppercase tracking-wide">Información Laboral</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                            <div>
+                                <select id="w-role" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm font-bold text-[#542c1c] focus:bg-white focus:border-[#bb7434] outline-none">
+                                    <option value="Colaborador">Colaborador</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select id="w-status" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm font-bold text-gray-600 focus:bg-white focus:border-[#bb7434] outline-none">
+                                    <option value="activo">Activo</option>
+                                    <option value="inactivo">Inactivo</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <input id="w-specs" placeholder="Especialidades" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="bank-section-form" class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl card-shadow" style="display:none;">
+                        <h4 class="font-bold text-gray-500 mb-2.5 sm:mb-3 text-xs sm:text-sm uppercase tracking-wide flex items-center gap-2"><i data-lucide="shield" class="w-4 h-4"></i> Info. Bancaria</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                            <div><select id="w-bank-name" onchange="window.handleBankChange(this)" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"><option value="">Banco</option><option value="Bancolombia">Bancolombia</option><option value="Davivienda">Davivienda</option><option value="Nequi">Nequi</option><option value="BRE-B">BRE-B</option><option value="Otro">Otro</option></select></div>
+                            <div><select id="w-bank-type" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"><option value="Ahorros">Ahorros</option><option value="Corriente">Corriente</option><option value="Nequi/Daviplata">Nequi</option></select></div>
+                            <div class="sm:col-span-2"><input type="number" id="w-bank-num" placeholder="Número de Cuenta" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"></div>
+                            <div class="sm:col-span-2"><input id="w-bank-owner" placeholder="Titular de la cuenta" class="w-full border border-gray-200 bg-gray-50 rounded-lg p-2.5 text-sm focus:bg-white focus:border-[#bb7434] outline-none"></div>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 pb-3">
+                        <button type="submit" id="save-worker-btn" class="w-full bg-[#7be4af] text-[#542c1c] py-3 rounded-xl font-black text-sm sm:text-base hover:bg-[#66d19c] active:scale-95 transition-all shadow-lg shadow-[#7be4af]/25">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FORMULARIO ADMIN -->
+    <div id="admin-modal" class="modal-backdrop">
+        <div class="modal-content w-full sm:max-w-sm">
+            <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
+                <h3 class="font-black text-lg sm:text-xl text-[#542c1c]">Nuevo Administrador</h3>
+                <button onclick="window.closeAdminModal()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-4 sm:p-6 bg-gray-50/60">
+                <form id="admin-form" onsubmit="window.saveAdmin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Nombre a mostrar</label>
+                        <input required id="a-name" placeholder="Ej: Laly Admin" class="w-full border border-gray-200 bg-white rounded-lg p-3 text-sm focus:border-[#bb7434] focus:ring-2 focus:ring-[#bb7434]/20 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Usuario</label>
+                        <input required id="a-user" placeholder="Usuario para ingresar" class="w-full border border-gray-200 bg-white rounded-lg p-3 text-sm focus:border-[#bb7434] focus:ring-2 focus:ring-[#bb7434]/20 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Contraseña</label>
+                        <input required type="password" id="a-pass" placeholder="Contraseña" class="w-full border border-gray-200 bg-white rounded-lg p-3 text-sm focus:border-[#bb7434] focus:ring-2 focus:ring-[#bb7434]/20 outline-none transition-all">
+                    </div>
+                    <button type="submit" id="save-admin-btn" class="w-full bg-[#bb7434] text-white py-3 rounded-xl font-black text-sm hover:bg-[#a55f25] active:scale-95 transition-all shadow-md mt-2">Crear Administrador</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL VISTA PREVIA DOCUMENTO -->
+    <div id="doc-preview-modal" class="modal-backdrop z-[1050]">
+        <div class="modal-content w-full sm:max-w-4xl h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
+                <h3 id="doc-preview-title" class="font-black text-lg sm:text-xl text-[#542c1c] truncate pr-4">Vista Previa</h3>
+                <button onclick="window.closeDocPreview()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="flex-1 w-full bg-gray-50/60 p-2 sm:p-4 overflow-hidden relative">
+                <iframe id="doc-preview-iframe" class="w-full h-full rounded-xl shadow-inner border border-gray-200 bg-white" src=""></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS -->
+    <div id="toast-container" class="fixed bottom-24 md:bottom-10 left-1/2 transform -translate-x-1/2 z-[1500] flex flex-col gap-2 pointer-events-none w-11/12 max-w-sm items-center"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, setDoc, doc, query, where, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB4N-DtD-dPaF4r2TIU2Vsk8nlEHtEnAss",
+            authDomain: "recursoslaly.firebaseapp.com",
+            projectId: "recursoslaly",
+            storageBucket: "recursoslaly.firebasestorage.app",
+            messagingSenderId: "49889283141",
+            appId: "1:49889283141:web:9cc349b9d814855f07a72c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        window.appState = {
+            currentUser: null,
+            currentView: 'dashboard',
+            selectedWorker: null,
+            selectedMonth: new Date().toISOString().slice(0, 7),
+            dbWorkers: [],
+            points: [],
+            messages: [],
+            currentProfileDocs: [],
+            activeProfileTab: 'rendimiento',
+            loginType: 'admin'
+        };
+
+        window.evaluationCriteria = [
+            // POSITIVOS
+            { reason: "Llegar puntualmente al evento", amount: 5, type: "pos" },
+            { reason: "Foto de evidencia al llegar", amount: 5, type: "pos" },
+            { reason: "Foto de evidencia al finalizar", amount: 5, type: "pos" },
+            { reason: "Realizar un show espectacular y de calidad", amount: 5, type: "pos" },
+            { reason: "Ser recursivo ante situaciones inesperadas", amount: 5, type: "pos" },
+            { reason: "Realizar video de la utilería que entra y sale de la casa", amount: 5, type: "pos" },
+            { reason: "Recibir felicitación o reconocimiento especial de un cliente", amount: 10, type: "pos" },
+            { reason: "Mostrar disposición para apoyar al equipo", amount: 5, type: "pos" },
+            // NEGATIVOS
+            { reason: "Llegar tarde sin justificación", amount: 10, type: "neg" },
+            { reason: "No enviar foto de llegada", amount: 5, type: "neg" },
+            { reason: "No enviar foto de finalización", amount: 5, type: "neg" },
+            { reason: "Olvidar algún implemento del evento", amount: 10, type: "neg" },
+            { reason: "No revisar los elementos recibidos y reportar faltantes", amount: 10, type: "neg" },
+            { reason: "No realizar video de la utilería cuando sea solicitado", amount: 5, type: "neg" },
+            { reason: "No confirmar una información importante", amount: 5, type: "neg" },
+            { reason: "Incumplir una regla de la empresa", amount: 10, type: "neg" },
+            { reason: "Queja o reclamo de un cliente por comportamiento o incumplimiento", amount: 15, type: "neg" },
+            { reason: "Brindar su número personal a un cliente", amount: 30, type: "neg" },
+            { reason: "Solicitar el número personal del cliente", amount: 30, type: "neg" },
+            { reason: "Conducta que afecte gravemente la imagen de la empresa", amount: 40, type: "neg" },
+            { reason: "Mal de presentación personal, no aretes, no gorras que no sean de las asignadas, mal peinado, Jean rotos, camisa rotas", amount: 15, type: "neg" }
+        ];
+
+        window.handlePresetChange = (selectElement) => {
+            const val = selectElement.value;
+            const amountInput = document.getElementById('pt-amount');
+            const typeSelect = document.getElementById('pt-type');
+            const reasonInput = document.getElementById('pt-reason');
+
+            if (val === 'custom') {
+                amountInput.value = '';
+                reasonInput.value = '';
+                reasonInput.focus();
+            } else {
+                const criteria = window.evaluationCriteria[val];
+                if (criteria) {
+                    amountInput.value = criteria.amount;
+                    typeSelect.value = criteria.type;
+                    reasonInput.value = criteria.reason;
+                }
+            }
+        };
+
+        window.getInitials = (name) => {
+            const parts = name.trim().split(' ');
+            if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+            if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+            return 'US';
+        };
+
+        window.escapeHtml = (str) => {
+            if(!str) return '';
+            return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        };
+
+        window.showToast = (message, type = 'success') => {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `px-5 py-3 rounded-2xl text-sm font-bold shadow-xl transition-all duration-300 transform translate-y-4 opacity-0 flex items-center gap-3 w-full max-w-sm ${type === 'error' ? 'bg-red-500 text-white' : 'bg-gray-800 text-white'}`;
+            const iconColor = type === 'error' ? 'text-white' : 'text-[#7be4af]';
+            toast.innerHTML = `<i data-lucide="${type === 'error' ? 'alert-circle' : 'check-circle'}" class="w-5 h-5 ${iconColor} shrink-0"></i> <span class="flex-1 min-w-0 truncate break-words whitespace-normal">${message}</span>`;
+            container.appendChild(toast);
+            lucide.createIcons();
+            
+            requestAnimationFrame(() => toast.classList.remove('translate-y-4', 'opacity-0'));
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        window.onload = async () => {
+            lucide.createIcons();
+            try { await signInAnonymously(auth); checkSession(); } 
+            catch (error) { window.showToast("Error de conexión a Firebase", "error"); }
+        };
+
+        async function fetchAllData() {
+            try {
+                const wSnap = await getDocs(collection(db, "workers"));
+                window.appState.dbWorkers = wSnap.docs.map(doc => doc.data());
+                localStorage.setItem('laly_workers', JSON.stringify(window.appState.dbWorkers));
+                
+                const pSnap = await getDocs(collection(db, "points"));
+                window.appState.points = pSnap.docs.map(doc => ({dbId: doc.id, ...doc.data()}));
+                localStorage.setItem('laly_points', JSON.stringify(window.appState.points));
+                
+                const mSnap = await getDocs(collection(db, "messages"));
+                window.appState.messages = mSnap.docs.map(doc => doc.data());
+                localStorage.setItem('laly_messages', JSON.stringify(window.appState.messages));
+            } catch (e) { console.error("Error sincronizando BD en segundo plano:", e); }
+        }
+
+        async function checkSession() {
+            // Sesión permanente en localStorage
+            const session = localStorage.getItem('hr_v2_session') || sessionStorage.getItem('hr_v2_session');
+            if (session) {
+                window.appState.currentUser = JSON.parse(session);
+                
+                // 1. CARGA ULTRA-RÁPIDA DESDE MEMORIA CACHÉ (0 LAG)
+                const cW = localStorage.getItem('laly_workers');
+                const cP = localStorage.getItem('laly_points');
+                const cM = localStorage.getItem('laly_messages');
+                
+                performLoginUIFast();
+                
+                // Si ya hay datos guardados, mostramos la interfaz real instantáneamente
+                if(cW && cP && cM) {
+                    window.appState.dbWorkers = JSON.parse(cW);
+                    window.appState.points = JSON.parse(cP);
+                    window.appState.messages = JSON.parse(cM);
+                    renderViewAfterLogin(); 
+                }
+
+                // 2. SINCRONIZACIÓN FANTASMA EN SEGUNDO PLANO
+                fetchAllData().then(() => {
+                    // Actualiza la vista silenciosamente con los datos frescos de Firebase
+                    if (window.appState.currentView) {
+                        window.setView(window.appState.currentView);
+                    }
+                }).catch(e => console.error(e));
+            }
+        }
+
+        // Skeletons
+        function showSkeletonDashboard() { return `<div class="space-y-6"><div class="bg-gradient-to-r from-[#542c1c] to-[#146459] -mx-6 md:-mx-8 -mt-6 md:-mt-8 pt-12 pb-10 px-6 md:px-10 rounded-b-[2rem]"><div class="max-w-5xl mx-auto"><div class="skeleton-base h-10 mb-3" style="width: 200px;"></div><div class="skeleton-base h-6 mb-8" style="width: 150px;"></div></div></div></div>`; }
+        function showSkeletonDirectory() { return `<div class="space-y-6"><div class="skeleton-base h-10 w-1/3 mb-6"></div><div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">${Array(6).fill(0).map(() => `<div class="skeleton-card"><div class="skeleton-base h-20"></div></div>`).join('')}</div></div>`; }
+        function showSkeletonRanking() { return `<div class="space-y-6"><div class="skeleton-base h-10 w-1/3 mb-6"></div><div class="space-y-3">${Array(5).fill(0).map(() => `<div class="skeleton-card h-16"></div>`).join('')}</div></div>`; }
+        function showSkeletonProfile() { return `<div class="space-y-6"><div class="bg-white px-5 md:px-10 pt-8 pb-6 rounded-3xl md:mt-2"><div class="flex gap-4 md:gap-6"><div class="skeleton-base w-20 h-20 md:w-28 md:h-28 rounded-3xl"></div><div class="flex-1"><div class="skeleton-base h-8 mb-2 w-2/3"></div><div class="skeleton-base h-4 w-1/2"></div></div></div></div></div>`; }
+
+        function performLoginUIFast() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-layout').classList.remove('hidden');
+            const user = window.appState.currentUser;
+            document.getElementById('user-name').innerText = user.name;
+            const photoEl = document.getElementById('user-avatar');
+            if(user.photo) photoEl.innerHTML = `<img src="${user.photo}" loading="lazy" decoding="async" class="w-full h-full object-cover">`;
+            else photoEl.innerText = window.getInitials(user.name);
+            
+            document.getElementById('user-role').innerText = user.role;
+            window.renderNav();
+            const mainContent = document.getElementById('main-content');
+            const isWorker = window.appState.currentUser.systemRole === 'WORKER';
+            const skeleton = isWorker ? showSkeletonProfile() : showSkeletonDashboard();
+            mainContent.innerHTML = '<div class="p-4 md:p-6 space-y-4"><div class="flex items-center justify-center gap-3 mb-6"><i data-lucide="loader-2" class="w-5 h-5 text-[#bb7434] animate-spin"></i><p class="text-gray-500 font-medium text-sm">Sincronizando...</p></div>' + skeleton + '</div>';
+            lucide.createIcons();
+        }
+
+        function renderViewAfterLogin() {
+            const user = window.appState.currentUser;
+            if (user.systemRole === 'WORKER') { window.appState.selectedWorker = user; window.setView('profile'); } 
+            else { window.setView('dashboard'); }
+        }
+
+        window.switchLoginType = (type) => {
+            const adminBtn = document.getElementById('login-type-admin');
+            const workerBtn = document.getElementById('login-type-worker');
+            const adminForm = document.getElementById('login-form-admin');
+            const workerForm = document.getElementById('login-form-worker');
+            
+            if (type === 'admin') {
+                adminBtn.classList.add('active'); adminBtn.classList.remove('inactive');
+                workerBtn.classList.remove('active'); workerBtn.classList.add('inactive');
+                adminForm.classList.remove('hidden'); workerForm.classList.add('hidden');
+                window.appState.loginType = 'admin';
+            } else {
+                adminBtn.classList.remove('active'); adminBtn.classList.add('inactive');
+                workerBtn.classList.add('active'); workerBtn.classList.remove('inactive');
+                adminForm.classList.add('hidden'); workerForm.classList.remove('hidden');
+                window.appState.loginType = 'worker';
+            }
+        };
+
+        window.handleLogin = async (e) => {
+            e.preventDefault();
+            const loginType = window.appState.loginType || 'admin';
+            const btnId = loginType === 'admin' ? 'login-btn' : 'login-btn-w';
+            const btn = document.getElementById(btnId);
+            
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 mx-auto animate-spin"></i>';
+            lucide.createIcons();
+            btn.disabled = true;
+
+            try {
+                let user = null;
+
+                if (loginType === 'admin') {
+                    const username = document.getElementById('login-username').value.trim();
+                    const password = document.getElementById('login-password').value.trim();
+                    const encodedCredentials = 'MTAwNzExNzk1M3xMbTE3QDUqKg=='; 
+                    const [validUser, validPass] = atob(encodedCredentials).split('|');
+                    
+                    if (username === validUser && password === validPass) {
+                        user = { id: 'admin_' + username, name: 'Administrador Principal', username: username, role: 'Administrador', systemRole: 'ADMIN', status: 'activo', isAdmin: true };
+                    } else {
+                        const q = query(collection(db, "workers"), where("username", "==", username), where("password", "==", password), where("systemRole", "==", "ADMIN"), where("status", "==", "activo"));
+                        const querySnapshot = await getDocs(q);
+                        
+                        if (!querySnapshot.empty) {
+                            user = querySnapshot.docs[0].data();
+                        } else {
+                            window.showToast('Usuario o contraseña incorrectos', 'error');
+                            btn.innerHTML = 'Ingresar'; btn.disabled = false; return;
+                        }
+                    }
+                } else {
+                    const docInput = document.getElementById('login-cedula').value.trim();
+                    if (!docInput) { window.showToast('Ingresa tu número de documento', 'error'); btn.innerHTML = 'Ingresar'; btn.disabled = false; return; }
+
+                    const q = query(collection(db, "workers"), where("document", "==", docInput), where("status", "==", "activo"));
+                    const querySnapshot = await getDocs(q);
+                    
+                    if (!querySnapshot.empty) {
+                        user = querySnapshot.docs[0].data();
+                        if(!user.systemRole) {
+                            if(user.role === 'Administrador') user.systemRole = 'ADMIN';
+                            else user.systemRole = 'WORKER';
+                        }
+                    } else {
+                        window.showToast('Documento no encontrado o inactivo', 'error');
+                        btn.innerHTML = 'Ingresar'; btn.disabled = false; return;
+                    }
+                }
+
+                if (user) {
+                    window.appState.currentUser = user;
+                    localStorage.setItem('hr_v2_session', JSON.stringify(user)); // Guarda sesión permanentemente
+                    performLoginUIFast();
+                    fetchAllData().then(() => renderViewAfterLogin()).catch(e => console.error(e));
+                }
+            } catch (error) { 
+                console.error(error); window.showToast('Error de conexión', 'error'); btn.innerHTML = 'Ingresar'; btn.disabled = false; 
+            }
+        };
+
+        window.appSignOut = () => {
+            localStorage.removeItem('hr_v2_session');
+            sessionStorage.removeItem('hr_v2_session'); // Limpieza doble
+            window.appState.currentUser = null;
+            document.getElementById('app-layout').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('login-cedula').value = '';
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('login-btn').innerHTML = 'Ingresar';
+            document.getElementById('login-btn').disabled = false;
+        };
+
+        window.setView = (viewName) => {
+            if (window.appState.currentUser.systemRole === 'WORKER' && viewName !== 'profile') return;
+            window.appState.currentView = viewName;
+            window.renderNav();
+            
+            const main = document.getElementById('main-content');
+            
+            if (viewName === 'dashboard') { main.innerHTML = window.renderDashboard(); lucide.createIcons(); }
+            if (viewName === 'directory') {
+                main.innerHTML = window.renderDirectory(); lucide.createIcons();
+                fetchAllData().then(() => { if (window.appState.currentView === 'directory') { main.innerHTML = window.renderDirectory(); lucide.createIcons(); } });
+            }
+            if (viewName === 'ranking') { main.innerHTML = window.renderRanking(); lucide.createIcons(); }
+            if (viewName === 'messages') {
+                main.innerHTML = window.renderMessages(); lucide.createIcons();
+                fetchAllData().then(() => { if (window.appState.currentView === 'messages') { main.innerHTML = window.renderMessages(); lucide.createIcons(); } });
+            }
+            if (viewName === 'profile') {
+                const wId = window.appState.selectedWorker.id;
+                window.appState.activeProfileTab = 'rendimiento'; 
+                
+                if (!window.appState.cachedDocs) window.appState.cachedDocs = {};
+                
+                if (window.appState.cachedDocs[wId]) {
+                    window.appState.currentProfileDocs = window.appState.cachedDocs[wId];
+                    main.innerHTML = window.renderProfile(); lucide.createIcons();
+                } else {
+                    window.appState.currentProfileDocs = [];
+                    main.innerHTML = window.renderProfile(); lucide.createIcons();
+                }
+
+                const qDocs = query(collection(db, "documents"), where("workerId", "==", wId));
+                getDocs(qDocs).then(snapDocs => {
+                    const docs = snapDocs.docs.map(doc => ({dbId: doc.id, ...doc.data()})).sort((a,b) => b.timestamp - a.timestamp);
+                    window.appState.cachedDocs[wId] = docs;
+                    window.appState.currentProfileDocs = docs;
+                    if (window.appState.currentView === 'profile' && window.appState.selectedWorker.id === wId) {
+                        main.innerHTML = window.renderProfile(); lucide.createIcons();
+                    }
+                });
+                
+                fetchAllData().then(() => {
+                    window.appState.selectedWorker = window.appState.dbWorkers.find(w => w.id === wId) || window.appState.selectedWorker;
+                    if (window.appState.currentView === 'profile' && window.appState.selectedWorker.id === wId) {
+                        main.innerHTML = window.renderProfile(); lucide.createIcons();
+                    }
+                });
+            }
+        };
+
+        window.renderNav = () => {
+            const role = window.appState.currentUser.systemRole;
+            const desktopNav = document.getElementById('desktop-nav');
+            const mobileNav = document.getElementById('mobile-nav');
+
+            const navItems = [
+                { id: 'dashboard', icon: 'layout-dashboard', label: 'Inicio', roles: ['ADMIN', 'HR', 'COORD'] },
+                { id: 'directory', icon: 'users', label: 'Directorio', roles: ['ADMIN', 'HR', 'COORD'] },
+                { id: 'ranking', icon: 'star', label: 'Ranking', roles: ['ADMIN', 'HR', 'COORD'] },
+                { id: 'messages', icon: 'message-square', label: 'Mensajes', roles: ['ADMIN', 'HR', 'COORD'] },
+                { id: 'profile', icon: 'user', label: 'Mi Perfil', roles: ['WORKER'] }
+            ];
+
+            const allowedItems = navItems.filter(item => item.roles.includes(role));
+
+            desktopNav.innerHTML = allowedItems.map(item => `
+                <button onclick="window.setView('${item.id}')"
+                    class="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl font-bold transition-all ${window.appState.currentView === item.id ? 'bg-[#bb7434] text-white shadow-lg shadow-[#bb7434]/20' : 'text-gray-300 hover:bg-[#7a4a35] hover:text-white'}">
+                    <i data-lucide="${item.icon}" class="w-5 h-5 shrink-0"></i> <span class="truncate">${item.label}</span>
+                </button>
+            `).join('');
+
+            let mobileHtml = allowedItems.map(item => `
+                <button onclick="window.setView('${item.id}')" class="flex flex-col items-center gap-1 transition-colors ${window.appState.currentView === item.id ? 'text-[#542c1c]' : 'text-gray-400'}">
+                    <div class="p-2 rounded-2xl transition-all ${window.appState.currentView === item.id ? 'bg-[#7be4af]/20' : ''}"><i data-lucide="${item.icon}" class="w-5 h-5 shrink-0"></i></div>
+                    <span class="text-[10px] font-bold">${item.label}</span>
+                </button>
+            `).join('');
+
+            mobileHtml += `<button onclick="window.appSignOut()" class="flex flex-col items-center gap-1 transition-colors text-red-400"><div class="p-2 rounded-2xl transition-all"><i data-lucide="log-out" class="w-5 h-5 shrink-0"></i></div><span class="text-[10px] font-bold">Salir</span></button>`;
+            mobileNav.innerHTML = mobileHtml;
+            lucide.createIcons();
+        };
+
+        window.renderDashboard = () => {
+            const activeWorkers = window.appState.dbWorkers.filter(w => w.status === 'activo' && w.role !== 'Administrador').length;
+            const firstName = window.appState.currentUser.name.split(' ')[0];
+
+            const now = new Date();
+            const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1);
+            const prevMonthStr = `${prevMonth.getFullYear()}-${String(prevMonth.getMonth()+1).padStart(2,'0')}`;
+            const prevMonthPoints = window.appState.points.filter(p => { const d = new Date(p.timestamp); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}` === prevMonthStr; });
+            const prevScores = {}; window.appState.dbWorkers.forEach(w => prevScores[w.id] = 0); 
+            prevMonthPoints.forEach(p => prevScores[p.workerId] += (p.type === 'pos' ? p.amount : -p.amount));
+            const topWorkerPrev = window.appState.dbWorkers.filter(w => w.status === 'activo' && w.role !== 'Administrador').sort((a,b) => prevScores[b.id] - prevScores[a.id])[0];
+            const topWorkerPrevPts = topWorkerPrev ? prevScores[topWorkerPrev.id] : 0;
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const currentMonth = today.getMonth() + 1;
+            const currentDay = today.getDate();
+            
+            let upcomingBirthdays = window.appState.dbWorkers
+                .filter(w => w.status === 'activo' && w.birthday && w.role !== 'Administrador')
+                .map(w => {
+                    const [bYear, bMonth, bDay] = w.birthday.split('-');
+                    const month = parseInt(bMonth, 10);
+                    const day = parseInt(bDay, 10);
+                    
+                    let nextBdayYear = today.getFullYear();
+                    if (month < currentMonth || (month === currentMonth && day < currentDay)) {
+                        nextBdayYear++;
+                    }
+                    
+                    const nextBdayDate = new Date(nextBdayYear, month - 1, day);
+                    const daysUntil = Math.round((nextBdayDate - today) / (1000 * 60 * 60 * 24));
+                    
+                    return { ...w, daysUntil, bMonth: month, bDay: day };
+                })
+                .sort((a, b) => a.daysUntil - b.daysUntil);
+
+            const nextBdayWorker = upcomingBirthdays.length > 0 ? upcomingBirthdays[0] : null;
+            const sharedBdaysCount = nextBdayWorker ? upcomingBirthdays.filter(w => w.daysUntil === nextBdayWorker.daysUntil).length - 1 : 0;
+            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+            return `
+            <div class="space-y-4 sm:space-y-6 max-w-7xl mx-auto pb-8">
+                <div class="bg-gradient-to-br from-[#542c1c] via-[#6b3c2a] to-[#7a4a35] -mx-3 sm:-mx-4 md:-mx-6 lg:-mx-8 -mt-3 sm:-mt-4 md:-mt-6 lg:-mt-8 pt-10 sm:pt-12 md:pt-14 pb-24 sm:pb-28 px-4 sm:px-6 md:px-10 rounded-b-[2rem] shadow-lg relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdHRlcm4gaWQ9InAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0iI2ZmZiIvPjwvcGF0dGVybj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3ApIi8+PC9zdmc+')]"></div>
+                    <div class="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div class="w-full min-w-0">
+                            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight mb-1 truncate">Hola, ${firstName} 👋</h1>
+                            <p class="text-[#cab2a2] text-xs sm:text-sm md:text-base font-medium truncate">Panel general de administración</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="-mt-16 sm:-mt-20 relative z-20 px-0 grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] card-shadow flex items-center gap-3 sm:gap-4 group border border-gray-100 hover:border-[#bb7434]/30 transition-all">
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-orange-50 text-[#bb7434] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-inner border border-orange-100/50"><i data-lucide="users" class="w-6 h-6 sm:w-7 sm:h-7"></i></div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 truncate">Total Equipo</p>
+                            <p class="text-2xl sm:text-3xl font-black text-gray-800 leading-none truncate">${activeWorkers} <span class="text-xs sm:text-sm font-bold text-gray-400">Activos</span></p>
+                        </div>
+                    </div>
+
+                    ${topWorkerPrev ? `
+                    <div onclick="viewWorkerProfile('${topWorkerPrev.id}')" class="bg-gradient-to-br from-[#bb7434] to-[#995922] rounded-2xl sm:rounded-[1.5rem] p-4 sm:p-5 shadow-lg shadow-[#bb7434]/20 text-white flex items-center gap-3 sm:gap-4 relative overflow-hidden cursor-pointer hover:shadow-xl transition-all active:scale-[0.98] group">
+                        <div class="absolute -right-4 -top-4 opacity-[0.05] group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500 pointer-events-none"><i data-lucide="trophy" class="w-32 h-32 text-white"></i></div>
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/10 flex items-center justify-center shrink-0 z-10 backdrop-blur-sm border border-white/20 group-hover:bg-white/20 transition-colors"><i data-lucide="trophy" class="w-6 h-6 sm:w-7 sm:h-7 text-[#fde047]"></i></div>
+                        <div class="flex-1 min-w-0 z-10 pr-2">
+                            <p class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#fde047] mb-0.5 truncate">Top Mensual</p>
+                            <h3 class="text-sm sm:text-base font-black truncate">${topWorkerPrev.name}</h3>
+                            <p class="text-[10px] sm:text-[11px] font-medium text-white/80 truncate mt-0.5">${topWorkerPrevPts} Puntos alcanzados</p>
+                        </div>
+                        ${topWorkerPrev.photo ? 
+                            `<img src="${topWorkerPrev.photo}" loading="lazy" decoding="async" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white/30 shrink-0 z-10 shadow-md">` : 
+                            `<div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 text-white font-black text-xs sm:text-sm flex items-center justify-center shrink-0 z-10 shadow-md border border-white/30">${window.getInitials(topWorkerPrev.name)}</div>`
+                        }
+                    </div>` : ''}
+
+                    ${nextBdayWorker ? `
+                    <div onclick="viewWorkerProfile('${nextBdayWorker.id}')" class="${!topWorkerPrev ? 'md:col-span-2' : 'md:col-span-2 lg:col-span-1'} bg-white border border-[#f3ebe3] rounded-2xl sm:rounded-[1.5rem] p-4 sm:p-5 card-shadow flex items-center gap-3 sm:gap-4 relative overflow-hidden cursor-pointer hover:border-pink-200 transition-all active:scale-[0.98] group">
+                        <div class="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:scale-110 group-hover:-rotate-12 transition-transform duration-500 pointer-events-none"><i data-lucide="cake" class="w-32 h-32 text-pink-600"></i></div>
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-pink-50 text-pink-500 flex items-center justify-center shrink-0 z-10 shadow-sm border border-pink-100 group-hover:bg-pink-100 transition-colors"><i data-lucide="gift" class="w-6 h-6 sm:w-7 sm:h-7"></i></div>
+                        <div class="flex-1 min-w-0 z-10 pr-2">
+                            <p class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-pink-500 mb-0.5 truncate">Próximo Cumpleaños</p>
+                            <h3 class="text-sm sm:text-base font-black text-gray-800 truncate">${nextBdayWorker.name} ${sharedBdaysCount > 0 ? `<span class="text-[9px] sm:text-[10px] font-bold text-gray-400">y ${sharedBdaysCount} más</span>` : ''}</h3>
+                            <p class="text-[10px] sm:text-[11px] font-bold text-gray-500 truncate mt-0.5">
+                                ${nextBdayWorker.daysUntil === 0 ? '<span class="text-pink-500 font-black animate-pulse">¡Es hoy! 🎉</span>' : 
+                                  nextBdayWorker.daysUntil === 1 ? '<span class="text-pink-400 font-black">Mañana 🎈</span>' : 
+                                  `En <span class="text-pink-500">${nextBdayWorker.daysUntil}</span> días (${nextBdayWorker.bDay} de ${monthNames[nextBdayWorker.bMonth - 1]})`}
+                            </p>
+                        </div>
+                        ${nextBdayWorker.photo ? 
+                            `<img src="${nextBdayWorker.photo}" loading="lazy" decoding="async" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-pink-100 shrink-0 z-10 shadow-sm">` : 
+                            `<div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-pink-100 text-pink-600 font-black text-xs sm:text-sm flex items-center justify-center shrink-0 z-10 shadow-sm border border-pink-200">${window.getInitials(nextBdayWorker.name)}</div>`
+                        }
+                    </div>` : ''}
+                </div>
+
+                <div class="mt-2 sm:mt-4">
+                    <h3 class="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest mb-3 px-1 sm:px-2">Accesos Rápidos</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                        <div onclick="setView('directory')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3 sm:gap-4 cursor-pointer hover:border-[#bb7434]/40 hover:shadow-lg transition-all group border border-gray-100">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0 group-hover:bg-blue-500 group-hover:text-white transition-colors"><i data-lucide="users" class="w-5 h-5"></i></div>
+                            <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm truncate">Directorio</h3><p class="text-[10px] sm:text-[11px] text-gray-400 truncate">Gestión de personal</p></div>
+                        </div>
+                        <div onclick="setView('ranking')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3 sm:gap-4 cursor-pointer hover:border-[#bb7434]/40 hover:shadow-lg transition-all group border border-gray-100">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-purple-50 text-purple-500 flex items-center justify-center shrink-0 group-hover:bg-purple-500 group-hover:text-white transition-colors"><i data-lucide="star" class="w-5 h-5"></i></div>
+                            <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm truncate">Rendimiento</h3><p class="text-[10px] sm:text-[11px] text-gray-400 truncate">Ranking mensual</p></div>
+                        </div>
+                        <div onclick="setView('messages')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3 sm:gap-4 cursor-pointer hover:border-[#bb7434]/40 hover:shadow-lg transition-all group border border-gray-100">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0 group-hover:bg-indigo-500 group-hover:text-white transition-colors"><i data-lucide="message-square" class="w-5 h-5"></i></div>
+                            <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm truncate">Mensajes</h3><p class="text-[10px] sm:text-[11px] text-gray-400 truncate">Avisos y notas</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        };
+
+        window.filterDirectory = (term) => {
+            const lowerTerm = term.toLowerCase();
+            document.querySelectorAll('.directory-card').forEach(card => {
+                const data = card.getAttribute('data-search');
+                if (data.includes(lowerTerm)) card.style.display = 'flex';
+                else card.style.display = 'none';
+            });
+        };
+
+        window.renderDirectory = () => {
+            const canEdit = ['ADMIN', 'HR'].includes(window.appState.currentUser.systemRole);
+            const isAdmin = window.appState.currentUser.systemRole === 'ADMIN';
+            
+            let html = `
+            <div class="h-full flex flex-col max-w-7xl mx-auto pb-8">
+                <div class="bg-white p-4 sm:p-5 md:p-6 rounded-[2rem] card-shadow mb-4 sm:mb-6 border border-gray-100/50">
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div class="w-full md:w-auto">
+                            <h1 class="text-2xl sm:text-3xl font-black text-gray-800 tracking-tight">Directorio</h1>
+                            <p class="text-gray-500 text-xs sm:text-sm font-medium mt-1">Gestión del equipo de talento</p>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                            <div class="relative flex-1 sm:w-72">
+                                <i data-lucide="search" class="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                                <input type="text" oninput="window.filterDirectory(this.value)" placeholder="Buscar por nombre o rol..." class="w-full pl-10 pr-4 py-3 rounded-2xl border border-gray-200 bg-gray-50 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#bb7434]/20 focus:border-[#bb7434] transition-all">
+                            </div>
+                            ${canEdit ? `
+                            <div class="flex gap-2 shrink-0">
+                                <button onclick="openWorkerForm()" class="bg-[#bb7434] text-white px-5 py-3 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#bb7434]/30 hover:bg-[#a55f25] active:scale-95 transition-all w-full sm:w-auto"><i data-lucide="user-plus" class="w-4 h-4"></i> <span class="hidden sm:inline">Colaborador</span></button>
+                                ${isAdmin ? `<button onclick="window.openAdminModal()" class="bg-gray-800 text-white px-5 py-3 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-gray-800/30 hover:bg-gray-900 active:scale-95 transition-all w-full sm:w-auto"><i data-lucide="shield" class="w-4 h-4"></i> <span class="hidden sm:inline">Admin</span></button>` : ''}
+                            </div>` : ''}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4" id="directory-grid">`;
+
+            window.appState.dbWorkers.forEach(w => {
+                if (w.role === 'Administrador') return;
+                const isInactive = w.status === 'inactivo';
+                const photoHtml = w.photo ? `<img src="${w.photo}" loading="lazy" decoding="async" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl object-cover shrink-0">` : `<div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gray-100 text-gray-400 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 border border-gray-200 shadow-inner">${window.getInitials(w.name)}</div>`;
+                
+                let firstSpecHtml = '';
+                if(w.specialties) {
+                    const firstSpec = w.specialties.split(',')[0].trim();
+                    if(firstSpec) firstSpecHtml = `<span class="bg-indigo-50 text-indigo-600 text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-lg flex items-center gap-1 shrink-0 border border-indigo-100/50"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> ${firstSpec}</span>`;
+                }
+                const cityHtml = w.city ? `<span class="bg-gray-50 text-gray-500 text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-lg truncate border border-gray-100"><i data-lucide="map-pin" class="w-2.5 h-2.5 inline mr-1"></i>${w.city}</span>` : '';
+                const searchData = `${w.name} ${w.role} ${w.document || ''} ${w.specialties || ''}`.toLowerCase();
+
+                html += `
+                <div onclick="viewWorkerProfile('${w.id}')" data-search="${searchData}" class="directory-card bg-white p-3.5 sm:p-4 rounded-[1.5rem] card-shadow cursor-pointer hover:border-[#bb7434]/40 hover:shadow-xl transition-all border border-gray-100 flex items-center gap-3.5 sm:gap-4 relative overflow-hidden group ${isInactive?'opacity-60 grayscale-[0.2] hover:grayscale-0':''}">
+                    <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-[#bb7434] scale-y-0 group-hover:scale-y-100 transition-transform origin-center"></div>
+                    <div class="relative shrink-0">
+                        ${photoHtml}
+                        ${isInactive ? `<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-red-400 border-[3px] border-white rounded-full shadow-sm"></div>` : `<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-[3px] border-white rounded-full shadow-sm"></div>`}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-black text-gray-800 text-sm sm:text-base leading-tight truncate mb-0.5 group-hover:text-[#bb7434] transition-colors">${w.name}</h4>
+                        <p class="text-[10px] sm:text-[11px] font-black text-gray-400 uppercase tracking-wider truncate mb-2">${w.role}</p>
+                        <div class="flex items-center gap-1.5 overflow-hidden">${firstSpecHtml}${cityHtml}</div>
+                    </div>
+                    <div class="shrink-0 text-gray-200 group-hover:text-[#bb7434] transition-colors pr-1"><i data-lucide="chevron-right" class="w-5 h-5"></i></div>
+                </div>`;
+            });
+            html += `</div></div>`;
+            return html;
+        };
+
+        window.changeMonth = (e) => { 
+            const newMonth = e.target.value; const oldMonth = window.appState.selectedMonth;
+            if(newMonth !== oldMonth) {
+                if(confirm(`¿Cambiar a ${newMonth}?\n\nLos puntos del mes se filtrarán según esta fecha.`)) {
+                    window.appState.selectedMonth = newMonth; window.setView('ranking');
+                } else { e.target.value = oldMonth; }
+            }
+        };
+        
+        window.renderRanking = () => {
+            const monthStr = window.appState.selectedMonth; 
+            const monthPoints = window.appState.points.filter(p => { const d = new Date(p.timestamp); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}` === monthStr; });
+            const scores = {}; window.appState.dbWorkers.forEach(w => scores[w.id] = 0); 
+            monthPoints.forEach(p => scores[p.workerId] += (p.type === 'pos' ? p.amount : -p.amount));
+            const rankedWorkers = window.appState.dbWorkers.filter(w => w.status === 'activo' && w.role !== 'Administrador').map(w => ({ ...w, totalPts: scores[w.id] })).sort((a, b) => b.totalPts - a.totalPts);
+
+            let html = `
+            <div class="max-w-7xl mx-auto pb-10">
+                <div class="bg-white p-4 sm:p-5 md:p-6 rounded-[1.5rem] sm:rounded-[2rem] card-shadow mb-4 sm:mb-6 border border-gray-100/50 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-4 overflow-hidden">
+                    <div class="flex-1 min-w-0 w-full">
+                        <h1 class="text-2xl sm:text-3xl font-black text-gray-800 tracking-tight truncate">Ranking Mensual</h1>
+                        <p class="text-gray-500 text-xs sm:text-sm font-medium mt-1 truncate">Desempeño y evaluaciones del mes.</p>
+                    </div>
+                    <div class="relative w-full sm:w-auto shrink-0">
+                        <i data-lucide="calendar" class="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#bb7434]"></i>
+                        <input type="month" value="${monthStr}" onchange="window.changeMonth(event)" class="w-full sm:max-w-[220px] m-0 box-border pl-10 pr-4 py-3 rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 text-[#542c1c] text-xs sm:text-sm font-black focus:outline-none focus:ring-2 focus:ring-[#bb7434]/20 focus:border-[#bb7434] shadow-sm cursor-pointer transition-all appearance-none">
+                    </div>
+                </div>
+                <div class="space-y-3 sm:space-y-4">`;
+
+            if(rankedWorkers.length === 0) html += '<div class="text-center py-12 bg-white rounded-[1.5rem] border border-gray-100"><div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="bar-chart-2" class="w-6 h-6 sm:w-8 sm:h-8"></i></div><p class="text-xs sm:text-sm font-bold text-gray-400">No hay colaboradores activos</p></div>';
+
+            rankedWorkers.forEach((w, index) => {
+                const pos = index + 1;
+                let cardClass = "bg-white border-gray-100 hover:border-[#bb7434]/30"; 
+                let numClass = "bg-gray-100 text-gray-500"; 
+                let ptsClass = "bg-gray-50 text-gray-700 border border-gray-200";
+                let crownIcon = '';
+                let avatarRing = "border-transparent";
+
+                if(pos === 1) { 
+                    cardClass = "bg-gradient-to-r from-amber-50 to-white border-amber-200 shadow-md"; 
+                    numClass = "bg-gradient-to-br from-yellow-400 to-amber-500 text-white shadow-lg shadow-amber-500/30"; 
+                    ptsClass = "bg-yellow-100 text-amber-700 border border-yellow-200";
+                    crownIcon = '<i data-lucide="crown" class="absolute -top-2 -left-1.5 sm:-top-3 sm:-left-2 w-5 h-5 sm:w-7 sm:h-7 text-yellow-500 drop-shadow-md rotate-[-15deg] z-10"></i>';
+                    avatarRing = "ring-4 ring-yellow-400/30";
+                } else if(pos === 2) { 
+                    cardClass = "bg-gradient-to-r from-slate-50 to-white border-slate-200 shadow-sm";
+                    numClass = "bg-gradient-to-br from-slate-300 to-slate-400 text-white shadow-md shadow-slate-400/20";
+                    ptsClass = "bg-slate-100 text-slate-700 border border-slate-200";
+                    avatarRing = "ring-4 ring-slate-300/30";
+                } else if(pos === 3) { 
+                    cardClass = "bg-gradient-to-r from-orange-50 to-white border-orange-200 shadow-sm";
+                    numClass = "bg-gradient-to-br from-orange-400 to-orange-500 text-white shadow-md shadow-orange-500/20";
+                    ptsClass = "bg-orange-100 text-orange-700 border border-orange-200";
+                    avatarRing = "ring-4 ring-orange-400/30";
+                }
+
+                const photoHtml = w.photo ? `<img src="${w.photo}" loading="lazy" decoding="async" class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl object-cover shrink-0 ${avatarRing}">` : `<div class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gray-100 text-gray-400 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 border border-gray-200 ${avatarRing}">${window.getInitials(w.name)}</div>`;
+
+                html += `
+                <div onclick="viewWorkerProfile('${w.id}')" class="p-3 sm:p-4 rounded-2xl sm:rounded-[1.5rem] card-shadow border ${cardClass} flex items-center justify-between cursor-pointer hover:-translate-y-0.5 transition-all gap-2 sm:gap-3 relative group">
+                    ${crownIcon}
+                    <div class="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
+                        <div class="relative flex items-center justify-center shrink-0">
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-black text-xs sm:text-lg shrink-0 z-10 ${numClass}">${pos}</div>
+                        </div>
+                        ${photoHtml}
+                        <div class="flex-1 min-w-0 px-1">
+                            <h4 class="font-black text-gray-900 text-sm sm:text-base leading-tight truncate group-hover:text-[#bb7434] transition-colors">${w.name}</h4>
+                            <p class="text-[9px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest truncate mt-0.5 sm:mt-1">${w.role}</p>
+                        </div>
+                    </div>
+                    <div class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-base flex items-baseline gap-1 sm:gap-1.5 shrink-0 ${ptsClass}">${w.totalPts} <span class="text-[8px] sm:text-[10px] font-bold opacity-70 uppercase tracking-widest">Pts</span></div>
+                </div>`;
+            });
+            html += `</div></div>`;
+            return html;
+        };
+
+        window.renderMessages = () => {
+            const workersOptions = window.appState.dbWorkers.filter(w => w.status === 'activo' && w.role !== 'Administrador').map(w => `<option value="${w.id}">${window.escapeHtml(w.name)}</option>`).join('');
+            const sorted = [...(window.appState.messages || [])].sort((a,b) => b.timestamp - a.timestamp);
+
+            let listHtml = sorted.map(m => {
+                const targetWorker = m.targetWorkerId ? window.appState.dbWorkers.find(w => w.id === m.targetWorkerId) : null;
+                const isDirect = !!m.targetWorkerId;
+                const targetLabel = isDirect ? (targetWorker ? targetWorker.name : 'Colaborador eliminado') : 'Aviso General';
+                
+                const badgeClass = isDirect ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-blue-100 text-blue-700 border-blue-200';
+                const cardClass = isDirect ? 'border-purple-100 hover:border-purple-300' : 'border-blue-100 hover:border-blue-300';
+                const iconClass = isDirect ? 'text-purple-500 bg-purple-50 border-purple-100' : 'text-blue-500 bg-blue-50 border-blue-100';
+                const iconName = isDirect ? 'user' : 'megaphone';
+
+                return `
+                <div class="bg-white p-4 sm:p-5 rounded-[1.5rem] card-shadow border ${cardClass} flex items-start gap-3 sm:gap-4 transition-all">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center shrink-0 border shadow-inner ${iconClass}"><i data-lucide="${iconName}" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 mb-2 flex-wrap">
+                            <span class="text-[9px] sm:text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-widest border ${badgeClass}">${window.escapeHtml(targetLabel)}</span>
+                            <span class="text-[10px] sm:text-xs font-bold text-gray-400 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${new Date(m.timestamp).toLocaleDateString()}</span>
+                        </div>
+                        <p class="text-sm sm:text-base font-medium text-gray-800 break-words whitespace-pre-wrap leading-relaxed">${window.escapeHtml(m.text)}</p>
+                        <p class="text-[10px] sm:text-[11px] font-bold text-gray-400 mt-3 flex items-center gap-1.5"><i data-lucide="pen-tool" class="w-3.5 h-3.5"></i> Escrito por ${window.escapeHtml(m.authorName)}</p>
+                    </div>
+                    <button onclick="window.deleteMessage('${m.id}')" class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center text-red-400 hover:bg-red-50 hover:text-red-500 hover:border-red-200 active:scale-95 transition-all shrink-0"><i data-lucide="trash-2" class="w-4 h-4 sm:w-5 sm:h-5"></i></button>
+                </div>`;
+            }).join('');
+
+            if(!listHtml) listHtml = '<div class="text-center py-12 bg-white rounded-[2rem] border border-gray-100"><div class="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="message-square-dashed" class="w-8 h-8"></i></div><p class="text-sm font-bold text-gray-400">Aún no hay mensajes publicados</p></div>';
+
+            return `
+            <div class="max-w-4xl mx-auto pb-10">
+                <div class="bg-white p-4 sm:p-5 md:p-6 rounded-[2rem] card-shadow mb-4 sm:mb-6 border border-gray-100/50">
+                    <h1 class="text-2xl sm:text-3xl font-black text-gray-800 tracking-tight mb-1">Mensajes</h1>
+                    <p class="text-gray-500 text-xs sm:text-sm font-medium">Comunícate con el equipo o envía notas individuales.</p>
+                </div>
+
+                <form onsubmit="window.saveMessage(event)" class="bg-white p-4 sm:p-5 md:p-6 rounded-[2rem] card-shadow mb-6 sm:mb-8 border border-gray-100/50">
+                    <h3 class="text-xs sm:text-sm font-black text-[#542c1c] uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="edit-3" class="w-4 h-4 text-[#bb7434]"></i> Nuevo Mensaje</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Destinatario</label>
+                            <div class="relative">
+                                <i data-lucide="users" class="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400"></i>
+                                <select id="msg-target" class="w-full pl-11 pr-4 py-3 sm:py-3.5 rounded-2xl border border-gray-200 bg-gray-50 text-xs sm:text-sm font-black text-[#542c1c] focus:outline-none focus:ring-2 focus:ring-[#bb7434]/20 focus:border-[#bb7434] transition-all cursor-pointer shadow-sm appearance-none">
+                                    <option value="">📢 Todos (Aviso General)</option>
+                                    ${workersOptions}
+                                </select>
+                                <i data-lucide="chevron-down" class="absolute right-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Contenido del mensaje</label>
+                            <textarea id="msg-text" rows="3" placeholder="Escribe aquí tu anuncio o nota..." class="w-full p-4 rounded-2xl border border-gray-200 bg-gray-50 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#bb7434]/20 focus:border-[#bb7434] transition-all resize-none shadow-sm"></textarea>
+                        </div>
+                        <div class="flex justify-end pt-1">
+                            <button type="submit" id="save-message-btn" class="w-full sm:w-auto bg-[#bb7434] text-white px-6 py-3.5 rounded-xl font-black text-xs sm:text-sm hover:bg-[#a55f25] shadow-lg shadow-[#bb7434]/30 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="send" class="w-4 h-4"></i> Publicar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="space-y-3 sm:space-y-4">
+                    <h3 class="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest mb-3 px-2">Muro de Publicaciones</h3>
+                    ${listHtml}
+                </div>
+            </div>`;
+        };
+
+        window.renderProfile = () => {
+            const w = window.appState.selectedWorker;
+            const role = window.appState.currentUser.systemRole;
+            const canEdit = ['ADMIN', 'HR'].includes(role);
+            const canGrade = ['ADMIN', 'HR', 'COORD'].includes(role);
+
+            const monthStr = window.appState.selectedMonth; 
+            let monthPts = 0; let allPts = 0; let pList = '';
+            
+            const myPoints = window.appState.points.filter(p => p.workerId === w.id).sort((a,b) => b.timestamp - a.timestamp);
+            myPoints.forEach(p => {
+                const pAmt = p.type === 'pos' ? p.amount : -p.amount; allPts += pAmt;
+                const pMonth = `${new Date(p.timestamp).getFullYear()}-${String(new Date(p.timestamp).getMonth()+1).padStart(2,'0')}`;
+                if(pMonth === monthStr) monthPts += pAmt;
+                const color = p.type === 'pos' ? 'text-green-600 bg-green-50' : 'text-red-500 bg-red-50';
+                const sign = p.type === 'pos' ? '+' : '-';
+                pList += `
+                <div class="flex items-center gap-3 py-3 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 px-3 rounded-xl transition-colors">
+                    <div class="flex-1 min-w-0">
+                        <p class="font-bold text-sm text-gray-800 break-words">${p.reason}</p>
+                        <p class="text-[11px] text-gray-400 mt-0.5 truncate flex items-center gap-1"><i data-lucide="calendar-clock" class="w-3 h-3"></i> ${new Date(p.timestamp).toLocaleDateString()} · Eval: ${p.evaluator}</p>
+                    </div>
+                    <span class="font-black text-sm px-2.5 py-1.5 rounded-lg ${color} shadow-sm shrink-0">${sign}${p.amount}</span>
+                </div>`;
+            });
+
+            let dList = '';
+            window.appState.currentProfileDocs.forEach(d => {
+                dList += `
+                <div class="flex items-center gap-3 p-3.5 bg-white rounded-2xl mb-3 card-shadow hover:border-[#bb7434]/30 transition-all group">
+                    <div class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i data-lucide="file-text" class="w-5 h-5"></i></div>
+                    <div class="flex-1 min-w-0"><p class="font-bold text-sm text-gray-800 truncate">${d.name}</p><p class="text-[10px] text-gray-400">Documento PDF</p></div>
+                    <div class="flex gap-2 shrink-0">
+                        <button onclick="window.previewDoc('${d.dbId}')" title="Ver Documento" class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 hover:bg-blue-100 active:scale-90 transition-all"><i data-lucide="eye" class="w-4 h-4"></i></button>
+                        <a href="${d.file}" download="${d.name}.pdf" title="Descargar" class="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-[#542c1c] hover:bg-gray-200 active:scale-90 transition-all"><i data-lucide="download" class="w-4 h-4"></i></a>
+                        ${canEdit ? `<button onclick="deleteDocFile('${d.dbId}')" title="Eliminar" class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100 active:scale-90 transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`:''}
+                    </div>
+                </div>`;
+            });
+
+            const relevantMessages = (window.appState.messages || []).filter(m => !m.targetWorkerId || m.targetWorkerId === w.id).sort((a,b) => b.timestamp - a.timestamp);
+            let announcementsHtml = relevantMessages.length > 0 ? `
+                <div id="tab-anuncios" class="${window.appState.activeProfileTab === 'anuncios' ? 'block' : 'hidden'} space-y-3">
+                    ${relevantMessages.map(m => `
+                        <div class="bg-gradient-to-br from-amber-50 to-orange-50/50 border border-amber-200/60 p-4 sm:p-5 rounded-2xl shadow-sm flex items-start gap-3 sm:gap-4 relative overflow-hidden group">
+                            <div class="absolute -right-4 -top-4 opacity-[0.03] group-hover:scale-110 transition-transform duration-500 pointer-events-none"><i data-lucide="megaphone" class="w-32 h-32 text-amber-600"></i></div>
+                            <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 z-10"><i data-lucide="megaphone" class="w-5 h-5"></i></div>
+                            <div class="flex-1 min-w-0 z-10">
+                                <div class="flex justify-between items-start gap-2 mb-1">
+                                    <span class="text-[10px] font-black uppercase tracking-widest text-amber-600 bg-amber-100/50 px-2 py-0.5 rounded-md">${m.targetWorkerId ? 'Mensaje Directo' : 'Anuncio General'}</span>
+                                    <span class="text-[10px] font-bold text-gray-400">${new Date(m.timestamp).toLocaleDateString()}</span>
+                                </div>
+                                <p class="text-sm sm:text-base text-gray-800 font-medium break-words whitespace-pre-wrap leading-relaxed">${window.escapeHtml(m.text)}</p>
+                                <p class="text-[11px] text-gray-500 font-medium mt-3 flex items-center gap-1.5"><i data-lucide="user-circle" class="w-3.5 h-3.5"></i> Escrito por ${window.escapeHtml(m.authorName)}</p>
+                            </div>
+                            ${canEdit ? `<button onclick="window.deleteMessage('${m.id}')" class="w-8 h-8 rounded-lg bg-white/60 flex items-center justify-center text-amber-700 hover:bg-white shrink-0 z-10 transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+                        </div>
+                    `).join('')}
+                </div>` : `
+                <div id="tab-anuncios" class="${window.appState.activeProfileTab === 'anuncios' ? 'block' : 'hidden'} text-center py-10">
+                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="bell-off" class="w-8 h-8"></i></div>
+                    <p class="text-sm font-bold text-gray-400">No hay avisos por el momento</p>
+                </div>`;
+
+            const posOptions = window.evaluationCriteria.map((c, index) => c.type === 'pos' ? `<option value="${index}">${c.reason} (+${c.amount})</option>` : '').join('');
+            const negOptions = window.evaluationCriteria.map((c, index) => c.type === 'neg' ? `<option value="${index}">${c.reason} (-${c.amount})</option>` : '').join('');
+            
+            return `
+            <div class="max-w-4xl mx-auto pb-10">
+                <div class="bg-gradient-to-br from-[#542c1c] via-[#6b3c2a] to-[#bb7434] px-4 sm:px-6 md:px-10 pt-8 sm:pt-10 pb-20 sm:pb-24 rounded-b-[2.5rem] md:rounded-3xl md:mt-2 shadow-lg relative z-0 overflow-hidden">
+                    <div class="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdHRlcm4gaWQ9InAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0iI2ZmZiIvPjwvcGF0dGVybj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3ApIi8+PC9zdmc+')]"></div>
+                    
+                    ${role !== 'WORKER' ? `<button onclick="setView('directory')" class="text-white/80 hover:text-white mb-4 sm:mb-6 font-bold text-xs sm:text-sm flex items-center gap-2 transition-all active:scale-95 relative z-10"><i data-lucide="chevron-left" class="w-4 h-4 sm:w-5 sm:h-5"></i> Volver</button>` : `<div class="mb-4 sm:mb-6 relative z-10"><p class="text-white/70 text-xs font-black uppercase tracking-widest flex items-center gap-2"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Mi Espacio</p></div>`}
+                    
+                    <div class="flex justify-between items-start gap-4 relative z-10">
+                        <div class="text-white flex-1 min-w-0">
+                            <h2 class="text-2xl sm:text-3xl md:text-4xl font-black leading-tight mb-1 truncate drop-shadow-md">${w.name}</h2>
+                            <p class="text-white/90 text-xs sm:text-sm font-medium mb-3 flex items-center gap-2 flex-wrap"><span class="bg-white/20 px-2.5 py-1 rounded-lg backdrop-blur-md shadow-sm border border-white/10">${w.role}</span> <span class="opacity-80">CC. ${w.document}</span></p>
+                        </div>
+                        ${canEdit ? `
+                        <div class="flex flex-col sm:flex-row gap-2 shrink-0">
+                            <button onclick="openWorkerForm('${w.id}')" class="bg-white text-[#542c1c] p-2.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl hover:bg-gray-50 transition-all active:scale-95"><i data-lucide="edit-3" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i><span class="hidden sm:inline ml-2 text-xs sm:text-sm font-bold">Editar</span></button>
+                            ${role === 'ADMIN' ? `<button onclick="window.deleteWorker('${w.id}')" class="bg-red-500/90 text-white p-2.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl hover:bg-red-500 border border-white/10 transition-all active:scale-95"><i data-lucide="trash-2" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i></button>` : ''}
+                        </div>` : ''}
+                    </div>
+                </div>
+
+                <div class="px-4 sm:px-6 md:px-10 -mt-12 sm:-mt-14 relative z-10 flex flex-col sm:flex-row gap-4 items-center sm:items-end">
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-[1.5rem] sm:rounded-[2rem] border-4 sm:border-[6px] border-[#f3ebe3] md:border-white bg-white shadow-xl overflow-hidden shrink-0 flex items-center justify-center text-[#bb7434] text-3xl md:text-5xl font-black relative group">
+                        ${w.photo ? `<img src="${w.photo}" loading="lazy" decoding="async" class="w-full h-full object-cover">` : window.getInitials(w.name)}
+                        ${w.status === 'activo' ? `<div class="absolute bottom-2 right-2 w-3 h-3 md:w-4 md:h-4 bg-green-500 border-2 border-white rounded-full shadow-sm"></div>` : `<div class="absolute bottom-2 right-2 w-3 h-3 md:w-4 md:h-4 bg-red-400 border-2 border-white rounded-full shadow-sm"></div>`}
+                    </div>
+                    
+                    <div class="flex-1 w-full grid grid-cols-2 gap-3 sm:gap-4 pb-2 sm:pb-0">
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] card-shadow flex items-center justify-between group cursor-default hover:border-[#bb7434]/40 transition-colors">
+                            <div><p class="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Mes Actual</p><p class="text-2xl sm:text-3xl font-black text-[#bb7434] leading-none">${monthPts}</p></div>
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform shadow-inner"><i data-lucide="calendar-days" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                        </div>
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] card-shadow flex items-center justify-between group cursor-default hover:border-gray-300 transition-colors">
+                            <div><p class="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Histórico</p><p class="text-2xl sm:text-3xl font-black text-gray-800 leading-none">${allPts}</p></div>
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-500 group-hover:scale-110 transition-transform shadow-inner"><i data-lucide="award" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-4 sm:px-6 md:px-10 mt-6 sm:mt-8">
+                    <div class="bg-gray-200/60 p-1.5 rounded-2xl sm:rounded-[1.25rem] flex overflow-x-auto hide-scrollbar gap-1 relative shadow-inner">
+                        <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'rendimiento' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="star" class="w-4 h-4"></i> <span class="hidden sm:inline">Puntos</span></button>
+                        <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'laboral' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="user" class="w-4 h-4"></i> <span class="hidden sm:inline">Info & Docs</span></button>
+                        <button onclick="switchTab('anuncios')" id="tab-btn-anuncios" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'anuncios' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="bell" class="w-4 h-4"></i> <span class="hidden sm:inline">Avisos</span></button>
+                        ${canEdit ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'banco' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="credit-card" class="w-4 h-4"></i> <span class="hidden sm:inline">Banco</span></button>` : ''}
+                    </div>
+                </div>
+
+                <div class="px-4 sm:px-6 md:px-10 mt-5 space-y-4">
+                    
+                    <!-- TAB: RENDIMIENTO -->
+                    <div id="tab-rendimiento" class="${window.appState.activeProfileTab === 'rendimiento' ? 'block' : 'hidden'} space-y-4">
+                        ${canGrade ? `
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl card-shadow border border-gray-100 relative overflow-hidden">
+                            <div class="absolute right-0 top-0 w-24 h-24 bg-orange-50 rounded-bl-full opacity-50 pointer-events-none"></div>
+                            <h4 class="text-sm font-black text-gray-800 mb-3 flex items-center gap-2 relative z-10"><i data-lucide="plus-circle" class="w-4 h-4 text-[#bb7434]"></i> Nueva Evaluación</h4>
+                            <select id="pt-preset" onchange="window.handlePresetChange(this)" class="w-full mb-3 p-3 rounded-xl bg-gray-50 border border-gray-200 text-sm font-semibold text-gray-700 focus:outline-none focus:border-[#bb7434] transition-colors cursor-pointer relative z-10 shadow-sm">
+                                <option value="custom">✍️ Otro (Ingreso manual)</option>
+                                <optgroup label="✅ PUNTOS POSITIVOS">${posOptions}</optgroup>
+                                <optgroup label="🚫 PENALIZACIONES">${negOptions}</optgroup>
+                            </select>
+                            <div class="flex flex-col sm:flex-row gap-2 relative z-10">
+                                <div class="flex gap-2 shrink-0">
+                                    <input type="number" id="pt-amount" placeholder="Pts" class="w-20 p-3 rounded-xl bg-gray-50 border border-gray-200 text-sm font-black focus:outline-none focus:border-[#bb7434] text-center shadow-sm">
+                                    <select id="pt-type" class="p-3 rounded-xl bg-gray-50 border border-gray-200 text-sm font-black focus:outline-none focus:border-[#bb7434] shadow-sm cursor-pointer"><option value="pos" class="text-green-600">Sumar (+)</option><option value="neg" class="text-red-600">Restar (-)</option></select>
+                                </div>
+                                <input type="text" id="pt-reason" placeholder="Escribe el motivo aquí..." class="flex-1 p-3 rounded-xl bg-gray-50 border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#bb7434] shadow-sm">
+                                <button onclick="savePoint()" class="bg-[#bb7434] text-white px-6 py-3 rounded-xl text-sm font-black shadow-md hover:bg-[#a55f25] active:scale-95 shrink-0 transition-all flex items-center justify-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> Guardar</button>
+                            </div>
+                        </div>` : ''}
+                        
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl card-shadow border border-gray-100">
+                            <h4 class="text-xs font-black text-gray-400 mb-3 uppercase tracking-widest flex items-center gap-2"><i data-lucide="history" class="w-4 h-4"></i> Historial de Puntos</h4>
+                            <div class="space-y-1">
+                                ${pList || `
+                                <div class="text-center py-8">
+                                    <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-2 text-gray-300"><i data-lucide="inbox" class="w-6 h-6"></i></div>
+                                    <p class="text-sm font-bold text-gray-400">Sin historial de evaluaciones</p>
+                                </div>`}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: INFORMACIÓN LABORAL Y DOCS -->
+                    <div id="tab-laboral" class="${window.appState.activeProfileTab === 'laboral' ? 'block' : 'hidden'}">
+                        
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50/50 p-4 sm:p-5 rounded-2xl card-shadow border border-blue-100 mb-4">
+                            <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-3 flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4"></i> Horarios Disponibles</p>
+                            <div class="flex flex-wrap gap-2">
+                                ${w.availabilityText && w.availabilityText !== 'No especificada' ? (() => { 
+                                    const parts = w.availabilityText.split(' | '); 
+                                    return parts.map(part => `<div class="bg-white border border-blue-200 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-blue-900 shadow-sm flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-blue-400"></i> ${part.trim()}</div>`).join(''); 
+                                })() : '<p class="text-sm font-bold text-gray-400 italic px-2">Horario no especificado</p>'}
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-8">
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center shrink-0"><i data-lucide="award" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Rol</p><p class="text-sm font-black text-gray-800 truncate">${w.role || '-'}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0"><i data-lucide="activity" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Estado</p><p class="text-sm font-black text-emerald-600 capitalize truncate">${w.status || '-'}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center shrink-0"><i data-lucide="phone" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Teléfono</p><p class="text-sm font-black text-gray-800 truncate">${w.phone || '-'}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center shrink-0"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Ciudad</p><p class="text-sm font-black text-gray-800 truncate">${w.city || '-'}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center shrink-0"><i data-lucide="gift" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Cumpleaños</p><p class="text-sm font-black text-gray-800 truncate">${w.birthday || '-'}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-sky-50 text-sky-500 flex items-center justify-center shrink-0"><i data-lucide="mail" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Email</p><p class="text-sm font-black text-gray-800 truncate">${w.email || '-'}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-red-50 text-red-500 flex items-center justify-center shrink-0"><i data-lucide="droplet" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Sangre / EPS</p><p class="text-sm font-black text-gray-800 truncate">${w.bloodType || '-'} | ${w.eps || '-'}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex items-center gap-3.5 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center shrink-0"><i data-lucide="heart-pulse" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Emergencia</p><p class="text-sm font-black text-gray-800 truncate">${w.emergencyName || '-'}</p><p class="text-[11px] text-gray-500 truncate">${w.emergencyPhone || ''}</p></div>
+                            </div>
+                            <div class="bg-white p-3.5 sm:p-4 rounded-2xl card-shadow border border-gray-100 flex gap-3.5 sm:col-span-2 hover:border-gray-200 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Especialidades</p><p class="text-sm font-black text-[#542c1c] break-words mt-1">${w.specialties || 'No especificadas'}</p></div>
+                            </div>
+                        </div>
+
+                        <!-- SECCIÓN DOCUMENTOS MOVIDA AQUÍ DENTRO DE INFO -->
+                        <div class="pt-6 border-t border-gray-200/60">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="font-black text-gray-800 text-sm flex items-center gap-2"><i data-lucide="folder-open" class="w-5 h-5 text-[#bb7434]"></i> Documentos Anexos</h4>
+                                ${canEdit ? `
+                                <label class="bg-gray-800 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-black cursor-pointer inline-flex items-center gap-2 shadow-lg hover:bg-gray-700 active:scale-95 transition-all">
+                                    <i data-lucide="upload-cloud" class="w-4 h-4"></i> Subir PDF
+                                    <input type="file" accept="application/pdf" class="hidden" onchange="uploadDocument(event)">
+                                </label>` : ''}
+                            </div>
+                            
+                            ${dList || `
+                            <div class="text-center py-8 bg-white rounded-3xl border border-gray-100 border-dashed card-shadow">
+                                <div class="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="file-x-2" class="w-6 h-6"></i></div>
+                                <p class="text-sm font-bold text-gray-400">Carpeta vacía</p>
+                            </div>`}
+                        </div>
+
+                    </div>
+
+                    <!-- TAB: ANUNCIOS -->
+                    ${announcementsHtml}
+
+                    <!-- TAB: BANCO -->
+                    ${canEdit ? `
+                    <div id="tab-banco" class="${window.appState.activeProfileTab === 'banco' ? 'block' : 'hidden'}">
+                        <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-5 sm:p-6 rounded-[1.5rem] shadow-xl text-white relative overflow-hidden">
+                            <div class="absolute -right-6 -bottom-6 opacity-10 pointer-events-none"><i data-lucide="credit-card" class="w-48 h-48"></i></div>
+                            
+                            <div class="flex items-center gap-2 mb-6">
+                                <i data-lucide="building-2" class="w-5 h-5 text-gray-400"></i>
+                                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Información Bancaria</p>
+                            </div>
+                            
+                            <p class="text-xl sm:text-2xl font-black mb-1">${w.bankName || 'Banco no definido'}</p>
+                            <p class="text-sm text-gray-400 font-medium mb-6">${w.bankType || '-'}</p>
+                            
+                            <div class="flex items-center justify-between bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10 mb-4 group hover:bg-white/20 transition-colors">
+                                <div>
+                                    <p class="text-[10px] uppercase font-bold text-gray-400 mb-1 tracking-widest">N° Cuenta</p>
+                                    <p class="text-lg sm:text-xl font-black tracking-wider truncate">${w.bankNumber || '---'}</p>
+                                </div>
+                                ${w.bankNumber ? `<button onclick="copyToClipboard('${w.bankNumber}')" class="w-10 h-10 rounded-full bg-white text-gray-900 hover:bg-gray-200 transition-transform active:scale-90 flex items-center justify-center shadow-lg"><i data-lucide="copy" class="w-4 h-4"></i></button>` : ''}
+                            </div>
+                            
+                            <p class="text-[10px] uppercase font-bold text-gray-400 mb-0.5 tracking-widest">Titular</p>
+                            <p class="text-sm font-bold text-white break-words">${w.bankOwner || '-'}</p>
+                        </div>
+                    </div>` : ''}
+
+                </div>
+            </div>`;
+        };
+
+        window.switchTab = (tabId) => {
+            window.appState.activeProfileTab = tabId;
+            const tabs = ['rendimiento', 'laboral', 'anuncios', 'banco'];
+            
+            tabs.forEach(t => {
+                const content = document.getElementById(`tab-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if(content && btn) {
+                    if(t === tabId) { 
+                        content.classList.remove('hidden'); content.classList.add('block'); 
+                        btn.className = `flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 bg-white text-[#542c1c] shadow-sm`;
+                    } else { 
+                        content.classList.remove('block'); content.classList.add('hidden'); 
+                        btn.className = `flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 text-gray-500 hover:bg-white/50`;
+                    }
+                }
+            });
+        };
+
+        window.savePoint = async () => {
+            const amount = parseInt(document.getElementById('pt-amount').value);
+            const type = document.getElementById('pt-type').value;
+            const reason = document.getElementById('pt-reason').value.trim();
+            if(!amount || !reason) return window.showToast('Ingresa cantidad y motivo', 'error');
+            try { 
+                const newPoint = { workerId: window.appState.selectedWorker.id, amount, type, reason, evaluator: window.appState.currentUser.name, timestamp: Date.now() };
+                const docRef = await addDoc(collection(db, "points"), newPoint); 
+                window.appState.points.push({dbId: docRef.id, ...newPoint}); 
+                window.showToast('Evaluación guardada'); window.setView('profile'); 
+            } catch (e) { window.showToast('Error', 'error'); }
+        };
+
+        window.saveMessage = async (e) => {
+            e.preventDefault(); const btn = document.getElementById('save-message-btn');
+            const targetWorkerId = document.getElementById('msg-target').value || null; const text = document.getElementById('msg-text').value.trim();
+            if(!text) { window.showToast('Escribe un mensaje', 'error'); return; }
+            btn.disabled = true;
+            try {
+                const newMessage = { id: 'msg_' + Date.now(), text, targetWorkerId, authorName: window.appState.currentUser.name, timestamp: Date.now() };
+                await setDoc(doc(db, "messages", newMessage.id), newMessage);
+                window.showToast('Mensaje publicado'); await window.setView('messages');
+            } catch(err) { window.showToast('Error al publicar: ' + err.message, 'error'); } 
+            finally { btn.disabled = false; }
+        };
+
+        window.deleteMessage = async (id) => {
+            if(!confirm('¿Eliminar este mensaje?')) return;
+            try {
+                await deleteDoc(doc(db, "messages", id));
+                window.appState.messages = window.appState.messages.filter(m => m.id !== id);
+                window.showToast('Mensaje eliminado');
+                if(window.appState.currentView === 'messages') await window.setView('messages');
+                if(window.appState.currentView === 'profile') await window.setView('profile');
+            } catch (e) { window.showToast('Error al eliminar', 'error'); }
+        };
+
+        window.viewWorkerProfile = (id) => { window.appState.selectedWorker = window.appState.dbWorkers.find(w => w.id === id); window.setView('profile'); };
+
+        window.uploadDocument = (e) => {
+            const file = e.target.files[0];
+            if (!file || file.size > 1024 * 1024) return window.showToast('El PDF debe pesar máximo 1MB', 'error');
+            window.showToast('Subiendo documento...');
+            const reader = new FileReader();
+            reader.onload = async (ev) => {
+                try { 
+                    await addDoc(collection(db, "documents"), { workerId: window.appState.selectedWorker.id, name: file.name.replace('.pdf',''), file: ev.target.result, timestamp: Date.now() }); 
+                    window.showToast('Documento guardado'); window.setView('profile'); 
+                } catch (er) { window.showToast('Error al subir', 'error'); }
+            }; reader.readAsDataURL(file);
+        };
+
+        window.previewDoc = (docId) => {
+            const docData = window.appState.currentProfileDocs.find(d => d.dbId === docId);
+            if(docData) {
+                document.getElementById('doc-preview-title').innerText = docData.name;
+                document.getElementById('doc-preview-iframe').src = docData.file;
+                document.getElementById('doc-preview-modal').classList.add('active');
+            }
+        };
+
+        window.closeDocPreview = () => {
+            document.getElementById('doc-preview-modal').classList.remove('active');
+            // Limpiamos el iframe un instante después para evitar parpadeos visuales al cerrar
+            setTimeout(() => { document.getElementById('doc-preview-iframe').src = ''; }, 300);
+        };
+
+        window.deleteDocFile = async (id) => { if(!confirm('¿Eliminar este documento?')) return; await deleteDoc(doc(db, "documents", id)); window.setView('profile'); };
+        window.copyToClipboard = (txt) => { navigator.clipboard.writeText(txt); window.showToast('Cuenta copiada'); };
+
+        window.handleBankChange = (selectElement) => {
+            const numInput = document.getElementById('w-bank-num');
+            if (selectElement.value === 'BRE-B') {
+                numInput.type = 'text';
+                numInput.placeholder = 'Número / Código Alfanumérico';
+            } else {
+                numInput.type = 'number';
+                numInput.placeholder = 'Número de Cuenta';
+            }
+        };
+
+        window.openWorkerForm = (id = null) => {
+            document.getElementById('worker-form').reset(); 
+            document.getElementById('w-photo-preview').classList.add('hidden'); 
+            document.getElementById('w-photo-icon').classList.remove('hidden'); 
+            document.getElementById('w-photo-base64').value = '';
+            document.getElementById('availability-options-container').innerHTML = '';
+            document.querySelectorAll('.w-availability-day').forEach(cb => cb.checked = false);
+            
+            const canSeeBank = ['ADMIN', 'HR'].includes(window.appState.currentUser.systemRole); 
+            document.getElementById('bank-section-form').style.display = canSeeBank ? 'block' : 'none';
+
+            if (id) {
+                const w = window.appState.dbWorkers.find(x => x.id === id);
+                document.getElementById('worker-modal-title').innerText = 'Editar Colaborador'; 
+                document.getElementById('w-id').value = w.id; 
+                document.getElementById('w-name').value = w.name || ''; 
+                document.getElementById('w-lastname').value = w.lastname || '';
+                document.getElementById('w-birthday').value = w.birthday || '';
+                document.getElementById('w-doc').value = w.document; 
+                document.getElementById('w-email').value = w.email || '';
+                document.getElementById('w-phone').value = w.phone || ''; 
+                document.getElementById('w-bloodtype').value = w.bloodType || '';
+                document.getElementById('w-eps').value = w.eps || '';
+                document.getElementById('w-address').value = w.address || '';
+                document.getElementById('w-city').value = w.city || ''; 
+                document.getElementById('w-emergency-name').value = w.emergencyName || '';
+                document.getElementById('w-emergency-phone').value = w.emergencyPhone || '';
+                document.getElementById('w-role').value = w.role; 
+                document.getElementById('w-status').value = w.status; 
+                document.getElementById('w-specs').value = w.specialties || '';
+                
+                if(canSeeBank){ 
+                    document.getElementById('w-bank-name').value = w.bankName||''; 
+                    document.getElementById('w-bank-type').value = w.bankType||'Ahorros'; 
+                    document.getElementById('w-bank-num').value = w.bankNumber||''; 
+                    document.getElementById('w-bank-owner').value = w.bankOwner||'';
+                    window.handleBankChange(document.getElementById('w-bank-name'));
+                }
+                
+                const dayMap = { 'Lunes': 'lunes', 'Martes': 'martes', 'Miércoles': 'miercoles', 'Jueves': 'jueves', 'Viernes': 'viernes', 'Sábado': 'sabado', 'Domingo': 'domingo' };
+                const dayNames = Object.keys(dayMap);
+                const hasText = w.availabilityText && w.availabilityText !== 'No especificada';
+                const textParts = hasText ? w.availabilityText.split(' | ').map(p => p.trim()) : [];
+
+                let daysToCheck = (w.availabilityDays && w.availabilityDays.length > 0) ? [...w.availabilityDays] : [];
+                textParts.forEach(part => {
+                    const foundDayName = dayNames.find(dn => part.startsWith(dn));
+                    if(foundDayName) { const dayValue = dayMap[foundDayName]; if(!daysToCheck.includes(dayValue)) daysToCheck.push(dayValue); }
+                });
+
+                if(daysToCheck.length > 0) {
+                    daysToCheck.forEach(day => { const checkbox = document.querySelector(`.w-availability-day[value="${day}"]`); if(checkbox) checkbox.checked = true; });
+                    window.updateAvailabilityUI();
+                    setTimeout(() => {
+                        textParts.forEach(part => {
+                            const foundDayName = dayNames.find(dn => part.startsWith(dn));
+                            if(foundDayName) {
+                                const dayValue = dayMap[foundDayName]; const input = document.getElementById(`availability-${dayValue}`);
+                                if(input) input.value = part.substring(foundDayName.length).trim();
+                            }
+                        });
+                        document.getElementById('worker-modal').classList.add('active');
+                    }, 150);
+                } else { document.getElementById('worker-modal').classList.add('active'); }
+                
+                if(w.photo){ 
+                    document.getElementById('w-photo-base64').value = w.photo; 
+                    document.getElementById('w-photo-preview').src = w.photo; 
+                    document.getElementById('w-photo-preview').classList.remove('hidden'); 
+                    document.getElementById('w-photo-icon').classList.add('hidden');
+                }
+            } else { 
+                document.getElementById('worker-modal-title').innerText = 'Nuevo Colaborador'; 
+                document.getElementById('w-id').value = '';
+                if(canSeeBank) window.handleBankChange(document.getElementById('w-bank-name'));
+                document.getElementById('worker-modal').classList.add('active');
+            }
+        };
+
+        window.closeWorkerModal = () => { document.getElementById('worker-modal').classList.remove('active'); };
+        
+        window.openAdminModal = () => { document.getElementById('admin-form').reset(); document.getElementById('admin-modal').classList.add('active'); };
+        window.closeAdminModal = () => { document.getElementById('admin-modal').classList.remove('active'); };
+
+        window.saveAdmin = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('save-admin-btn');
+            const name = document.getElementById('a-name').value.trim();
+            const username = document.getElementById('a-user').value.trim();
+            const password = document.getElementById('a-pass').value.trim();
+            
+            if(!name || !username || !password) return window.showToast('Completa todos los campos', 'error');
+            
+            btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 mx-auto animate-spin"></i>'; lucide.createIcons();
+            
+            try {
+                const q = query(collection(db, "workers"), where("username", "==", username));
+                const snap = await getDocs(q);
+                if(!snap.empty) { window.showToast('El usuario ya existe', 'error'); btn.innerHTML = 'Crear Administrador'; btn.disabled = false; return; }
+
+                const adminData = { id: 'admin_' + Date.now(), name, username, password, role: 'Administrador', systemRole: 'ADMIN', status: 'activo' };
+                await setDoc(doc(db, "workers", adminData.id), adminData);
+                
+                window.closeAdminModal(); window.showToast('Administrador creado exitosamente'); await fetchAllData();
+            } catch(e) { window.showToast('Error: ' + e.message, 'error'); } 
+            finally { btn.disabled = false; btn.innerText = 'Crear Administrador'; }
+        };
+
+        window.handlePhotoUpload = (e) => { 
+            const file = e.target.files[0]; 
+            if(file && file.size < 800000) { 
+                const reader = new FileReader(); 
+                reader.onload = (ev) => { 
+                    document.getElementById('w-photo-base64').value = ev.target.result; 
+                    document.getElementById('w-photo-preview').src = ev.target.result; 
+                    document.getElementById('w-photo-preview').classList.remove('hidden'); 
+                    document.getElementById('w-photo-icon').classList.add('hidden'); 
+                }; 
+                reader.readAsDataURL(file); 
+            } else { window.showToast('La foto debe pesar máximo 800KB', 'error'); }
+        };
+
+        window.updateAvailabilityUI = () => {
+            const container = document.getElementById('availability-options-container');
+            if (!container) return;
+            const selectedDays = Array.from(document.querySelectorAll('.w-availability-day:checked')).map(cb => cb.value);
+            const dayLabels = { lunes: 'Lunes', martes: 'Martes', miercoles: 'Miércoles', jueves: 'Jueves', viernes: 'Viernes', sabado: 'Sábado', domingo: 'Domingo' };
+            const existingValues = {};
+            container.querySelectorAll('input[data-day]').forEach(input => { existingValues[input.dataset.day] = input.value; });
+            
+            if(selectedDays.length === 0) { container.innerHTML = ''; return; }
+            
+            let html = '';
+            selectedDays.forEach(day => {
+                html += `
+                    <div class="bg-white p-3 sm:p-4 rounded-lg border border-blue-300 mb-2">
+                        <label class="font-bold text-sm text-[#542c1c] mb-2 block">${dayLabels[day]}</label>
+                        <input type="text" class="w-full border border-blue-300 bg-blue-50 rounded-lg px-3 py-2.5 text-sm sm:text-base focus:bg-white focus:border-[#bb7434] outline-none transition-colors" placeholder="Ej: 9:00 am - 2:00 pm" data-day="${day}" id="availability-${day}">
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            selectedDays.forEach(day => { if(existingValues[day]) { const input = document.getElementById(`availability-${day}`); if(input) input.value = existingValues[day]; } });
+        };
+
+        window.deleteWorker = async (id) => {
+            if (!confirm('¿Estás seguro de eliminar este colaborador?')) return;
+            try {
+                await deleteDoc(doc(db, "workers", id));
+                window.appState.dbWorkers = window.appState.dbWorkers.filter(w => w.id !== id);
+                window.showToast('Colaborador eliminado'); window.setView('directory');
+            } catch (e) { window.showToast('Error al eliminar', 'error'); }
+        };
+
+        window.saveWorker = async (e) => {
+            e.preventDefault();
+            const formId = document.getElementById('w-id').value; 
+            const btn = document.getElementById('save-worker-btn');
+            const name = document.getElementById('w-name').value.trim();
+            const lastname = document.getElementById('w-lastname').value.trim();
+            const docNumber = document.getElementById('w-doc').value.trim();
+            const phone = document.getElementById('w-phone').value.trim();
+            
+            if(!name || !lastname || !docNumber || !phone) { window.showToast('Completa: Nombres, Apellidos, Cédula y Teléfono', 'error'); return; }
+            
+            const availableDays = Array.from(document.querySelectorAll('.w-availability-day:checked')).map(cb => cb.value);
+            const dayLabels = { lunes: 'Lunes', martes: 'Martes', miercoles: 'Miércoles', jueves: 'Jueves', viernes: 'Viernes', sabado: 'Sábado', domingo: 'Domingo' };
+            let availabilityText = 'No especificada';
+            if(availableDays.length > 0) {
+                const parts = [];
+                availableDays.forEach(day => {
+                    const input = document.getElementById(`availability-${day}`);
+                    if(input) {
+                        const value = input.value.trim();
+                        if(value) parts.push(`${dayLabels[day]} ${value}`);
+                        else { window.showToast(`Completa el horario para ${dayLabels[day]}`, 'error'); return; }
+                    }
+                });
+                if(parts.length !== availableDays.length) return;
+                if(parts.length > 0) availabilityText = parts.join(' | ');
+            }
+            
+            const workerData = { 
+                id: formId || 'w_' + Date.now(), name: name, lastname: lastname, birthday: document.getElementById('w-birthday').value,
+                document: docNumber, email: document.getElementById('w-email').value.trim(), phone: phone, bloodType: document.getElementById('w-bloodtype').value,
+                eps: document.getElementById('w-eps').value.trim(), address: document.getElementById('w-address').value.trim(), city: document.getElementById('w-city').value.trim(), 
+                emergencyName: document.getElementById('w-emergency-name').value.trim(), emergencyPhone: document.getElementById('w-emergency-phone').value.trim(),
+                role: document.getElementById('w-role').value, status: document.getElementById('w-status').value, 
+                availabilityDays: availableDays, availabilityText: availabilityText, specialties: document.getElementById('w-specs').value.trim(), 
+                photo: document.getElementById('w-photo-base64').value 
+            };
+            
+            workerData.systemRole = 'WORKER';
+
+            if (['ADMIN', 'HR'].includes(window.appState.currentUser.systemRole)) { 
+                workerData.bankName = document.getElementById('w-bank-name').value; workerData.bankType = document.getElementById('w-bank-type').value; 
+                workerData.bankNumber = document.getElementById('w-bank-num').value; workerData.bankOwner = document.getElementById('w-bank-owner').value; 
+            } else if (formId) { 
+                const old = window.appState.dbWorkers.find(w => w.id === formId); 
+                if (old) { workerData.bankName = old.bankName; workerData.bankType = old.bankType; workerData.bankNumber = old.bankNumber; workerData.bankOwner = old.bankOwner; } 
+            }
+            
+            btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 mx-auto animate-spin"></i>'; lucide.createIcons();
+            
+            try { 
+                await setDoc(doc(db, "workers", workerData.id), workerData, { merge: true }); 
+                window.closeWorkerModal(); window.showToast('Colaborador guardado'); await fetchAllData(); 
+                if(window.appState.currentView === 'directory') window.setView('directory'); 
+                if(window.appState.currentView === 'profile') window.setView('profile'); 
+            } catch(e) { window.showToast('Error: ' + e.message, 'error'); } 
+            finally { btn.disabled = false; btn.innerText = 'Guardar'; }
+        };
+    </script>
+</body>
+</html>
