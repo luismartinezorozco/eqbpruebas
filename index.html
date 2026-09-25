@@ -44,11 +44,10 @@
         }
 
         /* ============ Aceleración GPU para 60fps (Fluidez nativa) ============ */
-        #main-content, #app-layout, .modal-content, #worker-modal, #admin-modal, .directory-card {
+        .modal-content, .directory-card {
             -webkit-transform: translateZ(0);
             transform: translateZ(0);
             backface-visibility: hidden;
-            perspective: 1000px;
         }
         #main-content {
             -webkit-overflow-scrolling: touch; 
