@@ -374,21 +374,6 @@
         </div>
     </div>
 
-    <!-- MODAL VISTA PREVIA DOCUMENTO -->
-    <div id="doc-preview-modal" class="modal-backdrop z-[1050]">
-        <div class="modal-content w-full sm:max-w-4xl h-[85vh] flex flex-col">
-            <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
-                <h3 id="doc-preview-title" class="font-black text-lg sm:text-xl text-[#542c1c] truncate pr-4">Vista Previa</h3>
-                <button onclick="window.closeDocPreview()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <div class="flex-1 w-full bg-gray-50/60 p-2 sm:p-4 overflow-hidden relative">
-                <iframe id="doc-preview-iframe" class="w-full h-full rounded-xl shadow-inner border border-gray-200 bg-white" src=""></iframe>
-            </div>
-        </div>
-    </div>
-
     <!-- TOAST NOTIFICATIONS -->
     <div id="toast-container" class="fixed bottom-24 md:bottom-10 left-1/2 transform -translate-x-1/2 z-[1500] flex flex-col gap-2 pointer-events-none w-11/12 max-w-sm items-center"></div>
 
@@ -1128,7 +1113,7 @@
                     <div class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform"><i data-lucide="file-text" class="w-5 h-5"></i></div>
                     <div class="flex-1 min-w-0"><p class="font-bold text-sm text-gray-800 truncate">${d.name}</p><p class="text-[10px] text-gray-400">Documento PDF</p></div>
                     <div class="flex gap-2 shrink-0">
-                        <button onclick="window.previewDoc('${d.dbId}')" title="Ver Documento" class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 hover:bg-blue-100 active:scale-90 transition-all"><i data-lucide="eye" class="w-4 h-4"></i></button>
+                        <button onclick="window.previewDoc('${d.dbId}')" title="Vista Previa" class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 hover:bg-blue-100 active:scale-90 transition-all"><i data-lucide="eye" class="w-4 h-4"></i></button>
                         <a href="${d.file}" download="${d.name}.pdf" title="Descargar" class="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-[#542c1c] hover:bg-gray-200 active:scale-90 transition-all"><i data-lucide="download" class="w-4 h-4"></i></a>
                         ${canEdit ? `<button onclick="deleteDocFile('${d.dbId}')" title="Eliminar" class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center text-red-500 hover:bg-red-100 active:scale-90 transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`:''}
                     </div>
@@ -1421,19 +1406,16 @@
             }; reader.readAsDataURL(file);
         };
 
-        window.previewDoc = (docId) => {
-            const docData = window.appState.currentProfileDocs.find(d => d.dbId === docId);
-            if(docData) {
-                document.getElementById('doc-preview-title').innerText = docData.name;
-                document.getElementById('doc-preview-iframe').src = docData.file;
-                document.getElementById('doc-preview-modal').classList.add('active');
+        window.previewDoc = (dbId) => {
+            const docData = window.appState.currentProfileDocs.find(d => d.dbId === dbId);
+            if(docData && docData.file) {
+                const newWin = window.open();
+                if(newWin) {
+                    newWin.document.write(`<title>${window.escapeHtml(docData.name)} - Vista Previa</title><body style="margin:0; background:#333;"><iframe src="${docData.file}" width="100%" height="100%" style="border:none; height: 100vh;"></iframe></body>`);
+                } else {
+                    window.showToast('Permite las ventanas emergentes para ver el documento', 'error');
+                }
             }
-        };
-
-        window.closeDocPreview = () => {
-            document.getElementById('doc-preview-modal').classList.remove('active');
-            // Limpiamos el iframe un instante después para evitar parpadeos visuales al cerrar
-            setTimeout(() => { document.getElementById('doc-preview-iframe').src = ''; }, 300);
         };
 
         window.deleteDocFile = async (id) => { if(!confirm('¿Eliminar este documento?')) return; await deleteDoc(doc(db, "documents", id)); window.setView('profile'); };
