@@ -1186,7 +1186,8 @@
             const role = window.appState.currentUser.systemRole;
             const canEdit = ['ADMIN', 'HR'].includes(role);
             const canGrade = ['ADMIN', 'HR', 'COORD'].includes(role);
-            // El usuario puede ver la pestaña "Banco" si es Admin o si es el dueño de la cuenta.
+            
+            // EL ADMIN O EL DUEÑO DEL PERFIL PUEDEN VER LA PESTAÑA BANCO
             const canSeeBank = canEdit || window.appState.currentUser.id === w.id;
 
             const monthStr = window.appState.selectedMonth; 
@@ -1246,7 +1247,7 @@
                     <p class="text-sm font-bold text-gray-400">No hay avisos por el momento</p>
                 </div>`;
 
-            // === SECCIÓN DE COBROS (AHORA DENTRO DE BANCO) ===
+            // === SECCIÓN DE COBROS E HISTORIAL ===
             const myPayments = (window.appState.payments || []).filter(p => p.workerId === w.id).sort((a,b) => b.timestamp - a.timestamp);
             const formatCurrency = (val) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(val);
             
@@ -1472,6 +1473,7 @@
                             <p class="text-sm font-bold text-white break-words">${w.bankOwner || '-'}</p>
                         </div>
 
+                        <!-- ESTA ES LA SECCIÓN DE HISTORIAL DE COBROS QUE FALTABA -->
                         <div class="border-t border-gray-200/60 pt-6">
                             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                                 <div>
@@ -1484,7 +1486,6 @@
                             </div>
                             ${paymentsHtml}
                         </div>
-
                     </div>` : ''}
 
                 </div>
