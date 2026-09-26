@@ -1563,6 +1563,7 @@
             try {
                 const docRef = await addDoc(collection(db, "payments"), paymentData);
                 window.appState.payments.push({dbId: docRef.id, ...paymentData});
+                localStorage.setItem('laly_payments', JSON.stringify(window.appState.payments)); // <--- ACTULIZA LA MEMORIA LOCAL
                 window.closePaymentModal();
                 window.showToast('Constancia registrada correctamente');
                 window.setView('profile');
@@ -1864,6 +1865,7 @@
             try {
                 await deleteDoc(doc(db, "payments", id));
                 window.appState.payments = window.appState.payments.filter(p => p.dbId !== id);
+                localStorage.setItem('laly_payments', JSON.stringify(window.appState.payments)); // <--- LIMPIA LA MEMORIA LOCAL
                 window.showToast('Constancia eliminada');
                 window.setView('profile'); // Recarga el perfil para actualizar la lista
             } catch (e) { 
