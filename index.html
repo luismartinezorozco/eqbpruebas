@@ -1267,6 +1267,7 @@
                     <div class="flex gap-2 w-full sm:w-auto shrink-0 mt-2 sm:mt-0">
                         <button onclick="window.handlePdfAction('view', '${p.dbId}')" class="flex-1 sm:flex-none px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold transition-all border border-gray-200 flex items-center justify-center gap-1.5"><i data-lucide="eye" class="w-4 h-4"></i> Ver</button>
                         <button onclick="window.handlePdfAction('download', '${p.dbId}')" class="flex-1 sm:flex-none px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold transition-all border border-gray-200 flex items-center justify-center gap-1.5"><i data-lucide="download" class="w-4 h-4"></i> PDF</button>
+                        ${canEdit ? `<button onclick="window.deletePayment('${p.dbId}')" title="Eliminar constancia" class="flex-none px-3 py-2 bg-red-50 hover:bg-red-100 text-red-500 rounded-xl text-xs font-bold transition-all border border-red-100 flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
                     </div>
                 </div>
             `).join('');
@@ -1856,6 +1857,18 @@
                     const url = URL.createObjectURL(pdfBlob);
                     window.open(url, '_blank');
                 }
+            }
+        };
+
+        window.deletePayment = async (id) => {
+            if(!confirm('¿Estás seguro de eliminar esta constancia de cobro?')) return;
+            try {
+                await deleteDoc(doc(db, "payments", id));
+                window.appState.payments = window.appState.payments.filter(p => p.dbId !== id);
+                window.showToast('Constancia eliminada');
+                window.setView('profile'); // Recarga el perfil para actualizar la lista
+            } catch (e) { 
+                window.showToast('Error al eliminar constancia', 'error'); 
             }
         };
 
