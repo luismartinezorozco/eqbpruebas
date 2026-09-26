@@ -214,7 +214,7 @@
     </div>
 
     <!-- MODAL FORMULARIO COLABORADOR -->
-    <div id="worker-modal" class="modal-backdrop">
+    <div id="worker-modal" class="modal-backdrop z-[1000]">
         <div class="modal-content w-full sm:w-auto sm:max-w-sm md:max-w-md">
             <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
                 <h3 id="worker-modal-title" class="font-black text-lg sm:text-xl text-[#542c1c]">Nuevo Colaborador</h3>
@@ -337,7 +337,7 @@
     </div>
 
     <!-- MODAL FORMULARIO ADMIN -->
-    <div id="admin-modal" class="modal-backdrop">
+    <div id="admin-modal" class="modal-backdrop z-[1000]">
         <div class="modal-content w-full sm:max-w-sm">
             <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
                 <h3 class="font-black text-lg sm:text-xl text-[#542c1c]">Nuevo Administrador</h3>
@@ -365,12 +365,12 @@
         </div>
     </div>
 
-    <!-- MODAL FORMULARIO DE PAGOS -->
-    <div id="payment-modal" class="modal-backdrop">
+    <!-- MODAL FORMULARIO DE PAGOS (CONSTANCIAS) -->
+    <div id="payment-modal" class="modal-backdrop z-[1050]">
         <div class="modal-content w-full sm:max-w-sm md:max-w-md">
             <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
-                <h3 class="font-black text-lg sm:text-xl text-[#542c1c] flex items-center gap-2"><i data-lucide="banknote" class="w-5 h-5"></i> Registrar Pago</h3>
-                <button onclick="window.closePaymentModal()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
+                <h3 class="font-black text-lg sm:text-xl text-[#542c1c] flex items-center gap-2"><i data-lucide="file-plus" class="w-5 h-5"></i> Crear Constancia</h3>
+                <button type="button" onclick="window.closePaymentModal()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -378,7 +378,7 @@
                 <form id="payment-form" onsubmit="window.savePayment(event)" class="space-y-4">
                     <div class="bg-blue-50/50 border border-blue-100 p-3 rounded-xl mb-4 text-xs font-medium text-blue-800 flex gap-2">
                         <i data-lucide="info" class="w-4 h-4 shrink-0 text-blue-500"></i>
-                        <span>Los datos bancarios del colaborador se anexarán automáticamente a este pago.</span>
+                        <span>Tus datos bancarios actuales se anexarán automáticamente a esta constancia.</span>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -388,22 +388,18 @@
                         </div>
                         <div>
                             <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Fecha del Evento</label>
-                            <!-- El input type="date" con w-full asegura contención perfecta sin desbordar en móviles -->
+                            <!-- Input contenido visualmente correcto en iOS/Android con w-full -->
                             <input required type="date" id="pay-event-date" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm">
                         </div>
                         <div>
-                            <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Fecha de Pago</label>
-                            <input required type="date" id="pay-date" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm">
+                            <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Valor a Cobrar (COP)</label>
+                            <input required type="number" id="pay-amount" placeholder="Ej: 150000" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm font-black text-gray-800 focus:border-[#bb7434] outline-none shadow-sm">
                         </div>
                         <div class="sm:col-span-2">
                             <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Servicio Prestado</label>
                             <input required id="pay-service" placeholder="Ej: Recreación y animación" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm">
                         </div>
-                        <div>
-                            <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Valor Pagado (COP)</label>
-                            <input required type="number" id="pay-amount" placeholder="Ej: 150000" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm font-black text-gray-800 focus:border-[#bb7434] outline-none shadow-sm">
-                        </div>
-                        <div>
+                        <div class="sm:col-span-2">
                             <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Lugar / Ciudad</label>
                             <input required id="pay-location" placeholder="Ej: Salón comunal, Barranquilla" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm">
                         </div>
@@ -415,7 +411,7 @@
 
                     <div class="pt-2">
                         <button type="submit" id="save-payment-btn" class="w-full bg-[#bb7434] text-white py-3.5 rounded-xl font-black text-sm sm:text-base hover:bg-[#a55f25] active:scale-95 transition-all shadow-lg shadow-[#bb7434]/25 flex items-center justify-center gap-2">
-                            <i data-lucide="check-circle" class="w-5 h-5"></i> Guardar Pago
+                            <i data-lucide="check-circle" class="w-5 h-5"></i> Guardar Constancia
                         </button>
                     </div>
                 </form>
@@ -461,7 +457,7 @@
                     <i data-lucide="key" class="w-8 h-8"></i>
                 </div>
                 <h3 class="font-black text-xl text-gray-800 mb-2">Ingresar Clave</h3>
-                <p class="text-sm text-gray-500 mb-6 font-medium">Por tu seguridad, ingresa tu clave personal para acceder a esta constancia.</p>
+                <p class="text-sm text-gray-500 mb-6 font-medium">Por tu seguridad, ingresa tu clave personal para continuar.</p>
                 
                 <form onsubmit="window.verifyPinAndProceed(event)" class="space-y-4">
                     <input type="hidden" id="pin-prompt-action">
@@ -506,7 +502,7 @@
             dbWorkers: [],
             points: [],
             messages: [],
-            payments: [], // NUEVO ESTADO PARA PAGOS
+            payments: [], 
             currentProfileDocs: [],
             activeProfileTab: 'rendimiento',
             loginType: 'admin'
@@ -641,7 +637,6 @@
             }
         }
 
-        // Skeletons
         function showSkeletonDashboard() { return `<div class="space-y-6"><div class="bg-gradient-to-r from-[#542c1c] to-[#146459] -mx-6 md:-mx-8 -mt-6 md:-mt-8 pt-12 pb-10 px-6 md:px-10 rounded-b-[2rem]"><div class="max-w-5xl mx-auto"><div class="skeleton-base h-10 mb-3" style="width: 200px;"></div><div class="skeleton-base h-6 mb-8" style="width: 150px;"></div></div></div></div>`; }
         function showSkeletonDirectory() { return `<div class="space-y-6"><div class="skeleton-base h-10 w-1/3 mb-6"></div><div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">${Array(6).fill(0).map(() => `<div class="skeleton-card"><div class="skeleton-base h-20"></div></div>`).join('')}</div></div>`; }
         function showSkeletonRanking() { return `<div class="space-y-6"><div class="skeleton-base h-10 w-1/3 mb-6"></div><div class="space-y-3">${Array(5).fill(0).map(() => `<div class="skeleton-card h-16"></div>`).join('')}</div></div>`; }
@@ -1191,6 +1186,7 @@
             const role = window.appState.currentUser.systemRole;
             const canEdit = ['ADMIN', 'HR'].includes(role);
             const canGrade = ['ADMIN', 'HR', 'COORD'].includes(role);
+            // El usuario puede ver la pestaña "Banco" si es Admin o si es el dueño de la cuenta.
             const canSeeBank = canEdit || window.appState.currentUser.id === w.id;
 
             const monthStr = window.appState.selectedMonth; 
@@ -1497,7 +1493,7 @@
 
         window.switchTab = (tabId) => {
             window.appState.activeProfileTab = tabId;
-            const tabs = ['rendimiento', 'laboral', 'anuncios', 'banco', 'pagos'];
+            const tabs = ['rendimiento', 'laboral', 'anuncios', 'banco'];
             
             tabs.forEach(t => {
                 const content = document.getElementById(`tab-${t}`);
@@ -1516,6 +1512,13 @@
 
         // ================== LÓGICA DE PAGOS Y CONSTANCIAS PDF ================== //
 
+        window.initiateCreateReceipt = () => {
+            document.getElementById('pin-prompt-input').value = '';
+            document.getElementById('pin-prompt-action').value = 'create_receipt';
+            document.getElementById('pin-prompt-payment').value = '';
+            document.getElementById('pin-prompt-modal').classList.add('active');
+        };
+
         window.openPaymentModal = () => {
             document.getElementById('payment-form').reset();
             document.getElementById('payment-modal').classList.add('active');
@@ -1531,7 +1534,7 @@
             const w = window.appState.selectedWorker;
 
             if(!w.bankName || !w.bankNumber) {
-                window.showToast('El colaborador no tiene info bancaria configurada', 'error');
+                window.showToast('Configura tu info bancaria primero', 'error');
                 return;
             }
 
@@ -1539,12 +1542,11 @@
                 workerId: w.id,
                 eventName: document.getElementById('pay-event').value.trim(),
                 eventDate: document.getElementById('pay-event-date').value,
-                paymentDate: document.getElementById('pay-date').value,
+                paymentDate: new Date().toISOString().split('T')[0], // FECHA AUTOMATICA DE HOY
                 service: document.getElementById('pay-service').value.trim(),
                 amount: parseInt(document.getElementById('pay-amount').value),
                 location: document.getElementById('pay-location').value.trim(),
                 notes: document.getElementById('pay-notes').value.trim(),
-                // Se congela la info bancaria del momento actual
                 bankName: w.bankName,
                 bankType: w.bankType,
                 bankNumber: w.bankNumber,
@@ -1561,12 +1563,12 @@
                 const docRef = await addDoc(collection(db, "payments"), paymentData);
                 window.appState.payments.push({dbId: docRef.id, ...paymentData});
                 window.closePaymentModal();
-                window.showToast('Pago registrado correctamente');
+                window.showToast('Constancia registrada correctamente');
                 window.setView('profile');
             } catch (err) {
                 window.showToast('Error al guardar: ' + err.message, 'error');
                 btn.disabled = false;
-                btn.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> Guardar Pago';
+                btn.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> Guardar Constancia';
                 lucide.createIcons();
             }
         };
@@ -1667,7 +1669,12 @@
                 const hashedPin = await hashPIN(pin);
                 if (hashedPin === w.pdfPinHash) {
                     window.closePinPromptModal();
-                    await window.generatePaymentPDF(paymentId, action);
+                    
+                    if (action === 'create_receipt') {
+                        window.openPaymentModal();
+                    } else {
+                        await window.generatePaymentPDF(paymentId, action);
+                    }
                 } else {
                     window.showToast('Clave incorrecta', 'error');
                     document.getElementById('pin-prompt-input').value = '';
@@ -1681,7 +1688,6 @@
             }
         };
 
-        // Generador maestro de Constancias PDF vía jsPDF
         window.generatePaymentPDF = async (paymentId, action) => {
             const p = window.appState.payments.find(x => x.dbId === paymentId);
             if(!p) return window.showToast('Pago no encontrado', 'error');
@@ -1689,16 +1695,14 @@
 
             window.showToast('Generando constancia...', 'success');
 
-            // Cargar jsPDF
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ format: 'letter' });
 
             const primaryColor = [84, 44, 28];   // #542c1c
             const secondaryColor = [187, 116, 52]; // #bb7434
 
-            // --- CABECERA ---
             doc.setFillColor(...primaryColor);
-            doc.rect(0, 0, 215.9, 45, 'F'); // Letter width 215.9mm
+            doc.rect(0, 0, 215.9, 45, 'F');
 
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(26);
@@ -1707,12 +1711,11 @@
             
             doc.setFontSize(14);
             doc.setFont("helvetica", "normal");
-            doc.setTextColor(200, 178, 162); // #cab2a2
+            doc.setTextColor(200, 178, 162); 
             doc.text("CONSTANCIA DE PAGO DIGITAL", 107.95, 32, { align: "center" });
 
             let startY = 60;
 
-            // --- INFO DEL COLABORADOR ---
             if (w.photo) {
                 try { doc.addImage(w.photo, 'JPEG', 20, startY, 32, 32); } catch(e) {}
             } else {
@@ -1741,7 +1744,6 @@
 
             startY += 45;
 
-            // --- DETALLES DEL EVENTO Y PAGO ---
             doc.setDrawColor(...secondaryColor);
             doc.setLineWidth(0.5);
             doc.roundedRect(20, startY, 175.9, 75, 3, 3);
@@ -1781,11 +1783,10 @@
             doc.setFontSize(16);
             doc.setFont("helvetica", "bold");
             doc.setTextColor(...primaryColor);
-            doc.text(`Total Pagado: ${formatCurrency(p.amount)}`, 107.95, startY, { align: "center" });
+            doc.text(`Total a Cobrar: ${formatCurrency(p.amount)}`, 107.95, startY, { align: "center" });
 
             startY += 22;
 
-            // --- DETALLES BANCARIOS ---
             doc.setDrawColor(200, 200, 200);
             doc.roundedRect(20, startY, 175.9, 35, 3, 3);
             
@@ -1815,16 +1816,14 @@
 
             startY += 35;
 
-            // --- DECLARACIÓN LEGAL ---
             doc.setFontSize(9);
             doc.setFont("helvetica", "italic");
             doc.setTextColor(120, 120, 120);
-            const declaration = `Declaro que he recibido a satisfacción el pago correspondiente al servicio prestado en el evento anteriormente relacionado, de acuerdo con la información consignada en esta constancia. Documento emitido y validado digitalmente a través de la plataforma oficial Laly Talento.`;
+            const declaration = `Declaro que la información contenida en este documento es correcta y corresponde al servicio prestado en el evento relacionado, autorizando el desembolso de los fondos en la cuenta bancaria descrita. Documento generado y validado digitalmente a través de la plataforma oficial Laly Talento.`;
             const splitText = doc.splitTextToSize(declaration, 175.9);
             doc.text(splitText, 20, startY);
 
-            // --- FOOTER ---
-            const footerY = 260; // Bottom of letter page
+            const footerY = 260; 
             doc.setDrawColor(220, 220, 220);
             doc.line(20, footerY - 5, 195.9, footerY - 5);
             
@@ -1834,7 +1833,6 @@
             doc.text(`Generado el: ${new Date().toLocaleString()}`, 20, footerY);
             doc.text(`Constancia protegida digitalmente`, 195.9, footerY, { align: "right" });
 
-            // --- SALIDA DEL DOCUMENTO ---
             const fileName = `Constancia_Laly_${w.document}_${p.eventDate}.pdf`;
             
             if (action === 'download') {
@@ -1853,7 +1851,7 @@
                         doc.save(fileName);
                         window.showToast("Tu dispositivo descargó la constancia.");
                     }
-                } else { // 'view'
+                } else { 
                     const url = URL.createObjectURL(pdfBlob);
                     window.open(url, '_blank');
                 }
