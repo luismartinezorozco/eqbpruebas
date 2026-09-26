@@ -9,7 +9,6 @@
     
     <link rel="icon" type="image/svg+xml" href="https://www.image2url.com/r2/default/images/1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg">
     
-    <!-- Configuraciones PWA para iOS y Android -->
     <meta name="theme-color" content="#542c1c">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -22,8 +21,10 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- JsPDF para generación de PDFs profesionales en el cliente -->
+    <!-- JsPDF para generación de PDFs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- JSZip para el cierre mensual y descarga en lote -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
@@ -218,7 +219,7 @@
         <div class="modal-content w-full sm:w-auto sm:max-w-sm md:max-w-md">
             <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
                 <h3 id="worker-modal-title" class="font-black text-lg sm:text-xl text-[#542c1c]">Nuevo Colaborador</h3>
-                <button onclick="document.getElementById('worker-modal').classList.remove('active')" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
+                <button type="button" onclick="window.closeWorkerModal()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -341,7 +342,7 @@
         <div class="modal-content w-full sm:max-w-sm">
             <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
                 <h3 class="font-black text-lg sm:text-xl text-[#542c1c]">Nuevo Administrador</h3>
-                <button onclick="window.closeAdminModal()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
+                <button type="button" onclick="window.closeAdminModal()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-all duration-300 ease-out hover:rotate-90 active:scale-90 shrink-0">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -365,7 +366,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORMULARIO DE PAGOS (CONSTANCIAS) -->
+    <!-- MODAL FORMULARIO DE PAGOS (CONSTANCIAS SIMPLIFICADAS) -->
     <div id="payment-modal" class="modal-backdrop z-[1050]">
         <div class="modal-content w-full sm:max-w-sm md:max-w-md">
             <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
@@ -381,29 +382,31 @@
                         <span>Tus datos bancarios actuales se anexarán automáticamente a esta constancia.</span>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                        <div class="sm:col-span-2">
-                            <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Nombre del Evento</label>
-                            <input required id="pay-event" placeholder="Ej: Fiesta de 15 años" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm">
-                        </div>
+                    <div class="grid grid-cols-1 gap-3 sm:gap-4">
                         <div>
                             <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Fecha del Evento</label>
-                            <!-- Input contenido visualmente correcto en iOS/Android con w-full -->
                             <input required type="date" id="pay-event-date" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm">
                         </div>
                         <div>
-                            <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Valor a Cobrar (COP)</label>
-                            <input required type="number" id="pay-amount" placeholder="Ej: 150000" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm font-black text-gray-800 focus:border-[#bb7434] outline-none shadow-sm">
-                        </div>
-                        <div class="sm:col-span-2">
                             <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Servicio Prestado</label>
-                            <input required id="pay-service" placeholder="Ej: Recreación y animación" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm">
+                            <div class="relative">
+                                <select required id="pay-service" onchange="window.handleServiceChange(this)" class="w-full border border-gray-200 bg-white rounded-xl p-3 pr-10 text-sm font-semibold text-gray-800 focus:border-[#bb7434] outline-none shadow-sm appearance-none cursor-pointer">
+                                    <option value="" disabled selected>Selecciona un servicio...</option>
+                                    <option value="Logística">Logística ($50.000)</option>
+                                    <option value="Personaje botarga / princesa">Personaje botarga / princesa ($60.000)</option>
+                                    <option value="Personaje show musical">Personaje show musical ($70.000)</option>
+                                    <option value="Pintucaritas">Pintucaritas ($70.000)</option>
+                                    <option value="Apoyo o asistente">Apoyo o asistente ($50.000)</option>
+                                    <option value="Animación">Animación (Valor manual)</option>
+                                </select>
+                                <i data-lucide="chevron-down" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
+                            </div>
                         </div>
-                        <div class="sm:col-span-2">
-                            <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Lugar / Ciudad</label>
-                            <input required id="pay-location" placeholder="Ej: Salón comunal, Barranquilla" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm">
+                        <div>
+                            <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Valor a Cobrar (COP)</label>
+                            <input required type="number" id="pay-amount" placeholder="Selecciona un servicio primero" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm font-black text-gray-800 focus:border-[#bb7434] outline-none shadow-sm transition-colors" readonly>
                         </div>
-                        <div class="sm:col-span-2">
+                        <div>
                             <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Observaciones (Opcional)</label>
                             <textarea id="pay-notes" rows="2" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm resize-none"></textarea>
                         </div>
@@ -450,10 +453,10 @@
     <!-- MODAL SOLICITUD DE PIN -->
     <div id="pin-prompt-modal" class="modal-backdrop z-[1100]">
         <div class="modal-content w-full sm:max-w-sm">
-            <div class="p-6 text-center">
-                <button onclick="window.closePinPromptModal()" class="absolute top-4 right-4 p-2 text-gray-400 hover:bg-gray-100 rounded-full transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="p-6 text-center relative">
+                <button type="button" onclick="window.closePinPromptModal()" class="absolute top-4 right-4 p-2 text-gray-400 hover:bg-gray-100 rounded-full transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
                 
-                <div class="w-16 h-16 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 border border-amber-100 mt-4">
+                <div class="w-16 h-16 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 border border-amber-100 mt-2">
                     <i data-lucide="key" class="w-8 h-8"></i>
                 </div>
                 <h3 class="font-black text-xl text-gray-800 mb-2">Ingresar Clave</h3>
@@ -551,6 +554,37 @@
                     typeSelect.value = criteria.type;
                     reasonInput.value = criteria.reason;
                 }
+            }
+        };
+
+        window.handleServiceChange = (selectElement) => {
+            const amountInput = document.getElementById('pay-amount');
+            const val = selectElement.value;
+            
+            // Precios automatizados
+            const prices = {
+                'Logística': 50000,
+                'Personaje botarga / princesa': 60000,
+                'Personaje show musical': 70000,
+                'Pintucaritas': 70000,
+                'Apoyo o asistente': 50000
+            };
+            
+            if (prices[val]) {
+                amountInput.value = prices[val];
+                amountInput.readOnly = true;
+                amountInput.classList.add('bg-gray-100');
+            } else if (val === 'Animación') {
+                amountInput.value = '';
+                amountInput.readOnly = false;
+                amountInput.classList.remove('bg-gray-100');
+                amountInput.placeholder = "Ingresa el valor...";
+                amountInput.focus();
+            } else {
+                amountInput.value = '';
+                amountInput.readOnly = true;
+                amountInput.classList.add('bg-gray-100');
+                amountInput.placeholder = "Selecciona un servicio primero";
             }
         };
 
@@ -777,9 +811,14 @@
                 main.innerHTML = window.renderMessages(); lucide.createIcons();
                 fetchAllData().then(() => { if (window.appState.currentView === 'messages') { main.innerHTML = window.renderMessages(); lucide.createIcons(); } });
             }
+            if (viewName === 'finances') { 
+                main.innerHTML = window.renderFinances(); lucide.createIcons(); 
+                fetchAllData().then(() => { if (window.appState.currentView === 'finances') { main.innerHTML = window.renderFinances(); lucide.createIcons(); } });
+            }
             if (viewName === 'profile') {
                 const wId = window.appState.selectedWorker.id;
-                window.appState.activeProfileTab = 'rendimiento'; 
+                // Mantener en la pestaña seleccionada, si no existe o es nueva, ir a rendimiento
+                window.appState.activeProfileTab = window.appState.activeProfileTab || 'rendimiento'; 
                 
                 if (!window.appState.cachedDocs) window.appState.cachedDocs = {};
                 
@@ -819,6 +858,7 @@
                 { id: 'dashboard', icon: 'layout-dashboard', label: 'Inicio', roles: ['ADMIN', 'HR', 'COORD'] },
                 { id: 'directory', icon: 'users', label: 'Directorio', roles: ['ADMIN', 'HR', 'COORD'] },
                 { id: 'ranking', icon: 'star', label: 'Ranking', roles: ['ADMIN', 'HR', 'COORD'] },
+                { id: 'finances', icon: 'wallet', label: 'Finanzas', roles: ['ADMIN', 'HR'] },
                 { id: 'messages', icon: 'message-square', label: 'Mensajes', roles: ['ADMIN', 'HR', 'COORD'] },
                 { id: 'profile', icon: 'user', label: 'Mi Perfil', roles: ['WORKER'] }
             ];
@@ -885,6 +925,8 @@
             const sharedBdaysCount = nextBdayWorker ? upcomingBirthdays.filter(w => w.daysUntil === nextBdayWorker.daysUntil).length - 1 : 0;
             const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
+            const canSeeFinances = ['ADMIN', 'HR'].includes(window.appState.currentUser.systemRole);
+
             return `
             <div class="space-y-4 sm:space-y-6 max-w-7xl mx-auto pb-8">
                 <div class="bg-gradient-to-br from-[#542c1c] via-[#6b3c2a] to-[#7a4a35] -mx-3 sm:-mx-4 md:-mx-6 lg:-mx-8 -mt-3 sm:-mt-4 md:-mt-6 lg:-mt-8 pt-10 sm:pt-12 md:pt-14 pb-24 sm:pb-28 px-4 sm:px-6 md:px-10 rounded-b-[2rem] shadow-lg relative overflow-hidden">
@@ -943,7 +985,7 @@
 
                 <div class="mt-2 sm:mt-4">
                     <h3 class="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest mb-3 px-1 sm:px-2">Accesos Rápidos</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                         <div onclick="setView('directory')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3 sm:gap-4 cursor-pointer hover:border-[#bb7434]/40 hover:shadow-lg transition-all group border border-gray-100">
                             <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0 group-hover:bg-blue-500 group-hover:text-white transition-colors"><i data-lucide="users" class="w-5 h-5"></i></div>
                             <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm truncate">Directorio</h3><p class="text-[10px] sm:text-[11px] text-gray-400 truncate">Gestión de personal</p></div>
@@ -952,11 +994,76 @@
                             <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-purple-50 text-purple-500 flex items-center justify-center shrink-0 group-hover:bg-purple-500 group-hover:text-white transition-colors"><i data-lucide="star" class="w-5 h-5"></i></div>
                             <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm truncate">Rendimiento</h3><p class="text-[10px] sm:text-[11px] text-gray-400 truncate">Ranking mensual</p></div>
                         </div>
+                        ${canSeeFinances ? `
+                        <div onclick="setView('finances')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3 sm:gap-4 cursor-pointer hover:border-[#bb7434]/40 hover:shadow-lg transition-all group border border-gray-100">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-green-50 text-green-500 flex items-center justify-center shrink-0 group-hover:bg-green-500 group-hover:text-white transition-colors"><i data-lucide="wallet" class="w-5 h-5"></i></div>
+                            <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm truncate">Finanzas</h3><p class="text-[10px] sm:text-[11px] text-gray-400 truncate">Cierres de mes</p></div>
+                        </div>` : ''}
                         <div onclick="setView('messages')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3 sm:gap-4 cursor-pointer hover:border-[#bb7434]/40 hover:shadow-lg transition-all group border border-gray-100">
                             <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0 group-hover:bg-indigo-500 group-hover:text-white transition-colors"><i data-lucide="message-square" class="w-5 h-5"></i></div>
                             <div class="flex-1 min-w-0"><h3 class="font-bold text-gray-800 text-sm truncate">Mensajes</h3><p class="text-[10px] sm:text-[11px] text-gray-400 truncate">Avisos y notas</p></div>
                         </div>
                     </div>
+                </div>
+            </div>`;
+        };
+
+        window.renderFinances = () => {
+            const monthStr = window.appState.selectedMonth; 
+            const monthPayments = window.appState.payments.filter(p => p.eventDate && p.eventDate.startsWith(monthStr)).sort((a,b) => new Date(b.eventDate) - new Date(a.eventDate));
+            
+            let totalAmount = 0;
+            let paymentsListHtml = monthPayments.map(p => {
+                const w = window.appState.dbWorkers.find(x => x.id === p.workerId) || { name: 'Desconocido', document: '-' };
+                totalAmount += parseInt(p.amount) || 0;
+                return `
+                <div class="bg-white p-4 rounded-2xl card-shadow border border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3 hover:border-[#bb7434]/30 transition-colors">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-black text-gray-800 text-sm sm:text-base truncate">${window.escapeHtml(w.name)}</h4>
+                        <p class="text-xs text-gray-500 font-medium truncate mt-0.5"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 inline text-[#bb7434] mr-1"></i>${window.escapeHtml(p.service)}</p>
+                        <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-wider font-bold">Fecha Evento: ${p.eventDate}</p>
+                    </div>
+                    <div class="text-left sm:text-right w-full sm:w-auto flex flex-row sm:flex-col justify-between items-center sm:items-end">
+                        <p class="font-black text-green-600 text-lg">${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(p.amount)}</p>
+                        <button onclick="window.generatePaymentPDF('${p.dbId}', 'view')" class="text-[11px] font-bold text-blue-500 hover:text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 mt-0 sm:mt-2"><i data-lucide="eye" class="w-3 h-3"></i> Ver Constancia</button>
+                    </div>
+                </div>`;
+            }).join('');
+
+            if(!paymentsListHtml) paymentsListHtml = `
+                <div class="text-center py-10 bg-white rounded-3xl border border-gray-100 border-dashed card-shadow">
+                    <div class="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="receipt" class="w-8 h-8"></i></div>
+                    <p class="text-sm font-bold text-gray-400">No hay cobros registrados en este mes</p>
+                </div>
+            `;
+
+            return `
+            <div class="max-w-4xl mx-auto pb-10">
+                <div class="bg-white p-4 sm:p-5 md:p-6 rounded-[2rem] card-shadow mb-4 sm:mb-6 border border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex-1">
+                        <h1 class="text-2xl sm:text-3xl font-black text-gray-800 tracking-tight">Finanzas</h1>
+                        <p class="text-gray-500 text-xs sm:text-sm font-medium mt-1">Cierre mensual de cobros y constancias.</p>
+                    </div>
+                    <div class="relative w-full sm:w-auto shrink-0">
+                        <i data-lucide="calendar" class="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#bb7434]"></i>
+                        <input type="month" value="${monthStr}" onchange="window.changeMonth(event)" class="w-full sm:max-w-[220px] m-0 box-border pl-10 pr-4 py-3 rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 text-[#542c1c] text-xs sm:text-sm font-black focus:outline-none focus:ring-2 focus:ring-[#bb7434]/20 focus:border-[#bb7434] shadow-sm cursor-pointer transition-all appearance-none">
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-green-600 via-emerald-600 to-teal-700 p-5 sm:p-6 md:p-8 rounded-[2rem] text-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 opacity-10 pointer-events-none"><i data-lucide="banknote" class="w-48 h-48"></i></div>
+                    <div class="relative z-10 flex-1">
+                        <p class="text-[10px] sm:text-xs font-black uppercase tracking-widest opacity-80 mb-1 flex items-center gap-1.5"><i data-lucide="calculator" class="w-4 h-4"></i> Total a Pagar (${monthStr})</p>
+                        <p class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight drop-shadow-md">${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(totalAmount)}</p>
+                    </div>
+                    <button onclick="window.downloadMonthlyZip('${monthStr}')" class="w-full sm:w-auto bg-white text-green-700 px-6 py-3.5 rounded-2xl font-black text-sm hover:bg-gray-50 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 shrink-0 relative z-10">
+                        <i data-lucide="folder-down" class="w-5 h-5"></i> Descargar ZIP
+                    </button>
+                </div>
+
+                <h3 class="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest mb-3 px-2 flex items-center gap-1.5"><i data-lucide="list-checks" class="w-4 h-4"></i> Desglose de Constancias</h3>
+                <div class="space-y-3">
+                    ${paymentsListHtml}
                 </div>
             </div>`;
         };
@@ -1031,12 +1138,9 @@
         };
 
         window.changeMonth = (e) => { 
-            const newMonth = e.target.value; const oldMonth = window.appState.selectedMonth;
-            if(newMonth !== oldMonth) {
-                if(confirm(`¿Cambiar a ${newMonth}?\n\nLos puntos del mes se filtrarán según esta fecha.`)) {
-                    window.appState.selectedMonth = newMonth; window.setView('ranking');
-                } else { e.target.value = oldMonth; }
-            }
+            const newMonth = e.target.value; 
+            window.appState.selectedMonth = newMonth; 
+            window.setView(window.appState.currentView);
         };
         
         window.renderRanking = () => {
@@ -1256,7 +1360,7 @@
                     <div class="flex items-start gap-3.5 w-full sm:w-auto flex-1 min-w-0">
                         <div class="w-12 h-12 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center shrink-0 border border-green-100 shadow-inner group-hover:bg-green-500 group-hover:text-white transition-colors"><i data-lucide="file-signature" class="w-6 h-6"></i></div>
                         <div class="flex-1 min-w-0">
-                            <h4 class="font-black text-gray-800 text-sm truncate">${window.escapeHtml(p.eventName)}</h4>
+                            <h4 class="font-black text-gray-800 text-sm truncate">${window.escapeHtml(p.service || '-')}</h4>
                             <p class="text-[11px] font-bold text-gray-400 mt-0.5 truncate flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Gen: ${p.paymentDate} &nbsp;&bull;&nbsp; Ev: ${p.eventDate}</p>
                             <p class="text-xs font-black text-green-600 mt-1">${formatCurrency(p.amount)}</p>
                         </div>
@@ -1330,10 +1434,10 @@
 
                 <div class="px-4 sm:px-6 md:px-10 mt-6 sm:mt-8">
                     <div class="bg-gray-200/60 p-1.5 rounded-2xl sm:rounded-[1.25rem] flex overflow-x-auto hide-scrollbar gap-1 relative shadow-inner">
-                        <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="flex-1 flex-shrink-0 min-w-[70px] px-2 sm:px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'rendimiento' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="star" class="w-4 h-4"></i> <span class="hidden sm:inline">Puntos</span></button>
-                        <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-1 flex-shrink-0 min-w-[70px] px-2 sm:px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'laboral' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="user" class="w-4 h-4"></i> <span class="hidden sm:inline">Info & Docs</span></button>
-                        <button onclick="switchTab('anuncios')" id="tab-btn-anuncios" class="flex-1 flex-shrink-0 min-w-[70px] px-2 sm:px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'anuncios' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="bell" class="w-4 h-4"></i> <span class="hidden sm:inline">Avisos</span></button>
-                        ${canSeeBank ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="flex-1 flex-shrink-0 min-w-[70px] px-2 sm:px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'banco' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="credit-card" class="w-4 h-4"></i> <span class="hidden sm:inline">Banco & Cobros</span></button>` : ''}
+                        <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'rendimiento' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="star" class="w-4 h-4"></i> <span class="hidden sm:inline">Puntos</span></button>
+                        <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'laboral' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="user" class="w-4 h-4"></i> <span class="hidden sm:inline">Info & Docs</span></button>
+                        <button onclick="switchTab('anuncios')" id="tab-btn-anuncios" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'anuncios' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="bell" class="w-4 h-4"></i> <span class="hidden sm:inline">Avisos</span></button>
+                        ${canSeeBank ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 ${window.appState.activeProfileTab === 'banco' ? 'bg-white text-[#542c1c] shadow-sm' : 'text-gray-500 hover:bg-white/50'}"><i data-lucide="credit-card" class="w-4 h-4"></i> <span class="hidden sm:inline">Banco & Cobros</span></button>` : ''}
                     </div>
                 </div>
 
@@ -1424,6 +1528,7 @@
                             </div>
                         </div>
 
+                        <!-- SECCIÓN DOCUMENTOS -->
                         <div class="pt-6 border-t border-gray-200/60">
                             <div class="flex justify-between items-center mb-4">
                                 <h4 class="font-black text-gray-800 text-sm flex items-center gap-2"><i data-lucide="folder-open" class="w-5 h-5 text-[#bb7434]"></i> Documentos Anexos</h4>
@@ -1440,7 +1545,6 @@
                                 <p class="text-sm font-bold text-gray-400">Carpeta vacía</p>
                             </div>`}
                         </div>
-
                     </div>
 
                     <!-- TAB: ANUNCIOS -->
@@ -1473,12 +1577,12 @@
                             <p class="text-sm font-bold text-white break-words">${w.bankOwner || '-'}</p>
                         </div>
 
-                        <!-- ESTA ES LA SECCIÓN DE HISTORIAL DE COBROS QUE FALTABA -->
+                        <!-- HISTORIAL DE COBROS -->
                         <div class="border-t border-gray-200/60 pt-6">
                             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                                 <div>
                                     <h4 class="font-black text-gray-800 text-sm flex items-center gap-2"><i data-lucide="file-signature" class="w-5 h-5 text-[#bb7434]"></i> Constancias de Cobro</h4>
-                                    <p class="text-[11px] font-bold text-gray-400 mt-0.5">Historial generado por el colaborador</p>
+                                    <p class="text-[11px] font-bold text-gray-400 mt-0.5">Historial de pagos solicitados</p>
                                 </div>
                                 <div class="flex gap-2 w-full sm:w-auto">
                                     ${receiptActions}
@@ -1502,16 +1606,16 @@
                 if(content && btn) {
                     if(t === tabId) { 
                         content.classList.remove('hidden'); content.classList.add('block'); 
-                        btn.className = `flex-1 flex-shrink-0 min-w-[70px] px-2 sm:px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 bg-white text-[#542c1c] shadow-sm`;
+                        btn.className = `flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 bg-white text-[#542c1c] shadow-sm`;
                     } else { 
                         content.classList.remove('block'); content.classList.add('hidden'); 
-                        btn.className = `flex-1 flex-shrink-0 min-w-[70px] px-2 sm:px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 text-gray-500 hover:bg-white/50`;
+                        btn.className = `flex-1 flex-shrink-0 min-w-[80px] px-3 py-2.5 sm:py-3 text-[11px] sm:text-xs font-black rounded-xl transition-all flex justify-center items-center gap-1.5 text-gray-500 hover:bg-white/50`;
                     }
                 }
             });
         };
 
-        // ================== LÓGICA DE PAGOS Y CONSTANCIAS PDF ================== //
+        // ================== LÓGICA DE PAGOS, PDF Y ZIP ================== //
 
         window.initiateCreateReceipt = () => {
             document.getElementById('pin-prompt-input').value = '';
@@ -1522,6 +1626,17 @@
 
         window.openPaymentModal = () => {
             document.getElementById('payment-form').reset();
+            
+            // Colocamos fecha por defecto de hoy
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('pay-event-date').value = today;
+            
+            // Reiniciamos el readonly y clases del input de monto
+            const amountInput = document.getElementById('pay-amount');
+            amountInput.readOnly = true;
+            amountInput.classList.add('bg-gray-100');
+            amountInput.placeholder = "Selecciona un servicio primero";
+
             document.getElementById('payment-modal').classList.add('active');
         };
         
@@ -1541,12 +1656,10 @@
 
             const paymentData = {
                 workerId: w.id,
-                eventName: document.getElementById('pay-event').value.trim(),
                 eventDate: document.getElementById('pay-event-date').value,
                 paymentDate: new Date().toISOString().split('T')[0], // FECHA AUTOMATICA DE HOY
                 service: document.getElementById('pay-service').value.trim(),
                 amount: parseInt(document.getElementById('pay-amount').value),
-                location: document.getElementById('pay-location').value.trim(),
                 notes: document.getElementById('pay-notes').value.trim(),
                 bankName: w.bankName,
                 bankType: w.bankType,
@@ -1563,7 +1676,8 @@
             try {
                 const docRef = await addDoc(collection(db, "payments"), paymentData);
                 window.appState.payments.push({dbId: docRef.id, ...paymentData});
-                localStorage.setItem('laly_payments', JSON.stringify(window.appState.payments)); // <--- ACTULIZA LA MEMORIA LOCAL
+                localStorage.setItem('laly_payments', JSON.stringify(window.appState.payments));
+                
                 window.closePaymentModal();
                 window.showToast('Constancia registrada correctamente');
                 window.setView('profile');
@@ -1575,7 +1689,7 @@
             }
         };
 
-        // Cifrado SHA-256 para el PIN usando Web Crypto API
+        // Cifrado SHA-256 para el PIN
         async function hashPIN(pin) {
             const msgBuffer = new TextEncoder().encode(pin);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -1609,7 +1723,6 @@
                 const w = window.appState.selectedWorker;
                 await updateDoc(doc(db, "workers", w.id), { pdfPinHash: hashedPin });
                 
-                // Actualizar estado local
                 w.pdfPinHash = hashedPin;
                 const index = window.appState.dbWorkers.findIndex(x => x.id === w.id);
                 if(index > -1) window.appState.dbWorkers[index] = w;
@@ -1625,7 +1738,7 @@
         };
 
         window.resetWorkerPIN = async (workerId) => {
-            if(!confirm('¿Estás seguro de restablecer la clave de este colaborador? El sistema borrará la clave actual y el colaborador deberá configurar una nueva.')) return;
+            if(!confirm('¿Restablecer la clave? El colaborador deberá configurar una nueva.')) return;
             try {
                 await updateDoc(doc(db, "workers", workerId), { pdfPinHash: null });
                 const w = window.appState.selectedWorker;
@@ -1695,7 +1808,7 @@
             if(!p) return window.showToast('Pago no encontrado', 'error');
             const w = window.appState.dbWorkers.find(x => x.id === p.workerId);
 
-            window.showToast('Generando constancia...', 'success');
+            if (action !== 'blob') window.showToast('Generando constancia...', 'success');
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ format: 'letter' });
@@ -1763,22 +1876,25 @@
             
             const lCol = 25; const rCol = 120;
 
-            doc.setFont("helvetica", "bold"); doc.text("Evento:", lCol, startY);
-            doc.setFont("helvetica", "normal"); doc.text(p.eventName || '-', lCol + 17, startY);
+            doc.setFont("helvetica", "bold"); doc.text("Servicio:", lCol, startY);
+            // Soporte para facturas antiguas que tenían "eventName"
+            const serviceText = p.service || p.eventName || '-';
+            doc.setFont("helvetica", "normal"); doc.text(serviceText, lCol + 20, startY);
 
             doc.setFont("helvetica", "bold"); doc.text("Fecha Evento:", rCol, startY);
             doc.setFont("helvetica", "normal"); doc.text(p.eventDate || '-', rCol + 28, startY);
 
             startY += 10;
-            doc.setFont("helvetica", "bold"); doc.text("Lugar:", lCol, startY);
-            doc.setFont("helvetica", "normal"); doc.text(p.location || '-', lCol + 15, startY);
+            let notesText = p.notes || 'Ninguna';
+            if (p.location) notesText = `Lugar: ${p.location}. ${notesText}`; // Facturas antiguas
+            
+            doc.setFont("helvetica", "bold"); doc.text("Observaciones:", lCol, startY);
+            // Dividir las observaciones por si son largas
+            const splitNotes = doc.splitTextToSize(notesText, 65);
+            doc.setFont("helvetica", "normal"); doc.text(splitNotes, lCol + 32, startY);
 
             doc.setFont("helvetica", "bold"); doc.text("Fecha de Pago:", rCol, startY);
             doc.setFont("helvetica", "normal"); doc.text(p.paymentDate || '-', rCol + 30, startY);
-
-            startY += 10;
-            doc.setFont("helvetica", "bold"); doc.text("Servicio:", lCol, startY);
-            doc.setFont("helvetica", "normal"); doc.text(p.service || '-', lCol + 18, startY);
 
             startY += 18;
             const formatCurrency = (val) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(val);
@@ -1835,9 +1951,12 @@
             doc.text(`Generado el: ${new Date().toLocaleString()}`, 20, footerY);
             doc.text(`Constancia protegida digitalmente`, 195.9, footerY, { align: "right" });
 
-            const fileName = `Constancia_Laly_${w.document}_${p.eventDate}.pdf`;
+            const safeName = w.name.replace(/[^a-zA-Z0-9]/g, '_');
+            const fileName = `Constancia_Laly_${safeName}_${p.eventDate}.pdf`;
             
-            if (action === 'download') {
+            if (action === 'blob') {
+                return doc.output('blob'); // Retorno silencioso para el ZIP
+            } else if (action === 'download') {
                 doc.save(fileName);
             } else if (action === 'share' || action === 'view') {
                 const pdfBlob = doc.output('blob');
@@ -1860,20 +1979,52 @@
             }
         };
 
+        window.downloadMonthlyZip = async (monthStr) => {
+            const payments = window.appState.payments.filter(p => p.eventDate && p.eventDate.startsWith(monthStr));
+            if(payments.length === 0) return window.showToast('No hay cobros en este mes', 'error');
+
+            window.showToast('Generando ZIP, por favor no cierres la ventana...', 'success');
+            
+            try {
+                const zip = new JSZip();
+                for(const p of payments) {
+                    const w = window.appState.dbWorkers.find(x => x.id === p.workerId) || { name: 'Desconocido', document: '000' };
+                    // Generar PDF silenciosamente
+                    const pdfBlob = await window.generatePaymentPDF(p.dbId, 'blob');
+                    if (pdfBlob) {
+                        const safeName = w.name.replace(/[^a-zA-Z0-9]/g, '_');
+                        zip.file(`Constancia_${safeName}_${p.eventDate}_${p.dbId}.pdf`, pdfBlob);
+                    }
+                }
+
+                const content = await zip.generateAsync({type:"blob"});
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = `Cierre_LALY_${monthStr}.zip`;
+                link.click();
+                window.showToast('ZIP descargado con éxito');
+            } catch (err) {
+                console.error(err);
+                window.showToast('Error al generar el ZIP', 'error');
+            }
+        };
+
         window.deletePayment = async (id) => {
             if(!confirm('¿Estás seguro de eliminar esta constancia de cobro?')) return;
             try {
                 await deleteDoc(doc(db, "payments", id));
                 window.appState.payments = window.appState.payments.filter(p => p.dbId !== id);
-                localStorage.setItem('laly_payments', JSON.stringify(window.appState.payments)); // <--- LIMPIA LA MEMORIA LOCAL
+                localStorage.setItem('laly_payments', JSON.stringify(window.appState.payments));
+                
                 window.showToast('Constancia eliminada');
-                window.setView('profile'); // Recarga el perfil para actualizar la lista
+                // Refrescar la vista actual (perfil o finanzas)
+                window.setView(window.appState.currentView);
             } catch (e) { 
                 window.showToast('Error al eliminar constancia', 'error'); 
             }
         };
 
-        // ================== FIN NUEVA LÓGICA ================== //
+        // ================== FIN LÓGICA DE PAGOS ================== //
 
         window.savePoint = async () => {
             const amount = parseInt(document.getElementById('pt-amount').value);
@@ -1930,17 +2081,6 @@
         window.deleteDocFile = async (id) => { if(!confirm('¿Eliminar este documento?')) return; await deleteDoc(doc(db, "documents", id)); window.setView('profile'); };
         window.copyToClipboard = (txt) => { navigator.clipboard.writeText(txt); window.showToast('Cuenta copiada'); };
 
-        window.handleBankChange = (selectElement) => {
-            const numInput = document.getElementById('w-bank-num');
-            if (selectElement.value === 'BRE-B') {
-                numInput.type = 'text';
-                numInput.placeholder = 'Número / Código Alfanumérico';
-            } else {
-                numInput.type = 'number';
-                numInput.placeholder = 'Número de Cuenta';
-            }
-        };
-
         window.openWorkerForm = (id = null) => {
             document.getElementById('worker-form').reset(); 
             document.getElementById('w-photo-preview').classList.add('hidden'); 
@@ -1977,7 +2117,11 @@
                     document.getElementById('w-bank-type').value = w.bankType||'Ahorros'; 
                     document.getElementById('w-bank-num').value = w.bankNumber||''; 
                     document.getElementById('w-bank-owner').value = w.bankOwner||'';
-                    window.handleBankChange(document.getElementById('w-bank-name'));
+                    
+                    const bankNameSelect = document.getElementById('w-bank-name');
+                    if (bankNameSelect.value === 'BRE-B') {
+                        document.getElementById('w-bank-num').type = 'text';
+                    }
                 }
                 
                 const dayMap = { 'Lunes': 'lunes', 'Martes': 'martes', 'Miércoles': 'miercoles', 'Jueves': 'jueves', 'Viernes': 'viernes', 'Sábado': 'sabado', 'Domingo': 'domingo' };
@@ -2015,7 +2159,12 @@
             } else { 
                 document.getElementById('worker-modal-title').innerText = 'Nuevo Colaborador'; 
                 document.getElementById('w-id').value = '';
-                if(canSeeBank) window.handleBankChange(document.getElementById('w-bank-name'));
+                if(canSeeBank) {
+                    const bankNameSelect = document.getElementById('w-bank-name');
+                    if (bankNameSelect.value === 'BRE-B') {
+                        document.getElementById('w-bank-num').type = 'text';
+                    }
+                }
                 document.getElementById('worker-modal').classList.add('active');
             }
         };
