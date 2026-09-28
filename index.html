@@ -393,14 +393,20 @@
                             <div class="relative">
                                 <select required id="pay-service" onchange="window.handleServiceChange(this)" class="w-full border border-gray-200 bg-white rounded-xl p-3 pr-10 text-sm font-semibold text-gray-800 focus:border-[#bb7434] outline-none shadow-sm appearance-none cursor-pointer">
                                     <option value="" disabled selected>Selecciona un servicio...</option>
-                                    <option value="Logística">Logística ($50.000)</option>
-                                    <option value="Personaje botarga / princesa">Personaje botarga / princesa ($60.000)</option>
-                                    <option value="Personaje show musical">Personaje show musical ($70.000)</option>
-                                    <option value="Pintucaritas">Pintucaritas ($70.000)</option>
-                                    <option value="Apoyo o asistente">Apoyo o asistente ($50.000)</option>
-                                    <option value="Animación">Animación (Valor manual)</option>
+                                    <option value="Logística">Logística</option>
+                                    <option value="Personaje botarga / princesa">Personaje botarga / princesa</option>
+                                    <option value="Personaje show musical">Personaje show musical</option>
+                                    <option value="Pintucaritas">Pintucaritas</option>
+                                    <option value="Apoyo o asistente">Apoyo o asistente</option>
+                                    <option value="Animación">Animación</option>
+                                    <option value="Hora loca">Hora loca</option>
+                                    <option value="Otros conceptos">Otros conceptos</option>
                                 </select>
                                 <i data-lucide="chevron-down" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
+                            </div>
+                            <div id="other-concept-container" class="hidden mt-3">
+                                <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Especificar concepto o rol</label>
+                                <input type="text" id="pay-other-concept" placeholder="¿Qué labor realizaste?" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm transition-colors">
                             </div>
                         </div>
                         <div>
@@ -560,7 +566,19 @@
 
         window.handleServiceChange = (selectElement) => {
             const amountInput = document.getElementById('pay-amount');
+            const otherConceptContainer = document.getElementById('other-concept-container');
+            const otherConceptInput = document.getElementById('pay-other-concept');
             const val = selectElement.value;
+            
+            // Lógica para mostrar/ocultar el campo "Otros conceptos"
+            if (val === 'Otros conceptos') {
+                otherConceptContainer.classList.remove('hidden');
+                otherConceptInput.required = true;
+            } else {
+                otherConceptContainer.classList.add('hidden');
+                otherConceptInput.required = false;
+                otherConceptInput.value = '';
+            }
             
             // Precios automatizados
             const prices = {
@@ -575,7 +593,8 @@
                 amountInput.value = prices[val];
                 amountInput.readOnly = true;
                 amountInput.classList.add('bg-gray-100');
-            } else if (val === 'Animación') {
+                amountInput.placeholder = "";
+            } else if (val === 'Animación' || val === 'Hora loca' || val === 'Otros conceptos') {
                 amountInput.value = '';
                 amountInput.readOnly = false;
                 amountInput.classList.remove('bg-gray-100');
@@ -1633,6 +1652,12 @@
             amountInput.readOnly = true;
             amountInput.classList.add('bg-gray-100');
             amountInput.placeholder = "Selecciona un servicio primero";
+            
+            const otherConceptContainer = document.getElementById('other-concept-container');
+            if (otherConceptContainer) {
+                otherConceptContainer.classList.add('hidden');
+                document.getElementById('pay-other-concept').required = false;
+            }
 
             document.getElementById('payment-modal').classList.add('active');
         };
