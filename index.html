@@ -367,7 +367,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORMULARIO DE PAGOS (CONSTANCIAS SIMPLIFICADAS) -->
+    <!-- MODAL FORMULARIO DE PAGOS (CONSTANCIAS SIMPLIFICADAS CON RECARGOS) -->
     <div id="payment-modal" class="modal-backdrop z-[1050]">
         <div class="modal-content w-full sm:max-w-sm md:max-w-md">
             <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
@@ -398,8 +398,8 @@
                                     <option value="Personaje show musical">Personaje show musical</option>
                                     <option value="Pintucaritas">Pintucaritas</option>
                                     <option value="Apoyo o asistente">Apoyo o asistente</option>
-                                    <option value="Animación">Animación</option>
                                     <option value="Hora loca">Hora loca</option>
+                                    <option value="Animación">Animación</option>
                                     <option value="Otros conceptos">Otros conceptos</option>
                                 </select>
                                 <i data-lucide="chevron-down" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
@@ -410,9 +410,28 @@
                             </div>
                         </div>
                         <div>
-                            <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Valor a Cobrar (COP)</label>
+                            <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Valor del Servicio (COP)</label>
                             <input required type="number" id="pay-amount" placeholder="Selecciona un servicio primero" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm font-black text-gray-800 focus:border-[#bb7434] outline-none shadow-sm transition-colors" readonly>
                         </div>
+
+                        <!-- NUEVO: RECARGOS -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 bg-gray-100/50 rounded-xl border border-gray-200/60">
+                            <div>
+                                <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">¿Recibiste recargos?</label>
+                                <div class="relative">
+                                    <select id="pay-has-surcharge" onchange="window.handleSurchargeChange(this)" class="w-full border border-gray-200 bg-white rounded-xl p-3 pr-10 text-sm font-semibold text-gray-800 focus:border-[#bb7434] outline-none shadow-sm appearance-none cursor-pointer">
+                                        <option value="no" selected>No</option>
+                                        <option value="si">Sí</option>
+                                    </select>
+                                    <i data-lucide="chevron-down" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
+                                </div>
+                            </div>
+                            <div id="surcharge-container" class="hidden">
+                                <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Valor del recargo (COP)</label>
+                                <input type="number" id="pay-surcharge" placeholder="Ingresa el valor..." class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm font-black text-gray-800 focus:border-[#bb7434] outline-none shadow-sm transition-colors">
+                            </div>
+                        </div>
+
                         <div>
                             <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Observaciones (Opcional)</label>
                             <textarea id="pay-notes" rows="2" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm resize-none"></textarea>
@@ -603,6 +622,20 @@
                 amountInput.readOnly = true;
                 amountInput.classList.add('bg-gray-100');
                 amountInput.placeholder = "Selecciona un servicio...";
+            }
+        };
+
+        window.handleSurchargeChange = (select) => {
+            const container = document.getElementById('surcharge-container');
+            const input = document.getElementById('pay-surcharge');
+            if (select.value === 'si') {
+                container.classList.remove('hidden');
+                input.required = true;
+                input.focus();
+            } else {
+                container.classList.add('hidden');
+                input.required = false;
+                input.value = '';
             }
         };
 
@@ -1647,6 +1680,7 @@
             document.getElementById('payment-form').reset();
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('pay-event-date').value = today;
+            
             const amountInput = document.getElementById('pay-amount');
             amountInput.readOnly = true;
             amountInput.classList.add('bg-gray-100');
@@ -1656,6 +1690,16 @@
             if (otherConceptContainer) {
                 otherConceptContainer.classList.add('hidden');
                 document.getElementById('pay-other-concept').required = false;
+            }
+
+            // Resetear recargos
+            document.getElementById('pay-has-surcharge').value = 'no';
+            const surchargeContainer = document.getElementById('surcharge-container');
+            const surchargeInput = document.getElementById('pay-surcharge');
+            if(surchargeContainer) surchargeContainer.classList.add('hidden');
+            if(surchargeInput) {
+                surchargeInput.required = false;
+                surchargeInput.value = '';
             }
 
             document.getElementById('payment-modal').classList.add('active');
@@ -1717,9 +1761,23 @@
                     const paddedNum = String(assignedNumber).padStart(4, '0');
                     const paymentNumberString = `LALY-CC-${yyyy}-${mm}-${paddedNum}`;
 
+                    // Cálculo del valor final (Servicio + Recargo)
+                    let baseAmt = parseInt(document.getElementById('pay-amount').value) || 0;
+                    let surchargeAmt = 0;
+                    if(document.getElementById('pay-has-surcharge').value === 'si') {
+                        surchargeAmt = parseInt(document.getElementById('pay-surcharge').value) || 0;
+                    }
+                    let totalAmt = baseAmt + surchargeAmt;
+
                     let finalService = document.getElementById('pay-service').value.trim();
                     if (finalService === 'Otros conceptos') {
                         finalService = `Otros conceptos: ${document.getElementById('pay-other-concept').value.trim()}`;
+                    }
+
+                    let notesText = document.getElementById('pay-notes').value.trim();
+                    if(surchargeAmt > 0) {
+                        const formattedSurcharge = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(surchargeAmt);
+                        notesText = notesText ? `Recargo incluido de ${formattedSurcharge}. ${notesText}` : `Recargo incluido de ${formattedSurcharge}.`;
                     }
 
                     const paymentData = {
@@ -1727,8 +1785,10 @@
                         eventDate: document.getElementById('pay-event-date').value,
                         paymentDate: todayIso,
                         service: finalService,
-                        amount: parseInt(document.getElementById('pay-amount').value),
-                        notes: document.getElementById('pay-notes').value.trim(),
+                        amount: totalAmt,
+                        baseAmount: baseAmt,
+                        surcharge: surchargeAmt,
+                        notes: notesText,
                         bankName: w.bankName,
                         bankType: w.bankType,
                         bankNumber: w.bankNumber,
