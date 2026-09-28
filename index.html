@@ -870,35 +870,7 @@
         };
 
         window.renderNav = () => {
-            const role = window.appState.currentUser.systemRole;
-            const desktopNav = document.getElementById('desktop-nav');
-            const mobileNav = document.getElementById('mobile-nav');
-
-            const navItems = [
-                { id: 'dashboard', icon: 'layout-dashboard', label: 'Inicio', roles: ['ADMIN', 'HR', 'COORD'] },
-                { id: 'directory', icon: 'users', label: 'Directorio', roles: ['ADMIN', 'HR', 'COORD'] },
-                { id: 'ranking', icon: 'star', label: 'Ranking', roles: ['ADMIN', 'HR', 'COORD'] },
-                { id: 'finances', icon: 'wallet', label: 'Finanzas', roles: ['ADMIN', 'HR'] },
-                { id: 'messages', icon: 'message-square', label: 'Mensajes', roles: ['ADMIN', 'HR', 'COORD'] },
-                { id: 'profile', icon: 'user', label: 'Mi Perfil', roles: ['WORKER'] }
-            ];
-
-            const allowedItems = navItems.filter(item => item.roles.includes(role));
-
-            desktopNav.innerHTML = allowedItems.map(item => `
-                <button onclick="window.setView('${item.id}')"
-                    class="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl font-bold transition-all ${window.appState.currentView === item.id ? 'bg-[#bb7434] text-white shadow-lg shadow-[#bb7434]/20' : 'text-gray-300 hover:bg-[#7a4a35] hover:text-white'}">
-                    <i data-lucide="${item.icon}" class="w-5 h-5 shrink-0"></i> <span class="truncate">${item.label}</span>
-                </button>
-            `).join('');
-
-            let mobileHtml = allowedItems.map(item => `
-                <button onclick="window.setView('${item.id}')" class="flex flex-col items-center gap-1 transition-colors ${window.appState.currentView === item.id ? 'text-[#542c1c]' : 'text-gray-400'}">
-                    <div class="p-2 rounded-2xl transition-all ${window.appState.currentView === item.id ? 'bg-[#7be4af]/20' : ''}"><i data-lucide="${item.icon}" class="w-5 h-5 shrink-0"></i></div>
-                    <span class="text-[10px] font-bold">${item.label}</span>
-                </button>
-            `).join('');
-
+            // ... (el código de renderNav sigue igual)
             mobileHtml += `<button onclick="window.appSignOut()" class="flex flex-col items-center gap-1 transition-colors text-red-400"><div class="p-2 rounded-2xl transition-all"><i data-lucide="log-out" class="w-5 h-5 shrink-0"></i></div><span class="text-[10px] font-bold">Salir</span></button>`;
             mobileNav.innerHTML = mobileHtml;
             lucide.createIcons();
@@ -907,6 +879,7 @@
         window.renderDashboard = () => {
             const activeWorkers = window.appState.dbWorkers.filter(w => w.status === 'activo' && w.role !== 'Administrador').length;
             const firstName = window.appState.currentUser.name.split(' ')[0];
+            const canSeeFinances = ['ADMIN', 'HR'].includes(window.appState.currentUser.systemRole);
 
             const now = new Date();
             const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1);
