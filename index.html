@@ -1697,11 +1697,16 @@
                     const paddedNum = String(assignedNumber).padStart(4, '0');
                     const paymentNumberString = `LALY-CC-${yyyy}-${mm}-${paddedNum}`;
 
+                    let finalService = document.getElementById('pay-service').value.trim();
+                    if (finalService === 'Otros conceptos') {
+                        finalService = `Otros conceptos: ${document.getElementById('pay-other-concept').value.trim()}`;
+                    }
+
                     const paymentData = {
                         workerId: w.id,
                         eventDate: document.getElementById('pay-event-date').value,
                         paymentDate: todayIso,
-                        service: document.getElementById('pay-service').value.trim(),
+                        service: finalService,
                         amount: parseInt(document.getElementById('pay-amount').value),
                         notes: document.getElementById('pay-notes').value.trim(),
                         bankName: w.bankName,
