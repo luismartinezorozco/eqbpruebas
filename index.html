@@ -9,6 +9,7 @@
     
     <link rel="icon" type="image/svg+xml" href="https://www.image2url.com/r2/default/images/1788374834690-45577bd2-1651-4ed7-ad3b-d8813e90ef11.svg">
     
+    <!-- Configuraciones PWA para iOS y Android (Icono de aplicación y pantalla completa) -->
     <meta name="theme-color" content="#542c1c">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -383,7 +384,6 @@
                     </div>
 
                     <div class="grid grid-cols-1 gap-3 sm:gap-4">
-                        <!-- Campo eliminado: Nombre del Evento y Lugar -->
                         <div>
                             <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Fecha del Evento</label>
                             <input required type="date" id="pay-event-date" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm">
@@ -570,7 +570,6 @@
             const otherConceptInput = document.getElementById('pay-other-concept');
             const val = selectElement.value;
             
-            // Lógica para mostrar/ocultar el campo "Otros conceptos"
             if (val === 'Otros conceptos') {
                 otherConceptContainer.classList.remove('hidden');
                 otherConceptInput.required = true;
@@ -580,7 +579,6 @@
                 otherConceptInput.value = '';
             }
             
-            // Precios automatizados
             const prices = {
                 'Logística': 50000,
                 'Personaje botarga / princesa': 60000,
@@ -604,7 +602,7 @@
                 amountInput.value = '';
                 amountInput.readOnly = true;
                 amountInput.classList.add('bg-gray-100');
-                amountInput.placeholder = "Selecciona un servicio primero";
+                amountInput.placeholder = "Selecciona un servicio...";
             }
         };
 
@@ -837,7 +835,6 @@
             }
             if (viewName === 'profile') {
                 const wId = window.appState.selectedWorker.id;
-                // Mantener en la pestaña seleccionada, si no existe o es nueva, ir a rendimiento
                 window.appState.activeProfileTab = window.appState.activeProfileTab || 'rendimiento'; 
                 
                 if (!window.appState.cachedDocs) window.appState.cachedDocs = {};
@@ -870,7 +867,35 @@
         };
 
         window.renderNav = () => {
-            // ... (el código de renderNav sigue igual)
+            const role = window.appState.currentUser.systemRole;
+            const desktopNav = document.getElementById('desktop-nav');
+            const mobileNav = document.getElementById('mobile-nav');
+
+            const navItems = [
+                { id: 'dashboard', icon: 'layout-dashboard', label: 'Inicio', roles: ['ADMIN', 'HR', 'COORD'] },
+                { id: 'directory', icon: 'users', label: 'Directorio', roles: ['ADMIN', 'HR', 'COORD'] },
+                { id: 'ranking', icon: 'star', label: 'Ranking', roles: ['ADMIN', 'HR', 'COORD'] },
+                { id: 'finances', icon: 'wallet', label: 'Finanzas', roles: ['ADMIN', 'HR'] },
+                { id: 'messages', icon: 'message-square', label: 'Mensajes', roles: ['ADMIN', 'HR', 'COORD'] },
+                { id: 'profile', icon: 'user', label: 'Mi Perfil', roles: ['WORKER'] }
+            ];
+
+            const allowedItems = navItems.filter(item => item.roles.includes(role));
+
+            desktopNav.innerHTML = allowedItems.map(item => `
+                <button onclick="window.setView('${item.id}')"
+                    class="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl font-bold transition-all ${window.appState.currentView === item.id ? 'bg-[#bb7434] text-white shadow-lg shadow-[#bb7434]/20' : 'text-gray-300 hover:bg-[#7a4a35] hover:text-white'}">
+                    <i data-lucide="${item.icon}" class="w-5 h-5 shrink-0"></i> <span class="truncate">${item.label}</span>
+                </button>
+            `).join('');
+
+            let mobileHtml = allowedItems.map(item => `
+                <button onclick="window.setView('${item.id}')" class="flex flex-col items-center gap-1 transition-colors ${window.appState.currentView === item.id ? 'text-[#542c1c]' : 'text-gray-400'}">
+                    <div class="p-2 rounded-2xl transition-all ${window.appState.currentView === item.id ? 'bg-[#7be4af]/20' : ''}"><i data-lucide="${item.icon}" class="w-5 h-5 shrink-0"></i></div>
+                    <span class="text-[10px] font-bold">${item.label}</span>
+                </button>
+            `).join('');
+
             mobileHtml += `<button onclick="window.appSignOut()" class="flex flex-col items-center gap-1 transition-colors text-red-400"><div class="p-2 rounded-2xl transition-all"><i data-lucide="log-out" class="w-5 h-5 shrink-0"></i></div><span class="text-[10px] font-bold">Salir</span></button>`;
             mobileNav.innerHTML = mobileHtml;
             lucide.createIcons();
@@ -1077,7 +1102,7 @@
             const isAdmin = window.appState.currentUser.systemRole === 'ADMIN';
             
             let html = `
-            <div class="max-w-7xl mx-auto pb-24 lg:pb-8">
+            <div class="flex flex-col max-w-7xl mx-auto pb-24 lg:pb-8">
                 <div class="bg-white p-4 sm:p-5 md:p-6 rounded-[2rem] card-shadow mb-4 sm:mb-6 border border-gray-100/50">
                     <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                         <div class="w-full md:w-auto">
@@ -1662,7 +1687,7 @@
                 const sequenceDocId = `${yyyy}-${mm}`;
                 
                 const sequenceRef = doc(db, "payment_sequences", sequenceDocId);
-                const newPaymentRef = doc(collection(db, "payments")); // Generador de ID automático
+                const newPaymentRef = doc(collection(db, "payments")); 
 
                 await runTransaction(db, async (transaction) => {
                     const seqDoc = await transaction.get(sequenceRef);
@@ -1677,22 +1702,18 @@
 
                     let assignedNumber;
                     if (reusableSequences.length > 0) {
-                        // Reutilizar el número más pequeño disponible
                         reusableSequences.sort((a, b) => a - b);
                         assignedNumber = reusableSequences.shift();
                     } else {
-                        // Aumentar la secuencia general
                         lastSequence += 1;
                         assignedNumber = lastSequence;
                     }
 
-                    // Actualizar control de secuencia
                     transaction.set(sequenceRef, {
                         lastSequence: lastSequence,
                         reusableSequences: reusableSequences
                     }, { merge: true });
 
-                    // Formatear el consecutivo LALY-CC-YYYY-MM-XXXX
                     const paddedNum = String(assignedNumber).padStart(4, '0');
                     const paymentNumberString = `LALY-CC-${yyyy}-${mm}-${paddedNum}`;
 
@@ -1715,7 +1736,6 @@
                         recordedBy: window.appState.currentUser.name,
                         timestamp: Date.now(),
                         
-                        // Campos del Consecutivo Atómico
                         paymentNumber: paymentNumberString,
                         sequenceYear: parseInt(yyyy),
                         sequenceMonth: mm,
@@ -1725,7 +1745,6 @@
                     transaction.set(newPaymentRef, paymentData);
                     return paymentData;
                 }).then((paymentData) => {
-                    // Actualizar estado local inmediatamente al terminar la transacción
                     window.appState.payments.push({dbId: newPaymentRef.id, ...paymentData});
                     localStorage.setItem('laly_payments', JSON.stringify(window.appState.payments));
                     
@@ -1882,7 +1901,6 @@
             doc.setTextColor(200, 178, 162); 
             doc.text("CONSTANCIA DE PAGO DIGITAL", 107.95, 32, { align: "center" });
 
-            // Mostrar número de constancia (Consecutivo)
             if (p.paymentNumber) {
                 doc.setFontSize(10);
                 doc.setFont("helvetica", "bold");
@@ -2079,7 +2097,6 @@
                     const sequenceRef = doc(db, "payment_sequences", sequenceDocId);
                     const paymentRef = doc(db, "payments", id);
 
-                    // Transacción para liberar el número de forma segura
                     await runTransaction(db, async (transaction) => {
                         const seqDoc = await transaction.get(sequenceRef);
                         let reusableSequences = [];
@@ -2097,11 +2114,9 @@
                         transaction.delete(paymentRef);
                     });
                 } else {
-                    // Fallback para registros antiguos que no tenían consecutivo atómico
                     await deleteDoc(doc(db, "payments", id));
                 }
 
-                // Borramos inmediatamente de la memoria local para todos
                 window.appState.payments = window.appState.payments.filter(x => x.dbId !== id);
                 localStorage.setItem('laly_payments', JSON.stringify(window.appState.payments));
                 
@@ -2232,7 +2247,7 @@
                 });
 
                 if(daysToCheck.length > 0) {
-                    daysToCheck.forEach(day => { const checkbox = document.querySelector(`.w-availability-day[value="${day}"]`); if(checkbox) checkbox.checked = true; });
+                    daysToCheck.forEach(day => { const checkbox = document.querySelector(`.w-availability-day[value="${day}"]`); if(checkbox) checked = true; });
                     window.updateAvailabilityUI();
                     setTimeout(() => {
                         textParts.forEach(part => {
