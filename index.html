@@ -361,7 +361,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORMULARIO DE PAGOS (SIMPLIFICADO) -->
+    <!-- MODAL FORMULARIO DE PAGOS (SIMPLIFICADO E INTELIGENTE) -->
     <div id="payment-modal" class="modal-backdrop z-[1050]">
         <div class="modal-content w-full sm:max-w-sm md:max-w-md">
             <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
@@ -399,15 +399,15 @@
                                 <input type="text" id="pay-other-concept" placeholder="¿Qué labor realizaste?" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm transition-colors box-border">
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Valor del Servicio (COP)</label>
-                            <input required type="number" id="pay-amount" placeholder="Selecciona un servicio primero" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm font-black text-gray-800 focus:border-[#bb7434] outline-none shadow-sm transition-colors box-border" readonly>
-                        </div>
-
+                        
                         <!-- RECARGOS -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 bg-gray-100/50 rounded-xl border border-gray-200/60">
                             <div>
-                                <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">¿Recibiste recargos?</label>
+                                <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Valor del Servicio</label>
+                                <input required type="number" id="pay-amount" placeholder="Valor" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm font-black text-gray-800 focus:border-[#bb7434] outline-none shadow-sm transition-colors box-border" readonly>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">¿Recargos extras?</label>
                                 <div class="relative">
                                     <select id="pay-has-surcharge" onchange="window.handleSurchargeChange(this)" class="w-full border border-gray-200 bg-white rounded-xl p-3 pr-10 text-sm font-semibold text-gray-800 focus:border-[#bb7434] outline-none shadow-sm appearance-none cursor-pointer box-border">
                                         <option value="no" selected>No</option>
@@ -416,9 +416,9 @@
                                     <i data-lucide="chevron-down" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
                                 </div>
                             </div>
-                            <div id="surcharge-container" class="hidden">
+                            <div id="surcharge-container" class="hidden sm:col-span-2 mt-1 border-t border-gray-200/50 pt-3">
                                 <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Valor del recargo (COP)</label>
-                                <input type="number" id="pay-surcharge" placeholder="Ingresa el valor..." class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm font-black text-gray-800 focus:border-[#bb7434] outline-none shadow-sm transition-colors box-border">
+                                <input type="number" id="pay-surcharge" placeholder="Ingresa el valor del recargo extra..." class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm font-black text-[#bb7434] focus:border-[#bb7434] outline-none shadow-sm transition-colors box-border">
                             </div>
                         </div>
                     </div>
@@ -1459,8 +1459,8 @@
                             <div class="text-white flex-1 min-w-0">
                                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-black leading-tight mb-2 truncate drop-shadow-md">${w.name}</h2>
                                 <div class="flex items-center gap-2 flex-wrap">
-                                    <span class="bg-[#bb7434] text-white px-3 py-1 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-md border border-[#bb7434]/50">${w.role}</span>
-                                    <span class="bg-white/10 text-[#cab2a2] px-3 py-1 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider backdrop-blur-md border border-white/10">CC. ${w.document}</span>
+                                    <span class="bg-[#bb7434] text-white px-3 py-1 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-md border border-[#bb7434]/50">${w.role || '-'}</span>
+                                    <span class="bg-white/10 text-[#cab2a2] px-3 py-1 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider backdrop-blur-md border border-white/10">CC. ${w.document || '-'}</span>
                                 </div>
                             </div>
                             ${canEdit ? `
@@ -1686,7 +1686,7 @@
             const amountInput = document.getElementById('pay-amount');
             amountInput.readOnly = true;
             amountInput.classList.add('bg-gray-100');
-            amountInput.placeholder = "Selecciona un servicio primero";
+            amountInput.placeholder = "Valor";
             
             const otherConceptContainer = document.getElementById('other-concept-container');
             if (otherConceptContainer) {
@@ -2272,7 +2272,7 @@
                 document.getElementById('w-name').value = w.name || ''; 
                 document.getElementById('w-lastname').value = w.lastname || '';
                 document.getElementById('w-birthday').value = w.birthday || '';
-                document.getElementById('w-doc').value = w.document; 
+                document.getElementById('w-doc').value = w.document || ''; 
                 document.getElementById('w-email').value = w.email || '';
                 document.getElementById('w-phone').value = w.phone || ''; 
                 document.getElementById('w-bloodtype').value = w.bloodType || '';
@@ -2281,8 +2281,8 @@
                 document.getElementById('w-city').value = w.city || ''; 
                 document.getElementById('w-emergency-name').value = w.emergencyName || '';
                 document.getElementById('w-emergency-phone').value = w.emergencyPhone || '';
-                document.getElementById('w-role').value = w.role; 
-                document.getElementById('w-status').value = w.status; 
+                document.getElementById('w-role').value = w.role || 'Colaborador'; 
+                document.getElementById('w-status').value = w.status || 'activo'; 
                 document.getElementById('w-specs').value = w.specialties || '';
                 
                 if(canSeeBank){ 
@@ -2305,7 +2305,10 @@
                 });
 
                 if(daysToCheck.length > 0) {
-                    daysToCheck.forEach(day => { const checkbox = document.querySelector(`.w-availability-day[value="${day}"]`); if(checkbox) checked = true; });
+                    daysToCheck.forEach(day => { 
+                        const checkbox = document.querySelector(`.w-availability-day[value="${day}"]`); 
+                        if(checkbox) checkbox.checked = true; // CORRECCIÓN: checkbox.checked = true 
+                    });
                     window.updateAvailabilityUI();
                     setTimeout(() => {
                         textParts.forEach(part => {
