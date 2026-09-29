@@ -203,7 +203,7 @@
 
         <!-- MAIN CONTENT AREA -->
         <div class="flex-1 flex flex-col h-[100dvh] bg-[#f3ebe3] lg:rounded-l-[2.5rem] overflow-hidden relative shadow-2xl lg:border-l lg:border-white/10">
-            <div id="main-content" class="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 lg:p-8 relative pb-36 sm:pb-40 md:pb-40 lg:pb-12 hide-scrollbar">
+            <div id="main-content" class="flex-1 overflow-y-auto p-0 md:p-0 lg:p-0 relative pb-36 sm:pb-40 md:pb-40 lg:pb-12 hide-scrollbar">
                 <!-- Vistas dinámicas inyectadas aquí -->
             </div>
 
@@ -379,14 +379,10 @@
                 <form id="payment-form" onsubmit="window.savePayment(event)" class="space-y-4">
                     <div class="bg-blue-50/50 border border-blue-100 p-3 rounded-xl mb-4 text-xs font-medium text-blue-800 flex gap-2">
                         <i data-lucide="info" class="w-4 h-4 shrink-0 text-blue-500"></i>
-                        <span>Tus datos bancarios actuales se anexarán automáticamente a esta constancia.</span>
+                        <span>Tus datos bancarios actuales se anexarán automáticamente a esta constancia. La fecha de pago se asume al día de hoy.</span>
                     </div>
 
                     <div class="grid grid-cols-1 gap-3 sm:gap-4">
-                        <div>
-                            <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Fecha del Evento</label>
-                            <input required type="date" id="pay-event-date" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm box-border">
-                        </div>
                         <div>
                             <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Servicio Prestado</label>
                             <div class="relative">
@@ -412,7 +408,7 @@
                             <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Valor del Servicio (COP)</label>
                             <input required type="number" id="pay-amount" placeholder="Selecciona un servicio primero" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm font-black text-gray-800 focus:border-[#bb7434] outline-none shadow-sm transition-colors box-border" readonly>
                         </div>
-                        
+
                         <!-- RECARGOS -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 bg-gray-100/50 rounded-xl border border-gray-200/60">
                             <div>
@@ -532,7 +528,6 @@
         };
 
         window.evaluationCriteria = [
-            // POSITIVOS
             { reason: "Llegar puntualmente al evento", amount: 5, type: "pos" },
             { reason: "Foto de evidencia al llegar", amount: 5, type: "pos" },
             { reason: "Foto de evidencia al finalizar", amount: 5, type: "pos" },
@@ -541,7 +536,6 @@
             { reason: "Realizar video de la utilería que entra y sale de la casa", amount: 5, type: "pos" },
             { reason: "Recibir felicitación o reconocimiento especial de un cliente", amount: 10, type: "pos" },
             { reason: "Mostrar disposición para apoyar al equipo", amount: 5, type: "pos" },
-            // NEGATIVOS
             { reason: "Llegar tarde sin justificación", amount: 10, type: "neg" },
             { reason: "No enviar foto de llegada", amount: 5, type: "neg" },
             { reason: "No enviar foto de finalización", amount: 5, type: "neg" },
@@ -845,6 +839,7 @@
             window.renderNav();
             
             const main = document.getElementById('main-content');
+            main.className = "flex-1 overflow-y-auto relative hide-scrollbar " + (viewName === 'dashboard' || viewName === 'profile' ? "p-0" : "p-3 sm:p-4 md:p-6 lg:p-8 pb-36 sm:pb-40 md:pb-40 lg:pb-12");
             
             if (viewName === 'dashboard') { main.innerHTML = window.renderDashboard(); lucide.createIcons(); }
             if (viewName === 'directory') {
@@ -971,26 +966,30 @@
             const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
             return `
-            <div class="space-y-4 sm:space-y-6 max-w-7xl mx-auto pb-8">
-                <!-- DISEÑO CORPORATIVO PREMIUM EN ENCABEZADO -->
-                <div class="bg-[#2d170e] -mx-3 sm:-mx-4 md:-mx-6 lg:-mx-8 -mt-3 sm:-mt-4 md:-mt-6 lg:-mt-8 pt-10 sm:pt-12 md:pt-14 pb-24 sm:pb-28 px-4 sm:px-6 md:px-10 rounded-b-[2.5rem] shadow-[0_10px_40px_-10px_rgba(84,44,28,0.5)] relative overflow-hidden border-b border-[#bb7434]/20">
+            <div class="space-y-4 sm:space-y-6 max-w-7xl mx-auto pb-36 sm:pb-40 md:pb-40 lg:pb-12">
+                <!-- DISEÑO CORPORATIVO SAAS ULTRA PREMIUM -->
+                <div class="bg-gradient-to-br from-[#1a0d08] via-[#2d170e] to-[#402012] pt-10 sm:pt-12 md:pt-14 pb-24 sm:pb-28 px-4 sm:px-6 md:px-10 lg:rounded-bl-[2.5rem] relative overflow-hidden shadow-2xl border-b border-[#bb7434]/30 z-0">
                     
-                    <!-- Brillo sutil de acento -->
-                    <div class="absolute top-0 right-0 w-[80%] h-[100%] bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#bb7434]/20 via-transparent to-transparent pointer-events-none"></div>
+                    <!-- Textura de Puntos (Dot Grid) -->
+                    <div class="absolute inset-0 opacity-[0.05]" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 24px 24px;"></div>
                     
-                    <!-- Contenido -->
-                    <div class="relative z-10 flex flex-row justify-between items-center gap-3">
-                        <div class="w-full min-w-0 text-shadow-sm">
-                            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight mb-1 truncate drop-shadow-md">Hola, ${firstName}</h1>
-                            <p class="text-white/70 text-xs sm:text-sm md:text-base font-medium truncate drop-shadow-sm">Panel general de administración</p>
+                    <!-- Foco de luz volumétrica indirecta -->
+                    <div class="absolute -right-24 -top-24 w-[500px] h-[500px] bg-[#bb7434] rounded-full mix-blend-screen filter blur-[120px] opacity-20 pointer-events-none"></div>
+                    <div class="absolute -left-24 -bottom-24 w-[400px] h-[400px] bg-[#bb7434] rounded-full mix-blend-screen filter blur-[100px] opacity-[0.15] pointer-events-none"></div>
+
+                    <!-- Contenedor Principal (Glassmorphism Frosted Glass) -->
+                    <div class="relative z-10 bg-white/10 backdrop-blur-2xl border border-white/20 p-5 sm:p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgba(0,0,0,0.12)] flex flex-row justify-between items-center gap-4 mt-4 sm:mt-6">
+                        <div class="w-full min-w-0">
+                            <p class="text-[#cab2a2] text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] mb-1.5 drop-shadow-sm">Panel de Control</p>
+                            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight truncate drop-shadow-md">Bienvenido, ${firstName}</h1>
                         </div>
-                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 flex items-center justify-center p-2.5 shrink-0 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
-                            <img src="https://www.image2url.com/r2/default/images/1790563425145-6bf6885c-554e-4d07-900c-35e85d92646d.png" alt="Logo LALY" class="w-full h-full object-contain filter drop-shadow-md opacity-90">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-b from-white/20 to-white/5 backdrop-blur-md border border-white/30 flex items-center justify-center p-2.5 shrink-0 shadow-[0_0_20px_rgba(0,0,0,0.2)] hover:scale-105 transition-transform duration-500">
+                            <img src="https://www.image2url.com/r2/default/images/1790563425145-6bf6885c-554e-4d07-900c-35e85d92646d.png" alt="Logo LALY" class="w-full h-full object-contain filter drop-shadow-lg opacity-95">
                         </div>
                     </div>
                 </div>
 
-                <div class="-mt-16 sm:-mt-20 relative z-20 px-0 grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                <div class="px-4 sm:px-6 md:px-10 -mt-16 sm:-mt-20 relative z-20 grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                     <div class="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] card-shadow flex items-center gap-3 sm:gap-4 group border border-gray-100 hover:border-[#bb7434]/30 transition-all">
                         <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-orange-50 text-[#bb7434] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-inner border border-orange-100/50"><i data-lucide="users" class="w-6 h-6 sm:w-7 sm:h-7"></i></div>
                         <div class="flex-1 min-w-0">
@@ -1034,7 +1033,7 @@
                     </div>` : ''}
                 </div>
 
-                <div class="mt-2 sm:mt-4">
+                <div class="px-4 sm:px-6 md:px-10 mt-2 sm:mt-4">
                     <h3 class="text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-widest mb-3 px-1 sm:px-2">Accesos Rápidos</h3>
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                         <div onclick="setView('directory')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3 sm:gap-4 cursor-pointer hover:border-[#bb7434]/40 hover:shadow-lg transition-all group border border-gray-100">
@@ -1070,7 +1069,7 @@
                 return `
                 <div class="bg-white p-4 rounded-2xl card-shadow border border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3 hover:border-[#bb7434]/30 transition-colors">
                     <div class="flex-1 min-w-0">
-                        <p class="text-[10px] text-gray-500 font-bold tracking-widest uppercase mb-0.5">${p.paymentNumber || 'SIN CONSECUTIVO'}</p>
+                        <p class="text-[10px] text-[#bb7434] font-black tracking-widest uppercase mb-0.5">${p.paymentNumber || 'SIN CONSECUTIVO'}</p>
                         <h4 class="font-black text-gray-800 text-sm sm:text-base truncate">${window.escapeHtml(w.name)}</h4>
                         <p class="text-xs text-gray-500 font-medium truncate mt-0.5"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 inline text-[#bb7434] mr-1"></i>${window.escapeHtml(p.service)}</p>
                         <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-wider font-bold">Fecha Evento: ${p.eventDate}</p>
@@ -1134,7 +1133,7 @@
             const isAdmin = window.appState.currentUser.systemRole === 'ADMIN';
             
             let html = `
-            <div class="flex flex-col max-w-7xl mx-auto pb-24 lg:pb-8">
+            <div class="flex flex-col max-w-7xl mx-auto">
                 <div class="bg-white p-4 sm:p-5 md:p-6 rounded-[2rem] card-shadow mb-4 sm:mb-6 border border-gray-100/50">
                     <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                         <div class="w-full md:w-auto">
@@ -1447,26 +1446,32 @@
             const negOptions = window.evaluationCriteria.map((c, index) => c.type === 'neg' ? `<option value="${index}">${c.reason} (-${c.amount})</option>` : '').join('');
             
             return `
-            <div class="max-w-4xl mx-auto pb-10">
-                <!-- DISEÑO CORPORATIVO PREMIUM EN PERFIL -->
-                <div class="bg-[#2d170e] px-4 sm:px-6 md:px-10 pt-8 sm:pt-10 pb-20 sm:pb-24 rounded-b-[2.5rem] md:rounded-3xl md:mt-2 shadow-[0_10px_40px_-10px_rgba(84,44,28,0.5)] relative overflow-hidden border-b border-[#bb7434]/20 z-0">
+            <div class="max-w-4xl mx-auto pb-36 sm:pb-40 lg:pb-12">
+                <!-- DISEÑO CORPORATIVO SAAS ULTRA PREMIUM EN PERFIL -->
+                <div class="bg-gradient-to-br from-[#1a0d08] via-[#2d170e] to-[#402012] px-4 sm:px-6 md:px-10 pt-8 sm:pt-10 pb-24 sm:pb-28 lg:rounded-bl-[2.5rem] md:rounded-3xl md:mt-2 shadow-2xl relative overflow-hidden z-0 border-b border-[#bb7434]/30">
                     
-                    <!-- Brillo sutil de acento -->
-                    <div class="absolute top-0 right-0 w-[80%] h-[100%] bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#bb7434]/20 via-transparent to-transparent pointer-events-none"></div>
+                    <!-- Textura de Puntos (Dot Grid) -->
+                    <div class="absolute inset-0 opacity-[0.05]" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 24px 24px;"></div>
                     
-                    <!-- Controles y título -->
+                    <!-- Foco de luz volumétrica indirecta -->
+                    <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-[#bb7434] rounded-full mix-blend-screen filter blur-[100px] opacity-[0.15] pointer-events-none"></div>
+
                     <div class="relative z-10">
-                        ${role !== 'WORKER' ? `<button onclick="setView('directory')" class="text-white/90 hover:text-white mb-4 sm:mb-6 font-bold text-xs sm:text-sm flex items-center gap-2 transition-all active:scale-95"><i data-lucide="chevron-left" class="w-4 h-4 sm:w-5 sm:h-5"></i> Volver</button>` : `<div class="mb-4 sm:mb-6"><p class="text-white/80 text-xs font-black uppercase tracking-widest flex items-center gap-2 drop-shadow-sm"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Mi Espacio</p></div>`}
+                        ${role !== 'WORKER' ? `<button onclick="setView('directory')" class="text-[#cab2a2] hover:text-white mb-6 font-black text-xs sm:text-sm flex items-center gap-2 transition-all active:scale-95 uppercase tracking-widest"><i data-lucide="arrow-left" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i> Regresar</button>` : `<div class="mb-6"><p class="text-[#cab2a2] text-xs font-black uppercase tracking-widest flex items-center gap-2 drop-shadow-sm"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Mi Espacio</p></div>`}
                         
-                        <div class="flex justify-between items-start gap-4">
+                        <!-- Tarjeta Principal de Glassmorphism -->
+                        <div class="bg-white/10 backdrop-blur-2xl border border-white/20 p-5 sm:p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgba(0,0,0,0.12)] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                             <div class="text-white flex-1 min-w-0">
-                                <h2 class="text-2xl sm:text-3xl md:text-4xl font-black leading-tight mb-1 truncate drop-shadow-md">${w.name}</h2>
-                                <p class="text-white/90 text-xs sm:text-sm font-medium mb-3 flex items-center gap-2 flex-wrap drop-shadow-sm"><span class="bg-white/10 px-2.5 py-1 rounded-lg backdrop-blur-md shadow-sm border border-white/10">${w.role}</span> <span class="opacity-90">CC. ${w.document}</span></p>
+                                <h2 class="text-2xl sm:text-3xl md:text-4xl font-black leading-tight mb-2 truncate drop-shadow-md">${w.name}</h2>
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="bg-[#bb7434] text-white px-3 py-1 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-md border border-[#bb7434]/50">${w.role}</span>
+                                    <span class="bg-white/10 text-[#cab2a2] px-3 py-1 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider backdrop-blur-md border border-white/10">CC. ${w.document}</span>
+                                </div>
                             </div>
                             ${canEdit ? `
-                            <div class="flex flex-col sm:flex-row gap-2 shrink-0">
-                                <button onclick="openWorkerForm('${w.id}')" class="bg-white text-[#542c1c] p-2.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl hover:bg-gray-50 transition-all active:scale-95"><i data-lucide="edit-3" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i><span class="hidden sm:inline ml-2 text-xs sm:text-sm font-bold">Editar</span></button>
-                                ${role === 'ADMIN' ? `<button onclick="window.deleteWorker('${w.id}')" class="bg-red-500/90 text-white p-2.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl hover:bg-red-500 border border-white/10 transition-all active:scale-95"><i data-lucide="trash-2" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i></button>` : ''}
+                            <div class="flex gap-2 shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
+                                <button onclick="openWorkerForm('${w.id}')" class="flex-1 sm:flex-none bg-white text-[#542c1c] px-4 py-3 rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-xl hover:bg-gray-50 transition-all active:scale-95 font-black text-xs sm:text-sm"><i data-lucide="edit-3" class="w-4 h-4"></i><span>Editar</span></button>
+                                ${role === 'ADMIN' ? `<button onclick="window.deleteWorker('${w.id}')" class="bg-red-500/90 text-white px-4 py-3 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl hover:bg-red-500 border border-red-400 transition-all active:scale-95"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
                             </div>` : ''}
                         </div>
                     </div>
@@ -1681,8 +1686,6 @@
 
         window.openPaymentModal = () => {
             document.getElementById('payment-form').reset();
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('pay-event-date').value = today;
             
             const amountInput = document.getElementById('pay-amount');
             amountInput.readOnly = true;
@@ -1784,7 +1787,7 @@
 
                     const paymentData = {
                         workerId: w.id,
-                        eventDate: document.getElementById('pay-event-date').value,
+                        eventDate: todayIso, 
                         paymentDate: todayIso,
                         service: finalService,
                         amount: totalAmt,
