@@ -81,6 +81,16 @@
             box-shadow: 0 0 0 3px rgba(187, 116, 52, 0.45); outline: none;
         }
 
+        @keyframes aura-pulse {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.4; }
+            33% { transform: scale(1.2) translate(30px, -20px); opacity: 0.7; }
+            66% { transform: scale(0.8) translate(-20px, 30px); opacity: 0.3; }
+            100% { transform: scale(1) translate(0, 0); opacity: 0.4; }
+        }
+        .aura-1 { animation: aura-pulse 8s infinite alternate ease-in-out; }
+        .aura-2 { animation: aura-pulse 11s infinite alternate-reverse ease-in-out; }
+        .aura-3 { animation: aura-pulse 14s infinite alternate ease-in-out; animation-delay: -5s; }
+
         #login-screen {
             background:
                 radial-gradient(55rem 32rem at 12% 8%, rgba(187, 116, 52, 0.16), transparent 55%),
@@ -414,7 +424,7 @@
                             <input required type="number" id="pay-amount" placeholder="Selecciona un servicio primero" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm font-black text-gray-800 focus:border-[#bb7434] outline-none shadow-sm transition-colors" readonly>
                         </div>
 
-                        <!-- NUEVO: RECARGOS -->
+                        <!-- RECARGOS -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 bg-gray-100/50 rounded-xl border border-gray-200/60">
                             <div>
                                 <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">¿Recibiste recargos?</label>
@@ -722,10 +732,10 @@
             }
         }
 
-        function showSkeletonDashboard() { return `<div class="space-y-6"><div class="bg-gradient-to-r from-[#542c1c] to-[#146459] -mx-6 md:-mx-8 -mt-6 md:-mt-8 pt-12 pb-10 px-6 md:px-10 rounded-b-[2rem]"><div class="max-w-5xl mx-auto"><div class="skeleton-base h-10 mb-3" style="width: 200px;"></div><div class="skeleton-base h-6 mb-8" style="width: 150px;"></div></div></div></div>`; }
+        function showSkeletonDashboard() { return `<div class="space-y-6"><div class="bg-[#542c1c] -mx-6 md:-mx-8 -mt-6 md:-mt-8 pt-12 pb-10 px-6 md:px-10 rounded-b-[2rem]"><div class="max-w-5xl mx-auto"><div class="skeleton-base h-10 mb-3" style="width: 200px;"></div><div class="skeleton-base h-6 mb-8" style="width: 150px;"></div></div></div></div>`; }
         function showSkeletonDirectory() { return `<div class="space-y-6"><div class="skeleton-base h-10 w-1/3 mb-6"></div><div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">${Array(6).fill(0).map(() => `<div class="skeleton-card"><div class="skeleton-base h-20"></div></div>`).join('')}</div></div>`; }
         function showSkeletonRanking() { return `<div class="space-y-6"><div class="skeleton-base h-10 w-1/3 mb-6"></div><div class="space-y-3">${Array(5).fill(0).map(() => `<div class="skeleton-card h-16"></div>`).join('')}</div></div>`; }
-        function showSkeletonProfile() { return `<div class="space-y-6"><div class="bg-white px-5 md:px-10 pt-8 pb-6 rounded-3xl md:mt-2"><div class="flex gap-4 md:gap-6"><div class="skeleton-base w-20 h-20 md:w-28 md:h-28 rounded-3xl"></div><div class="flex-1"><div class="skeleton-base h-8 mb-2 w-2/3"></div><div class="skeleton-base h-4 w-1/2"></div></div></div></div></div>`; }
+        function showSkeletonProfile() { return `<div class="space-y-6"><div class="bg-[#542c1c] px-5 md:px-10 pt-8 pb-6 rounded-3xl md:mt-2"><div class="flex gap-4 md:gap-6"><div class="skeleton-base w-20 h-20 md:w-28 md:h-28 rounded-3xl"></div><div class="flex-1"><div class="skeleton-base h-8 mb-2 w-2/3"></div><div class="skeleton-base h-4 w-1/2"></div></div></div></div></div>`; }
 
         function performLoginUIFast() {
             document.getElementById('login-screen').classList.add('hidden');
@@ -978,14 +988,24 @@
 
             return `
             <div class="space-y-4 sm:space-y-6 max-w-7xl mx-auto pb-8">
-                <div class="bg-gradient-to-br from-[#542c1c] via-[#6b3c2a] to-[#7a4a35] -mx-3 sm:-mx-4 md:-mx-6 lg:-mx-8 -mt-3 sm:-mt-4 md:-mt-6 lg:-mt-8 pt-10 sm:pt-12 md:pt-14 pb-24 sm:pb-28 px-4 sm:px-6 md:px-10 rounded-b-[2rem] shadow-lg relative overflow-hidden">
-                    <div class="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdHRlcm4gaWQ9InAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0iI2ZmZiIvPjwvcGF0dGVybj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3ApIi8+PC9zdmc+')]"></div>
+                <!-- AURA MESH GRADIENT EN EL ENCABEZADO -->
+                <div class="bg-[#542c1c] -mx-3 sm:-mx-4 md:-mx-6 lg:-mx-8 -mt-3 sm:-mt-4 md:-mt-6 lg:-mt-8 pt-10 sm:pt-12 md:pt-14 pb-24 sm:pb-28 px-4 sm:px-6 md:px-10 rounded-b-[2rem] shadow-lg relative overflow-hidden">
+                    
+                    <!-- Orbes de luz (Aura) -->
+                    <div class="absolute top-[-20%] left-[-10%] w-[60%] h-[140%] bg-[#bb7434] rounded-full blur-[80px] aura-1 pointer-events-none"></div>
+                    <div class="absolute top-[-10%] right-[-20%] w-[70%] h-[150%] bg-[#991b1b] rounded-full blur-[90px] aura-2 pointer-events-none"></div>
+                    <div class="absolute bottom-[-40%] left-[10%] w-[60%] h-[120%] bg-[#d97706] rounded-full blur-[80px] aura-3 pointer-events-none"></div>
+                    
+                    <!-- Patrón sutil -->
+                    <div class="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdHRlcm4gaWQ9InAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0iI2ZmZiIvPjwvcGF0dGVybj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3ApIi8+PC9zdmc+')] pointer-events-none"></div>
+                    
+                    <!-- Contenido (debe estar en z-10) -->
                     <div class="relative z-10 flex flex-row justify-between items-center gap-3">
-                        <div class="w-full min-w-0">
-                            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight mb-1 truncate">Hola, ${firstName} 👋</h1>
-                            <p class="text-[#cab2a2] text-xs sm:text-sm md:text-base font-medium truncate">Panel general de administración</p>
+                        <div class="w-full min-w-0 text-shadow-sm">
+                            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight mb-1 truncate drop-shadow-md">Hola, ${firstName} 👋</h1>
+                            <p class="text-white/80 text-xs sm:text-sm md:text-base font-medium truncate drop-shadow-sm">Panel general de administración</p>
                         </div>
-                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center p-2.5 shrink-0 shadow-[0_0_15px_rgba(0,0,0,0.1)]">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center p-2.5 shrink-0 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                             <img src="https://www.image2url.com/r2/default/images/1790563425145-6bf6885c-554e-4d07-900c-35e85d92646d.png" alt="Logo LALY" class="w-full h-full object-contain filter drop-shadow-md">
                         </div>
                     </div>
@@ -1449,21 +1469,32 @@
             
             return `
             <div class="max-w-4xl mx-auto pb-10">
-                <div class="bg-gradient-to-br from-[#542c1c] via-[#6b3c2a] to-[#bb7434] px-4 sm:px-6 md:px-10 pt-8 sm:pt-10 pb-20 sm:pb-24 rounded-b-[2.5rem] md:rounded-3xl md:mt-2 shadow-lg relative z-0 overflow-hidden">
-                    <div class="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdHRlcm4gaWQ9InAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0iI2ZmZiIvPjwvcGF0dGVybj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3ApIi8+PC9zdmc+')]"></div>
+                <!-- AURA MESH GRADIENT EN EL ENCABEZADO DEL PERFIL -->
+                <div class="bg-[#542c1c] px-4 sm:px-6 md:px-10 pt-8 sm:pt-10 pb-20 sm:pb-24 rounded-b-[2.5rem] md:rounded-3xl md:mt-2 shadow-lg relative z-0 overflow-hidden">
                     
-                    ${role !== 'WORKER' ? `<button onclick="setView('directory')" class="text-white/80 hover:text-white mb-4 sm:mb-6 font-bold text-xs sm:text-sm flex items-center gap-2 transition-all active:scale-95 relative z-10"><i data-lucide="chevron-left" class="w-4 h-4 sm:w-5 sm:h-5"></i> Volver</button>` : `<div class="mb-4 sm:mb-6 relative z-10"><p class="text-white/70 text-xs font-black uppercase tracking-widest flex items-center gap-2"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Mi Espacio</p></div>`}
+                    <!-- Orbes de luz (Aura) -->
+                    <div class="absolute top-[-20%] left-[-10%] w-[60%] h-[140%] bg-[#bb7434] rounded-full blur-[80px] aura-1 pointer-events-none"></div>
+                    <div class="absolute top-[-10%] right-[-20%] w-[70%] h-[150%] bg-[#991b1b] rounded-full blur-[90px] aura-2 pointer-events-none"></div>
+                    <div class="absolute bottom-[-40%] left-[10%] w-[60%] h-[120%] bg-[#d97706] rounded-full blur-[80px] aura-3 pointer-events-none"></div>
                     
-                    <div class="flex justify-between items-start gap-4 relative z-10">
-                        <div class="text-white flex-1 min-w-0">
-                            <h2 class="text-2xl sm:text-3xl md:text-4xl font-black leading-tight mb-1 truncate drop-shadow-md">${w.name}</h2>
-                            <p class="text-white/90 text-xs sm:text-sm font-medium mb-3 flex items-center gap-2 flex-wrap"><span class="bg-white/20 px-2.5 py-1 rounded-lg backdrop-blur-md shadow-sm border border-white/10">${w.role}</span> <span class="opacity-80">CC. ${w.document}</span></p>
+                    <!-- Patrón sutil -->
+                    <div class="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdHRlcm4gaWQ9InAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0iI2ZmZiIvPjwvcGF0dGVybj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3ApIi8+PC9zdmc+')] pointer-events-none"></div>
+                    
+                    <!-- Controles y título (deben estar en z-10) -->
+                    <div class="relative z-10">
+                        ${role !== 'WORKER' ? `<button onclick="setView('directory')" class="text-white/90 hover:text-white mb-4 sm:mb-6 font-bold text-xs sm:text-sm flex items-center gap-2 transition-all active:scale-95"><i data-lucide="chevron-left" class="w-4 h-4 sm:w-5 sm:h-5"></i> Volver</button>` : `<div class="mb-4 sm:mb-6"><p class="text-white/80 text-xs font-black uppercase tracking-widest flex items-center gap-2 drop-shadow-sm"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Mi Espacio</p></div>`}
+                        
+                        <div class="flex justify-between items-start gap-4">
+                            <div class="text-white flex-1 min-w-0">
+                                <h2 class="text-2xl sm:text-3xl md:text-4xl font-black leading-tight mb-1 truncate drop-shadow-md">${w.name}</h2>
+                                <p class="text-white/90 text-xs sm:text-sm font-medium mb-3 flex items-center gap-2 flex-wrap drop-shadow-sm"><span class="bg-white/20 px-2.5 py-1 rounded-lg backdrop-blur-md shadow-sm border border-white/10">${w.role}</span> <span class="opacity-90">CC. ${w.document}</span></p>
+                            </div>
+                            ${canEdit ? `
+                            <div class="flex flex-col sm:flex-row gap-2 shrink-0">
+                                <button onclick="openWorkerForm('${w.id}')" class="bg-white text-[#542c1c] p-2.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl hover:bg-gray-50 transition-all active:scale-95"><i data-lucide="edit-3" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i><span class="hidden sm:inline ml-2 text-xs sm:text-sm font-bold">Editar</span></button>
+                                ${role === 'ADMIN' ? `<button onclick="window.deleteWorker('${w.id}')" class="bg-red-500/90 text-white p-2.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl hover:bg-red-500 border border-white/10 transition-all active:scale-95"><i data-lucide="trash-2" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i></button>` : ''}
+                            </div>` : ''}
                         </div>
-                        ${canEdit ? `
-                        <div class="flex flex-col sm:flex-row gap-2 shrink-0">
-                            <button onclick="openWorkerForm('${w.id}')" class="bg-white text-[#542c1c] p-2.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl hover:bg-gray-50 transition-all active:scale-95"><i data-lucide="edit-3" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i><span class="hidden sm:inline ml-2 text-xs sm:text-sm font-bold">Editar</span></button>
-                            ${role === 'ADMIN' ? `<button onclick="window.deleteWorker('${w.id}')" class="bg-red-500/90 text-white p-2.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl hover:bg-red-500 border border-white/10 transition-all active:scale-95"><i data-lucide="trash-2" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i></button>` : ''}
-                        </div>` : ''}
                     </div>
                 </div>
 
@@ -1667,8 +1698,6 @@
             });
         };
 
-        // ================== LÓGICA DE PAGOS, CONSECUTIVOS, PDF Y ZIP ================== //
-
         window.initiateCreateReceipt = () => {
             document.getElementById('pin-prompt-input').value = '';
             document.getElementById('pin-prompt-action').value = 'create_receipt';
@@ -1690,6 +1719,7 @@
             if (otherConceptContainer) {
                 otherConceptContainer.classList.add('hidden');
                 document.getElementById('pay-other-concept').required = false;
+                document.getElementById('pay-other-concept').value = '';
             }
 
             // Resetear recargos
@@ -2187,8 +2217,6 @@
                 window.showToast('Error al eliminar constancia', 'error'); 
             }
         };
-
-        // ================== FIN LÓGICA DE PAGOS ================== //
 
         window.savePoint = async () => {
             const amount = parseInt(document.getElementById('pt-amount').value);
