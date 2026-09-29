@@ -87,11 +87,6 @@
                 #2d170e;
         }
 
-        #main-content [class*="bg-[#542c1c]"]:not(button) {
-            background: linear-gradient(135deg, #542c1c 0%, #6b3c2a 55%, #7a4a35 100%);
-            box-shadow: 0 14px 34px -14px rgba(84, 44, 28, 0.4);
-        }
-
         .modal-backdrop {
             position: fixed; inset: 0; background-color: rgba(84, 44, 28, 0.45);
             backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -1154,7 +1149,7 @@
                     </div>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4" id="directory-grid">`;
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 pb-20" id="directory-grid">`;
 
             window.appState.dbWorkers.forEach(w => {
                 if (w.role === 'Administrador') return;
@@ -1448,7 +1443,7 @@
             return `
             <div class="max-w-4xl mx-auto pb-36 sm:pb-40 lg:pb-12">
                 <!-- DISEÑO CORPORATIVO SAAS ULTRA PREMIUM EN PERFIL -->
-                <div class="bg-gradient-to-br from-[#1a0d08] via-[#2d170e] to-[#402012] px-4 sm:px-6 md:px-10 pt-8 sm:pt-10 pb-24 sm:pb-28 lg:rounded-bl-[2.5rem] md:rounded-3xl md:mt-2 shadow-2xl relative overflow-hidden z-0 border-b border-[#bb7434]/30">
+                <div class="bg-gradient-to-br from-[#1a0d08] via-[#2d170e] to-[#402012] px-4 sm:px-6 md:px-10 pt-8 sm:pt-10 pb-28 sm:pb-32 md:pb-36 lg:rounded-bl-[2.5rem] md:rounded-3xl md:mt-2 shadow-2xl relative overflow-hidden z-0 border-b border-[#bb7434]/30">
                     
                     <!-- Textura de Puntos (Dot Grid) -->
                     <div class="absolute inset-0 opacity-[0.05]" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 24px 24px;"></div>
@@ -1477,20 +1472,21 @@
                     </div>
                 </div>
 
-                <div class="px-4 sm:px-6 md:px-10 -mt-12 sm:-mt-14 relative z-10 flex flex-col sm:flex-row gap-4 items-center sm:items-end">
-                    <div class="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-[1.5rem] sm:rounded-[2rem] border-4 sm:border-[6px] border-[#f3ebe3] md:border-white bg-white shadow-xl overflow-hidden shrink-0 flex items-center justify-center text-[#bb7434] text-3xl md:text-5xl font-black relative group">
+                <div class="px-4 sm:px-6 md:px-10 -mt-16 sm:-mt-20 md:-mt-24 relative z-10 flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-end">
+                    <!-- FOTO DE PERFIL GIGANTE -->
+                    <div class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] border-[6px] sm:border-[8px] border-[#f3ebe3] md:border-white bg-white shadow-2xl overflow-hidden shrink-0 flex items-center justify-center text-[#bb7434] text-4xl md:text-6xl font-black relative group transform transition-transform hover:scale-105">
                         ${w.photo ? `<img src="${w.photo}" loading="lazy" decoding="async" class="w-full h-full object-cover">` : window.getInitials(w.name)}
-                        ${w.status === 'activo' ? `<div class="absolute bottom-2 right-2 w-3 h-3 md:w-4 md:h-4 bg-green-500 border-2 border-white rounded-full shadow-sm"></div>` : `<div class="absolute bottom-2 right-2 w-3 h-3 md:w-4 md:h-4 bg-red-400 border-2 border-white rounded-full shadow-sm"></div>`}
+                        ${w.status === 'activo' ? `<div class="absolute bottom-2 right-2 md:bottom-3 md:right-3 w-4 h-4 md:w-5 md:h-5 bg-green-500 border-[3px] border-white rounded-full shadow-md"></div>` : `<div class="absolute bottom-2 right-2 md:bottom-3 md:right-3 w-4 h-4 md:w-5 md:h-5 bg-red-400 border-[3px] border-white rounded-full shadow-md"></div>`}
                     </div>
                     
-                    <div class="flex-1 w-full grid grid-cols-2 gap-3 sm:gap-4 pb-2 sm:pb-0">
-                        <div class="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] card-shadow flex items-center justify-between group cursor-default hover:border-[#bb7434]/40 transition-colors">
-                            <div><p class="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Mes Actual</p><p class="text-2xl sm:text-3xl font-black text-[#bb7434] leading-none">${monthPts}</p></div>
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform shadow-inner"><i data-lucide="calendar-days" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                    <div class="flex-1 w-full grid grid-cols-2 gap-3 sm:gap-4 pb-2 sm:pb-4 md:pb-6">
+                        <div class="bg-gradient-to-br from-white to-orange-50/30 p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-[1.5rem] card-shadow flex items-center justify-between group cursor-default hover:border-[#bb7434]/40 transition-all hover:shadow-lg border border-gray-100">
+                            <div><p class="text-[9px] sm:text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-widest mb-0.5">Mes Actual</p><p class="text-2xl sm:text-3xl md:text-4xl font-black text-[#bb7434] leading-none">${monthPts}</p></div>
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform shadow-inner"><i data-lucide="calendar-days" class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7"></i></div>
                         </div>
-                        <div class="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] card-shadow flex items-center justify-between group cursor-default hover:border-gray-300 transition-colors">
-                            <div><p class="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Histórico</p><p class="text-2xl sm:text-3xl font-black text-gray-800 leading-none">${allPts}</p></div>
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-500 group-hover:scale-110 transition-transform shadow-inner"><i data-lucide="award" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                        <div class="bg-gradient-to-br from-white to-gray-50/50 p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-[1.5rem] card-shadow flex items-center justify-between group cursor-default hover:border-gray-300 transition-all hover:shadow-lg border border-gray-100">
+                            <div><p class="text-[9px] sm:text-[10px] md:text-xs font-black text-gray-400 uppercase tracking-widest mb-0.5">Histórico</p><p class="text-2xl sm:text-3xl md:text-4xl font-black text-gray-800 leading-none">${allPts}</p></div>
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-500 group-hover:scale-110 transition-transform shadow-inner"><i data-lucide="award" class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7"></i></div>
                         </div>
                     </div>
                 </div>
