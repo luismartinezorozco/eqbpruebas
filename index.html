@@ -361,7 +361,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORMULARIO DE PAGOS (SIMPLIFICADO E INTELIGENTE) -->
+    <!-- MODAL FORMULARIO DE PAGOS (SIMPLIFICADO) -->
     <div id="payment-modal" class="modal-backdrop z-[1050]">
         <div class="modal-content w-full sm:max-w-sm md:max-w-md">
             <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
@@ -400,7 +400,6 @@
                             </div>
                         </div>
                         
-                        <!-- RECARGOS -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 bg-gray-100/50 rounded-xl border border-gray-200/60">
                             <div>
                                 <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Valor del Servicio</label>
@@ -1099,7 +1098,7 @@
                 <div class="bg-gradient-to-br from-green-600 via-emerald-600 to-teal-700 p-5 sm:p-6 md:p-8 rounded-[2rem] text-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 shadow-xl relative overflow-hidden">
                     <div class="absolute -right-6 -bottom-6 opacity-10 pointer-events-none"><i data-lucide="banknote" class="w-48 h-48"></i></div>
                     <div class="relative z-10 flex-1">
-                        <p class="text-[10px] sm:text-xs font-black uppercase tracking-widest opacity-80 mb-1 flex items-center gap-1.5"><i data-lucide="calculator" class="w-4 h-4"></i> Total a Pagar (${monthStr})</p>
+                        <p class="text-[10px] sm:text-xs font-black uppercase tracking-widest opacity-80 mb-1 flex items-center gap-1.5"><i data-lucide="calculator" class="w-4 h-4"></i> Total Pagado (${monthStr})</p>
                         <p class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight drop-shadow-md">${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(totalAmount)}</p>
                     </div>
                     <button onclick="window.downloadMonthlyZip('${monthStr}')" class="w-full sm:w-auto bg-white text-green-700 px-6 py-3.5 rounded-2xl font-black text-sm hover:bg-gray-50 active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 shrink-0 relative z-10">
@@ -1353,7 +1352,7 @@
                 <div class="flex items-center gap-3 py-3 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 px-3 rounded-xl transition-colors">
                     <div class="flex-1 min-w-0">
                         <p class="font-bold text-sm text-gray-800 break-words">${p.reason}</p>
-                        <p class="text-[11px] text-gray-400 mt-0.5 truncate flex items-center gap-1"><i data-lucide="calendar-clock" class="w-3 h-3"></i> ${new Date(p.timestamp).toLocaleDateString()} · Eval: ${p.evaluator}</p>
+                        <p class="text-[11px] text-gray-400 mt-0.5 truncate flex items-center gap-1"><i data-lucide="calendar-clock" class="w-3 h-3"></i> ${new Date(p.timestamp).toLocaleDateString()} &nbsp;&bull;&nbsp; Eval: ${p.evaluator}</p>
                     </div>
                     <span class="font-black text-sm px-2.5 py-1.5 rounded-lg ${color} shadow-sm shrink-0">${sign}${p.amount}</span>
                 </div>`;
@@ -1778,7 +1777,7 @@
                     let notesText = '';
                     if(surchargeAmt > 0) {
                         const formattedSurcharge = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(surchargeAmt);
-                        notesText = `Recargo incluido de ${formattedSurcharge}.`;
+                        notesText = `Se incluyeron recargos extra por un valor de ${formattedSurcharge}.`;
                     }
 
                     const paymentData = {
@@ -1947,6 +1946,7 @@
 
             const primaryColor = [45, 23, 14];   
             const secondaryColor = [187, 116, 52]; 
+            const formatCurrency = (val) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(val);
 
             doc.setFillColor(...primaryColor);
             doc.rect(0, 0, 215.9, 45, 'F');
@@ -1998,49 +1998,68 @@
 
             startY += 45;
 
+            // CUADRO DE INFORMACIÓN DEL SERVICIO Y PAGO (Más alto para incluir el desglose)
+            let box1Y = startY;
             doc.setDrawColor(...secondaryColor);
             doc.setLineWidth(0.5);
-            doc.roundedRect(20, startY, 175.9, 75, 3, 3);
+            doc.roundedRect(20, box1Y, 175.9, 95, 3, 3);
             
             doc.setFillColor(...secondaryColor);
-            doc.roundedRect(20, startY, 175.9, 12, 3, 3, 'F');
+            doc.roundedRect(20, box1Y, 175.9, 12, 3, 3, 'F');
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(12);
             doc.setFont("helvetica", "bold");
-            doc.text("INFORMACIÓN DEL SERVICIO Y PAGO", 107.95, startY + 8, { align: "center" });
+            doc.text("INFORMACIÓN DEL SERVICIO Y PAGO", 107.95, box1Y + 8, { align: "center" });
 
-            startY += 22;
+            let lineY = box1Y + 22;
             doc.setTextColor(50, 50, 50);
             doc.setFontSize(11);
             
             const lCol = 25; const rCol = 120;
 
-            doc.setFont("helvetica", "bold"); doc.text("Servicio:", lCol, startY);
+            doc.setFont("helvetica", "bold"); doc.text("Servicio:", lCol, lineY);
             const serviceText = p.service || p.eventName || '-';
-            doc.setFont("helvetica", "normal"); doc.text(serviceText, lCol + 20, startY);
+            doc.setFont("helvetica", "normal"); doc.text(serviceText, lCol + 18, lineY);
 
-            doc.setFont("helvetica", "bold"); doc.text("Fecha Evento:", rCol, startY);
-            doc.setFont("helvetica", "normal"); doc.text(p.eventDate || '-', rCol + 28, startY);
+            doc.setFont("helvetica", "bold"); doc.text("Fecha Evento:", rCol, lineY);
+            doc.setFont("helvetica", "normal"); doc.text(p.eventDate || '-', rCol + 28, lineY);
 
-            startY += 10;
+            lineY += 12;
             let notesText = p.notes || 'Ninguna';
             if (p.location) notesText = `Lugar: ${p.location}. ${notesText}`;
             
-            doc.setFont("helvetica", "bold"); doc.text("Observaciones:", lCol, startY);
+            doc.setFont("helvetica", "bold"); doc.text("Observaciones:", lCol, lineY);
             const splitNotes = doc.splitTextToSize(notesText, 65);
-            doc.setFont("helvetica", "normal"); doc.text(splitNotes, lCol + 32, startY);
+            doc.setFont("helvetica", "normal"); doc.text(splitNotes, lCol + 32, lineY);
 
-            doc.setFont("helvetica", "bold"); doc.text("Fecha de Pago:", rCol, startY);
-            doc.setFont("helvetica", "normal"); doc.text(p.paymentDate || '-', rCol + 30, startY);
+            doc.setFont("helvetica", "bold"); doc.text("Fecha de Pago:", rCol, lineY);
+            doc.setFont("helvetica", "normal"); doc.text(p.paymentDate || '-', rCol + 30, lineY);
 
-            startY += 18;
-            const formatCurrency = (val) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(val);
+            // DESGLOSE DE VALORES (Breakdown)
+            lineY += 12 + ((splitNotes.length - 1) * 4); // Ajuste dinámico de espacio si la nota es larga
+
+            doc.setDrawColor(220, 220, 220);
+            doc.setLineWidth(0.3);
+            doc.line(25, lineY, 190.9, lineY); // Línea sutil divisora
+            
+            lineY += 10;
+            const baseAmt = p.baseAmount !== undefined ? p.baseAmount : p.amount;
+            const surchargeAmt = p.surcharge || 0;
+            
+            doc.setFont("helvetica", "bold"); doc.text("Valor del Servicio:", lCol, lineY);
+            doc.setFont("helvetica", "normal"); doc.text(formatCurrency(baseAmt), lCol + 36, lineY);
+
+            doc.setFont("helvetica", "bold"); doc.text("Valor Recargos:", rCol, lineY);
+            doc.setFont("helvetica", "normal"); doc.text(formatCurrency(surchargeAmt), rCol + 32, lineY);
+
+            lineY += 18;
             doc.setFontSize(16);
             doc.setFont("helvetica", "bold");
             doc.setTextColor(...primaryColor);
-            doc.text(`Total a Cobrar: ${formatCurrency(p.amount)}`, 107.95, startY, { align: "center" });
+            doc.text(`TOTAL PAGADO: ${formatCurrency(p.amount)}`, 107.95, lineY, { align: "center" });
 
-            startY += 22;
+            // Siguiente Sección (Moviendo el startY principal por debajo de la caja actual)
+            startY = box1Y + 105;
 
             doc.setDrawColor(200, 200, 200);
             doc.roundedRect(20, startY, 175.9, 35, 3, 3);
@@ -2307,7 +2326,7 @@
                 if(daysToCheck.length > 0) {
                     daysToCheck.forEach(day => { 
                         const checkbox = document.querySelector(`.w-availability-day[value="${day}"]`); 
-                        if(checkbox) checkbox.checked = true; // CORRECCIÓN: checkbox.checked = true 
+                        if(checkbox) checkbox.checked = true;
                     });
                     window.updateAvailabilityUI();
                     setTimeout(() => {
