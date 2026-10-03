@@ -361,7 +361,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORMULARIO DE PAGOS (SIMPLIFICADO) -->
+    <!-- MODAL FORMULARIO DE PAGOS (SIMPLIFICADO Y LIMPIO) -->
     <div id="payment-modal" class="modal-backdrop z-[1050]">
         <div class="modal-content w-full sm:max-w-sm md:max-w-md">
             <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
@@ -419,6 +419,12 @@
                                 <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Valor del recargo (COP)</label>
                                 <input type="number" id="pay-surcharge" placeholder="Ingresa el valor del recargo extra..." class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm font-black text-[#bb7434] focus:border-[#bb7434] outline-none shadow-sm transition-colors box-border">
                             </div>
+                        </div>
+                        
+                        <!-- CASILLA DE OBSERVACIONES AÑADIDA -->
+                        <div class="mt-1">
+                            <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Observaciones (Opcional)</label>
+                            <textarea id="pay-notes" rows="2" placeholder="Agrega notas, detalles de transporte, etc." class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm transition-colors box-border resize-none"></textarea>
                         </div>
                     </div>
 
@@ -1703,6 +1709,9 @@
                 surchargeInput.value = '';
             }
 
+            const notesInput = document.getElementById('pay-notes');
+            if(notesInput) notesInput.value = '';
+
             document.getElementById('payment-modal').classList.add('active');
         };
         
@@ -1774,10 +1783,12 @@
                         finalService = `Otros conceptos: ${document.getElementById('pay-other-concept').value.trim()}`;
                     }
 
-                    let notesText = '';
+                    let customNotes = document.getElementById('pay-notes').value.trim();
+                    let notesText = customNotes;
                     if(surchargeAmt > 0) {
                         const formattedSurcharge = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(surchargeAmt);
-                        notesText = `Se incluyeron recargos extra por un valor de ${formattedSurcharge}.`;
+                        const surchargeStr = `Incluye recargos extra por ${formattedSurcharge}.`;
+                        notesText = notesText ? `${notesText} | ${surchargeStr}` : surchargeStr;
                     }
 
                     const paymentData = {
