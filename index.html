@@ -37,7 +37,14 @@
         .fade-in { opacity: 1; }
         .animate-in { opacity: 1; }
 
-        img { content-visibility: auto; }
+        /* Aceleración por hardware para eliminar parpadeos en imágenes */
+        img { 
+            -webkit-transform: translateZ(0); 
+            transform: translateZ(0); 
+            -webkit-backface-visibility: hidden; 
+            backface-visibility: hidden; 
+        }
+        
         .card-shadow { 
             box-shadow: 0 8px 30px rgb(0, 0, 0, 0.04), 0 1px 2px rgb(0, 0, 0, 0.02); 
             border: 1px solid rgba(243, 244, 246, 0.7); 
@@ -224,7 +231,7 @@
                     
                     <div class="flex flex-col items-center mb-3 sm:mb-4">
                         <div class="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-200 border-4 border-white shadow-md flex items-center justify-center overflow-hidden mb-2">
-                            <img id="w-photo-preview" src="" loading="lazy" decoding="async" class="w-full h-full object-cover hidden">
+                            <img id="w-photo-preview" src="" class="w-full h-full object-cover hidden">
                             <i id="w-photo-icon" data-lucide="camera" class="w-5 h-5 sm:w-6 sm:h-6 text-gray-400"></i>
                         </div>
                         <label class="cursor-pointer text-[#542c1c] text-xs font-bold py-1.5 px-2.5 sm:px-3 rounded-full bg-white shadow-sm border border-gray-200 hover:bg-gray-50 transition-all active:scale-95">
@@ -729,7 +736,7 @@
             const user = window.appState.currentUser;
             document.getElementById('user-name').innerText = user.name;
             const photoEl = document.getElementById('user-avatar');
-            if(user.photo) photoEl.innerHTML = `<img src="${user.photo}" loading="lazy" decoding="async" class="w-full h-full object-cover">`;
+            if(user.photo) photoEl.innerHTML = `<img src="${user.photo}" class="w-full h-full object-cover">`;
             else photoEl.innerText = window.getInitials(user.name);
             
             document.getElementById('user-role').innerText = user.role;
@@ -1016,7 +1023,7 @@
                             <p class="text-[10px] sm:text-[11px] font-medium text-white/80 truncate mt-0.5">${topWorkerPrevPts} Puntos alcanzados</p>
                         </div>
                         ${topWorkerPrev.photo ? 
-                            `<img src="${topWorkerPrev.photo}" loading="lazy" decoding="async" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white/30 shrink-0 z-10 shadow-md">` : 
+                            `<img src="${topWorkerPrev.photo}" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white/30 shrink-0 z-10 shadow-md">` : 
                             `<div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 text-white font-black text-xs sm:text-sm flex items-center justify-center shrink-0 z-10 shadow-md border border-white/30">${window.getInitials(topWorkerPrev.name)}</div>`
                         }
                     </div>` : ''}
@@ -1035,7 +1042,7 @@
                             </p>
                         </div>
                         ${nextBdayWorker.photo ? 
-                            `<img src="${nextBdayWorker.photo}" loading="lazy" decoding="async" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-pink-100 shrink-0 z-10 shadow-sm">` : 
+                            `<img src="${nextBdayWorker.photo}" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-pink-100 shrink-0 z-10 shadow-sm">` : 
                             `<div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-pink-100 text-pink-600 font-black text-xs sm:text-sm flex items-center justify-center shrink-0 z-10 shadow-sm border border-pink-200">${window.getInitials(nextBdayWorker.name)}</div>`
                         }
                     </div>` : ''}
@@ -1167,7 +1174,7 @@
             window.appState.dbWorkers.forEach(w => {
                 if (w.role === 'Administrador') return;
                 const isInactive = w.status === 'inactivo';
-                const photoHtml = w.photo ? `<img src="${w.photo}" loading="lazy" decoding="async" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl object-cover shrink-0">` : `<div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gray-100 text-gray-400 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 border border-gray-200 shadow-inner">${window.getInitials(w.name)}</div>`;
+                const photoHtml = w.photo ? `<img src="${w.photo}" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl object-cover shrink-0">` : `<div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gray-100 text-gray-400 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 border border-gray-200 shadow-inner">${window.getInitials(w.name)}</div>`;
                 
                 let firstSpecHtml = '';
                 if(w.specialties) {
@@ -1258,7 +1265,7 @@
                     avatarRing = "ring-4 ring-orange-400/30";
                 }
 
-                const photoHtml = w.photo ? `<img src="${w.photo}" loading="lazy" decoding="async" class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl object-cover shrink-0 ${avatarRing}">` : `<div class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gray-100 text-gray-400 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 border border-gray-200 ${avatarRing}">${window.getInitials(w.name)}</div>`;
+                const photoHtml = w.photo ? `<img src="${w.photo}" class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl object-cover shrink-0 ${avatarRing}">` : `<div class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gray-100 text-gray-400 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 border border-gray-200 ${avatarRing}">${window.getInitials(w.name)}</div>`;
 
                 html += `
                 <div onclick="viewWorkerProfile('${w.id}')" class="p-3 sm:p-4 rounded-2xl sm:rounded-[1.5rem] card-shadow border ${cardClass} flex items-center justify-between cursor-pointer hover:-translate-y-0.5 transition-all gap-2 sm:gap-3 relative group">
@@ -1495,7 +1502,7 @@
                 <div class="px-4 sm:px-6 md:px-10 -mt-16 sm:-mt-20 md:-mt-24 relative z-10 flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-end">
                     <!-- FOTO DE PERFIL GIGANTE -->
                     <div class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] border-[6px] sm:border-[8px] border-[#f3ebe3] md:border-white bg-white shadow-2xl overflow-hidden shrink-0 flex items-center justify-center text-[#bb7434] text-4xl md:text-6xl font-black relative group transform transition-transform hover:scale-105">
-                        ${w.photo ? `<img src="${w.photo}" loading="lazy" decoding="async" class="w-full h-full object-cover">` : window.getInitials(w.name)}
+                        ${w.photo ? `<img src="${w.photo}" class="w-full h-full object-cover">` : window.getInitials(w.name)}
                         ${w.status === 'activo' ? `<div class="absolute bottom-2 right-2 md:bottom-3 md:right-3 w-4 h-4 md:w-5 md:h-5 bg-green-500 border-[3px] border-white rounded-full shadow-md"></div>` : `<div class="absolute bottom-2 right-2 md:bottom-3 md:right-3 w-4 h-4 md:w-5 md:h-5 bg-red-400 border-[3px] border-white rounded-full shadow-md"></div>`}
                     </div>
                     
