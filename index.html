@@ -361,7 +361,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORMULARIO DE PAGOS (SIMPLIFICADO Y LIMPIO) -->
+    <!-- MODAL FORMULARIO DE PAGOS -->
     <div id="payment-modal" class="modal-backdrop z-[1050]">
         <div class="modal-content w-full sm:max-w-sm md:max-w-md">
             <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white/70 backdrop-blur-xl">
@@ -406,7 +406,7 @@
                                 <input required type="number" id="pay-amount" placeholder="Valor" class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm font-black text-gray-800 focus:border-[#bb7434] outline-none shadow-sm transition-colors box-border" readonly>
                             </div>
                             <div>
-                                <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">¿Recargos extras?</label>
+                                <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">¿Recibiste recargos?</label>
                                 <div class="relative">
                                     <select id="pay-has-surcharge" onchange="window.handleSurchargeChange(this)" class="w-full border border-gray-200 bg-white rounded-xl p-3 pr-10 text-sm font-semibold text-gray-800 focus:border-[#bb7434] outline-none shadow-sm appearance-none cursor-pointer box-border">
                                         <option value="no" selected>No</option>
@@ -421,7 +421,6 @@
                             </div>
                         </div>
                         
-                        <!-- CASILLA DE OBSERVACIONES AÑADIDA -->
                         <div class="mt-1">
                             <label class="block text-[10px] sm:text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Observaciones (Opcional)</label>
                             <textarea id="pay-notes" rows="2" placeholder="Agrega notas, detalles de transporte, etc." class="w-full border border-gray-200 bg-white rounded-xl p-3 text-sm focus:border-[#bb7434] outline-none shadow-sm transition-colors box-border resize-none"></textarea>
@@ -653,6 +652,15 @@
                 toast.classList.add('opacity-0', 'translate-y-4');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
+        };
+
+        window.copyToClipboard = (txt) => { navigator.clipboard.writeText(txt); window.showToast('Cuenta copiada'); };
+        
+        window.copyWorkerData = (e, name, doc) => {
+            e.stopPropagation();
+            const textToCopy = `${name} - ${doc}`;
+            navigator.clipboard.writeText(textToCopy);
+            window.showToast('Datos copiados: ' + name);
         };
 
         window.onload = async () => {
@@ -1167,7 +1175,11 @@
                     if(firstSpec) firstSpecHtml = `<span class="bg-indigo-50 text-indigo-600 text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-lg flex items-center gap-1 shrink-0 border border-indigo-100/50"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> ${firstSpec}</span>`;
                 }
                 const cityHtml = w.city ? `<span class="bg-gray-50 text-gray-500 text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-lg truncate border border-gray-100"><i data-lucide="map-pin" class="w-2.5 h-2.5 inline mr-1"></i>${w.city}</span>` : '';
-                const searchData = `${w.name} ${w.role} ${w.document || ''} ${w.specialties || ''}`.toLowerCase();
+                
+                // Generar Nombre Completo (Nombres + Apellidos)
+                const fullName = `${w.name} ${w.lastname || ''}`.trim();
+                const safeNameJS = fullName.replace(/'/g, "\\'"); // Escapar comillas para la función JS
+                const searchData = `${fullName} ${w.role} ${w.document || ''} ${w.specialties || ''}`.toLowerCase();
 
                 html += `
                 <div onclick="viewWorkerProfile('${w.id}')" data-search="${searchData}" class="directory-card bg-white p-3.5 sm:p-4 rounded-[1.5rem] card-shadow cursor-pointer hover:border-[#bb7434]/40 hover:shadow-xl transition-all border border-gray-100 flex items-center gap-3.5 sm:gap-4 relative overflow-hidden group ${isInactive?'opacity-60 grayscale-[0.2] hover:grayscale-0':''}">
@@ -1177,11 +1189,14 @@
                         ${isInactive ? `<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-red-400 border-[3px] border-white rounded-full shadow-sm"></div>` : `<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-[3px] border-white rounded-full shadow-sm"></div>`}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-black text-gray-800 text-sm sm:text-base leading-tight truncate mb-0.5 group-hover:text-[#bb7434] transition-colors">${w.name}</h4>
+                        <h4 class="font-black text-gray-800 text-sm sm:text-base leading-tight truncate mb-0.5 group-hover:text-[#bb7434] transition-colors">${window.escapeHtml(fullName)}</h4>
                         <p class="text-[10px] sm:text-[11px] font-black text-gray-400 uppercase tracking-wider truncate mb-2">${w.role}</p>
                         <div class="flex items-center gap-1.5 overflow-hidden">${firstSpecHtml}${cityHtml}</div>
                     </div>
-                    <div class="shrink-0 text-gray-200 group-hover:text-[#bb7434] transition-colors pr-1"><i data-lucide="chevron-right" class="w-5 h-5"></i></div>
+                    <div class="flex items-center gap-2 shrink-0 z-10">
+                        ${canEdit ? `<button type="button" onclick="window.copyWorkerData(event, '${safeNameJS}', '${w.document || ''}')" class="w-8 h-8 rounded-xl bg-gray-50 text-gray-400 hover:text-[#bb7434] hover:bg-orange-50 border border-gray-200 flex items-center justify-center transition-all active:scale-90 shadow-sm" title="Copiar Datos"><i data-lucide="copy" class="w-4 h-4"></i></button>` : ''}
+                        <div class="text-gray-200 group-hover:text-[#bb7434] transition-colors pr-1"><i data-lucide="chevron-right" class="w-5 h-5"></i></div>
+                    </div>
                 </div>`;
             });
             html += `</div></div>`;
@@ -2009,7 +2024,7 @@
 
             startY += 45;
 
-            // CUADRO DE INFORMACIÓN DEL SERVICIO Y PAGO (Más alto para incluir el desglose)
+            // CUADRO DE INFORMACIÓN DEL SERVICIO Y PAGO
             let box1Y = startY;
             doc.setDrawColor(...secondaryColor);
             doc.setLineWidth(0.5);
@@ -2047,11 +2062,11 @@
             doc.setFont("helvetica", "normal"); doc.text(p.paymentDate || '-', rCol + 30, lineY);
 
             // DESGLOSE DE VALORES (Breakdown)
-            lineY += 12 + ((splitNotes.length - 1) * 4); // Ajuste dinámico de espacio si la nota es larga
+            lineY += 12 + ((splitNotes.length - 1) * 4);
 
             doc.setDrawColor(220, 220, 220);
             doc.setLineWidth(0.3);
-            doc.line(25, lineY, 190.9, lineY); // Línea sutil divisora
+            doc.line(25, lineY, 190.9, lineY); 
             
             lineY += 10;
             const baseAmt = p.baseAmount !== undefined ? p.baseAmount : p.amount;
@@ -2069,7 +2084,7 @@
             doc.setTextColor(...primaryColor);
             doc.text(`TOTAL PAGADO: ${formatCurrency(p.amount)}`, 107.95, lineY, { align: "center" });
 
-            // Siguiente Sección (Moviendo el startY principal por debajo de la caja actual)
+            // Siguiente Sección
             startY = box1Y + 105;
 
             doc.setDrawColor(200, 200, 200);
@@ -2271,7 +2286,6 @@
         };
 
         window.deleteDocFile = async (id) => { if(!confirm('¿Eliminar este documento?')) return; await deleteDoc(doc(db, "documents", id)); window.setView('profile'); };
-        window.copyToClipboard = (txt) => { navigator.clipboard.writeText(txt); window.showToast('Cuenta copiada'); };
 
         window.handleBankChange = (selectElement) => {
             const numInput = document.getElementById('w-bank-num');
@@ -2298,7 +2312,7 @@
             if (id) {
                 const w = window.appState.dbWorkers.find(x => x.id === id);
                 document.getElementById('worker-modal-title').innerText = 'Editar Colaborador'; 
-                document.getElementById('w-id').value = w.id; 
+                document.getElementById('w-id').value = w.id || ''; 
                 document.getElementById('w-name').value = w.name || ''; 
                 document.getElementById('w-lastname').value = w.lastname || '';
                 document.getElementById('w-birthday').value = w.birthday || '';
