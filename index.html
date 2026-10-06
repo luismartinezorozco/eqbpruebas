@@ -2268,7 +2268,7 @@
             const botonDescarga = document.createElement('button');
             botonDescarga.type = 'button';
             botonDescarga.className = 'btn-descargar-mes bg-blue-600 text-white px-4 py-3 text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 sm:min-h-[46px]';
-            botonDescarga.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5v-4"></path><polyline points="7 10 12 15 17 15"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg><span>Descargar mes</span>';
+            botonDescarga.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg><span>Descargar mes</span>';
             botonDescarga.onclick = () => {
                 const grupo = grupos.find(item => item.clave === selector.value);
                 if (grupo) window.descargarDocumentosMes(tipo, grupo.clave, grupo.documentos, botonDescarga);
