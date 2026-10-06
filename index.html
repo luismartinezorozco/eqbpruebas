@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config={darkMode:'class',theme:{extend:{screens:{xs:'375px'},colors:{dark:{bg:'#0f172a',surface:'#1e293b',border:'#334155'}},zIndex:{overlay:'9998',modal:'9999',toast:'10000'}}}}</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     
     <style>
@@ -2210,6 +2211,120 @@
             window.showConfirm(`¿Eliminar documento?`,async()=>{try{await deleteDoc(getDocPath(collectionName,docId));window.removeLocalDocument(collectionName, docId);window.closeConfirm();window.showToast("Documento eliminado");if(typeof window.renderListas==='function') window.renderListas();if(typeof window.renderListaCobros==='function') window.renderListaCobros();if(typeof window.renderAnalisis==='function' && window.currentAppUser && window.currentAppUser.role === 'admin') window.renderAnalisis();}catch(e){window.showToast("Error");window.closeConfirm();}});
         };
 
+        window.agruparDocumentosPorMes = function(documentos, obtenerFecha) {
+            const grupos = new Map();
+            documentos.forEach(documento => {
+                const fecha = String(obtenerFecha(documento) || '');
+                const match = fecha.match(/^(\d{4})-(\d{2})/);
+                const parsed = match ? null : new Date(fecha);
+                const clave = match ? `${match[1]}-${match[2]}` : (parsed && !Number.isNaN(parsed.getTime()) ? `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, '0')}` : 'sin-fecha');
+                if (!grupos.has(clave)) grupos.set(clave, []);
+                grupos.get(clave).push(documento);
+            });
+            return [...grupos.entries()]
+                .sort(([a], [b]) => b.localeCompare(a))
+                .map(([clave, documentosMes]) => ({
+                    clave,
+                    titulo: clave === 'sin-fecha' ? 'Sin fecha' : new Date(`${clave}-01T00:00:00`).toLocaleDateString('es-CO', { month: 'long', year: 'numeric' }),
+                    documentos: documentosMes
+                }));
+        };
+
+        window.prepararCobroParaPDF = function(cobro) {
+            window.editingCobroId = cobro.id;
+            document.getElementById('cobro-num').value = cobro.num || '';
+            document.getElementById('cobro-fecha').value = cobro.fecha || '';
+            document.getElementById('cobro-cliente').value = cobro.cliente || '';
+            document.getElementById('cobro-cc').value = cobro.cc || '';
+            document.getElementById('cobro-tel').value = cobro.tel || '';
+            document.getElementById('cobro-ciudad').value = cobro.ciudad || '';
+            document.getElementById('cobro-concepto').value = cobro.concepto || '';
+            document.getElementById('cobro-fecha-prestacion').value = cobro.fechaPrestacion || '';
+            document.getElementById('cobro-horario').value = cobro.horario || '';
+            document.getElementById('cobro-observacion').value = cobro.observacion || '';
+            document.getElementById('cobro-condiciones').value = cobro.condiciones || '';
+
+            if (cobro.isRetenciones) {
+                document.getElementById('cobro-toggle-retenciones').checked = true;
+                document.getElementById('cobro-r-retefuente-pct').value = cobro.rPctFuente || 6;
+                document.getElementById('cobro-r-reteica-pct').value = cobro.rPctIca || 6;
+                document.getElementById('cobro-r-bruto').value = window.formatCOP(cobro.rBruto || cobro.rBase || 0);
+                document.getElementById('cobro-r-retefuente').value = window.formatCOP(cobro.rRetefuente || 0);
+                document.getElementById('cobro-r-reteica').value = window.formatCOP(cobro.rReteica || 0);
+                document.getElementById('cobro-r-total').value = window.formatCOP(cobro.rTotal || 0);
+            } else {
+                document.getElementById('cobro-toggle-retenciones').checked = false;
+                const subtotal = (cobro.valor || 0) + (cobro.descuento || 0);
+                document.getElementById('cobro-valor').value = window.formatCOP(subtotal);
+                document.getElementById('cobro-desc').value = window.formatCOP(cobro.descuento || 0);
+            }
+            window.toggleRetencionesCobro();
+            window.generarPreviewCobro();
+        };
+
+        window.descargarDocumentosMes = async function(tipo, mes, documentos, boton) {
+            if (typeof JSZip === 'undefined') { window.showToast('No se pudo cargar el generador ZIP'); return; }
+            const originalHTML = boton.innerHTML;
+            const zip = new JSZip();
+            const carpeta = zip.folder(`${tipo === 'facturas' ? 'Facturas' : 'Cuentas'}_${mes}`);
+            const nombreBoton = tipo === 'facturas' ? 'Factura' : 'Cuenta_Cobro';
+            const preview = document.getElementById(tipo === 'facturas' ? 'preview-container' : 'tab-content-cobro-gen');
+            const previewEstabaOculto = preview ? preview.classList.contains('hidden') : true;
+            const formContainer = tipo === 'facturas' ? document.getElementById('form-container') : null;
+            const formularioEstabaOculto = formContainer ? formContainer.classList.contains('hidden') : true;
+            const editingInvoiceIdAnterior = window.editingInvoiceId;
+            const editingCobroIdAnterior = window.editingCobroId;
+            const scrollAnterior = window.scrollY;
+            const camposCobro = tipo === 'cuentas' ? [...document.querySelectorAll('#cobroForm input, #cobroForm select, #cobroForm textarea')].map(campo => ({ campo, value: campo.value, checked: campo.checked })) : [];
+            boton.disabled = true;
+
+            try {
+                for (let index = 0; index < documentos.length; index++) {
+                    const documento = documentos[index];
+                    boton.textContent = `Preparando ${index + 1}/${documentos.length}...`;
+                    let pdfBlob;
+                    if (tipo === 'facturas') {
+                        window.renderPDFContent(documento);
+                        pdfBlob = await window.generarBlobFactura(documento.num, document.getElementById('invoice-render'));
+                    } else {
+                        window.prepararCobroParaPDF(documento);
+                        pdfBlob = await window.generarBlobFactura(documento.num, document.getElementById('cobro-render'));
+                    }
+                    const numero = String(documento.num || 'documento').replace(/[\\/:*?"<>|]/g, '-');
+                    carpeta.file(`${nombreBoton}_${numero}_${String(index + 1).padStart(3, '0')}.pdf`, pdfBlob);
+                }
+
+                const zipBlob = await zip.generateAsync({ type: 'blob' });
+                const objectUrl = URL.createObjectURL(zipBlob);
+                const link = document.createElement('a');
+                link.href = objectUrl;
+                link.download = `${tipo === 'facturas' ? 'Facturas' : 'Cuentas'}_${mes}.zip`;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+                window.showToast(`Descarga mensual lista: ${documentos.length} documentos`);
+            } catch (error) {
+                console.error(error);
+                window.showToast('Error al preparar la descarga mensual');
+            } finally {
+                if (tipo === 'facturas') {
+                    if (preview) preview.classList.toggle('hidden', previewEstabaOculto);
+                    if (formContainer) formContainer.classList.toggle('hidden', formularioEstabaOculto);
+                    window.editingInvoiceId = editingInvoiceIdAnterior;
+                } else {
+                    camposCobro.forEach(({ campo, value, checked }) => { campo.value = value; campo.checked = checked; });
+                    window.toggleRetencionesCobro();
+                    if (document.getElementById('cobroForm').checkValidity()) window.generarPreviewCobro();
+                    if (preview) preview.classList.toggle('hidden', previewEstabaOculto);
+                    window.editingCobroId = editingCobroIdAnterior;
+                }
+                window.scrollTo({ top: scrollAnterior, behavior: 'auto' });
+                boton.innerHTML = originalHTML;
+                boton.disabled = false;
+            }
+        };
+
         window.renderListas = function() {
             const tBody = document.getElementById('lista-clientes-tabla');
             if(tBody) {
@@ -2243,12 +2358,26 @@
 
             const hDiv = document.getElementById('lista-facturas');
             if(hDiv) {
-                hDiv.innerHTML = window.db.facturas.length === 0 ? `<div class="text-center py-20 opacity-30 font-black text-2xl uppercase tracking-[0.3em] text-slate-500">Sin Registros</div>` : '';
+                hDiv.innerHTML = '';
                 const sortedFacturas = window.dedupeDocuments([...window.db.facturas]
                     .filter(f => window.currentAppUser.role === 'admin' ? true : f.userId === window.currentAppUser.id))
-                    .sort((a, b) => new Date(b.fechaCreacion || b.fechaServicio) - new Date(a.fechaCreacion || a.fechaServicio));
+                    .sort((a, b) => new Date(b.fechaServicio || b.fechaCreacion) - new Date(a.fechaServicio || a.fechaCreacion));
 
-                sortedFacturas.forEach((f, index) => {
+                if (!sortedFacturas.length) hDiv.innerHTML = `<div class="text-center py-20 opacity-30 font-black text-2xl uppercase tracking-[0.3em] text-slate-500">Sin Registros</div>`;
+                window.agruparDocumentosPorMes(sortedFacturas, f => f.fechaServicio || f.fechaCreacion).forEach(grupo => {
+                    const contenedorMes = document.createElement('div');
+                    contenedorMes.className = 'space-y-4';
+                    const encabezado = document.createElement('div');
+                    encabezado.className = 'flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-700 pb-3';
+                    encabezado.innerHTML = `<div><h3 class="text-lg font-black text-slate-900 dark:text-white uppercase">${window.sanitizeHTML(grupo.titulo)}</h3><p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">${grupo.documentos.length} factura${grupo.documentos.length === 1 ? '' : 's'}</p></div><button type="button" class="btn-descargar-mes bg-blue-600 text-white px-4 py-3 text-[10px] uppercase tracking-widest flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5v-4"></path><polyline points="7 10 12 15 17 15"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Descargar mes</button>`;
+                    contenedorMes.appendChild(encabezado);
+                    const listaMes = document.createElement('div');
+                    listaMes.className = 'space-y-4';
+                    contenedorMes.appendChild(listaMes);
+                    encabezado.querySelector('.btn-descargar-mes').onclick = event => window.descargarDocumentosMes('facturas', grupo.clave, grupo.documentos, event.currentTarget);
+                    hDiv.appendChild(contenedorMes);
+
+                    grupo.documentos.forEach((f, index) => {
                     const docIdentifier = f.id || f.num; 
                     const card = document.createElement('div');
                     card.className = "bg-slate-50 dark:bg-slate-800/50 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all";
@@ -2280,7 +2409,8 @@
                             card.querySelector('.btn-editar-doc').onclick = () => window.editarFactura(docIdentifier);
                             card.querySelector('.btn-descargar-doc').onclick = () => window.descargarFacturaDirect(docIdentifier);
                             card.querySelector('.btn-eliminar-doc').onclick = () => window.eliminarDoc(docIdentifier, 'facturas');
-                    hDiv.appendChild(card);
+                    listaMes.appendChild(card);
+                    });
                 });
             }
         };
@@ -2635,40 +2765,7 @@
         window.descargarCobroDesdeHistorial = async function(id) {
              const cobro = window.db.cuentasCobro.find(c => c.id === id);
              if(!cobro) return;
-               window.editingCobroId = cobro.id;
-             
-             document.getElementById('cobro-num').value = cobro.num || '';
-             document.getElementById('cobro-fecha').value = cobro.fecha || '';
-             document.getElementById('cobro-cliente').value = cobro.cliente || '';
-             document.getElementById('cobro-cc').value = cobro.cc || '';
-             document.getElementById('cobro-tel').value = cobro.tel || '';
-             document.getElementById('cobro-ciudad').value = cobro.ciudad || '';
-             document.getElementById('cobro-concepto').value = cobro.concepto || '';
-             document.getElementById('cobro-fecha-prestacion').value = cobro.fechaPrestacion || '';
-             document.getElementById('cobro-horario').value = cobro.horario || '';
-             document.getElementById('cobro-observacion').value = cobro.observacion || '';
-             document.getElementById('cobro-condiciones').value = cobro.condiciones || '';
-
-             if(cobro.isRetenciones) {
-                 document.getElementById('cobro-toggle-retenciones').checked = true;
-                 
-                 document.getElementById('cobro-r-retefuente-pct').value = cobro.rPctFuente || 6;
-                 document.getElementById('cobro-r-reteica-pct').value = cobro.rPctIca || 6;
-                 
-                 document.getElementById('cobro-r-bruto').value = window.formatCOP(cobro.rBruto || cobro.rBase || 0);
-                 document.getElementById('cobro-r-retefuente').value = window.formatCOP(cobro.rRetefuente || 0);
-                 document.getElementById('cobro-r-reteica').value = window.formatCOP(cobro.rReteica || 0);
-                 document.getElementById('cobro-r-total').value = window.formatCOP(cobro.rTotal || 0);
-                 window.toggleRetencionesCobro();
-             } else {
-                 document.getElementById('cobro-toggle-retenciones').checked = false;
-                 const sub = (cobro.valor || 0) + (cobro.descuento || 0);
-                 document.getElementById('cobro-valor').value = window.formatCOP(sub);
-                 document.getElementById('cobro-desc').value = window.formatCOP(cobro.descuento || 0);
-                 window.toggleRetencionesCobro();
-             }
-
-             window.generarPreviewCobro();
+                         window.prepararCobroParaPDF(cobro);
              
              const renderEl = document.getElementById('cobro-render');
              const pdfAsBlob = await window.generarBlobFactura(cobro.num, renderEl);
@@ -2689,11 +2786,25 @@
             
             const misCobros = window.dedupeDocuments([...window.db.cuentasCobro]
                 .filter(c => window.currentAppUser.role === 'admin' ? true : c.userId === window.currentAppUser.id))
-                .sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion));
+                .sort((a, b) => new Date(b.fecha || b.fechaCreacion) - new Date(a.fecha || a.fechaCreacion));
 
-            hDiv.innerHTML = misCobros.length === 0 ? `<div class="text-center py-20 opacity-30 font-black text-2xl uppercase tracking-[0.3em] text-slate-500">Sin Cuentas</div>` : '';
+            hDiv.innerHTML = '';
+            if (!misCobros.length) hDiv.innerHTML = `<div class="text-center py-20 opacity-30 font-black text-2xl uppercase tracking-[0.3em] text-slate-500">Sin Cuentas</div>`;
 
-            misCobros.forEach((c) => {
+            window.agruparDocumentosPorMes(misCobros, c => c.fecha || c.fechaCreacion).forEach(grupo => {
+                const contenedorMes = document.createElement('div');
+                contenedorMes.className = 'space-y-4';
+                const encabezado = document.createElement('div');
+                encabezado.className = 'flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-700 pb-3';
+                encabezado.innerHTML = `<div><h3 class="text-lg font-black text-slate-900 dark:text-white uppercase">${window.sanitizeHTML(grupo.titulo)}</h3><p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">${grupo.documentos.length} cuenta${grupo.documentos.length === 1 ? '' : 's'}</p></div><button type="button" class="btn-descargar-mes bg-blue-600 text-white px-4 py-3 text-[10px] uppercase tracking-widest flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5v-4"></path><polyline points="7 10 12 15 17 15"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Descargar mes</button>`;
+                const listaMes = document.createElement('div');
+                listaMes.className = 'space-y-4';
+                contenedorMes.appendChild(encabezado);
+                contenedorMes.appendChild(listaMes);
+                encabezado.querySelector('.btn-descargar-mes').onclick = event => window.descargarDocumentosMes('cuentas', grupo.clave, grupo.documentos, event.currentTarget);
+                hDiv.appendChild(contenedorMes);
+
+            grupo.documentos.forEach((c) => {
                 const card = document.createElement('div');
                 card.className = "bg-indigo-50 dark:bg-indigo-900/10 p-5 rounded-3xl border border-indigo-100 dark:border-indigo-800/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all";
                 card.innerHTML = `
@@ -2719,7 +2830,8 @@
                 card.querySelector('.btn-editar-cobro').onclick = () => window.editarCobro(c.id);
                 card.querySelector('.btn-descargar-cobro').onclick = () => window.descargarCobroDirect(c.id);
                 card.querySelector('.btn-eliminar-cobro').onclick = () => window.eliminarDoc(c.id, 'cuentasCobro');
-                hDiv.appendChild(card);
+                listaMes.appendChild(card);
+                });
             });
         };
 
