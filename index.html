@@ -83,6 +83,7 @@
         .section-content{animation:fadeIn 0.4s ease-out}@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
         /* Filas flex con contenido variable (usuarios, listas): permitir encoger sin desbordar */
         #users-list .flex,#lista-cobros .flex,#lista-facturas .flex{min-width:0}
+        #lista-facturas button svg,#lista-cobros button svg{width:1rem!important;height:1rem!important;max-width:none;flex:0 0 1rem;display:block;margin:0}
         #users-list p,#lista-clientes-tabla p{overflow-wrap:anywhere}
         #confirm-modal,#login-screen{backdrop-filter:blur(8px)}
         .mobile-viewport-wrapper{width:100%;display:flex;justify-content:center;align-items:flex-start;background:#F8F9FA;border-radius:1.5rem;padding:0.6rem;min-height:40vh;overflow-x:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box}.dark .mobile-viewport-wrapper{background:#111111;border:1px solid #495057}
@@ -2230,6 +2231,60 @@
                 }));
         };
 
+        window.crearControlesHistorialMes = function(contenedor, tipo, grupos) {
+            if (!window.historialMesSeleccionado) window.historialMesSeleccionado = {};
+            const claveGuardada = window.historialMesSeleccionado[tipo];
+            const grupoInicial = grupos.find(grupo => grupo.clave === claveGuardada) || grupos[0];
+            const barra = document.createElement('div');
+            barra.className = 'flex flex-col sm:flex-row sm:items-end gap-3 mb-5';
+            const campoMes = document.createElement('div');
+            campoMes.className = 'flex-1';
+            const etiqueta = document.createElement('label');
+            etiqueta.className = 'block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2';
+            etiqueta.textContent = 'Seleccionar mes';
+            const selector = document.createElement('select');
+            selector.className = 'w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-bold outline-none';
+            selector.setAttribute('aria-label', `Seleccionar mes de ${tipo === 'facturas' ? 'facturas' : 'cuentas'}`);
+            grupos.forEach(grupo => {
+                const opcion = document.createElement('option');
+                opcion.value = grupo.clave;
+                opcion.textContent = `${grupo.titulo} (${grupo.documentos.length})`;
+                selector.appendChild(opcion);
+            });
+            selector.value = grupoInicial.clave;
+            campoMes.append(etiqueta, selector);
+
+            const botonDescarga = document.createElement('button');
+            botonDescarga.type = 'button';
+            botonDescarga.className = 'btn-descargar-mes bg-blue-600 text-white px-4 py-3 text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 sm:min-h-[46px]';
+            botonDescarga.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5v-4"></path><polyline points="7 10 12 15 17 15"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg><span>Descargar mes</span>';
+            botonDescarga.onclick = () => {
+                const grupo = grupos.find(item => item.clave === selector.value);
+                if (grupo) window.descargarDocumentosMes(tipo, grupo.clave, grupo.documentos, botonDescarga);
+            };
+            barra.append(campoMes, botonDescarga);
+            contenedor.appendChild(barra);
+
+            const listaMeses = document.createElement('div');
+            listaMeses.className = 'space-y-6';
+            contenedor.appendChild(listaMeses);
+            const elementosMes = new Map();
+            const mostrarSeleccionado = () => {
+                window.historialMesSeleccionado[tipo] = selector.value;
+                elementosMes.forEach((elemento, clave) => { elemento.hidden = clave !== selector.value; });
+            };
+            selector.addEventListener('change', mostrarSeleccionado);
+
+            return {
+                listaMeses,
+                agregarMes(clave, elemento) {
+                    elementosMes.set(clave, elemento);
+                    listaMeses.appendChild(elemento);
+                    mostrarSeleccionado();
+                }
+            };
+        };
+
         window.prepararCobroParaPDF = function(cobro) {
             window.editingCobroId = cobro.id;
             document.getElementById('cobro-num').value = cobro.num || '';
@@ -2363,19 +2418,21 @@
                     .filter(f => window.currentAppUser.role === 'admin' ? true : f.userId === window.currentAppUser.id))
                     .sort((a, b) => new Date(b.fechaServicio || b.fechaCreacion) - new Date(a.fechaServicio || a.fechaCreacion));
 
-                if (!sortedFacturas.length) hDiv.innerHTML = `<div class="text-center py-20 opacity-30 font-black text-2xl uppercase tracking-[0.3em] text-slate-500">Sin Registros</div>`;
-                window.agruparDocumentosPorMes(sortedFacturas, f => f.fechaServicio || f.fechaCreacion).forEach(grupo => {
+                const gruposFacturas = window.agruparDocumentosPorMes(sortedFacturas, f => f.fechaServicio || f.fechaCreacion);
+                if (!gruposFacturas.length) hDiv.innerHTML = `<div class="text-center py-20 opacity-30 font-black text-2xl uppercase tracking-[0.3em] text-slate-500">Sin Registros</div>`;
+                else {
+                    const controlesMes = window.crearControlesHistorialMes(hDiv, 'facturas', gruposFacturas);
+                    gruposFacturas.forEach(grupo => {
                     const contenedorMes = document.createElement('div');
                     contenedorMes.className = 'space-y-4';
                     const encabezado = document.createElement('div');
-                    encabezado.className = 'flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-700 pb-3';
-                    encabezado.innerHTML = `<div><h3 class="text-lg font-black text-slate-900 dark:text-white uppercase">${window.sanitizeHTML(grupo.titulo)}</h3><p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">${grupo.documentos.length} factura${grupo.documentos.length === 1 ? '' : 's'}</p></div><button type="button" class="btn-descargar-mes bg-blue-600 text-white px-4 py-3 text-[10px] uppercase tracking-widest flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5v-4"></path><polyline points="7 10 12 15 17 15"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Descargar mes</button>`;
+                    encabezado.className = 'border-b border-slate-200 dark:border-slate-700 pb-3';
+                    encabezado.innerHTML = `<h3 class="text-lg font-black text-slate-900 dark:text-white uppercase">${window.sanitizeHTML(grupo.titulo)}</h3><p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">${grupo.documentos.length} factura${grupo.documentos.length === 1 ? '' : 's'}</p>`;
                     contenedorMes.appendChild(encabezado);
                     const listaMes = document.createElement('div');
                     listaMes.className = 'space-y-4';
                     contenedorMes.appendChild(listaMes);
-                    encabezado.querySelector('.btn-descargar-mes').onclick = event => window.descargarDocumentosMes('facturas', grupo.clave, grupo.documentos, event.currentTarget);
-                    hDiv.appendChild(contenedorMes);
+                    controlesMes.agregarMes(grupo.clave, contenedorMes);
 
                     grupo.documentos.forEach((f, index) => {
                     const docIdentifier = f.id || f.num; 
@@ -2412,6 +2469,7 @@
                     listaMes.appendChild(card);
                     });
                 });
+                }
             }
         };
 
@@ -2789,20 +2847,21 @@
                 .sort((a, b) => new Date(b.fecha || b.fechaCreacion) - new Date(a.fecha || a.fechaCreacion));
 
             hDiv.innerHTML = '';
-            if (!misCobros.length) hDiv.innerHTML = `<div class="text-center py-20 opacity-30 font-black text-2xl uppercase tracking-[0.3em] text-slate-500">Sin Cuentas</div>`;
-
-            window.agruparDocumentosPorMes(misCobros, c => c.fecha || c.fechaCreacion).forEach(grupo => {
+            const gruposCobros = window.agruparDocumentosPorMes(misCobros, c => c.fecha || c.fechaCreacion);
+            if (!gruposCobros.length) hDiv.innerHTML = `<div class="text-center py-20 opacity-30 font-black text-2xl uppercase tracking-[0.3em] text-slate-500">Sin Cuentas</div>`;
+            else {
+                const controlesMes = window.crearControlesHistorialMes(hDiv, 'cuentas', gruposCobros);
+                gruposCobros.forEach(grupo => {
                 const contenedorMes = document.createElement('div');
                 contenedorMes.className = 'space-y-4';
                 const encabezado = document.createElement('div');
-                encabezado.className = 'flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-700 pb-3';
-                encabezado.innerHTML = `<div><h3 class="text-lg font-black text-slate-900 dark:text-white uppercase">${window.sanitizeHTML(grupo.titulo)}</h3><p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">${grupo.documentos.length} cuenta${grupo.documentos.length === 1 ? '' : 's'}</p></div><button type="button" class="btn-descargar-mes bg-blue-600 text-white px-4 py-3 text-[10px] uppercase tracking-widest flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5v-4"></path><polyline points="7 10 12 15 17 15"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Descargar mes</button>`;
+                encabezado.className = 'border-b border-slate-200 dark:border-slate-700 pb-3';
+                encabezado.innerHTML = `<h3 class="text-lg font-black text-slate-900 dark:text-white uppercase">${window.sanitizeHTML(grupo.titulo)}</h3><p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">${grupo.documentos.length} cuenta${grupo.documentos.length === 1 ? '' : 's'}</p>`;
                 const listaMes = document.createElement('div');
                 listaMes.className = 'space-y-4';
                 contenedorMes.appendChild(encabezado);
                 contenedorMes.appendChild(listaMes);
-                encabezado.querySelector('.btn-descargar-mes').onclick = event => window.descargarDocumentosMes('cuentas', grupo.clave, grupo.documentos, event.currentTarget);
-                hDiv.appendChild(contenedorMes);
+                controlesMes.agregarMes(grupo.clave, contenedorMes);
 
             grupo.documentos.forEach((c) => {
                 const card = document.createElement('div');
@@ -2833,6 +2892,7 @@
                 listaMes.appendChild(card);
                 });
             });
+            }
         };
 
         window.editarCobro = function(identifier) {
