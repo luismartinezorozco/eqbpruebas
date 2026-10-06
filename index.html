@@ -85,6 +85,17 @@
         #users-list .flex,#lista-cobros .flex,#lista-facturas .flex{min-width:0}
         #lista-facturas button svg,#lista-cobros button svg{width:1rem!important;height:1rem!important;max-width:none;flex:0 0 1rem;display:block;margin:0}
         #users-list p,#lista-clientes-tabla p{overflow-wrap:anywhere}
+        @media(max-width:640px){
+            #lista-facturas .history-document-card,#lista-cobros .history-document-card{padding:.75rem;gap:.6rem;border-radius:1rem}
+            #lista-facturas .history-document-card>div:first-child,#lista-cobros .history-document-card>div:first-child{gap:.65rem}
+            #lista-facturas .history-document-card>div:first-child>div:first-child,#lista-cobros .history-document-card>div:first-child>div:first-child{width:2.5rem;height:2.5rem;border-radius:.75rem}
+            #lista-facturas .history-document-card>div:first-child .text-lg,#lista-cobros .history-document-card>div:first-child .text-lg{font-size:.95rem;line-height:1.25rem}
+            #lista-facturas .history-document-card>div:nth-child(2),#lista-cobros .history-document-card>div:nth-child(2){padding-top:.6rem;padding-bottom:0;gap:.5rem;border-top:1px solid var(--sys-border)}
+            #lista-facturas .history-document-card>div:nth-child(2) .text-2xl,#lista-cobros .history-document-card>div:nth-child(2) .text-2xl{font-size:1rem;line-height:1.35rem;white-space:nowrap}
+            #lista-facturas .history-document-card>div:nth-child(2) .text-right,#lista-cobros .history-document-card>div:nth-child(2) .text-right{min-width:0}
+            #lista-facturas .history-document-card>div:nth-child(2)>div:last-child,#lista-cobros .history-document-card>div:nth-child(2)>div:last-child{gap:.35rem}
+            #lista-facturas .history-document-card>div:nth-child(2)>div:last-child button,#lista-cobros .history-document-card>div:nth-child(2)>div:last-child button{width:2.25rem;height:2.25rem;flex:none}
+        }
         #confirm-modal,#login-screen{backdrop-filter:blur(8px)}
         .mobile-viewport-wrapper{width:100%;display:flex;justify-content:center;align-items:flex-start;background:#F8F9FA;border-radius:1.5rem;padding:0.6rem;min-height:40vh;overflow-x:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box}.dark .mobile-viewport-wrapper{background:#111111;border:1px solid #495057}
         .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0.25rem}.calendar-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:0.75rem;font-size:0.8rem;font-weight:800;cursor:pointer;transition:all 0.2s}.calendar-day:hover{background-color:rgba(255,106,0,0.1)}.calendar-day.selected{background-color:#FF6A00;color:#111111}.dark .calendar-day.selected{background-color:#FF6A00;color:#111111}.calendar-day.today{border:2px solid #FF6A00}.calendar-day.empty{pointer-events:none}.event-dot{width:4px;height:4px;background-color:#FF6A00;border-radius:50%;margin-top:2px}.calendar-day.selected .event-dot{background-color:#111111}
@@ -2437,7 +2448,7 @@
                     grupo.documentos.forEach((f, index) => {
                     const docIdentifier = f.id || f.num; 
                     const card = document.createElement('div');
-                    card.className = "bg-slate-50 dark:bg-slate-800/50 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all";
+                    card.className = "history-document-card bg-slate-50 dark:bg-slate-800/50 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all";
                     card.innerHTML = `
                         <div class="flex items-center gap-4 w-full md:w-auto">
                             <div class="bg-blue-600 text-white w-12 h-12 rounded-2xl shadow-xl shadow-blue-600/30 flex-none flex items-center justify-center font-[900] text-sm italic tracking-tighter">${f.num}</div>
@@ -2865,7 +2876,7 @@
 
             grupo.documentos.forEach((c) => {
                 const card = document.createElement('div');
-                card.className = "bg-indigo-50 dark:bg-indigo-900/10 p-5 rounded-3xl border border-indigo-100 dark:border-indigo-800/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all";
+                card.className = "history-document-card bg-indigo-50 dark:bg-indigo-900/10 p-5 rounded-3xl border border-indigo-100 dark:border-indigo-800/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all";
                 card.innerHTML = `
                         <div class="flex items-center gap-4 w-full md:w-auto">
                         <div class="bg-indigo-600 text-white w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-xl shadow-indigo-600/30 flex-none flex items-center justify-center font-[900] text-sm italic tracking-tighter">${c.num}</div>
