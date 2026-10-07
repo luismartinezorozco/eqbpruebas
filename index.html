@@ -98,13 +98,12 @@
         #securityForm .settings-group-content{padding-top:.15rem}
         #sec-analisis .admin-panel-header{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--sys-border)}
         #sec-analisis .admin-panel-header h2{font-size:1.65rem;line-height:2rem}
-        #sec-analisis .admin-tabs{display:flex;gap:.25rem;margin:0 0 1rem;border-bottom:1px solid var(--sys-border)}
-        #sec-analisis .admin-tab-button{flex:1;min-width:0;padding:.8rem .9rem;border:0!important;border-bottom:2px solid transparent!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:var(--sys-muted);font-size:.68rem;font-weight:900;text-align:center;text-transform:uppercase;white-space:nowrap}
-        #sec-analisis .admin-tab-button[aria-selected="true"]{color:var(--sys-text);border-bottom-color:var(--sys-accent)!important}
-        #sec-analisis .admin-tab-panel{min-width:0}
-        #sec-analisis .admin-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;margin:0 0 1.5rem;padding:0 0 1.25rem;border-bottom:1px solid var(--sys-border)}
-        #sec-analisis .admin-metric{min-height:5rem;padding:0 1.25rem 0 0!important;background:transparent!important;color:var(--sys-text)!important;border-radius:0!important;border:0!important;box-shadow:none!important;transform:none!important}
-        #sec-analisis .admin-metric+ .admin-metric{padding-left:1.25rem!important;border-left:1px solid var(--sys-border)!important}
+        #sec-analisis .admin-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:0 0 1.5rem}
+        #sec-analisis .admin-metric{min-height:5rem;padding:1rem 1.15rem!important;color:var(--sys-text)!important;transform:none!important}
+        #sec-analisis .admin-shortcuts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+        #sec-analisis .admin-shortcut{display:flex;flex-direction:column;align-items:flex-start;gap:.3rem;padding:1rem 1.15rem;text-align:left;border:1px solid var(--app-line,#e3e7ef);background:var(--app-surface-muted,#f7f8fb);color:var(--app-ink,#202635)}
+        #sec-analisis .admin-shortcut strong{font-size:.8rem;font-weight:900;text-transform:uppercase}
+        #sec-analisis .admin-shortcut span{font-size:.72rem;font-weight:600;color:var(--app-muted,#737d8d)}
         #sec-analisis .admin-metric p,#sec-analisis .admin-metric svg{color:var(--sys-muted)!important}
         #sec-analisis .admin-metric h3{font-size:1.8rem;line-height:2.1rem;color:var(--sys-text)!important}
         #sec-analisis .license-create-panel{padding:1.25rem 0!important;margin:0!important;border:0!important;border-top:1px solid var(--sys-border)!important;border-bottom:1px solid var(--sys-border)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
@@ -135,11 +134,8 @@
             #sec-ajustes .settings-group-content{padding:0 .9rem .9rem}
             #admin-settings-block .settings-group-content{padding-top:.2rem}
             #sec-analisis .admin-panel-header{margin-bottom:1rem}
-            #sec-analisis .admin-tabs{gap:0}
-            #sec-analisis .admin-tab-button{padding:.7rem .25rem;font-size:.58rem;white-space:normal;line-height:1.1}
-            #sec-analisis .admin-metrics{margin-bottom:1rem;padding-bottom:.9rem}
-            #sec-analisis .admin-metric{min-height:4rem}
-            #sec-analisis .admin-metric+ .admin-metric{padding-left:.85rem!important}
+            #sec-analisis .admin-metrics{margin-bottom:1rem;gap:10px}
+            #sec-analisis .admin-metric{min-height:4rem;padding:.8rem .9rem!important}
             #sec-analisis .license-create-header{display:block}
             #sec-analisis .admin-users-heading{margin-top:1rem}
             #users-list>div{grid-template-columns:minmax(0,1fr) auto;gap:.5rem}
@@ -270,7 +266,6 @@
         #sec-analisis .admin-metric{background:linear-gradient(145deg,var(--app-surface),var(--app-surface-muted))!important;border:1px solid var(--app-line)!important;border-radius:13px!important;box-shadow:0 6px 16px rgba(32,42,58,.055)!important}
         .dark #sec-analisis .admin-metric{box-shadow:0 7px 18px rgba(0,0,0,.18)!important}
         #sec-analisis .admin-metric:first-child h3{color:var(--app-accent)!important}
-        #sec-analisis .admin-tab-button[aria-selected="true"]{background:var(--app-accent-soft)!important;color:var(--app-accent)!important}
         #sec-analisis .license-create-panel{background:linear-gradient(115deg,rgba(232,107,54,.06),transparent 65%),var(--app-surface-muted)!important;border:1px solid var(--app-line)!important;border-left:4px solid var(--app-accent)!important;border-radius:13px!important}
         #users-list>div{background:var(--app-surface)!important;border:1px solid var(--app-line)!important;border-radius:12px!important;box-shadow:0 3px 11px rgba(32,42,58,.045)!important}
         #users-list>div:hover{background:var(--app-surface-muted)!important;border-color:#c9d0dd!important;box-shadow:0 7px 18px rgba(32,42,58,.08)!important}
@@ -297,6 +292,23 @@
             #users-list .admin-user-row{padding:.8rem!important;border-radius:12px!important}
             #lista-facturas .history-document-card,#lista-cobros .history-document-card{border-radius:11px!important}
         }
+        /* Mismo ancho y alto base en todas las secciones con cabecera y pestañas */
+        #sec-crear,#sec-registros,#sec-cobros,#sec-analisis,#sec-licencias,#sec-usuarios{width:100%;max-width:1120px;margin-inline:auto}
+        #sec-crear>#form-container,#sec-registros>.glass-panel,#sec-cobros>.glass-panel,#sec-analisis>.glass-panel,#sec-licencias>.glass-panel,#sec-usuarios>.glass-panel{min-height:640px;margin-bottom:0!important}
+        @media(max-width:767px){#sec-crear>#form-container,#sec-registros>.glass-panel,#sec-cobros>.glass-panel,#sec-analisis>.glass-panel,#sec-licencias>.glass-panel,#sec-usuarios>.glass-panel{min-height:0}}
+        /* Paleta única: sin azules ni índigos */
+        :root{accent-color:#e86b36}
+        :root *,:root ::before,:root ::after{--tw-ring-color:rgba(232,107,54,.35)}
+        ::selection{background:rgba(232,107,54,.25)}
+        .bg-indigo-50,.bg-indigo-100,.bg-sky-50,.bg-sky-100,.bg-violet-50,.bg-violet-100{background-color:rgba(232,107,54,.1)!important}
+        .bg-indigo-500,.bg-indigo-600,.bg-indigo-700{background-color:var(--sys-accent)!important}
+        .text-indigo-400,.text-indigo-500,.text-sky-600,.text-violet-600{color:var(--sys-accent)!important}
+        .text-blue-300,.text-blue-700,.text-blue-800,.text-blue-900{color:var(--app-ink)!important}
+        .border-blue-100,.border-blue-200,.border-blue-800,.border-indigo-100,.border-indigo-200,.border-indigo-300{border-color:rgba(232,107,54,.35)!important}
+        .shadow-indigo-600\/20,.shadow-indigo-600\/30{box-shadow:0 18px 35px -12px rgba(232,107,54,.4)!important}
+        .dark .dark\:text-blue-200,.dark .dark\:text-blue-400,.dark .dark\:text-indigo-400{color:var(--app-accent)!important}
+        .dark .dark\:bg-blue-900\/20,.dark .dark\:bg-blue-900\/30,.dark .dark\:bg-indigo-900\/10{background-color:rgba(232,107,54,.14)!important}
+        .dark .dark\:border-blue-800,.dark .dark\:border-blue-900,.dark .dark\:border-indigo-800\/50{border-color:rgba(232,107,54,.4)!important}
     </style>
     <!-- PWA / Home screen icons -->
     <link rel="apple-touch-icon" sizes="180x180" href="https://www.image2url.com/r2/default/images/1783033708170-dd290dcc-2a89-4597-b84a-c43e08db1e67.png">
@@ -397,6 +409,14 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
             <span class="hidden xs:inline">Panel</span>
         </button>
+        <button onclick="showSection('licencias')" id="nav-licencias" class="nav-link flex-1 md:flex-none px-3 py-3 text-[9px] sm:text-[10px] font-black uppercase tracking-widest flex flex-col md:flex-row items-center justify-center gap-1.5 md:gap-2 min-w-[50px]" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <span class="hidden xs:inline">Licencias</span>
+        </button>
+        <button onclick="showSection('usuarios')" id="nav-usuarios" class="nav-link flex-1 md:flex-none px-3 py-3 text-[9px] sm:text-[10px] font-black uppercase tracking-widest flex flex-col md:flex-row items-center justify-center gap-1.5 md:gap-2 min-w-[50px]" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span class="hidden xs:inline">Usuarios</span>
+        </button>
         <button onclick="showSection('clientes')" id="nav-clientes" class="nav-link flex-1 md:flex-none px-3 py-3 text-[9px] sm:text-[10px] font-black uppercase tracking-widest flex flex-col md:flex-row items-center justify-center gap-1.5 md:gap-2 min-w-[50px]">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             <span class="hidden xs:inline">Clientes</span>
@@ -425,17 +445,8 @@
                     <p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">Resumen y gestión de licencias</p>
                 </div>
                 
-                <div class="admin-tabs" role="tablist" aria-label="Menús del administrador">
-                    <button type="button" class="admin-tab-button" role="tab" id="admin-tab-button-overview" aria-controls="admin-tab-overview" aria-selected="true" onclick="window.showAdminTab('overview')">Panel</button>
-                    <button type="button" class="admin-tab-button" role="tab" id="admin-tab-button-license" aria-controls="admin-tab-license" aria-selected="false" onclick="window.showAdminTab('license')">Activar licencia</button>
-                    <button type="button" class="admin-tab-button" role="tab" id="admin-tab-button-users" aria-controls="admin-tab-users" aria-selected="false" onclick="window.showAdminTab('users')">Usuarios y clientes</button>
-                </div>
 
-                <div id="admin-tab-overview" class="admin-tab-panel" role="tabpanel" aria-labelledby="admin-tab-button-overview">
-                    <div class="admin-panel-header">
-                        <h3 class="text-lg font-[950] text-slate-900 dark:text-white uppercase">Resumen del sistema</h3>
-                        <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">Indicadores generales</p>
-                    </div>
+                <div id="admin-tab-overview">
                     <div class="admin-metrics">
                         <div class="admin-metric">
                             <div class="flex justify-between items-start mb-2"><p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Licencias registradas</p></div>
@@ -445,15 +456,31 @@
                             <div class="flex justify-between items-start mb-2"><p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Facturas emitidas</p></div>
                             <h3 class="text-4xl font-[950] tracking-tighter" id="stat-count">73</h3>
                         </div>
+                        <div class="admin-metric">
+                            <div class="flex justify-between items-start mb-2"><p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Por vencer (5 días)</p></div>
+                            <h3 class="text-4xl font-[950] tracking-tighter" id="stat-expiring">0</h3>
+                        </div>
+                        <div class="admin-metric">
+                            <div class="flex justify-between items-start mb-2"><p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Suspendidas o vencidas</p></div>
+                            <h3 class="text-4xl font-[950] tracking-tighter" id="stat-inactive">0</h3>
+                        </div>
+                    </div>
+                    <div class="admin-shortcuts">
+                        <button type="button" onclick="showSection('licencias')" class="admin-shortcut"><strong>Activar licencia</strong><span>Crear un acceso nuevo con sus permisos</span></button>
+                        <button type="button" onclick="showSection('usuarios')" class="admin-shortcut"><strong>Usuarios y clientes</strong><span>Renovar, suspender o eliminar accesos</span></button>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div id="admin-tab-license" class="admin-tab-panel hidden" role="tabpanel" aria-labelledby="admin-tab-button-license">
+        <!-- SECCIÓN: LICENCIAS (ADMIN) -->
+        <section id="sec-licencias" class="section-content hidden">
+            <div class="glass-panel rounded-[2.5rem] shadow-xl p-8 md:p-12">
+                <div class="admin-panel-header">
+                    <h2 class="font-[950] text-slate-900 dark:text-white uppercase">Licencias</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">Activar nuevos accesos</p>
+                </div>
                 <div class="admin-license-section">
-                    <div class="admin-section-heading mb-3">
-                        <h2 class="text-xl md:text-2xl font-[950] text-slate-900 dark:text-white uppercase tracking-tighter">Licencias</h2>
-                        <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">Activar y administrar accesos</p>
-                    </div>
                     
                     <div class="license-create-panel">
                         <div class="license-create-header">
@@ -492,9 +519,17 @@
                     </div>
 
                 </div>
-                </div>
+            </div>
+        </section>
 
-                <div id="admin-tab-users" class="admin-tab-panel hidden" role="tabpanel" aria-labelledby="admin-tab-button-users">
+        <!-- SECCIÓN: USUARIOS Y CLIENTES (ADMIN) -->
+        <section id="sec-usuarios" class="section-content hidden">
+            <div class="glass-panel rounded-[2.5rem] shadow-xl p-8 md:p-12">
+                <div class="admin-panel-header">
+                    <h2 class="font-[950] text-slate-900 dark:text-white uppercase">Usuarios y clientes</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">Renovaciones, permisos y estado de cada acceso</p>
+                </div>
+                <div id="admin-tab-users">
                     <div class="admin-users-heading">
                         <h3 class="text-sm font-[900] text-slate-900 dark:text-white uppercase tracking-widest">Clientes y usuarios</h3>
                         <span id="admin-users-count" class="admin-users-count">0 usuarios</span>
@@ -527,8 +562,7 @@
         <!-- SECCIÓN: CREAR DOCUMENTO (FACTURA) -->
         <section id="sec-crear" class="section-content hidden">
             <div id="form-container" class="glass-panel rounded-[2rem] md:rounded-[2.5rem] shadow-xl overflow-hidden transition-all duration-300">
-                <form id="invoiceForm" onsubmit="event.preventDefault();" class="p-6 md:p-12 grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
-                    <div class="col-span-1 md:col-span-2 mb-2 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
                         <h2 class="text-3xl md:text-4xl font-[950] text-slate-900 dark:text-white uppercase tracking-tighter">Facturación</h2>
                         <div class="flex bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl w-full md:w-auto shadow-inner">
                             <button type="button" onclick="showSection('crear')" id="tab-btn-fact-gen" class="tab-btn active-tab rounded-xl">Generador</button>
@@ -536,6 +570,7 @@
                         </div>
                     </div>
                     
+                <form id="invoiceForm" onsubmit="event.preventDefault();" class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
                     <div class="space-y-1.5">
                         <label class="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Nº de Factura</label>
                         <input type="text" id="facturaNum" placeholder="Ej: 001" inputmode="numeric" required="" class="w-full px-5 py-4 rounded-xl border border-slate-200 bg-slate-50 text-sm font-bold focus:ring-4 focus:ring-blue-500/10 outline-none transition-all">
@@ -711,7 +746,7 @@
 
         <!-- SECCIÓN: CUENTAS DE COBRO -->
         <section id="sec-cobros" class="section-content hidden">
-            <div class="glass-panel rounded-[2.5rem] shadow-xl p-8 md:p-12 mb-8">
+            <div class="glass-panel rounded-[2.5rem] shadow-xl p-8 md:p-12">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
                     <h2 class="text-3xl md:text-4xl font-[950] text-slate-900 dark:text-white uppercase tracking-tighter">Cuentas de Cobro</h2>
                     <div class="flex bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl w-full md:w-auto shadow-inner">
@@ -1917,12 +1952,16 @@
                 if(document.getElementById('nav-registros')) document.getElementById('nav-registros').style.display = 'none';
                 if(document.getElementById('nav-clientes')) document.getElementById('nav-clientes').style.display = 'none';
                 if(document.getElementById('nav-analisis')) document.getElementById('nav-analisis').style.display = 'flex';
+                if(document.getElementById('nav-licencias')) document.getElementById('nav-licencias').style.display = 'flex';
+                if(document.getElementById('nav-usuarios')) document.getElementById('nav-usuarios').style.display = 'flex';
             } else {
                 if(document.getElementById('nav-crear')) document.getElementById('nav-crear').style.display = 'flex';
                 if(document.getElementById('nav-cobros')) document.getElementById('nav-cobros').style.display = hasCuentas ? 'flex' : 'none';
                 if(document.getElementById('nav-registros')) document.getElementById('nav-registros').style.display = hasRegistros ? 'flex' : 'none';
                 if(document.getElementById('nav-clientes')) document.getElementById('nav-clientes').style.display = 'flex';
                 if(document.getElementById('nav-analisis')) document.getElementById('nav-analisis').style.display = 'none';
+                if(document.getElementById('nav-licencias')) document.getElementById('nav-licencias').style.display = 'none';
+                if(document.getElementById('nav-usuarios')) document.getElementById('nav-usuarios').style.display = 'none';
             }
 
             const adminSettingsBlock = document.getElementById('admin-settings-block');
@@ -1958,23 +1997,17 @@
 
             if(document.getElementById('stat-licenses')) document.getElementById('stat-licenses').innerText = totalLicencias;
             if(document.getElementById('stat-count')) document.getElementById('stat-count').innerText = totalFacturas;
+
+            let porVencer = 0, inactivas = 0;
+            clientes.forEach(u => {
+                const rem = window.calculateDaysRemaining(u.fechaVencimiento);
+                if (u.status === 'suspended' || rem.expired) inactivas++;
+                else if (!rem.legacy && rem.days <= 5) porVencer++;
+            });
+            if(document.getElementById('stat-expiring')) document.getElementById('stat-expiring').innerText = porVencer;
+            if(document.getElementById('stat-inactive')) document.getElementById('stat-inactive').innerText = inactivas;
             
             window.renderUsersList();
-        };
-
-        window.showAdminTab = function(tabName) {
-            const tabs = ['overview', 'license', 'users'];
-            if (!tabs.includes(tabName)) return;
-            tabs.forEach(tab => {
-                const panel = document.getElementById(`admin-tab-${tab}`);
-                const button = document.getElementById(`admin-tab-button-${tab}`);
-                if (panel) panel.classList.toggle('hidden', tab !== tabName);
-                if (button) {
-                    button.setAttribute('aria-selected', String(tab === tabName));
-                    button.tabIndex = tab === tabName ? 0 : -1;
-                }
-            });
-            window.currentAdminTab = tabName;
         };
 
         window.createUser = async function() {
@@ -2113,7 +2146,7 @@
                 };
                 if (canManageUser) {
                     const renewal = document.createElement('select');
-                    renewal.className = 'text-[9px] font-black uppercase tracking-widest px-2 py-2 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-200 outline-none cursor-pointer';
+                    renewal.className = 'text-[9px] font-black uppercase tracking-widest px-2 py-2 rounded-lg bg-blue-50 text-blue-600 border border-blue-200 outline-none cursor-pointer';
                     renewal.innerHTML = '<option value="">Renovar...</option><option value="trial">+ 1 Día</option><option value="1">+ 1 Mes</option><option value="6">+ 6 Meses</option><option value="12">+ 12 Meses</option>';
                     renewal.addEventListener('change', () => {
                         if (!renewal.value) return;
@@ -3115,23 +3148,23 @@
 
             grupo.documentos.forEach((c) => {
                 const card = document.createElement('div');
-                card.className = "history-document-card bg-indigo-50 dark:bg-indigo-900/10 p-5 rounded-3xl border border-indigo-100 dark:border-indigo-800/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all";
+                card.className = "history-document-card bg-slate-50 dark:bg-slate-800/50 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all";
                 card.innerHTML = `
                         <div class="flex items-center gap-4 w-full md:w-auto">
-                        <div class="bg-indigo-600 text-white w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-xl shadow-indigo-600/30 flex-none flex items-center justify-center font-[900] text-sm italic tracking-tighter">${window.sanitizeHTML(c.num)}</div>
+                        <div class="bg-blue-600 text-white w-12 h-12 rounded-2xl shadow-xl shadow-blue-600/30 flex-none flex items-center justify-center font-[900] text-sm italic tracking-tighter">${window.sanitizeHTML(c.num)}</div>
                         <div class="space-y-0.5 min-w-0">
-                            <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest flex items-center gap-1">${window.sanitizeHTML(c.fecha)}</p>
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">${window.sanitizeHTML(c.fecha)}</p>
                             <p class="font-[900] text-slate-900 dark:text-white text-lg uppercase tracking-tight truncate">${window.sanitizeHTML(c.cliente)}</p>
                             <p class="text-[10px] text-slate-500 truncate">${window.sanitizeHTML(c.concepto)}</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 border-indigo-100 dark:border-indigo-800/50 pt-4 md:pt-0">
+                    <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 border-slate-200 dark:border-slate-700 pt-4 md:pt-0">
                         <div class="text-right">
-                            <p class="text-2xl font-[950] text-indigo-600 dark:text-indigo-400 tracking-tighter">${window.formatCOP(c.valor)}</p>
+                            <p class="text-2xl font-[950] text-slate-900 dark:text-white tracking-tighter">${window.formatCOP(c.valor)}</p>
                         </div>
                         <div class="flex gap-2">
-                            <button class="btn-editar-cobro bg-white text-indigo-600 hover:scale-105 w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
-                            <button class="btn-descargar-cobro bg-indigo-100 text-indigo-600 hover:scale-105 w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>
+                            <button class="btn-editar-cobro bg-white text-slate-600 hover:scale-105 w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                            <button class="btn-descargar-cobro bg-blue-50 text-blue-600 hover:scale-105 w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>
                             <button class="btn-eliminar-cobro bg-red-50 text-red-500 hover:scale-105 w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
                         </div>
                     </div>`;
@@ -3247,6 +3280,7 @@
             if (section === 'registros' && window.currentAppUser && window.currentAppUser.role === 'user' && !window.currentAppUser.canViewRegistros) return;
             if (section === 'cobros' && window.currentAppUser && window.currentAppUser.role === 'user' && !window.currentAppUser.canViewCuentas) return;
             if (section === 'clientes' && window.currentAppUser && window.currentAppUser.role === 'admin') return;
+            if ((section === 'licencias' || section === 'usuarios' || section === 'analisis') && !(window.currentAppUser && window.currentAppUser.role === 'admin')) return;
 
             document.querySelectorAll('.section-content').forEach(s => s.classList.add('hidden'));
             const sec = document.getElementById(`sec-${section}`);
@@ -3281,6 +3315,7 @@
             if(section === 'historial' || section === 'registros' || section === 'clientes') window.renderListas();
             if(section === 'registros') window.switchTab('facturas');
             if(section === 'analisis') window.renderAnalisis();
+            if(section === 'usuarios') window.renderUsersList();
             if(section === 'ajustes') window.updateProfileInfo();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
