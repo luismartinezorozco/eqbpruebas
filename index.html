@@ -104,34 +104,6 @@
         .settings-group-content{padding:0 1.1rem 1.1rem}
         #securityForm{padding-top:0;border-top:0}
         #securityForm .settings-group-content{padding-top:.15rem}
-        #sec-analisis .admin-panel-header{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--sys-border)}
-        #sec-analisis .admin-panel-header h2{font-size:1.65rem;line-height:2rem}
-        #sec-analisis .admin-tabs{display:flex;gap:.25rem;margin:0 0 1rem;border-bottom:1px solid var(--sys-border)}
-        #sec-analisis .admin-tab-button{flex:1;min-width:0;padding:.8rem .9rem;border:0!important;border-bottom:2px solid transparent!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:var(--sys-muted);font-size:.68rem;font-weight:900;text-align:center;text-transform:uppercase;white-space:nowrap}
-        #sec-analisis .admin-tab-button[aria-selected="true"]{color:var(--sys-text);border-bottom-color:var(--sys-accent)!important}
-        #sec-analisis .admin-tab-panel{min-width:0}
-        #sec-analisis .admin-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;margin:0 0 1.5rem;padding:0 0 1.25rem;border-bottom:1px solid var(--sys-border)}
-        #sec-analisis .admin-metric{min-height:5rem;padding:0 1.25rem 0 0!important;background:transparent!important;color:var(--sys-text)!important;border-radius:0!important;border:0!important;box-shadow:none!important;transform:none!important}
-        #sec-analisis .admin-metric+ .admin-metric{padding-left:1.25rem!important;border-left:1px solid var(--sys-border)!important}
-        #sec-analisis .admin-metric p,#sec-analisis .admin-metric svg{color:var(--sys-muted)!important}
-        #sec-analisis .admin-metric h3{font-size:1.8rem;line-height:2.1rem;color:var(--sys-text)!important}
-        #sec-analisis .license-create-panel{padding:1.25rem 0!important;margin:0!important;border:0!important;border-top:1px solid var(--sys-border)!important;border-bottom:1px solid var(--sys-border)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
-        #sec-analisis .license-create-header{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-bottom:1rem;text-align:left}
-        #sec-analisis .license-create-header p:first-child{margin:0;text-align:left}
-        #sec-analisis .license-permissions{display:flex;align-items:center;flex-wrap:wrap;gap:.75rem 1.25rem;margin:0 0 1rem;padding:.75rem 0;border-top:1px solid var(--sys-border);border-bottom:1px solid var(--sys-border)}
-        #sec-analisis .admin-users-heading{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:1.5rem 0 .5rem}
-        #sec-analisis .admin-users-count{font-size:.65rem;font-weight:800;color:var(--sys-muted);text-transform:uppercase}
-        #users-list>div{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:1rem;padding:.8rem 0!important;border:0!important;border-bottom:1px solid var(--sys-border)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
-        #users-list .user-row-controls{position:relative;z-index:1;justify-self:end}
-        #users-list .user-actions-menu{position:relative;min-width:7rem}
-        #users-list .user-actions-menu summary{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.55rem .75rem;border:1px solid var(--sys-border);font-size:.65rem;font-weight:800;text-transform:uppercase;cursor:pointer;list-style:none}
-        #users-list .user-actions-menu summary::-webkit-details-marker{display:none}
-        #users-list .user-actions-menu summary::after{content:'';width:.4rem;height:.4rem;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px)}
-        #users-list .user-actions-menu[open] summary::after{transform:rotate(225deg) translate(-1px,-1px)}
-        #users-list .user-actions{display:flex;flex-direction:column;gap:.4rem}
-        #users-list .user-actions-menu[open] .user-actions{position:absolute;top:calc(100% + .35rem);right:0;z-index:20;width:max-content;min-width:14rem;max-width:calc(100vw - 2rem);padding:.65rem;border:1px solid var(--sys-border);background:var(--sys-bg);box-shadow:0 10px 24px rgba(17,17,17,.12)}
-        .dark #users-list .user-actions-menu[open] .user-actions{background:#111111;box-shadow:0 10px 24px rgba(0,0,0,.35)}
-        #users-list .user-actions button,#users-list .user-actions select{width:100%;text-align:left;border-radius:.2rem!important;box-shadow:none!important}
         @media(max-width:640px){
             #sec-ajustes>.glass-panel{padding:1rem}
             #sec-ajustes .settings-page-heading{margin-bottom:1rem}
@@ -144,19 +116,6 @@
             #sec-ajustes .settings-summary{padding:.85rem .9rem}
             #sec-ajustes .settings-group-content{padding:0 .9rem .9rem}
             #admin-settings-block .settings-group-content{padding-top:.2rem}
-            #sec-analisis .admin-panel-header{margin-bottom:1rem}
-            #sec-analisis .admin-tabs{gap:0}
-            #sec-analisis .admin-tab-button{padding:.7rem .25rem;font-size:.58rem;white-space:normal;line-height:1.1}
-            #sec-analisis .admin-metrics{margin-bottom:1rem;padding-bottom:.9rem}
-            #sec-analisis .admin-metric{min-height:4rem}
-            #sec-analisis .admin-metric+ .admin-metric{padding-left:.85rem!important}
-            #sec-analisis .license-create-header{display:block}
-            #sec-analisis .admin-users-heading{margin-top:1rem}
-            #users-list>div{grid-template-columns:minmax(0,1fr) auto;gap:.5rem}
-            #users-list .user-actions-menu{min-width:6rem}
-            #users-list .user-actions-menu summary{padding:.5rem .55rem}
-            #users-list .user-row-controls{grid-column:2;grid-row:1/3}
-            #users-list .user-actions-menu[open] .user-actions{min-width:13rem}
         }
         @media(max-width:640px){
             #lista-facturas .history-document-card,#lista-cobros .history-document-card{padding:.75rem;gap:.6rem;border-radius:1rem}
@@ -258,40 +217,6 @@
         @media(min-width:768px){
             #main-nav{width:max-content;max-width:calc(100vw - 2rem);flex-wrap:wrap;justify-content:center;gap:.35rem;padding:.45rem;overflow:visible}
             #main-nav .nav-link{flex:0 0 auto;min-width:0;padding:.65rem .8rem;white-space:nowrap}
-        }
-        :root{--sys-bg:#eef2f5;--sys-surface:#ffffff;--sys-border:#dce3e9;--sys-text:#19232d;--sys-muted:#65717d;--sys-accent:#ed6a22}
-        .dark{--sys-bg:#141b22;--sys-surface:#1b252e;--sys-border:#33414e;--sys-text:#e8edf2;--sys-muted:#a5b0bb}
-        #main-body{background-color:var(--sys-bg)!important;background-image:linear-gradient(180deg,rgba(255,255,255,.46),rgba(238,242,245,.12))!important;color:var(--sys-text)!important}
-        .dark #main-body{background-image:linear-gradient(180deg,rgba(255,255,255,.025),rgba(10,15,20,.12))!important}
-        #main-content{max-width:1600px;margin-inline:auto;padding-left:clamp(1rem,3vw,2.75rem);padding-right:clamp(1rem,3vw,2.75rem)}
-        #main-content>section>.glass-panel,#main-content>section>#form-container{background:var(--sys-surface)!important;border:1px solid var(--sys-border)!important;border-top:3px solid rgba(237,106,34,.8)!important;border-radius:12px!important;box-shadow:0 14px 36px rgba(28,42,56,.075),0 2px 6px rgba(28,42,56,.035)!important}
-        .dark #main-content>section>.glass-panel,.dark #main-content>section>#form-container{box-shadow:0 16px 36px rgba(0,0,0,.2)!important}
-        .nav-liquid{background:var(--sys-surface)!important;border:1px solid var(--sys-border)!important;border-radius:12px!important;box-shadow:0 10px 28px rgba(28,42,56,.14)!important;backdrop-filter:blur(18px) saturate(145%)!important}
-        .dark .nav-liquid{background:rgba(27,37,46,.96)!important;box-shadow:0 12px 30px rgba(0,0,0,.35)!important}
-        .nav-link{border-radius:7px!important}
-        .nav-link:not(.active):hover{background:rgba(237,106,34,.08);color:var(--sys-text)}
-        #sec-analisis .admin-metric{padding:.9rem 1rem!important;background:var(--sys-surface)!important;border:1px solid var(--sys-border)!important;border-radius:8px!important}
-        #sec-analisis .admin-metric+.admin-metric{margin-left:.75rem;border-left:1px solid var(--sys-border)!important}
-        #sec-analisis .license-create-panel{padding:1.25rem!important;background:var(--sys-bg)!important;border:1px solid var(--sys-border)!important;border-left:3px solid var(--sys-accent)!important;border-radius:8px!important}
-        #users-list>div{padding:.85rem 1rem!important;background:var(--sys-surface)!important;border:1px solid var(--sys-border)!important;border-radius:8px!important;transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease!important}
-        #users-list>div:hover{background:#f7f9fb!important;border-color:#bdc9d3!important;box-shadow:0 4px 14px rgba(28,42,56,.07)!important}
-        .dark #users-list>div:hover{background:#202c36!important;border-color:#465867!important}
-        #lista-facturas .history-document-card,#lista-cobros .history-document-card{background:var(--sys-surface)!important;border:1px solid var(--sys-border)!important;border-radius:8px!important;transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease!important}
-        #lista-facturas .history-document-card:hover,#lista-cobros .history-document-card:hover{background:#f7f9fb!important;border-color:#bdc9d3!important;box-shadow:0 4px 14px rgba(28,42,56,.07)!important}
-        .dark #lista-facturas .history-document-card:hover,.dark #lista-cobros .history-document-card:hover{background:#202c36!important;border-color:#465867!important}
-        #main-content .settings-group,#sec-ajustes .settings-profile,#sec-ajustes .settings-profile-status,#main-content .payment-method-row,#sec-crear #montos-wrapper,#sec-cobros #cobro-retenciones-container{background:var(--sys-surface)!important;border-color:var(--sys-border)!important;border-radius:8px!important;box-shadow:0 3px 12px rgba(28,42,56,.045)!important}
-        #sec-ajustes .settings-group{background:var(--sys-bg)!important}
-        #main-content input:not([type="checkbox"]):not([type="radio"]),#main-content select,#main-content textarea{background-color:var(--sys-surface)!important;border-color:var(--sys-border)!important;color:var(--sys-text)!important;border-radius:7px!important}
-        #main-content input:focus,#main-content select:focus,#main-content textarea:focus{border-color:var(--sys-accent)!important;box-shadow:0 0 0 3px rgba(237,106,34,.13)!important}
-        #sec-analisis .admin-tab-button[aria-selected="true"]{background:rgba(237,106,34,.07)!important}
-        #main-content button:not(.nav-link):not(.tab-btn):not([class~="rounded-full"]){border-radius:6px!important}
-        @media(max-width:767px){
-            #main-content{padding-left:.75rem;padding-right:.75rem}
-            #main-content>section>.glass-panel,#main-content>section>#form-container{border-radius:9px!important;box-shadow:0 8px 22px rgba(28,42,56,.08)!important}
-            #sec-analisis .admin-metric{padding:.7rem .55rem!important}
-            #sec-analisis .admin-metric+.admin-metric{margin-left:.4rem;padding-left:.7rem!important}
-            #users-list>div{padding:.7rem .6rem!important}
-            #lista-facturas .history-document-card,#lista-cobros .history-document-card{border-radius:7px!important}
         }
     </style>
     <!-- PWA / Home screen icons -->
@@ -416,47 +341,36 @@
         <!-- SECCIÓN: PANEL DE ADMINISTRACIÓN -->
         <section id="sec-analisis" class="section-content">
             <div class="glass-panel rounded-[2.5rem] shadow-xl p-8 md:p-12 mb-8 relative overflow-hidden">
-                <div class="admin-panel-header">
-                    <h2 class="font-[950] text-slate-900 dark:text-white uppercase">Panel del Administrador</h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">Resumen y gestión de licencias</p>
-                </div>
+                <div class="absolute -right-20 -top-20 w-64 h-64 bg-blue-500/10 dark:bg-blue-600/20 rounded-full blur-3xl"></div>
+                <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-purple-500/10 dark:bg-purple-600/20 rounded-full blur-3xl"></div>
                 
-                <div class="admin-tabs" role="tablist" aria-label="Menús del administrador">
-                    <button type="button" class="admin-tab-button" role="tab" id="admin-tab-button-overview" aria-controls="admin-tab-overview" aria-selected="true" onclick="window.showAdminTab('overview')">Panel</button>
-                    <button type="button" class="admin-tab-button" role="tab" id="admin-tab-button-license" aria-controls="admin-tab-license" aria-selected="false" onclick="window.showAdminTab('license')">Activar licencia</button>
-                    <button type="button" class="admin-tab-button" role="tab" id="admin-tab-button-users" aria-controls="admin-tab-users" aria-selected="false" onclick="window.showAdminTab('users')">Usuarios y clientes</button>
-                </div>
-
-                <div id="admin-tab-overview" class="admin-tab-panel" role="tabpanel" aria-labelledby="admin-tab-button-overview">
-                    <div class="admin-panel-header">
-                        <h3 class="text-lg font-[950] text-slate-900 dark:text-white uppercase">Resumen del sistema</h3>
-                        <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">Indicadores generales</p>
+                <h2 class="text-3xl md:text-5xl font-[950] text-slate-900 dark:text-white uppercase tracking-tighter relative z-10">Panel de Control</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.3em] mb-10 relative z-10">Métricas y Gestión del Sistema</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10 mb-10">
+                    <div class="bg-blue-600 rounded-[2rem] p-6 shadow-xl shadow-blue-600/20 text-white transform hover:-translate-y-2 transition-transform duration-300">
+                        <div class="flex justify-between items-start mb-2">
+                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Licencias Activas</p>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-80"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        </div>
+                        <h3 class="text-4xl font-[950] tracking-tighter break-words" id="stat-licenses">1</h3>
                     </div>
-                    <div class="admin-metrics">
-                        <div class="admin-metric">
-                            <div class="flex justify-between items-start mb-2"><p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Licencias registradas</p></div>
-                            <h3 class="text-4xl font-[950] tracking-tighter" id="stat-licenses">1</h3>
+                    <div class="bg-white dark:bg-slate-800 rounded-[2rem] p-6 shadow-xl border border-slate-100 dark:border-slate-700 transform hover:-translate-y-2 transition-transform duration-300">
+                        <div class="flex justify-between items-start mb-2">
+                            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Facturas Emitidas</p>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                         </div>
-                        <div class="admin-metric">
-                            <div class="flex justify-between items-start mb-2"><p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Facturas emitidas</p></div>
-                            <h3 class="text-4xl font-[950] tracking-tighter" id="stat-count">73</h3>
-                        </div>
+                        <h3 class="text-4xl font-[950] text-slate-900 dark:text-white tracking-tighter" id="stat-count">73</h3>
                     </div>
                 </div>
 
-                <div id="admin-tab-license" class="admin-tab-panel hidden" role="tabpanel" aria-labelledby="admin-tab-button-license">
-                <div class="admin-license-section">
-                    <div class="admin-section-heading mb-3">
-                        <h2 class="text-xl md:text-2xl font-[950] text-slate-900 dark:text-white uppercase tracking-tighter">Licencias</h2>
-                        <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">Activar y administrar accesos</p>
-                    </div>
+                <div class="relative z-10 border-t border-slate-100 dark:border-slate-800 pt-8 mt-4">
+                    <h2 class="text-3xl md:text-4xl font-[950] text-slate-900 dark:text-white uppercase tracking-tighter mb-2">Venta de Licencias</h2>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.3em] mb-8">Activa y gestiona cuentas de clientes</p>
                     
-                    <div class="license-create-panel">
-                        <div class="license-create-header">
-                            <p class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-widest">Activar una licencia</p>
-                            <p class="text-[10px] font-bold text-slate-500">Configura el acceso y sus permisos</p>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 mb-4">
+                    <div class="bg-blue-50 dark:bg-slate-800/80 p-6 md:p-8 rounded-[2rem] border border-blue-100 dark:border-slate-700 mb-8 shadow-inner">
+                        <p class="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-[0.2em] text-center mb-6">Vender Nueva Licencia</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                             <input type="text" id="new-user-name" placeholder="Nombre del cliente" class="px-5 py-4 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-bold outline-none focus:ring-4 focus:ring-blue-500/20">
                             <input type="password" id="new-user-pin" placeholder="PIN (4 dígitos)" maxlength="4" inputmode="numeric" class="px-5 py-4 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-lg tracking-[0.5em] font-black focus:ring-4 focus:ring-blue-500/20 placeholder:tracking-normal placeholder:font-medium placeholder:text-sm">
                             <select id="new-user-plan" class="px-5 py-4 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-bold outline-none cursor-pointer">
@@ -466,8 +380,7 @@
                                 <option value="12">Plan 12 Meses</option>
                             </select>
                         </div>
-                        <div class="license-permissions">
-                            <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Permisos</span>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                             <div class="flex items-center gap-2">
                                 <input type="checkbox" id="new-user-registros" class="w-4 h-4 rounded border-slate-300 text-blue-600 cursor-pointer">
                                 <label for="new-user-registros" class="text-[10px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest cursor-pointer">Registros</label>
@@ -481,21 +394,14 @@
                                 <label for="new-user-cuentas" class="text-[10px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest cursor-pointer">Cuentas Cobro</label>
                             </div>
                         </div>
-                        <button type="button" onclick="createUser()" class="bg-blue-600 text-white font-[900] px-6 py-3 rounded-xl uppercase tracking-widest text-[10px] hover:bg-blue-500 transition-all flex justify-center items-center gap-2">
+                        <button type="button" onclick="createUser()" class="w-full bg-blue-600 text-white font-[900] py-4 rounded-xl shadow-xl shadow-blue-600/30 uppercase tracking-[0.2em] text-xs hover:bg-blue-500 hover:-translate-y-1 transition-all flex justify-center items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
                             Activar Cliente
                         </button>
                     </div>
 
-                </div>
-                </div>
-
-                <div id="admin-tab-users" class="admin-tab-panel hidden" role="tabpanel" aria-labelledby="admin-tab-button-users">
-                    <div class="admin-users-heading">
-                        <h3 class="text-sm font-[900] text-slate-900 dark:text-white uppercase tracking-widest">Clientes y usuarios</h3>
-                        <span id="admin-users-count" class="admin-users-count">0 usuarios</span>
-                    </div>
-                    <div id="users-list" class="space-y-0">
+                    <h3 class="text-xs font-[900] text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-4">Clientes Activos</h3>
+                    <div id="users-list" class="space-y-3">
                     <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 transition-all">
                         <div class="w-full xl:w-auto">
                             <div class="flex items-center gap-2 mb-1 flex-wrap">
@@ -1958,21 +1864,6 @@
             window.renderUsersList();
         };
 
-        window.showAdminTab = function(tabName) {
-            const tabs = ['overview', 'license', 'users'];
-            if (!tabs.includes(tabName)) return;
-            tabs.forEach(tab => {
-                const panel = document.getElementById(`admin-tab-${tab}`);
-                const button = document.getElementById(`admin-tab-button-${tab}`);
-                if (panel) panel.classList.toggle('hidden', tab !== tabName);
-                if (button) {
-                    button.setAttribute('aria-selected', String(tab === tabName));
-                    button.tabIndex = tab === tabName ? 0 : -1;
-                }
-            });
-            window.currentAdminTab = tabName;
-        };
-
         window.createUser = async function() {
             if(!window.currentAppUser || window.currentAppUser.role !== 'admin') return;
             if(!auth.currentUser) return;
@@ -2054,8 +1945,6 @@
             const list = document.getElementById('users-list');
             if(!list) return;
             list.innerHTML = '';
-            const count = document.getElementById('admin-users-count');
-            if (count) count.textContent = `${window.db.usuarios.length} usuarios`;
             
             window.db.usuarios.forEach(u => {
                 const isAdmin = u.role === 'admin';
@@ -2084,16 +1973,9 @@
                             </div>
                             <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mt-1 pl-6">PIN protegido</p>
                         </div>
-                        <div class="user-row-controls"></div>
+                        <div class="user-actions flex items-center gap-2 flex-wrap w-full xl:w-auto justify-end"></div>
                     </div>`;
                 list.insertAdjacentHTML('beforeend', html);
-                const controls = list.lastElementChild.querySelector('.user-row-controls');
-                if (canManageUser || canDeleteUser) {
-                    const menu = document.createElement('details');
-                    menu.className = 'user-actions-menu';
-                    menu.innerHTML = '<summary>Acciones</summary><div class="user-actions"></div>';
-                    controls.appendChild(menu);
-                }
                 const actions = list.lastElementChild.querySelector('.user-actions');
                 const addButton = (label, className, handler) => {
                     const button = document.createElement('button');
