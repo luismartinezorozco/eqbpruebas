@@ -85,6 +85,30 @@
         #users-list .flex,#lista-cobros .flex,#lista-facturas .flex{min-width:0}
         #lista-facturas button svg,#lista-cobros button svg{width:1rem!important;height:1rem!important;max-width:none;flex:0 0 1rem;display:block;margin:0}
         #users-list p,#lista-clientes-tabla p{overflow-wrap:anywhere}
+        .settings-group{border:1px solid var(--sys-border);border-radius:1rem;background:var(--sys-bg);overflow:hidden}
+        .dark .settings-group{border-color:#374151;background:#111111}
+        .settings-summary{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.1rem;cursor:pointer;list-style:none}
+        .settings-summary::-webkit-details-marker{display:none}
+        .settings-summary::after{content:'';width:.55rem;height:.55rem;flex:none;border-right:2px solid #6b7280;border-bottom:2px solid #6b7280;transform:rotate(45deg) translateY(-2px);transition:transform .2s ease}
+        .settings-group[open]>.settings-summary::after{transform:rotate(225deg) translate(-2px,-1px)}
+        .settings-summary-title{display:block;font-size:.75rem;font-weight:900;text-transform:uppercase;color:var(--sys-text)}
+        .settings-summary-note{display:block;margin-top:.25rem;font-size:.62rem;font-weight:700;text-transform:uppercase;color:var(--sys-muted)}
+        .settings-group-content{padding:0 1.1rem 1.1rem}
+        #securityForm{padding-top:0;border-top:0}
+        #securityForm .settings-group-content{padding-top:.15rem}
+        @media(max-width:640px){
+            #sec-ajustes>.glass-panel{padding:1rem}
+            #sec-ajustes .settings-page-heading{margin-bottom:1rem}
+            #sec-ajustes .settings-page-heading h2{font-size:1.55rem;line-height:1.9rem}
+            #sec-ajustes .settings-page-heading p{display:none}
+            #sec-ajustes .settings-profile{padding:.9rem;margin-bottom:1rem;gap:.75rem;border-radius:1rem}
+            #sec-ajustes .settings-profile-icon{width:2.75rem;height:2.75rem}
+            #sec-ajustes .settings-profile-status{width:auto;padding:.6rem .75rem;border-radius:.75rem}
+            #sec-ajustes .settings-group{border-radius:.85rem}
+            #sec-ajustes .settings-summary{padding:.85rem .9rem}
+            #sec-ajustes .settings-group-content{padding:0 .9rem .9rem}
+            #admin-settings-block .settings-group-content{padding-top:.2rem}
+        }
         @media(max-width:640px){
             #lista-facturas .history-document-card,#lista-cobros .history-document-card{padding:.75rem;gap:.6rem;border-radius:1rem}
             #lista-facturas .history-document-card>div:first-child,#lista-cobros .history-document-card>div:first-child{gap:.65rem}
@@ -944,16 +968,16 @@
 
         <!-- SECCIÓN: AJUSTES GLOBALES MEJORADA -->
         <section id="sec-ajustes" class="section-content hidden">
-            <div class="glass-panel rounded-[2.5rem] shadow-xl p-8 md:p-12 max-w-4xl mx-auto border-t-4 border-blue-500">
-                <div class="mb-10 text-center">
+            <div class="glass-panel rounded-[2.5rem] shadow-xl p-8 md:p-12 max-w-5xl mx-auto border-t-4 border-blue-500">
+                <div class="settings-page-heading mb-7">
                     <h2 class="text-3xl font-[950] text-slate-900 dark:text-white uppercase tracking-tighter">Ajustes</h2>
                     <p class="text-[10px] text-slate-500 font-bold mt-2 uppercase tracking-[0.3em]">Perfil y Configuración</p>
                 </div>
 
                 <!-- PERFIL Y SUSCRIPCIÓN -->
-                <div class="bg-blue-50 dark:bg-slate-800/80 p-6 md:p-8 rounded-[2rem] border border-blue-100 dark:border-slate-700 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-inner">
+                <div class="settings-profile bg-blue-50 dark:bg-slate-800/80 p-6 md:p-8 rounded-[2rem] border border-blue-100 dark:border-slate-700 mb-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-inner">
                     <div class="flex items-center gap-4 w-full md:w-auto text-center md:text-left flex-col md:flex-row">
-                        <div class="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-[950] shadow-lg shadow-blue-600/30 flex-shrink-0">
+                        <div class="settings-profile-icon w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-[950] shadow-lg shadow-blue-600/30 flex-shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         </div>
                         <div>
@@ -961,18 +985,16 @@
                             <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1" id="profile-role">Super Administrador</p>
                         </div>
                     </div>
-                    <div class="text-center md:text-right w-full md:w-auto bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <div class="settings-profile-status text-center md:text-right w-full md:w-auto bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
                         <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Estado de Licencia</p>
                         <div id="profile-status-badge" class="inline-block px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800">ILIMITADO (ADMIN)</div>
                     </div>
                 </div>
 
                 <!-- BLOQUE ADMIN: RESPALDO DEL SISTEMA -->
-                <div id="admin-settings-block" class="mb-10">
-                    <div class="border-b-2 border-slate-100 dark:border-slate-800 pb-3 mb-6 flex items-baseline gap-2">
-                        <h3 class="text-xs font-[900] text-slate-900 dark:text-white uppercase tracking-widest">Respaldo del Sistema</h3>
-                        <span class="text-[9px] font-bold text-slate-400 uppercase">(Solo Administrador)</span>
-                    </div>
+                <details id="admin-settings-block" class="settings-group mb-4">
+                    <summary class="settings-summary"><span><span class="settings-summary-title">Respaldo del Sistema</span><span class="settings-summary-note">Solo Administrador</span></span></summary>
+                    <div class="settings-group-content">
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <button type="button" onclick="window.exportBackup()" class="w-full bg-slate-900 dark:bg-slate-800 text-white font-[900] py-6 rounded-2xl shadow-xl hover:-translate-y-1 transition-all flex flex-col items-center justify-center gap-2 border border-slate-700">
@@ -990,16 +1012,15 @@
                             </button>
                         </div>
                     </div>
-                </div>
+                    </div>
+                </details>
 
                 <!-- FORMULARIO DE NEGOCIO Y PAGOS -->
-                <form id="configForm" onsubmit="saveConfig(event)" class="space-y-8 mb-10 hidden">
+                <form id="configForm" onsubmit="saveConfig(event)" class="space-y-4 mb-6 hidden">
                     <!-- BLOQUE: DATOS DEL NEGOCIO -->
-                    <div>
-                        <div class="border-b-2 border-slate-100 dark:border-slate-800 pb-3 mb-6 flex items-baseline gap-2">
-                            <h3 class="text-xs font-[900] text-slate-900 dark:text-white uppercase tracking-widest">Datos del Negocio</h3>
-                            <span class="text-[9px] font-bold text-slate-400 uppercase">(Aparecerán en el PDF)</span>
-                        </div>
+                    <details class="settings-group">
+                        <summary class="settings-summary"><span><span class="settings-summary-title">Datos del Negocio</span><span class="settings-summary-note">Aparecerán en el PDF</span></span></summary>
+                        <div class="settings-group-content">
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
@@ -1074,14 +1095,13 @@
                                 <input type="hidden" id="conf-firma-data">
                             </div>
                         </div>
-                    </div>
+                        </div>
+                    </details>
 
                     <!-- BLOQUE DINÁMICO: MÉTODOS DE PAGO -->
-                    <div>
-                        <div class="border-b-2 border-slate-100 dark:border-slate-800 pb-3 mb-6 flex flex-col sm:flex-row sm:items-baseline gap-2">
-                            <h3 class="text-xs font-[900] text-slate-900 dark:text-white uppercase tracking-widest">Métodos de Pago</h3>
-                            <span class="text-[9px] font-bold text-slate-400 uppercase">(Opciones para que el cliente realice el pago)</span>
-                        </div>
+                    <details class="settings-group">
+                        <summary class="settings-summary"><span><span class="settings-summary-title">Métodos de Pago</span><span class="settings-summary-note">Opciones para que el cliente realice el pago</span></span></summary>
+                        <div class="settings-group-content">
                         
                         <div id="payment-methods-container" class="space-y-4"></div>
 
@@ -1089,7 +1109,8 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             Añadir Método de Pago
                         </button>
-                    </div>
+                        </div>
+                    </details>
 
                     <div class="pt-4">
                         <button type="submit" class="w-full bg-blue-600 text-white font-[900] py-4 rounded-xl shadow-xl shadow-blue-600/30 uppercase tracking-[0.2em] text-xs hover:bg-blue-500 hover:-translate-y-1 active:scale-[0.98] transition-all">
@@ -1099,9 +1120,10 @@
                 </form>
 
                 <!-- SEGURIDAD Y ACCESO -->
-                <form id="securityForm" onsubmit="changeUserPin(event)" class="space-y-6 pt-6 border-t-[3px] border-slate-100 dark:border-slate-800">
-                    <h3 class="text-xs font-[900] text-slate-900 dark:text-white uppercase tracking-widest border-b-2 border-slate-100 dark:border-slate-800 pb-3">Seguridad y Acceso</h3>
-                    
+                <form id="securityForm" onsubmit="changeUserPin(event)" class="mb-4">
+                    <details class="settings-group">
+                        <summary class="settings-summary"><span class="settings-summary-title">Seguridad y Acceso</span></summary>
+                        <div class="settings-group-content">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                         <div class="space-y-1.5">
                             <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest">PIN Actual</label>
@@ -1122,6 +1144,8 @@
                             Actualizar PIN
                         </button>
                     </div>
+                        </div>
+                    </details>
                 </form>
 
             </div>
