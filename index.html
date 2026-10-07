@@ -1807,6 +1807,7 @@
 
             onSnapshot(getCol("usuarios"), (snap) => {
                 window.db.usuarios = snap.docs.map(d => d.data());
+                window.usuariosCargados = true;
                 
                 if(initialLoadUsuarios) {
                     initialLoadUsuarios = false;
@@ -1826,7 +1827,7 @@
                         window.updateProfileInfo();
                     }
                 }
-            }, (err) => console.error(err));
+            }, (err) => { console.error(err); window.usuariosCargados = false; window.showToast("No se pudieron cargar los usuarios. Revisa tu conexión."); });
 
             onSnapshot(getCol("facturas"), (snap) => {
                 window.db.facturas = window.dedupeDocuments(snap.docs.map(d => d.data()));
@@ -1927,7 +1928,7 @@
         };
 
         window.setupAdmin = async function() {
-            if(!auth.currentUser || window.db.usuarios.length > 0)return;
+            if(!auth.currentUser || !window.usuariosCargados || window.db.usuarios.length > 0)return;
             const name=document.getElementById('setup-admin-name').value.trim(),pin=document.getElementById('setup-admin-pin').value;
             if(!name||pin.length!==4)return;
             if (!name || !/^\d{4}$/.test(pin)) return;
@@ -1938,8 +1939,10 @@
         window.loginUser = function() {
             const username=document.getElementById('login-username').value.trim(),pin=document.getElementById('login-pin').value;
             if(!username||!/^[0-9]{4}$/.test(pin))return;
-            const normalizeStr=(str)=>str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""),user=window.db.usuarios.find(u=>normalizeStr(u.nombre)===normalizeStr(username));
-            if(!user||user.pin!==pin){window.showToast("Usuario o PIN incorrectos");document.getElementById('login-pin').value='';return;}
+            if(!window.usuariosCargados){window.showToast("Cargando usuarios, intenta de nuevo en unos segundos");return;}
+            const norm=(str)=>String(str||'').normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,' ').trim().toLowerCase();
+            const user=window.db.usuarios.filter(u=>u&&norm(u.nombre)===norm(username)).find(u=>String(u.pin)===pin);
+            if(!user){window.showToast("Usuario o PIN incorrectos");document.getElementById('login-pin').value='';return;}
             if(user.status==='suspended'){window.showToast("Tu cuenta ha sido suspendida.");document.getElementById('login-pin').value='';return;}
             const rem=window.calculateDaysRemaining(user.fechaVencimiento);
             if(rem.expired&&user.role!=='admin'){window.showToast("Tu licencia ha expirado.");document.getElementById('login-pin').value='';return;}
