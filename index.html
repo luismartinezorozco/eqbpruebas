@@ -259,6 +259,40 @@
             #main-nav{width:max-content;max-width:calc(100vw - 2rem);flex-wrap:wrap;justify-content:center;gap:.35rem;padding:.45rem;overflow:visible}
             #main-nav .nav-link{flex:0 0 auto;min-width:0;padding:.65rem .8rem;white-space:nowrap}
         }
+        :root{--sys-bg:#eef2f5;--sys-surface:#ffffff;--sys-border:#dce3e9;--sys-text:#19232d;--sys-muted:#65717d;--sys-accent:#ed6a22}
+        .dark{--sys-bg:#141b22;--sys-surface:#1b252e;--sys-border:#33414e;--sys-text:#e8edf2;--sys-muted:#a5b0bb}
+        #main-body{background-color:var(--sys-bg)!important;background-image:linear-gradient(180deg,rgba(255,255,255,.46),rgba(238,242,245,.12))!important;color:var(--sys-text)!important}
+        .dark #main-body{background-image:linear-gradient(180deg,rgba(255,255,255,.025),rgba(10,15,20,.12))!important}
+        #main-content{max-width:1600px;margin-inline:auto;padding-left:clamp(1rem,3vw,2.75rem);padding-right:clamp(1rem,3vw,2.75rem)}
+        #main-content>section>.glass-panel,#main-content>section>#form-container{background:var(--sys-surface)!important;border:1px solid var(--sys-border)!important;border-top:3px solid rgba(237,106,34,.8)!important;border-radius:12px!important;box-shadow:0 14px 36px rgba(28,42,56,.075),0 2px 6px rgba(28,42,56,.035)!important}
+        .dark #main-content>section>.glass-panel,.dark #main-content>section>#form-container{box-shadow:0 16px 36px rgba(0,0,0,.2)!important}
+        .nav-liquid{background:var(--sys-surface)!important;border:1px solid var(--sys-border)!important;border-radius:12px!important;box-shadow:0 10px 28px rgba(28,42,56,.14)!important;backdrop-filter:blur(18px) saturate(145%)!important}
+        .dark .nav-liquid{background:rgba(27,37,46,.96)!important;box-shadow:0 12px 30px rgba(0,0,0,.35)!important}
+        .nav-link{border-radius:7px!important}
+        .nav-link:not(.active):hover{background:rgba(237,106,34,.08);color:var(--sys-text)}
+        #sec-analisis .admin-metric{padding:.9rem 1rem!important;background:var(--sys-surface)!important;border:1px solid var(--sys-border)!important;border-radius:8px!important}
+        #sec-analisis .admin-metric+.admin-metric{margin-left:.75rem;border-left:1px solid var(--sys-border)!important}
+        #sec-analisis .license-create-panel{padding:1.25rem!important;background:var(--sys-bg)!important;border:1px solid var(--sys-border)!important;border-left:3px solid var(--sys-accent)!important;border-radius:8px!important}
+        #users-list>div{padding:.85rem 1rem!important;background:var(--sys-surface)!important;border:1px solid var(--sys-border)!important;border-radius:8px!important;transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease!important}
+        #users-list>div:hover{background:#f7f9fb!important;border-color:#bdc9d3!important;box-shadow:0 4px 14px rgba(28,42,56,.07)!important}
+        .dark #users-list>div:hover{background:#202c36!important;border-color:#465867!important}
+        #lista-facturas .history-document-card,#lista-cobros .history-document-card{background:var(--sys-surface)!important;border:1px solid var(--sys-border)!important;border-radius:8px!important;transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease!important}
+        #lista-facturas .history-document-card:hover,#lista-cobros .history-document-card:hover{background:#f7f9fb!important;border-color:#bdc9d3!important;box-shadow:0 4px 14px rgba(28,42,56,.07)!important}
+        .dark #lista-facturas .history-document-card:hover,.dark #lista-cobros .history-document-card:hover{background:#202c36!important;border-color:#465867!important}
+        #main-content .settings-group,#sec-ajustes .settings-profile,#sec-ajustes .settings-profile-status,#main-content .payment-method-row,#sec-crear #montos-wrapper,#sec-cobros #cobro-retenciones-container{background:var(--sys-surface)!important;border-color:var(--sys-border)!important;border-radius:8px!important;box-shadow:0 3px 12px rgba(28,42,56,.045)!important}
+        #sec-ajustes .settings-group{background:var(--sys-bg)!important}
+        #main-content input:not([type="checkbox"]):not([type="radio"]),#main-content select,#main-content textarea{background-color:var(--sys-surface)!important;border-color:var(--sys-border)!important;color:var(--sys-text)!important;border-radius:7px!important}
+        #main-content input:focus,#main-content select:focus,#main-content textarea:focus{border-color:var(--sys-accent)!important;box-shadow:0 0 0 3px rgba(237,106,34,.13)!important}
+        #sec-analisis .admin-tab-button[aria-selected="true"]{background:rgba(237,106,34,.07)!important}
+        #main-content button:not(.nav-link):not(.tab-btn):not([class~="rounded-full"]){border-radius:6px!important}
+        @media(max-width:767px){
+            #main-content{padding-left:.75rem;padding-right:.75rem}
+            #main-content>section>.glass-panel,#main-content>section>#form-container{border-radius:9px!important;box-shadow:0 8px 22px rgba(28,42,56,.08)!important}
+            #sec-analisis .admin-metric{padding:.7rem .55rem!important}
+            #sec-analisis .admin-metric+.admin-metric{margin-left:.4rem;padding-left:.7rem!important}
+            #users-list>div{padding:.7rem .6rem!important}
+            #lista-facturas .history-document-card,#lista-cobros .history-document-card{border-radius:7px!important}
+        }
     </style>
     <!-- PWA / Home screen icons -->
     <link rel="apple-touch-icon" sizes="180x180" href="https://www.image2url.com/r2/default/images/1783033708170-dd290dcc-2a89-4597-b84a-c43e08db1e67.png">
@@ -1931,7 +1965,10 @@
                 const panel = document.getElementById(`admin-tab-${tab}`);
                 const button = document.getElementById(`admin-tab-button-${tab}`);
                 if (panel) panel.classList.toggle('hidden', tab !== tabName);
-                if (button) button.setAttribute('aria-selected', String(tab === tabName));
+                if (button) {
+                    button.setAttribute('aria-selected', String(tab === tabName));
+                    button.tabIndex = tab === tabName ? 0 : -1;
+                }
             });
             window.currentAdminTab = tabName;
         };
