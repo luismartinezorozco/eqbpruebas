@@ -96,8 +96,8 @@
         .settings-group-content{padding:0 1.1rem 1.1rem}
         #securityForm{padding-top:0;border-top:0}
         #securityForm .settings-group-content{padding-top:.15rem}
-        #sec-analisis .admin-panel-header{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--sys-border)}
-        #sec-analisis .admin-panel-header h2{font-size:1.65rem;line-height:2rem}
+        .admin-panel-header{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--sys-border)}
+        .admin-panel-header h2{font-size:1.65rem;line-height:2rem}
         #sec-analisis .admin-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:0 0 1.5rem}
         #sec-analisis .admin-metric{min-height:5rem;padding:1rem 1.15rem!important;color:var(--sys-text)!important;transform:none!important}
         #sec-analisis .admin-shortcuts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
@@ -106,12 +106,22 @@
         #sec-analisis .admin-shortcut span{font-size:.72rem;font-weight:600;color:var(--app-muted,#737d8d)}
         #sec-analisis .admin-metric p,#sec-analisis .admin-metric svg{color:var(--sys-muted)!important}
         #sec-analisis .admin-metric h3{font-size:1.8rem;line-height:2.1rem;color:var(--sys-text)!important}
-        #sec-analisis .license-create-panel{padding:1.25rem 0!important;margin:0!important;border:0!important;border-top:1px solid var(--sys-border)!important;border-bottom:1px solid var(--sys-border)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
-        #sec-analisis .license-create-header{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-bottom:1rem;text-align:left}
-        #sec-analisis .license-create-header p:first-child{margin:0;text-align:left}
-        #sec-analisis .license-permissions{display:flex;align-items:center;flex-wrap:wrap;gap:.75rem 1.25rem;margin:0 0 1rem;padding:.75rem 0;border-top:1px solid var(--sys-border);border-bottom:1px solid var(--sys-border)}
-        #sec-analisis .admin-users-heading{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:1.5rem 0 .5rem}
-        #sec-analisis .admin-users-count{font-size:.65rem;font-weight:800;color:var(--sys-muted);text-transform:uppercase}
+        #sec-licencias .license-create-panel{padding:1.5rem!important;margin:0!important}
+        #sec-licencias .license-create-header{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-bottom:1.25rem;text-align:left}
+        #sec-licencias .license-create-header p:first-child{margin:0;text-align:left}
+        #sec-licencias .license-create-panel>.grid{gap:14px}
+        #sec-licencias .license-permissions{display:grid;gap:1.5rem;margin:1.5rem 0;padding:1.5rem 0 0;border-top:1px solid var(--sys-border)}
+        #sec-licencias .perm-title{margin:0 0 .75rem;font-size:.68rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--sys-muted)}
+        #sec-licencias .perm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+        #sec-licencias .perm-option{display:flex;align-items:center;gap:.9rem;padding:.95rem 1.05rem;border:1px solid var(--app-line,#e3e7ef);border-radius:12px;background:var(--app-surface,#fff);cursor:pointer;transition:border-color .15s,background-color .15s}
+        #sec-licencias .perm-option:hover{border-color:var(--app-accent,#e86b36)}
+        #sec-licencias .perm-option:has(input:checked){border-color:var(--app-accent,#e86b36);background:var(--app-accent-soft,#fff0e8)}
+        #sec-licencias .perm-option input{width:1.15rem;height:1.15rem;flex:none}
+        #sec-licencias .perm-option span{display:flex;flex-direction:column;gap:.15rem;min-width:0}
+        #sec-licencias .perm-option strong{font-size:.8rem;font-weight:900;text-transform:uppercase;color:var(--app-ink,#202635)}
+        #sec-licencias .perm-option small{font-size:.68rem;font-weight:600;color:var(--app-muted,#737d8d)}
+        #sec-usuarios .admin-users-heading{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:0 0 1rem}
+        #sec-usuarios .admin-users-count{font-size:.65rem;font-weight:800;color:var(--sys-muted);text-transform:uppercase}
         #users-list>div{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:1rem;padding:.8rem 0!important;border:0!important;border-bottom:1px solid var(--sys-border)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
         #users-list .user-row-controls{position:relative;z-index:1;justify-self:end}
         #users-list .user-actions-menu{position:relative;min-width:7rem}
@@ -133,11 +143,12 @@
             #sec-ajustes .settings-summary{padding:.85rem .9rem}
             #sec-ajustes .settings-group-content{padding:0 .9rem .9rem}
             #admin-settings-block .settings-group-content{padding-top:.2rem}
-            #sec-analisis .admin-panel-header{margin-bottom:1rem}
+            .admin-panel-header{margin-bottom:1rem}
             #sec-analisis .admin-metrics{margin-bottom:1rem;gap:10px}
             #sec-analisis .admin-metric{min-height:4rem;padding:.8rem .9rem!important}
-            #sec-analisis .license-create-header{display:block}
-            #sec-analisis .admin-users-heading{margin-top:1rem}
+            #sec-licencias .license-create-header{display:block}
+            #sec-licencias .license-create-panel{padding:1.1rem!important}
+            #sec-usuarios .admin-users-heading{margin-top:0}
             #users-list>div{grid-template-columns:minmax(0,1fr) auto;gap:.5rem}
             #users-list .user-actions-menu{min-width:6rem}
             #users-list .user-actions-menu summary{padding:.5rem .55rem}
@@ -266,7 +277,7 @@
         #sec-analisis .admin-metric{background:linear-gradient(145deg,var(--app-surface),var(--app-surface-muted))!important;border:1px solid var(--app-line)!important;border-radius:13px!important;box-shadow:0 6px 16px rgba(32,42,58,.055)!important}
         .dark #sec-analisis .admin-metric{box-shadow:0 7px 18px rgba(0,0,0,.18)!important}
         #sec-analisis .admin-metric:first-child h3{color:var(--app-accent)!important}
-        #sec-analisis .license-create-panel{background:linear-gradient(115deg,rgba(232,107,54,.06),transparent 65%),var(--app-surface-muted)!important;border:1px solid var(--app-line)!important;border-left:4px solid var(--app-accent)!important;border-radius:13px!important}
+        #sec-licencias .license-create-panel{background:linear-gradient(115deg,rgba(232,107,54,.06),transparent 65%),var(--app-surface-muted)!important;border:1px solid var(--app-line)!important;border-left:4px solid var(--app-accent)!important;border-radius:13px!important}
         #users-list>div{background:var(--app-surface)!important;border:1px solid var(--app-line)!important;border-radius:12px!important;box-shadow:0 3px 11px rgba(32,42,58,.045)!important}
         #users-list>div:hover{background:var(--app-surface-muted)!important;border-color:#c9d0dd!important;box-shadow:0 7px 18px rgba(32,42,58,.08)!important}
         .dark #users-list>div:hover{border-color:#4a586a!important}
@@ -498,18 +509,20 @@
                             </select>
                         </div>
                         <div class="license-permissions">
-                            <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Permisos</span>
-                            <div class="flex items-center gap-2">
-                                <input type="checkbox" id="new-user-registros" class="w-4 h-4 rounded border-slate-300 text-blue-600 cursor-pointer">
-                                <label for="new-user-registros" class="text-[10px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest cursor-pointer">Registros</label>
+                            <div class="perm-group">
+                                <p class="perm-title">Módulos de acceso</p>
+                                <div class="perm-grid">
+                                    <label class="perm-option"><input type="checkbox" id="new-user-facturas" checked><span><strong>Facturas</strong><small>Crear facturas</small></span></label>
+                                    <label class="perm-option"><input type="checkbox" id="new-user-cuentas"><span><strong>Cuentas</strong><small>Cuentas de cobro</small></span></label>
+                                    <label class="perm-option"><input type="checkbox" id="new-user-clientes" checked><span><strong>Clientes</strong><small>Directorio de clientes</small></span></label>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <input type="checkbox" id="new-user-saldo" class="w-4 h-4 rounded border-slate-300 text-amber-600 cursor-pointer">
-                                <label for="new-user-saldo" class="text-[10px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest cursor-pointer">Saldos</label>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <input type="checkbox" id="new-user-cuentas" class="w-4 h-4 rounded border-slate-300 text-purple-600 cursor-pointer">
-                                <label for="new-user-cuentas" class="text-[10px] font-black text-slate-600 dark:text-slate-300 uppercase tracking-widest cursor-pointer">Cuentas Cobro</label>
+                            <div class="perm-group">
+                                <p class="perm-title">Opciones adicionales</p>
+                                <div class="perm-grid">
+                                    <label class="perm-option"><input type="checkbox" id="new-user-registros"><span><strong>Historial</strong><small>Historial de facturas</small></span></label>
+                                    <label class="perm-option"><input type="checkbox" id="new-user-saldo"><span><strong>Saldos</strong><small>Saldo pendiente en facturas</small></span></label>
+                                </div>
                             </div>
                         </div>
                         <button type="button" onclick="createUser()" class="bg-blue-600 text-white font-[900] px-6 py-3 rounded-xl uppercase tracking-widest text-[10px] hover:bg-blue-500 transition-all flex justify-center items-center gap-2">
@@ -1909,7 +1922,7 @@
                 window.updateProfileInfo();
                 
                 if (window.currentAppUser.role === 'admin') window.showSection('analisis');
-                else window.showSection('crear');
+                else window.showSection(window.primeraSeccionPermitida());
             }
         };
 
@@ -1949,6 +1962,8 @@
             const hasRegistros = window.currentAppUser.canViewRegistros === true;
             const hasSaldo = window.currentAppUser.canViewSaldo === true;
             const hasCuentas = window.currentAppUser.canViewCuentas === true;
+            const hasFacturas = window.currentAppUser.canViewFacturas !== false;
+            const hasClientes = window.currentAppUser.canViewClientes !== false;
 
             if (role === 'admin') {
                 if(document.getElementById('nav-crear')) document.getElementById('nav-crear').style.display = 'none';
@@ -1959,10 +1974,10 @@
                 if(document.getElementById('nav-licencias')) document.getElementById('nav-licencias').style.display = 'flex';
                 if(document.getElementById('nav-usuarios')) document.getElementById('nav-usuarios').style.display = 'flex';
             } else {
-                if(document.getElementById('nav-crear')) document.getElementById('nav-crear').style.display = 'flex';
+                if(document.getElementById('nav-crear')) document.getElementById('nav-crear').style.display = hasFacturas ? 'flex' : 'none';
                 if(document.getElementById('nav-cobros')) document.getElementById('nav-cobros').style.display = hasCuentas ? 'flex' : 'none';
                 if(document.getElementById('nav-registros')) document.getElementById('nav-registros').style.display = hasRegistros ? 'flex' : 'none';
-                if(document.getElementById('nav-clientes')) document.getElementById('nav-clientes').style.display = 'flex';
+                if(document.getElementById('nav-clientes')) document.getElementById('nav-clientes').style.display = hasClientes ? 'flex' : 'none';
                 if(document.getElementById('nav-analisis')) document.getElementById('nav-analisis').style.display = 'none';
                 if(document.getElementById('nav-licencias')) document.getElementById('nav-licencias').style.display = 'none';
                 if(document.getElementById('nav-usuarios')) document.getElementById('nav-usuarios').style.display = 'none';
@@ -2035,7 +2050,9 @@
                 id: userId, nombre: name, pin: pin, role: 'user', status: 'active', 
                 canViewRegistros: document.getElementById('new-user-registros').checked, 
                 canViewSaldo: document.getElementById('new-user-saldo').checked, 
-                canViewCuentas: document.getElementById('new-user-cuentas').checked, 
+                canViewCuentas: document.getElementById('new-user-cuentas').checked,
+                canViewFacturas: document.getElementById('new-user-facturas').checked,
+                canViewClientes: document.getElementById('new-user-clientes').checked, 
                 fechaCreacion: fechaCreacion.toISOString(), 
                 fechaVencimiento: fechaVencimiento.toISOString(),
                 planMeses: planMeses === 'trial' ? 'trial' : parseInt(planMeses), 
@@ -2048,6 +2065,7 @@
                 document.getElementById('new-user-name').value = ''; document.getElementById('new-user-pin').value = '';
                     document.getElementById('new-user-registros').checked = false;
                 document.getElementById('new-user-saldo').checked = false; document.getElementById('new-user-cuentas').checked = false;
+                document.getElementById('new-user-facturas').checked = true; document.getElementById('new-user-clientes').checked = true;
                 window.showToast("Cliente activado exitosamente");
             } catch(e) { console.error(e); window.showToast("Error al activar cliente"); }
         };
@@ -2079,7 +2097,7 @@
         };
         window.toggleUserPerm=async function(userId,perm){
             if(!window.currentAppUser||window.currentAppUser.role!=='admin'||!auth.currentUser)return;
-            if (!['canViewRegistros', 'canViewSaldo', 'canViewCuentas'].includes(perm)) return;
+            if (!['canViewRegistros', 'canViewSaldo', 'canViewCuentas', 'canViewFacturas', 'canViewClientes'].includes(perm)) return;
             const user=window.db.usuarios.find(u=>u.id===userId);
             if(!user)return;
             try{const updatedUser={...user,[perm]:!user[perm]};await setDoc(getDocPath("usuarios",userId),updatedUser);window.applyLocalDocument('usuarios',updatedUser);}catch(e){window.showToast("Error");}
@@ -2100,7 +2118,7 @@
             
             window.db.usuarios.forEach(u => {
                 const isAdmin = u.role === 'admin';
-                const hasReg = u.canViewRegistros === true, hasSal = u.canViewSaldo === true, hasCuentas = u.canViewCuentas === true;
+                const hasReg = u.canViewRegistros === true, hasSal = u.canViewSaldo === true, hasCuentas = u.canViewCuentas === true, hasFac = u.canViewFacturas !== false, hasCli = u.canViewClientes !== false;
                 const isSuspended = u.status === 'suspended';
                 const rem = window.calculateDaysRemaining(u.fechaVencimiento);
                 
@@ -2159,6 +2177,8 @@
                     });
                     actions.appendChild(renewal);
                     addButton(isSuspended ? 'Reactivar' : 'Suspender', `text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border ${isSuspended ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-500'}`, () => window.toggleUserStatus(u.id));
+                    addButton(`Fac: ${hasFac ? 'ON' : 'OFF'}`, `text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border ${hasFac ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400'}`, () => window.toggleUserPerm(u.id, 'canViewFacturas'));
+                    addButton(`Cli: ${hasCli ? 'ON' : 'OFF'}`, `text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border ${hasCli ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400'}`, () => window.toggleUserPerm(u.id, 'canViewClientes'));
                     addButton(`Reg: ${hasReg ? 'ON' : 'OFF'}`, `text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border ${hasReg ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400'}`, () => window.toggleUserPerm(u.id, 'canViewRegistros'));
                     addButton(`Sal: ${hasSal ? 'ON' : 'OFF'}`, `text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border ${hasSal ? 'bg-amber-100 text-amber-600' : 'bg-slate-100 text-slate-400'}`, () => window.toggleUserPerm(u.id, 'canViewSaldo'));
                     addButton(`Cta: ${hasCuentas ? 'ON' : 'OFF'}`, `text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border ${hasCuentas ? 'bg-purple-100 text-purple-600' : 'bg-slate-100 text-slate-400'}`, () => window.toggleUserPerm(u.id, 'canViewCuentas'));
@@ -3280,7 +3300,17 @@
                 : '<line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line>';
         };
 
+        window.primeraSeccionPermitida = function() {
+            const u = window.currentAppUser || {};
+            if (u.canViewFacturas !== false) return 'crear';
+            if (u.canViewCuentas === true) return 'cobros';
+            if (u.canViewClientes !== false) return 'clientes';
+            return 'ajustes';
+        };
+
         window.showSection = function(section) {
+            const esUsuario = window.currentAppUser && window.currentAppUser.role === 'user';
+            if ((section === 'crear' && esUsuario && window.currentAppUser.canViewFacturas === false) || (section === 'clientes' && esUsuario && window.currentAppUser.canViewClientes === false)) { window.showToast('No tienes acceso a este módulo'); return; }
             if (section === 'registros' && window.currentAppUser && window.currentAppUser.role === 'user' && !window.currentAppUser.canViewRegistros) return;
             if (section === 'cobros' && window.currentAppUser && window.currentAppUser.role === 'user' && !window.currentAppUser.canViewCuentas) return;
             if (section === 'clientes' && window.currentAppUser && window.currentAppUser.role === 'admin') return;
