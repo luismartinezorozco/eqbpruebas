@@ -106,6 +106,10 @@
         #securityForm .settings-group-content{padding-top:.15rem}
         #sec-analisis .admin-panel-header{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--sys-border)}
         #sec-analisis .admin-panel-header h2{font-size:1.65rem;line-height:2rem}
+        #sec-analisis .admin-tabs{display:flex;gap:.25rem;margin:0 0 1rem;border-bottom:1px solid var(--sys-border)}
+        #sec-analisis .admin-tab-button{flex:1;min-width:0;padding:.8rem .9rem;border:0!important;border-bottom:2px solid transparent!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:var(--sys-muted);font-size:.68rem;font-weight:900;text-align:center;text-transform:uppercase;white-space:nowrap}
+        #sec-analisis .admin-tab-button[aria-selected="true"]{color:var(--sys-text);border-bottom-color:var(--sys-accent)!important}
+        #sec-analisis .admin-tab-panel{min-width:0}
         #sec-analisis .admin-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;margin:0 0 1.5rem;padding:0 0 1.25rem;border-bottom:1px solid var(--sys-border)}
         #sec-analisis .admin-metric{min-height:5rem;padding:0 1.25rem 0 0!important;background:transparent!important;color:var(--sys-text)!important;border-radius:0!important;border:0!important;box-shadow:none!important;transform:none!important}
         #sec-analisis .admin-metric+ .admin-metric{padding-left:1.25rem!important;border-left:1px solid var(--sys-border)!important}
@@ -141,6 +145,8 @@
             #sec-ajustes .settings-group-content{padding:0 .9rem .9rem}
             #admin-settings-block .settings-group-content{padding-top:.2rem}
             #sec-analisis .admin-panel-header{margin-bottom:1rem}
+            #sec-analisis .admin-tabs{gap:0}
+            #sec-analisis .admin-tab-button{padding:.7rem .25rem;font-size:.58rem;white-space:normal;line-height:1.1}
             #sec-analisis .admin-metrics{margin-bottom:1rem;padding-bottom:.9rem}
             #sec-analisis .admin-metric{min-height:4rem}
             #sec-analisis .admin-metric+ .admin-metric{padding-left:.85rem!important}
@@ -381,23 +387,30 @@
                     <p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">Resumen y gestión de licencias</p>
                 </div>
                 
-                <div class="admin-metrics">
-                    <div class="admin-metric">
-                        <div class="flex justify-between items-start mb-2">
-                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Licencias Activas</p>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-80"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                        </div>
-                        <h3 class="text-4xl font-[950] tracking-tighter break-words" id="stat-licenses">1</h3>
+                <div class="admin-tabs" role="tablist" aria-label="Menús del administrador">
+                    <button type="button" class="admin-tab-button" role="tab" id="admin-tab-button-overview" aria-controls="admin-tab-overview" aria-selected="true" onclick="window.showAdminTab('overview')">Panel</button>
+                    <button type="button" class="admin-tab-button" role="tab" id="admin-tab-button-license" aria-controls="admin-tab-license" aria-selected="false" onclick="window.showAdminTab('license')">Activar licencia</button>
+                    <button type="button" class="admin-tab-button" role="tab" id="admin-tab-button-users" aria-controls="admin-tab-users" aria-selected="false" onclick="window.showAdminTab('users')">Usuarios y clientes</button>
+                </div>
+
+                <div id="admin-tab-overview" class="admin-tab-panel" role="tabpanel" aria-labelledby="admin-tab-button-overview">
+                    <div class="admin-panel-header">
+                        <h3 class="text-lg font-[950] text-slate-900 dark:text-white uppercase">Resumen del sistema</h3>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">Indicadores generales</p>
                     </div>
-                    <div class="admin-metric">
-                        <div class="flex justify-between items-start mb-2">
-                            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Facturas Emitidas</p>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <div class="admin-metrics">
+                        <div class="admin-metric">
+                            <div class="flex justify-between items-start mb-2"><p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Licencias registradas</p></div>
+                            <h3 class="text-4xl font-[950] tracking-tighter" id="stat-licenses">1</h3>
                         </div>
-                        <h3 class="text-4xl font-[950] text-slate-900 dark:text-white tracking-tighter" id="stat-count">73</h3>
+                        <div class="admin-metric">
+                            <div class="flex justify-between items-start mb-2"><p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Facturas emitidas</p></div>
+                            <h3 class="text-4xl font-[950] tracking-tighter" id="stat-count">73</h3>
+                        </div>
                     </div>
                 </div>
 
+                <div id="admin-tab-license" class="admin-tab-panel hidden" role="tabpanel" aria-labelledby="admin-tab-button-license">
                 <div class="admin-license-section">
                     <div class="admin-section-heading mb-3">
                         <h2 class="text-xl md:text-2xl font-[950] text-slate-900 dark:text-white uppercase tracking-tighter">Licencias</h2>
@@ -440,6 +453,10 @@
                         </button>
                     </div>
 
+                </div>
+                </div>
+
+                <div id="admin-tab-users" class="admin-tab-panel hidden" role="tabpanel" aria-labelledby="admin-tab-button-users">
                     <div class="admin-users-heading">
                         <h3 class="text-sm font-[900] text-slate-900 dark:text-white uppercase tracking-widest">Clientes y usuarios</h3>
                         <span id="admin-users-count" class="admin-users-count">0 usuarios</span>
@@ -1905,6 +1922,18 @@
             if(document.getElementById('stat-count')) document.getElementById('stat-count').innerText = totalFacturas;
             
             window.renderUsersList();
+        };
+
+        window.showAdminTab = function(tabName) {
+            const tabs = ['overview', 'license', 'users'];
+            if (!tabs.includes(tabName)) return;
+            tabs.forEach(tab => {
+                const panel = document.getElementById(`admin-tab-${tab}`);
+                const button = document.getElementById(`admin-tab-button-${tab}`);
+                if (panel) panel.classList.toggle('hidden', tab !== tabName);
+                if (button) button.setAttribute('aria-selected', String(tab === tabName));
+            });
+            window.currentAdminTab = tabName;
         };
 
         window.createUser = async function() {
