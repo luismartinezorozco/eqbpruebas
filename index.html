@@ -100,6 +100,25 @@
         .mobile-viewport-wrapper{width:100%;display:flex;justify-content:center;align-items:flex-start;background:#F8F9FA;border-radius:1.5rem;padding:0.6rem;min-height:40vh;overflow-x:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box}.dark .mobile-viewport-wrapper{background:#111111;border:1px solid #495057}
         .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0.25rem}.calendar-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:0.75rem;font-size:0.8rem;font-weight:800;cursor:pointer;transition:all 0.2s}.calendar-day:hover{background-color:rgba(255,106,0,0.1)}.calendar-day.selected{background-color:#FF6A00;color:#111111}.dark .calendar-day.selected{background-color:#FF6A00;color:#111111}.calendar-day.today{border:2px solid #FF6A00}.calendar-day.empty{pointer-events:none}.event-dot{width:4px;height:4px;background-color:#FF6A00;border-radius:50%;margin-top:2px}.calendar-day.selected .event-dot{background-color:#111111}
         @media(max-width:640px){.responsive-table thead{display:none}.responsive-table tbody tr{display:block;background:#F8F9FA;border:1px solid #E9ECEF;border-radius:1rem;margin-bottom:1rem;padding:1rem;box-shadow:0 2px 4px rgba(0,0,0,0.02)}.dark .responsive-table tbody tr{background:#111111;border-color:#495057}.responsive-table tbody td{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0;border-bottom:1px dashed #E5E7EB;text-align:right}.dark .responsive-table tbody td{border-color:#495057}.responsive-table tbody td:last-child{border-bottom:none;justify-content:center;padding-top:1rem;margin-top:0.5rem}.responsive-table td::before{content:attr(data-label);font-weight:900;color:#495057;text-transform:uppercase;font-size:0.7rem;letter-spacing:0.05em;margin-right:1rem;text-align:left}.dark .responsive-table td::before{color:#E5E7EB}}
+        @media(max-width:640px){
+            #sec-clientes>.glass-panel{padding:1rem}
+            #sec-clientes .clients-search{margin-bottom:1rem}
+            #sec-clientes .clients-search input{padding-top:.75rem!important;padding-bottom:.75rem!important}
+            #sec-clientes .clients-search svg{top:.8rem;left:.9rem}
+            #sec-clientes .clients-table tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0 .75rem;margin:0 0 .6rem;padding:.7rem .8rem;border-radius:.85rem}
+            #sec-clientes .clients-table tbody td{min-width:0;padding:0;border:0;text-align:left}
+            #sec-clientes .clients-table tbody td::before{font-size:.58rem;margin:0;color:#6b7280}
+            .dark #sec-clientes .clients-table tbody td::before{color:#9ca3af}
+            #sec-clientes .clients-table tbody td:first-child{grid-column:1/-1;display:flex;justify-content:flex-start;padding-bottom:.45rem}
+            #sec-clientes .clients-table tbody td:first-child p{font-size:.9rem;line-height:1.2rem}
+            #sec-clientes .clients-table tbody td:nth-child(2){grid-column:1;grid-row:2;justify-content:flex-start;gap:.5rem;border-top:1px solid #e5e7eb;padding-top:.55rem;font-size:.72rem}
+            .dark #sec-clientes .clients-table tbody td:nth-child(2){border-color:#374151}
+            #sec-clientes .clients-table tbody td:last-child{grid-column:2;grid-row:2;justify-content:flex-end;padding-top:.25rem;margin:0;border:0}
+            #sec-clientes .clients-table tbody td:last-child>div{gap:.4rem}
+            #sec-clientes .clients-table .btn-usar{padding:.55rem .7rem;font-size:.62rem;line-height:1}
+            #sec-clientes .clients-table .btn-eliminar{width:2.25rem;height:2.25rem;padding:0;display:flex;align-items:center;justify-content:center}
+            #sec-clientes .clients-table .btn-eliminar svg{width:1rem;height:1rem;flex:none}
+        }
         @media (max-width:640px) {
             #preview-cobro-container .mobile-viewport-wrapper {
                 padding: 0.25rem;
@@ -345,7 +364,7 @@
                                 <p class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> luis</p>
                                 <span class="bg-blue-100 text-blue-600 px-2 py-0.5 rounded text-[8px] uppercase tracking-widest font-black">ADMINISTRADOR</span>
                             </div>
-                            <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mt-1 pl-6 flex items-center gap-1">PIN: <span id="pin-display-1775228822170" class="cursor-pointer text-blue-500 inline-flex items-center" onclick="togglePinDisplay('pin-display-1775228822170', '1017')">**** <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block ml-1 opacity-70"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg></span></p>
+                            <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mt-1 pl-6">PIN protegido</p>
                         </div>
                         <div class="flex items-center gap-2 flex-wrap w-full xl:w-auto justify-end"></div>
                     </div>
@@ -355,7 +374,7 @@
                                 <p class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> laly</p>
                                 <span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[8px] uppercase tracking-widest font-black">672 días</span>
                             </div>
-                            <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mt-1 pl-6 flex items-center gap-1">PIN: <span id="pin-display-1775308460037" class="cursor-pointer text-blue-500 inline-flex items-center" onclick="togglePinDisplay('pin-display-1775308460037', '0000')">**** <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block ml-1 opacity-70"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg></span></p>
+                            <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mt-1 pl-6">PIN protegido</p>
                         </div>
                         <div class="flex items-center gap-2 flex-wrap w-full xl:w-auto justify-end"><select onchange="if(this.value) { window.renovarLicencia('1775308460037', this.value); this.value=''; }" class="text-[9px] font-black uppercase tracking-widest px-2 py-2 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-200 outline-none cursor-pointer"><option value="">Renovar...</option><option value="trial">+ 1 Día</option><option value="1">+ 1 Mes</option><option value="6">+ 6 Meses</option><option value="12">+ 12 Meses</option></select><button type="button" onclick="toggleUserStatus('1775308460037')" class="text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border bg-slate-100 text-slate-500">Suspender</button><button type="button" onclick="toggleUserPerm('1775308460037','canViewRegistros')" class="text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border bg-blue-100 text-blue-600">Reg: ON</button><button type="button" onclick="toggleUserPerm('1775308460037','canViewAgenda')" class="text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border bg-slate-100 text-slate-400">Age: OFF</button><button type="button" onclick="toggleUserPerm('1775308460037','canViewSaldo')" class="text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border bg-amber-100 text-amber-600">Sal: ON</button><button type="button" onclick="toggleUserPerm('1775308460037','canViewCuentas')" class="text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border bg-purple-100 text-purple-600">Cta: ON</button><button type="button" onclick="deleteUser('1775308460037')" class="text-red-500 hover:scale-110 p-2 rounded transition-transform"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button></div>
                     </div></div>
@@ -884,19 +903,19 @@
         </section>
 
         <section id="sec-clientes" class="section-content hidden">
-            <div class="glass-panel rounded-[2.5rem] shadow-xl p-8 md:p-12">
+            <div class="glass-panel rounded-[2.5rem] shadow-xl p-8 md:p-12 clients-panel">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-8">
                     <div>
                         <h2 class="text-3xl md:text-4xl font-[950] text-slate-900 dark:text-white uppercase tracking-tighter">Clientes</h2>
                         <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.3em] mt-2">Gestión de clientes y documentos</p>
                     </div>
                 </div>
-                <div class="mb-6 relative">
+                <div class="mb-6 relative clients-search">
                     <input type="text" id="clientSearch" placeholder="Buscar por nombre o documento..." oninput="filterClients(this.value)" class="w-full px-6 py-4 pl-12 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-sm font-bold focus:ring-4 focus:ring-blue-500/10 outline-none">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-4 top-4 text-slate-400"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </div>
                 <p class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-4" id="cliente-count">0 Clientes</p>
-                <div class="responsive-table">
+                <div class="responsive-table clients-table">
                     <table class="w-full text-left">
                         <thead>
                             <tr class="text-[10px] font-black uppercase tracking-widest text-slate-400 border-b-2 border-slate-100 dark:border-slate-800">
@@ -1141,7 +1160,16 @@
             try {
                 const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
                 if (!raw) return null;
-                return JSON.parse(raw);
+                const storedData = JSON.parse(raw);
+                if (Array.isArray(storedData.usuarios)) {
+                    storedData.usuarios = storedData.usuarios.map(user => {
+                        if (!user || typeof user !== 'object') return null;
+                        const { pin, ...safeUser } = user;
+                        return safeUser;
+                    }).filter(Boolean);
+                    try { localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(storedData)); } catch (e) {}
+                }
+                return storedData;
             } catch (e) {
                 console.warn('No se pudo cargar el respaldo local', e);
                 return null;
@@ -1171,6 +1199,13 @@
                         cuentasCobro: (window.db.cuentasCobro || []).filter(c => c.userId === userId),
                         config: window.getUserConfig() // La configuración específica del usuario
                     };
+                }
+                if (Array.isArray(dataToStore.usuarios)) {
+                    dataToStore.usuarios = dataToStore.usuarios.map(user => {
+                        if (!user || typeof user !== 'object') return null;
+                        const { pin, ...safeUser } = user;
+                        return safeUser;
+                    }).filter(Boolean);
                 }
                 localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToStore));
             } catch (e) {
@@ -1390,21 +1425,25 @@
             row.innerHTML = `
                 <div class="flex-1 w-full">
                     <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Banco / Plataforma</label>
-                    <input type="text" class="pay-name w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-bold outline-none" placeholder="Ej: Bancolombia" value="${method.name}">
+                    <input type="text" class="pay-name w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-bold outline-none" placeholder="Ej: Bancolombia">
                 </div>
                 <div class="flex-1 w-full">
                     <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Tipo de Cuenta</label>
-                    <input type="text" class="pay-bank w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-bold outline-none" placeholder="Ej: Ahorros" value="${method.bank}">
+                    <input type="text" class="pay-bank w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-bold outline-none" placeholder="Ej: Ahorros">
                 </div>
                 <div class="flex-1 w-full">
                     <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Número de Cuenta</label>
-                    <input type="text" class="pay-acc w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-bold outline-none" placeholder="000-000000-00" value="${method.account}">
+                    <input type="text" class="pay-acc w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-bold outline-none" placeholder="000-000000-00">
                 </div>
-                <button type="button" onclick="this.closest('.payment-method-row').remove()" class="w-full md:w-auto mt-2 md:mt-0 bg-white border border-red-100 text-red-500 hover:bg-red-50 p-3.5 rounded-xl transition-all shadow-sm dark:bg-slate-800 dark:border-red-900/50 flex items-center justify-center">
+                <button type="button" class="w-full md:w-auto mt-2 md:mt-0 bg-white border border-red-100 text-red-500 hover:bg-red-50 p-3.5 rounded-xl transition-all shadow-sm dark:bg-slate-800 dark:border-red-900/50 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                     <span class="inline md:hidden text-xs font-black uppercase tracking-widest ml-2">Eliminar</span>
                 </button>
             `;
+            row.querySelector('.pay-name').value = String(method.name || '');
+            row.querySelector('.pay-bank').value = String(method.bank || '');
+            row.querySelector('.pay-acc').value = String(method.account || '');
+            row.querySelector('button').addEventListener('click', () => row.remove());
             container.appendChild(row);
         };
 
@@ -1541,9 +1580,9 @@
             const newPin = document.getElementById('sec-pin-new').value;
             const confirmPin = document.getElementById('sec-pin-confirm').value;
             
-            if (!currentPin || currentPin.length !== 4) { window.showToast("Ingresa tu PIN actual (4 dígitos)"); return; }
-            if (!newPin || newPin.length !== 4) { window.showToast("El nuevo PIN debe tener 4 dígitos"); return; }
-            if (!confirmPin || confirmPin.length !== 4) { window.showToast("Confirma tu nuevo PIN (4 dígitos)"); return; }
+            if (!/^\d{4}$/.test(currentPin)) { window.showToast("Ingresa tu PIN actual (4 dígitos)"); return; }
+            if (!/^\d{4}$/.test(newPin)) { window.showToast("El nuevo PIN debe tener 4 dígitos"); return; }
+            if (!/^\d{4}$/.test(confirmPin)) { window.showToast("Confirma tu nuevo PIN (4 dígitos)"); return; }
             
             if (window.currentAppUser.pin !== currentPin) { window.showToast("PIN actual incorrecto"); document.getElementById('sec-pin-current').value = ''; return; }
             if (newPin !== confirmPin) { window.showToast("Los PIN nuevos no coinciden"); return; }
@@ -1698,16 +1737,17 @@
         };
 
         window.setupAdmin = async function() {
-            if(!auth.currentUser)return;
+            if(!auth.currentUser || window.db.usuarios.length > 0)return;
             const name=document.getElementById('setup-admin-name').value.trim(),pin=document.getElementById('setup-admin-pin').value;
             if(!name||pin.length!==4)return;
+            if (!name || !/^\d{4}$/.test(pin)) return;
             const userId=Date.now().toString(),userConfig=JSON.parse(JSON.stringify(window.db.config)),userObj={id:userId,nombre:name,pin:pin,role:'admin',status:'active',canViewRegistros:true,canViewSaldo:true,canViewCuentas:true,fechaCreacion:new Date().toISOString(),config:userConfig};
             try{await setDoc(getDocPath("usuarios",userId),userObj);window.currentAppUser=userObj;window.applyLocalDocument('usuarios',userObj);sessionStorage.setItem('currentLocalUserId',userId);document.getElementById('setup-admin-pin').value='';window.checkLoginState();}catch(e){console.error(e);}
         };
 
         window.loginUser = function() {
             const username=document.getElementById('login-username').value.trim(),pin=document.getElementById('login-pin').value;
-            if(!username||pin.length!==4)return;
+            if(!username||!/^[0-9]{4}$/.test(pin))return;
             const normalizeStr=(str)=>str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""),user=window.db.usuarios.find(u=>normalizeStr(u.nombre)===normalizeStr(username));
             if(!user||user.pin!==pin){window.showToast("Usuario o PIN incorrectos");document.getElementById('login-pin').value='';return;}
             if(user.status==='suspended'){window.showToast("Tu cuenta ha sido suspendida.");document.getElementById('login-pin').value='';return;}
@@ -1781,13 +1821,13 @@
         };
 
         window.createUser = async function() {
-            if(window.currentAppUser.role !== 'admin') return;
+            if(!window.currentAppUser || window.currentAppUser.role !== 'admin') return;
             if(!auth.currentUser) return;
             const name = document.getElementById('new-user-name').value.trim();
             const pin = document.getElementById('new-user-pin').value;
             const planMeses = document.getElementById('new-user-plan').value;
             
-            if(!name || pin.length !== 4) return;
+            if(!name || !/^[0-9]{4}$/.test(pin)) return;
             
             const userId = Date.now().toString();
             const fechaCreacion = new Date();
@@ -1845,21 +1885,14 @@
         };
         window.toggleUserPerm=async function(userId,perm){
             if(!window.currentAppUser||window.currentAppUser.role!=='admin'||!auth.currentUser)return;
+            if (!['canViewRegistros', 'canViewSaldo', 'canViewCuentas'].includes(perm)) return;
             const user=window.db.usuarios.find(u=>u.id===userId);
             if(!user)return;
             try{const updatedUser={...user,[perm]:!user[perm]};await setDoc(getDocPath("usuarios",userId),updatedUser);window.applyLocalDocument('usuarios',updatedUser);}catch(e){window.showToast("Error");}
         };
 
-        window.toggleUserPinDisplay = function(elementId, realPin) {
-            if(window.currentAppUser.role!=='admin')return;
-            const el=document.getElementById(elementId);
-            const eyeOnSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block ml-1 opacity-70"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
-            const eyeOffSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block ml-1 opacity-70"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
-            el.innerText.includes('****')?el.innerHTML=`${window.sanitizeHTML(realPin)} ${eyeOnSvg}`:el.innerHTML=`**** ${eyeOffSvg}`;
-        };
-
         window.deleteUser = function(userId) {
-            if(window.currentAppUser.role!=='admin'||!auth.currentUser)return;
+            if(!window.currentAppUser || window.currentAppUser.role!=='admin'||!auth.currentUser)return;
             if(userId===window.currentAppUser.id)return;
             window.showConfirm("¿Eliminar usuario?",async()=>{try{await deleteDoc(getDocPath("usuarios",userId));window.closeConfirm();window.showToast("Usuario eliminado");}catch(e){window.showToast("Error al eliminar");window.closeConfirm();}});
         };
@@ -1884,17 +1917,8 @@
                 else daysBadge = `<span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[8px] uppercase tracking-widest font-black">${rem.days} días</span>`;
                 if (isSuspended && !isAdmin) daysBadge = `<span class="bg-red-100 text-red-600 px-2 py-0.5 rounded text-[8px] uppercase tracking-widest font-black border border-red-200">SUSPENDIDO</span>`;
                 
-                let accionesHtml = '';
-                if (!isAdmin && u.id !== (window.currentAppUser ? window.currentAppUser.id : '')) {
-                    accionesHtml += `<select onchange="if(this.value) { window.renovarLicencia('${u.id}', this.value); this.value=''; }" class="text-[9px] font-black uppercase tracking-widest px-2 py-2 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-200 outline-none cursor-pointer"><option value="">Renovar...</option><option value="trial">+ 1 Día</option><option value="1">+ 1 Mes</option><option value="6">+ 6 Meses</option><option value="12">+ 12 Meses</option></select>`;
-                    accionesHtml += `<button type="button" onclick="toggleUserStatus('${u.id}')" class="text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border ${isSuspended ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-500'}">${isSuspended ? 'Reactivar' : 'Suspender'}</button>`;
-                    accionesHtml += `<button type="button" onclick="toggleUserPerm('${u.id}','canViewRegistros')" class="text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border ${hasReg ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400'}">Reg: ${hasReg ? 'ON' : 'OFF'}</button>`;
-                    accionesHtml += `<button type="button" onclick="toggleUserPerm('${u.id}','canViewSaldo')" class="text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border ${hasSal ? 'bg-amber-100 text-amber-600' : 'bg-slate-100 text-slate-400'}">Sal: ${hasSal ? 'ON' : 'OFF'}</button>`;
-                    accionesHtml += `<button type="button" onclick="toggleUserPerm('${u.id}','canViewCuentas')" class="text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border ${hasCuentas ? 'bg-purple-100 text-purple-600' : 'bg-slate-100 text-slate-400'}">Cta: ${hasCuentas ? 'ON' : 'OFF'}</button>`;
-                }
-                if (u.id !== (window.currentAppUser ? window.currentAppUser.id : '')) {
-                    accionesHtml += `<button type="button" onclick="deleteUser('${u.id}')" class="text-red-500 hover:scale-110 p-2 rounded transition-transform"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>`;
-                }
+                const canManageUser = !isAdmin && u.id !== (window.currentAppUser ? window.currentAppUser.id : '');
+                const canDeleteUser = u.id !== (window.currentAppUser ? window.currentAppUser.id : '');
 
                 const html = `
                     <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 transition-all">
@@ -1903,11 +1927,44 @@
                                 <p class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> ${window.sanitizeHTML(u.nombre)}</p>
                                 ${daysBadge}
                             </div>
-                            <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mt-1 pl-6 flex items-center gap-1">PIN: <span id="pin-display-${u.id}" class="cursor-pointer text-blue-500 inline-flex items-center" onclick="togglePinDisplay('pin-display-${u.id}', '${u.pin}')">**** <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block ml-1 opacity-70"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg></span></p>
+                            <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mt-1 pl-6">PIN protegido</p>
                         </div>
-                        <div class="flex items-center gap-2 flex-wrap w-full xl:w-auto justify-end">${accionesHtml}</div>
+                        <div class="user-actions flex items-center gap-2 flex-wrap w-full xl:w-auto justify-end"></div>
                     </div>`;
                 list.insertAdjacentHTML('beforeend', html);
+                const actions = list.lastElementChild.querySelector('.user-actions');
+                const addButton = (label, className, handler) => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = className;
+                    button.textContent = label;
+                    button.addEventListener('click', handler);
+                    actions.appendChild(button);
+                };
+                if (canManageUser) {
+                    const renewal = document.createElement('select');
+                    renewal.className = 'text-[9px] font-black uppercase tracking-widest px-2 py-2 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-200 outline-none cursor-pointer';
+                    renewal.innerHTML = '<option value="">Renovar...</option><option value="trial">+ 1 Día</option><option value="1">+ 1 Mes</option><option value="6">+ 6 Meses</option><option value="12">+ 12 Meses</option>';
+                    renewal.addEventListener('change', () => {
+                        if (!renewal.value) return;
+                        window.renovarLicencia(u.id, renewal.value);
+                        renewal.value = '';
+                    });
+                    actions.appendChild(renewal);
+                    addButton(isSuspended ? 'Reactivar' : 'Suspender', `text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border ${isSuspended ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-500'}`, () => window.toggleUserStatus(u.id));
+                    addButton(`Reg: ${hasReg ? 'ON' : 'OFF'}`, `text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border ${hasReg ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400'}`, () => window.toggleUserPerm(u.id, 'canViewRegistros'));
+                    addButton(`Sal: ${hasSal ? 'ON' : 'OFF'}`, `text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border ${hasSal ? 'bg-amber-100 text-amber-600' : 'bg-slate-100 text-slate-400'}`, () => window.toggleUserPerm(u.id, 'canViewSaldo'));
+                    addButton(`Cta: ${hasCuentas ? 'ON' : 'OFF'}`, `text-[8px] font-black uppercase tracking-widest px-2 py-2 rounded-lg border ${hasCuentas ? 'bg-purple-100 text-purple-600' : 'bg-slate-100 text-slate-400'}`, () => window.toggleUserPerm(u.id, 'canViewCuentas'));
+                }
+                if (canDeleteUser) {
+                    const deleteButton = document.createElement('button');
+                    deleteButton.type = 'button';
+                    deleteButton.className = 'text-red-500 hover:scale-110 p-2 rounded transition-transform';
+                    deleteButton.title = 'Eliminar usuario';
+                    deleteButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>';
+                    deleteButton.addEventListener('click', () => window.deleteUser(u.id));
+                    actions.appendChild(deleteButton);
+                }
             });
         };
 
@@ -1919,8 +1976,20 @@
 
         window.updatePaymentSelect = function() {
             const config=window.getUserConfig(),selectCobro=document.getElementById('cobro-metodo'),selectFactura=document.getElementById('metodoPago');
-            if(selectFactura){const currentVal=selectFactura.value;selectFactura.innerHTML='';(config.paymentMethods||[]).forEach((method)=>{selectFactura.innerHTML+=`<option value="${method.name}">${method.name}</option>`});if(currentVal&&Array.from(selectFactura.options).some(o=>o.value===currentVal))selectFactura.value=currentVal;}
-            if(selectCobro){const currentVal=selectCobro.value;selectCobro.innerHTML='';(config.paymentMethods||[]).forEach((method)=>{selectCobro.innerHTML+=`<option value="${method.name}">${method.name}</option>`});if(currentVal&&Array.from(selectCobro.options).some(o=>o.value===currentVal))selectCobro.value=currentVal;}
+            const rebuildSelect = select => {
+                if (!select) return;
+                const currentVal = select.value;
+                select.replaceChildren();
+                (config.paymentMethods || []).forEach(method => {
+                    const option = document.createElement('option');
+                    option.value = String(method.name || '');
+                    option.textContent = String(method.name || '');
+                    select.appendChild(option);
+                });
+                if (currentVal && Array.from(select.options).some(option => option.value === currentVal)) select.value = currentVal;
+            };
+            rebuildSelect(selectFactura);
+            rebuildSelect(selectCobro);
         };
 
         // --- SISTEMA DE FACTURAS ---
@@ -2407,8 +2476,8 @@
                     const tr = document.createElement('tr');
                     tr.className = "border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors";
                     tr.innerHTML = `
-                        <td class="py-4 px-2" data-label="Nombre"><p class="text-sm font-bold text-slate-900 dark:text-white uppercase">${c.nombre}</p></td>
-                        <td class="py-4 px-2 text-xs text-slate-500 font-bold tracking-widest" data-label="Documento">${c.cc}</td>
+                        <td class="py-4 px-2" data-label="Nombre"><p class="text-sm font-bold text-slate-900 dark:text-white uppercase">${window.sanitizeHTML(c.nombre)}</p></td>
+                        <td class="py-4 px-2 text-xs text-slate-500 font-bold tracking-widest" data-label="Documento">${window.sanitizeHTML(c.cc)}</td>
                         <td class="py-4 px-2 md:text-right" data-label="Acciones">
                             <div class="flex items-center justify-end gap-2">
                                 ${btnUsarHtml}
@@ -2451,7 +2520,7 @@
                     card.className = "history-document-card bg-slate-50 dark:bg-slate-800/50 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all";
                     card.innerHTML = `
                         <div class="flex items-center gap-4 w-full md:w-auto">
-                            <div class="bg-blue-600 text-white w-12 h-12 rounded-2xl shadow-xl shadow-blue-600/30 flex-none flex items-center justify-center font-[900] text-sm italic tracking-tighter">${f.num}</div>
+                            <div class="bg-blue-600 text-white w-12 h-12 rounded-2xl shadow-xl shadow-blue-600/30 flex-none flex items-center justify-center font-[900] text-sm italic tracking-tighter">${window.sanitizeHTML(f.num)}</div>
                             <div class="space-y-0.5 min-w-0">
                                 <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">${window.sanitizeHTML(f.fechaServicio)}</p>
                                 <p class="font-[900] text-slate-900 dark:text-white text-lg uppercase tracking-tight truncate">${window.sanitizeHTML(f.cliente)}</p>
@@ -2879,7 +2948,7 @@
                 card.className = "history-document-card bg-indigo-50 dark:bg-indigo-900/10 p-5 rounded-3xl border border-indigo-100 dark:border-indigo-800/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:-translate-y-1 hover:shadow-lg transition-all";
                 card.innerHTML = `
                         <div class="flex items-center gap-4 w-full md:w-auto">
-                        <div class="bg-indigo-600 text-white w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-xl shadow-indigo-600/30 flex-none flex items-center justify-center font-[900] text-sm italic tracking-tighter">${c.num}</div>
+                        <div class="bg-indigo-600 text-white w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-xl shadow-indigo-600/30 flex-none flex items-center justify-center font-[900] text-sm italic tracking-tighter">${window.sanitizeHTML(c.num)}</div>
                         <div class="space-y-0.5 min-w-0">
                             <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest flex items-center gap-1">${window.sanitizeHTML(c.fecha)}</p>
                             <p class="font-[900] text-slate-900 dark:text-white text-lg uppercase tracking-tight truncate">${window.sanitizeHTML(c.cliente)}</p>
