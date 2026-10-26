@@ -29,15 +29,31 @@
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Nuevas animaciones para la pantalla de carga */
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        @keyframes pulse-glow { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 0.6; transform: scale(1.2); } }
+        .animate-pulse-glow { animation: pulse-glow 2.5s ease-in-out infinite; }
     </style>
 </head>
 <body class="text-slate-800 antialiased h-screen flex flex-col overflow-hidden relative">
 
-    <!-- Loading Overlay (Firebase Connection) -->
-    <div id="loading-overlay" class="fixed inset-0 bg-slate-900 z-[100] flex flex-col items-center justify-center text-white transition-opacity duration-500">
-        <i class="fa-solid fa-circle-notch fa-spin text-5xl mb-4 text-brand-500"></i>
-        <p class="text-lg font-medium">Conectando a la Base de Datos...</p>
-        <p class="text-xs text-slate-400 mt-2">Sincronizando Firebase</p>
+    <!-- Loading Overlay (Firebase Connection) Animado -->
+    <div id="loading-overlay" class="fixed inset-0 bg-gradient-to-br from-slate-900 to-brand-900 z-[100] flex flex-col items-center justify-center text-white transition-all duration-700">
+        <div class="relative flex items-center justify-center mb-8 mt-[-10vh]">
+            <!-- Resplandor de fondo -->
+            <div class="absolute inset-0 bg-brand-400 rounded-full blur-2xl animate-pulse-glow"></div>
+            <!-- Logo Flotante -->
+            <div class="relative bg-white/10 p-6 rounded-3xl border border-white/20 backdrop-blur-md animate-float shadow-2xl">
+                <i class="fa-solid fa-box-open text-6xl text-white"></i>
+            </div>
+        </div>
+        <h1 class="text-4xl font-bold tracking-wider mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white to-brand-200">STOCKIA</h1>
+        <div class="flex items-center gap-3 bg-black/20 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10">
+            <i class="fa-solid fa-circle-notch fa-spin text-brand-300"></i>
+            <p class="text-sm font-medium tracking-wide text-brand-100">Sincronizando con la nube...</p>
+        </div>
     </div>
 
     <!-- Toast Notifications Container -->
@@ -501,8 +517,12 @@
                         if(loadedCount < collectionsToSync.length) {
                             loadedCount++;
                             if(loadedCount === collectionsToSync.length) {
-                                document.getElementById('loading-overlay').classList.add('opacity-0', 'pointer-events-none');
-                                setTimeout(() => document.getElementById('view-login').classList.remove('hidden'), 500);
+                                const overlay = document.getElementById('loading-overlay');
+                                overlay.classList.add('opacity-0', 'scale-105', 'pointer-events-none');
+                                setTimeout(() => {
+                                    overlay.classList.add('hidden');
+                                    if(!state.currentUser) document.getElementById('view-login').classList.remove('hidden');
+                                }, 700);
                             }
                         }
                     }, (err) => console.error(`Error loading ${colName}:`, err));
