@@ -2406,6 +2406,51 @@
             doc.text(`Generado el: ${new Date().toLocaleString()}`, 20, footerY);
             doc.text(`Constancia protegida digitalmente`, 195.9, footerY, { align: "right" });
 
+            if (p.receiptImage) {
+                doc.addPage();
+                
+                doc.setFillColor(...primaryColor);
+                doc.rect(0, 0, 215.9, 30, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(18);
+                doc.setFont("helvetica", "bold");
+                doc.text("LALY TALENTO", 107.95, 14, { align: "center" });
+                doc.setFontSize(10);
+                doc.setTextColor(200, 178, 162); 
+                doc.text("COMPROBANTE DE PAGO ANEXO", 107.95, 22, { align: "center" });
+                
+                if (p.paymentNumber) {
+                    doc.setFontSize(9);
+                    doc.setFont("helvetica", "bold");
+                    doc.setTextColor(255, 255, 255);
+                    doc.text(`N.º ${p.paymentNumber}`, 195.9, 18, { align: "right" });
+                }
+
+                try {
+                    const imgProps = doc.getImageProperties(p.receiptImage);
+                    const pdfWidth = doc.internal.pageSize.getWidth();
+                    const pdfHeight = doc.internal.pageSize.getHeight();
+                    
+                    const margin = 20;
+                    const maxImgWidth = pdfWidth - (margin * 2);
+                    const maxImgHeight = pdfHeight - 30 - (margin * 2); 
+                    
+                    const ratio = Math.min(maxImgWidth / imgProps.width, maxImgHeight / imgProps.height);
+                    const finalWidth = imgProps.width * ratio;
+                    const finalHeight = imgProps.height * ratio;
+                    
+                    const x = (pdfWidth - finalWidth) / 2;
+                    const y = 30 + ((pdfHeight - 30 - finalHeight) / 2);
+                    
+                    doc.addImage(p.receiptImage, imgProps.fileType || 'JPEG', x, y, finalWidth, finalHeight);
+                } catch(e) {
+                    console.error("Error al renderizar el comprobante en el PDF", e);
+                    doc.setTextColor(150, 150, 150);
+                    doc.setFontSize(10);
+                    doc.text("No se pudo cargar la imagen del comprobante adjunto.", 107.95, 140, { align: "center" });
+                }
+            }
+
             const safeName = w.name.replace(/[^a-zA-Z0-9]/g, '_');
             const sequenceStr = p.paymentNumber ? `_${p.paymentNumber}` : '';
             const fileName = `Constancia_Laly_${safeName}_${p.eventDate}${sequenceStr}.pdf`;
