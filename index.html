@@ -658,6 +658,7 @@
         };
 
         window.getInitials = (name) => {
+            if (!name) return 'US';
             const parts = name.trim().split(' ');
             if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
             if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
@@ -698,8 +699,14 @@
 
         window.onload = async () => {
             lucide.createIcons();
-            try { await signInAnonymously(auth); checkSession(); } 
-            catch (error) { window.showToast("Error de conexión a Firebase", "error"); }
+            try { 
+                await signInAnonymously(auth); 
+                checkSession(); 
+            } catch (error) { 
+                console.error("Firebase auth error:", error);
+                // Si falla el login anónimo (muy común en Safari/Incógnito), intentamos continuar con la sesión local si existe
+                checkSession();
+            }
         };
 
         async function fetchAllData() {
@@ -838,11 +845,23 @@
                     const docInput = document.getElementById('login-cedula').value.trim();
                     if (!docInput) { window.showToast('Ingresa tu número de documento', 'error'); btn.innerHTML = 'Ingresar'; btn.disabled = false; return; }
 
-                    const q = query(collection(db, "workers"), where("document", "==", docInput), where("status", "==", "activo"));
-                    const querySnapshot = await getDocs(q);
+                    // Intentar buscar tanto como String como Number (en caso de inconsistencias en DB)
+                    const qStr = query(collection(db, "workers"), where("document", "==", docInput), where("status", "==", "activo"));
+                    const querySnapshotStr = await getDocs(qStr);
                     
-                    if (!querySnapshot.empty) {
-                        user = querySnapshot.docs[0].data();
+                    if (!querySnapshotStr.empty) {
+                        user = querySnapshotStr.docs[0].data();
+                    } else {
+                        // Búsqueda alternativa como número
+                        const docNumber = Number(docInput);
+                        if (!isNaN(docNumber)) {
+                            const qNum = query(collection(db, "workers"), where("document", "==", docNumber), where("status", "==", "activo"));
+                            const querySnapshotNum = await getDocs(qNum);
+                            if (!querySnapshotNum.empty) user = querySnapshotNum.docs[0].data();
+                        }
+                    }
+
+                    if (user) {
                         if(!user.systemRole) {
                             if(user.role === 'Administrador') user.systemRole = 'ADMIN';
                             else user.systemRole = 'WORKER';
@@ -854,8 +873,14 @@
                 }
 
                 if (user) {
+                if (user) {
                     window.appState.currentUser = user;
-                    localStorage.setItem('hr_v2_session', JSON.stringify(user)); 
+                    try {
+                        localStorage.setItem('hr_v2_session', JSON.stringify(user)); 
+                    } catch (storageError) {
+                        // Fallback para modo incógnito
+                        sessionStorage.setItem('hr_v2_session', JSON.stringify(user));
+                    }
                     performLoginUIFast();
                     fetchAllData().then(() => renderViewAfterLogin()).catch(e => console.error(e));
                 }
