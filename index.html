@@ -340,7 +340,7 @@
                     <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white text-red-600 font-bold text-xs sm:text-sm mb-6 tracking-widest uppercase border border-red-100 shadow-sm">
                         <span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span> Calendario A - 2027
                     </div>
-                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.12] mb-6 tracking-tight text-balance">El tiempo corre <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-[#b91c1c] via-[#facc15] to-[#16a34a]">¿Aún estás pensando qué estudiar?</span></h1>
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.12] mb-6 tracking-tight text-balance">¡Tu futuro comienza con una decisión! <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-[#b91c1c] via-[#facc15] to-[#16a34a]">Da hoy el primer paso hacia tus metas profesionales.</span></h1>
                     <p class="text-base sm:text-lg md:text-xl text-gray-600 mb-8 sm:mb-10 max-w-lg mx-auto lg:mx-0 font-medium text-balance">Las matrículas están abiertas. Prepárate para tu futuro con nuestros programas de alta demanda laboral. ¡Te estamos esperando!</p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                         <a href="#programas" class="bg-gradient-to-r from-green-600 to-green-500 text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:shadow-lg hover:-translate-y-1 transition-all flex justify-center items-center gap-2">Ver Programas <i data-lucide="arrow-down" class="w-5 h-5 pointer-events-none"></i></a>
@@ -546,7 +546,7 @@
                         <h3 class="text-2xl font-black text-gray-900 uppercase mb-6 flex items-center gap-3">
                             <i data-lucide="credit-card" class="text-funsoder-main w-7 h-7"></i> Inversión del Programa
                         </h3>
-                        <div id="detail-costs" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                        <div id="detail-costs" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
                     </div>
                     
                     <h3 class="text-2xl font-black text-gray-900 uppercase mb-6 flex items-center gap-3">
@@ -590,12 +590,13 @@
         </div>
     </div>
 
+    <!-- Lógica Principal -->
     <script>
         window.courseData = {
             "Auxiliar en Servicios Farmacéuticos": {
                 category: "Programa Técnico",
                 img: "https://www.image2url.com/r2/default/images/1793298340874-0efb8f41-9d70-44d3-94ee-402a8f3eb9bc.png",
-                bgImg: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                bgImg: "https://images.unsplash.com/photo-1585435557343-3b092031a831?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 bgColor: "bg-red-900",
                 imgClass: "scale-[1.28] translate-y-1",
                 duration: "2 Semestres (1 año) + 6 meses de prácticas externas",
@@ -635,7 +636,7 @@
             "Auxiliar Administrativo en Salud": {
                 category: "Programa Técnico",
                 img: "https://www.image2url.com/r2/default/images/1793297905878-3d94aa76-f93d-4a1f-806d-14611d7c94a4.png",
-                bgImg: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                bgImg: "https://images.unsplash.com/photo-1516549655169-df83a0774514?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 bgColor: "bg-teal-900",
                 imgClass: "scale-[1.42] translate-y-3",
                 duration: "2 Semestres (1 año) + 6 meses de práctica",
@@ -677,7 +678,7 @@
             "Auxiliar en Enfermería": {
                 category: "Programa Técnico",
                 img: "https://www.image2url.com/r2/default/images/1793297110569-5239704a-8477-48c3-83fa-49c93f1a7a11.png",
-                bgImg: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                bgImg: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 bgColor: "bg-rose-900",
                 imgClass: "scale-[1.15] translate-y-1",
                 duration: "2 Semestres (1 año) + 6 meses de prácticas hospitalarias externas",
@@ -727,6 +728,7 @@
                 title: "Belleza y Peluquería Integral",
                 category: "Programa Técnico",
                 img: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                bgImg: "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 duration: "2 Semestres (1 año)",
                 schedule: "Según cronograma disponible",
                 attentionHours: "Lunes a sábados: 8:00 a.m. a 5:00 p.m.",
@@ -767,6 +769,7 @@
                 title: "Auxiliar Contable y Financiero",
                 category: "Programa Técnico",
                 img: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                bgImg: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 duration: "2 Semestres (1 año) + 4 meses de prácticas externas",
                 schedule: "Según cronograma disponible",
                 attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
@@ -806,6 +809,7 @@
             "Auxiliar Administrativo": {
                 category: "Programa Técnico",
                 img: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                bgImg: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 duration: "2 Semestres (1 año) + 4 meses de prácticas externas",
                 schedule: "Según cronograma disponible",
                 attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
@@ -845,6 +849,7 @@
                 title: "Auxiliar en Recursos Humanos",
                 category: "Programa Técnico",
                 img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                bgImg: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 duration: "2 Semestres (1 año) + 4 meses de prácticas externas",
                 schedule: "According to available schedule",
                 attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
@@ -885,6 +890,7 @@
                 title: "Auxiliar de Educación para la Primera Infancia",
                 category: "Programa Técnico",
                 img: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                bgImg: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 duration: "2 Semestres (1 año) + 4 meses de prácticas externas",
                 schedule: "Según cronograma disponible",
                 attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
@@ -925,6 +931,7 @@
                 title: "Cosmetología y Estética Integral",
                 category: "Programa Técnico",
                 img: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                bgImg: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 duration: "2 Semestres (1 año) + 4 meses de prácticas externas",
                 schedule: "Según cronograma disponible",
                 attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
@@ -955,7 +962,7 @@
                 ]
             },
             "General": {
-                category: "Programa Educativo", img: "https://images.unsplash.com/photo-1576267423445-b2e0074d68a4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", duration: "Varía según el programa", modules: ["Módulo Introductorio", "Fundamentos Básicos", "Profundización", "Práctica Profesional"]
+                category: "Programa Educativo", img: "https://www.image2url.com/r2/default/images/1793913608673-091a174c-f091-4689-a07c-bba9484aaad2.png", bgImg: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", duration: "Varía según el programa", modules: ["Módulo Introductorio", "Fundamentos Básicos", "Profundización", "Práctica Profesional"]
             }
         };
 
@@ -1004,7 +1011,6 @@
             const costsContainer = document.getElementById('detail-costs');
             if (costsSection && costsContainer) {
                 if (data.costs && data.costs.length > 0) {
-                    // Update grid layout based on number of items to ensure they take full width or split evenly
                     costsContainer.className = `grid grid-cols-1 ${data.costs.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`;
                     
                     costsContainer.innerHTML = data.costs.map(c => `
