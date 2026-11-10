@@ -55,7 +55,6 @@
                         <a href="#inicio" onclick="window.navigateToSection('inicio'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Inicio</a>
                         <a href="#sedes" onclick="window.navigateToSection('sedes'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Sedes</a>
                         <a href="#programas" onclick="window.navigateToSection('programas'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Programas</a>
-                        <a href="#pagos" onclick="window.navigateToSection('pagos'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Pagos</a>
                         <a href="#nosotros" onclick="window.navigateToSection('nosotros'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Nosotros</a>
                         <a href="#galeria" onclick="window.navigateToSection('galeria'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Galería</a>
                         <a href="#contacto" onclick="window.navigateToSection('contacto'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Contacto</a>
@@ -82,7 +81,6 @@
                 <a href="#inicio" onclick="window.navigateToSection('inicio'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Inicio</a>
                 <a href="#sedes" onclick="window.navigateToSection('sedes'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Sedes</a>
                 <a href="#programas" onclick="window.navigateToSection('programas'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Programas</a>
-                <a href="#pagos" onclick="window.navigateToSection('pagos'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Pagos</a>
                 <a href="#nosotros" onclick="window.navigateToSection('nosotros'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Nosotros</a>
                 <a href="#galeria" onclick="window.navigateToSection('galeria'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Galería</a>
                 <a href="#contacto" onclick="window.navigateToSection('contacto'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Contacto</a>
@@ -135,18 +133,8 @@
                 <div class="text-center mb-12">
                     <h2 class="text-3xl sm:text-4xl font-black text-gray-900 uppercase tracking-tight">Capacítate <span class="text-funetec-main">·</span> Crece <span class="text-funetec-main">·</span> Triunfa</h2>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- Action 1 -->
-                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all flex flex-col items-center text-center group hover:-translate-y-1 cursor-pointer" onclick="window.navigateToSection('pagos')">
-                        <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center text-funetec-main mb-6 group-hover:scale-110 transition-transform">
-                            <i data-lucide="search" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="font-black text-lg text-gray-900 uppercase mb-3">Consulta de pagos</h3>
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">(Estudiantes)</span>
-                        <p class="text-gray-600 text-sm mb-6 flex-grow">Ingresa tu documento y revisa tu historial de pagos.</p>
-                        <span class="text-funetec-main font-bold uppercase text-sm border-b-2 border-transparent group-hover:border-funetec-main transition-all flex items-center gap-1">Consultar Ahora <i data-lucide="chevron-right" class="w-4 h-4"></i></span>
-                    </div>
-                    <!-- Action 2 -->
                     <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all flex flex-col items-center text-center group hover:-translate-y-1 cursor-pointer" onclick="window.navigateToSection('programas')">
                         <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center text-funetec-main mb-6 group-hover:scale-110 transition-transform">
                             <i data-lucide="book-open" class="w-8 h-8"></i>
@@ -156,7 +144,7 @@
                         <p class="text-gray-600 text-sm mb-6 flex-grow">Conoce toda nuestra oferta académica técnica y cursos.</p>
                         <span class="text-funetec-main font-bold uppercase text-sm border-b-2 border-transparent group-hover:border-funetec-main transition-all flex items-center gap-1">Ver Programas <i data-lucide="chevron-right" class="w-4 h-4"></i></span>
                     </div>
-                    <!-- Action 3 -->
+                    <!-- Action 2 -->
                     <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all flex flex-col items-center text-center group hover:-translate-y-1 cursor-pointer" onclick="window.openPreinscriptionModal()">
                         <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center text-funetec-main mb-6 group-hover:scale-110 transition-transform">
                             <i data-lucide="user-plus" class="w-8 h-8"></i>
@@ -166,7 +154,7 @@
                         <p class="text-gray-600 text-sm mb-6 flex-grow">Déjanos tus datos y un asesor te contactará pronto.</p>
                         <span class="text-funetec-main font-bold uppercase text-sm border-b-2 border-transparent group-hover:border-funetec-main transition-all flex items-center gap-1">Preinscribirme <i data-lucide="chevron-right" class="w-4 h-4"></i></span>
                     </div>
-                    <!-- Action 4 -->
+                    <!-- Action 3 -->
                     <a href="https://verificacionfunetec.vercel.app" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all flex flex-col items-center text-center group hover:-translate-y-1">
                         <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center text-funetec-main mb-6 group-hover:scale-110 transition-transform">
                             <i data-lucide="file-text" class="w-8 h-8"></i>
@@ -191,7 +179,7 @@
                 
                 <div class="max-w-4xl mx-auto bg-gray-50 rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col md:flex-row group hover:shadow-lg transition-all">
                     <div class="md:w-1/2 h-64 md:h-auto relative overflow-hidden bg-gray-200">
-                        <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sede Principal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <img src="https://www.image2url.com/r2/default/images/1792088863662-4f0d1442-108e-43b4-93fa-b50bcf9e334f.png" onerror="if(!this.dataset.retried){this.dataset.retried='1';this.src='https://image2url.com/r2/default/images/1792088863662-4f0d1442-108e-43b4-93fa-b50bcf9e334f.png';}" alt="Sede Principal" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700">
                         <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent flex items-end p-6">
                             <span class="bg-funetec-main text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg">Sede Principal</span>
                         </div>
@@ -336,65 +324,6 @@
                     <button onclick="window.showCourseDetails('Recursos Humanos')" class="bg-white border border-gray-200 p-4 rounded-xl font-bold text-gray-700 hover:border-funetec-main hover:text-funetec-main transition-colors flex items-center justify-between group shadow-sm"><span class="text-sm uppercase truncate mr-2">Recursos Humanos</span> <i data-lucide="arrow-right" class="w-4 h-4 text-gray-400 group-hover:text-funetec-main"></i></button>
                     <button onclick="window.showCourseDetails('Cosmetología y Estética')" class="bg-white border border-gray-200 p-4 rounded-xl font-bold text-gray-700 hover:border-funetec-main hover:text-funetec-main transition-colors flex items-center justify-between group shadow-sm"><span class="text-sm uppercase truncate mr-2">Cosmetología Estética</span> <i data-lucide="arrow-right" class="w-4 h-4 text-gray-400 group-hover:text-funetec-main"></i></button>
                     <button onclick="window.showCourseDetails('Curso 5 en 1')" class="bg-gray-900 border border-gray-900 p-4 rounded-xl font-bold text-white hover:bg-gray-800 transition-colors flex items-center justify-between group shadow-sm"><span class="text-sm uppercase truncate mr-2">Ver Cursos Cortos</span> <i data-lucide="arrow-right" class="w-4 h-4 text-gray-400"></i></button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Consulta y Pagos en línea -->
-        <section id="pagos" class="py-20 bg-white border-t border-gray-100 scroll-mt-20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="text-sm font-bold text-funetec-main uppercase tracking-widest mb-2">Solo estudiantes matriculados</h2>
-                    <h3 class="text-3xl sm:text-4xl font-black text-gray-900 uppercase">Consulta de Pagos</h3>
-                </div>
-
-                <div class="flex flex-col lg:flex-row gap-12 lg:gap-16">
-                    <div class="lg:w-1/2">
-                        <h4 class="text-2xl font-black text-gray-900 uppercase mb-8">¿Cómo pago?</h4>
-                        <ul class="space-y-6">
-                            <li class="flex gap-4 items-start">
-                                <div class="bg-funetec-main text-white font-black w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">1</div>
-                                <p class="text-gray-700 font-medium">Escribe tu documento y tu fecha de nacimiento en el portal y toca <strong class="text-gray-900">Consultar</strong>.</p>
-                            </li>
-                            <li class="flex gap-4 items-start">
-                                <div class="bg-funetec-main text-white font-black w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">2</div>
-                                <p class="text-gray-700 font-medium">En <strong class="text-gray-900">Paga en línea</strong> escoge las semanas o, en <strong class="text-gray-900">Otros pagos</strong>, lo que vas a cancelar.</p>
-                            </li>
-                            <li class="flex gap-4 items-start">
-                                <div class="bg-funetec-main text-white font-black w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">3</div>
-                                <p class="text-gray-700 font-medium">Toca Continuar al pago y escanea el QR con la app de tu banco o Nequi.</p>
-                            </li>
-                            <li class="flex gap-4 items-start mt-4">
-                                <div class="bg-green-500 text-white font-black w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-md"><i data-lucide="check" class="w-5 h-5"></i></div>
-                                <p class="text-gray-700 font-medium">¡Listo! El pago queda registrado solo, con tu recibo. No tienes que enviar comprobante.</p>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <div class="lg:w-1/2 bg-gray-50 p-8 md:p-10 rounded-[2rem] border border-gray-200 shadow-sm relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-red-100 rounded-full blur-3xl -mr-10 -mt-10 opacity-60 pointer-events-none"></div>
-                        <h4 class="text-xl font-black text-gray-900 uppercase mb-2 relative z-10">Ingresa tus datos</h4>
-                        <p class="text-gray-500 text-sm mb-8 font-medium relative z-10">Para ver tu historial de pagos, saldo y detalle de tu programa.</p>
-                        
-                        <form class="space-y-5 relative z-10" onsubmit="event.preventDefault(); window.open('https://site2.q10.com/User/Login', '_blank');">
-                            <div>
-                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Número de documento</label>
-                                <input type="text" placeholder="Ej. 1002345678" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-funetec-main focus:ring-2 focus:ring-red-100 outline-none transition-all font-medium">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Fecha de nacimiento</label>
-                                <input type="date" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-funetec-main focus:ring-2 focus:ring-red-100 outline-none transition-all font-medium text-gray-600">
-                            </div>
-                            <button type="submit" class="w-full bg-gray-900 text-white font-black py-4 rounded-xl mt-4 hover:bg-gray-800 transition-colors uppercase tracking-wide flex items-center justify-center gap-2 shadow-lg">
-                                Consultar Información <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                            </button>
-                        </form>
-                        
-                        <div class="mt-6 flex items-start gap-3 bg-blue-50 p-4 rounded-xl border border-blue-100">
-                            <i data-lucide="shield-check" class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"></i>
-                            <p class="text-xs text-blue-800 font-medium leading-relaxed">Tus datos se tratan conforme a la Ley 1581 de 2012 (Habeas Data). Esta consulta es segura y solo muestra tu propia información.</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
