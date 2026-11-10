@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FUNSODER - Fundación Social de Emprendimiento Regional</title>
+    <title>FUNETEC - Fundación Educativa Técnica de la Costa</title>
     <!-- Favicon SVG -->
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%23facc15' stroke='%23b91c1c' stroke-width='4'/%3E%3Ccircle cx='32' cy='22' r='8' fill='%2316a34a'/%3E%3Cpath d='M16 48 Q32 30 48 48' stroke='%2316a34a' stroke-width='8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" type="image/svg+xml">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='10' y='10' width='12' height='44' fill='%23AF172B'/%3E%3Crect x='26' y='24' width='12' height='30' fill='%23FF2A2D'/%3E%3Crect x='42' y='10' width='12' height='44' fill='%23E2686F'/%3E%3C/svg%3E" type="image/svg+xml">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -13,275 +13,25 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* Base Reset & Preflight */
-        *, ::before, ::after { box-sizing: border-box; border-width: 0; border-style: solid; border-color: #e5e7eb; }
-        html { line-height: 1.5; -webkit-text-size-adjust: 100%; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background-color: #f9fafb; color: #1f2937; -webkit-font-smoothing: antialiased; position: relative; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
-        h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; margin: 0; }
-        p, ul, ol, li { margin: 0; padding: 0; }
-        ul, ol { list-style: none; }
-        a { color: inherit; text-decoration: none; }
-        button { font-family: inherit; font-size: 100%; font-weight: inherit; line-height: inherit; color: inherit; margin: 0; padding: 0; background-color: transparent; background-image: none; cursor: pointer; }
-        img, svg, video, canvas, iframe { display: block; vertical-align: middle; max-width: 100%; }
-        img { height: auto; }
-
-        /* Colores Institucionales FUNSODER (Rojo, Amarillo, Verde) */
-        .bg-funsoder-dark { background-color: #b91c1c; } /* Rojo oscuro */
-        .bg-funsoder-main { background-color: #facc15; } /* Amarillo */
-        .bg-funsoder-light { background-color: #16a34a; } /* Verde */
-        
-        .text-funsoder-main { color: #dc2626; }
+        body { font-family: 'Poppins', sans-serif; }
+        .bg-funetec-dark { background-color: #AF172B; } 
+        .bg-funetec-main { background-color: #FF2A2D; } 
+        .bg-funetec-light { background-color: #E2686F; } 
+        .text-funetec-main { color: #d60000; }
+        html { scroll-behavior: smooth; }
         .shadow-premium { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); }
-        .shadow-premium-hover:hover { box-shadow: 0 20px 40px -10px rgba(220, 38, 38, 0.15); }
-
+        .shadow-premium-hover { box-shadow: 0 20px 40px -10px rgba(214, 0, 0, 0.15); }
         @keyframes whatsapp-pulse {
             0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
             70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
             100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
-        @keyframes pulse { 50% { opacity: .5; } }
         .animate-whatsapp-pulse { animation: whatsapp-pulse 2s infinite; }
-        .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
         .text-balance { text-wrap: balance; }
-
-        /* Utilidades críticas */
-        .hidden { display: none !important; }
-        .block { display: block; }
-        .inline-block { display: inline-block; }
-        .inline-flex { display: inline-flex; }
-        .flex { display: flex; }
-        .grid { display: grid; }
-        .flex-col { flex-direction: column; }
-        .flex-wrap { flex-wrap: wrap; }
-        .flex-grow { flex-grow: 1; }
-        .flex-shrink-0 { flex-shrink: 0; }
-        .items-start { align-items: flex-start; }
-        .items-center { align-items: center; }
-        .items-end { align-items: flex-end; }
-        .justify-center { justify-content: center; }
-        .justify-between { justify-content: space-between; }
-        .justify-end { justify-content: flex-end; }
-        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-
-        .relative { position: relative; }
-        .absolute { position: absolute; }
-        .fixed { position: fixed; }
-        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
-        .top-0 { top: 0; }
-        .bottom-0 { bottom: 0; }
-        .left-0 { left: 0; }
-        .right-0 { right: 0; }
-        .bottom-5 { bottom: 1.25rem; }
-        .right-5 { right: 1.25rem; }
-        .right-\[115\%\] { right: 115%; }
-        .z-10 { z-index: 10; }
-        .z-20 { z-index: 20; }
-        .z-30 { z-index: 30; }
-        .z-40 { z-index: 40; }
-        .z-50 { z-index: 50; }
-        .z-\[80\] { z-index: 80; }
-        .overflow-hidden { overflow: hidden; }
-        .overflow-x-hidden { overflow-x: hidden; }
-        .overflow-y-auto { overflow-y: auto; }
-        .pointer-events-none { pointer-events: none; }
-        .scroll-mt-20 { scroll-margin-top: 5rem; }
-
-        /* Dimensiones */
-        .w-2 { width: 0.5rem; } .w-2\.5 { width: 0.625rem; } .w-3 { width: 0.75rem; } .w-3\.5 { width: 0.875rem; }
-        .w-4 { width: 1rem; } .w-5 { width: 1.25rem; } .w-6 { width: 1.5rem; } .w-7 { width: 1.75rem; } .w-8 { width: 2rem; }
-        .w-24 { width: 6rem; } .w-full { width: 100%; } .w-auto { width: auto; } .w-max { width: max-content; } .min-w-0 { min-width: 0; }
-        .h-1\.5 { height: 0.375rem; } .h-2 { height: 0.5rem; } .h-4 { height: 1rem; } .h-5 { height: 1.25rem; } .h-6 { height: 1.5rem; }
-        .h-7 { height: 1.75rem; } .h-8 { height: 2rem; } .h-10 { height: 2.5rem; } .h-20 { height: 5rem; } .h-60 { height: 15rem; }
-        .h-64 { height: 16rem; } .h-\[340px\] { height: 340px; } .h-\[400px\] { height: 400px; } .h-\[105\%\] { height: 105%; }
-        .h-\[112\%\] { height: 112%; } .h-full { height: 100%; } .min-h-screen { min-height: 100vh; } .min-h-\[17rem\] { min-height: 17rem; }
-        .max-h-\[80vh\] { max-height: 80vh; } .max-w-lg { max-width: 32rem; } .max-w-3xl { max-width: 48rem; }
-        .max-w-5xl { max-width: 64rem; } .max-w-7xl { max-width: 80rem; } .max-w-none { max-width: none; }
-
-        /* Espaciado */
-        .mx-auto { margin-left: auto; margin-right: auto; }
-        .ml-3 { margin-left: 0.75rem; } .mt-0\.5 { margin-top: 0.125rem; } .mt-1 { margin-top: 0.25rem; } .mt-1\.5 { margin-top: 0.375rem; }
-        .mt-2 { margin-top: 0.5rem; } .mt-2\.5 { margin-top: 0.625rem; } .mt-4 { margin-top: 1rem; } .mt-6 { margin-top: 1.5rem; }
-        .mt-8 { margin-top: 2rem; } .mt-12 { margin-top: 3rem; } .mt-auto { margin-top: auto; }
-        .mb-1 { margin-bottom: 0.25rem; } .mb-2 { margin-bottom: 0.5rem; } .mb-2\.5 { margin-bottom: 0.625rem; } .mb-3 { margin-bottom: 0.75rem; }
-        .mb-4 { margin-bottom: 1rem; } .mb-5 { margin-bottom: 1.25rem; } .mb-6 { margin-bottom: 1.5rem; } .mb-8 { margin-bottom: 2rem; }
-        .mb-10 { margin-bottom: 2.5rem; } .mb-12 { margin-bottom: 3rem; } .mb-14 { margin-bottom: 3.5rem; } .mb-16 { margin-bottom: 4rem; }
-        .p-2 { padding: 0.5rem; } .p-3 { padding: 0.75rem; } .p-3\.5 { padding: 0.875rem; } .p-4 { padding: 1rem; } .p-5 { padding: 1.25rem; }
-        .p-6 { padding: 1.5rem; } .p-8 { padding: 2rem; }
-        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; } .px-3\.5 { padding-left: 0.875rem; padding-right: 0.875rem; }
-        .px-4 { padding-left: 1rem; padding-right: 1rem; } .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
-        .px-8 { padding-left: 2rem; padding-right: 2rem; } .px-10 { padding-left: 2.5rem; padding-right: 2.5rem; }
-        .py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; } .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-        .py-2\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem; } .py-3\.5 { padding-top: 0.875rem; padding-bottom: 0.875rem; }
-        .py-4 { padding-top: 1rem; padding-bottom: 1rem; } .py-5 { padding-top: 1.25rem; padding-bottom: 1.25rem; }
-        .py-20 { padding-top: 5rem; padding-bottom: 5rem; } .py-24 { padding-top: 6rem; padding-bottom: 6rem; }
-        .pt-1 { padding-top: 0.25rem; } .pt-4 { padding-top: 1rem; } .pt-8 { padding-top: 2rem; } .pt-20 { padding-top: 5rem; }
-        .pt-24 { padding-top: 6rem; } .pt-28 { padding-top: 7rem; } .pb-4 { padding-bottom: 1rem; } .pb-10 { padding-bottom: 2.5rem; }
-        .pb-12 { padding-bottom: 3rem; } .pb-16 { padding-bottom: 4rem; } .pb-20 { padding-bottom: 5rem; } .pl-6 { padding-left: 1.5rem; }
-        .gap-1\.5 { gap: 0.375rem; } .gap-2 { gap: 0.5rem; } .gap-2\.5 { gap: 0.625rem; } .gap-3 { gap: 0.75rem; } .gap-3\.5 { gap: 0.875rem; }
-        .gap-4 { gap: 1rem; } .gap-5 { gap: 1.25rem; } .gap-6 { gap: 1.5rem; } .gap-8 { gap: 2rem; } .gap-10 { gap: 2.5rem; }
-        .gap-12 { gap: 3rem; } .gap-x-8 { column-gap: 2rem; } .gap-y-4 { row-gap: 1rem; }
-        .space-x-1\.5 > :not([hidden]) ~ :not([hidden]) { margin-left: 0.375rem; }
-        .space-x-4 > :not([hidden]) ~ :not([hidden]) { margin-left: 1rem; }
-        .space-x-8 > :not([hidden]) ~ :not([hidden]) { margin-left: 2rem; }
-        .space-y-3 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.75rem; }
-        .space-y-6 > :not([hidden]) ~ :not([hidden]) { margin-top: 1.5rem; }
-
-        /* Tipografía */
-        .text-xs { font-size: 0.75rem; line-height: 1rem; } .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
-        .text-base { font-size: 1rem; line-height: 1.5rem; } .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
-        .text-xl { font-size: 1.25rem; line-height: 1.75rem; } .text-2xl { font-size: 1.5rem; line-height: 2rem; }
-        .text-3xl { font-size: 1.875rem; line-height: 2.25rem; } .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
-        .font-medium { font-weight: 500; } .font-semibold { font-weight: 600; } .font-bold { font-weight: 700; }
-        .font-extrabold { font-weight: 800; } .font-black { font-weight: 900; }
-        .uppercase { text-transform: uppercase; }
-        .leading-none { line-height: 1; } .leading-tight { line-height: 1.25; } .leading-snug { line-height: 1.375; }
-        .leading-relaxed { line-height: 1.625; } .leading-\[1\.12\] { line-height: 1.12; }
-        .tracking-tight { letter-spacing: -0.025em; } .tracking-wide { letter-spacing: 0.025em; }
-        .tracking-wider { letter-spacing: 0.05em; } .tracking-widest { letter-spacing: 0.1em; }
-        .text-left { text-align: left; } .text-center { text-align: center; }
-        .break-all { word-break: break-all; } .break-words { overflow-wrap: break-word; } .whitespace-nowrap { white-space: nowrap; }
-
-        /* Colores, Fondos y Gradientes (Adaptados a Identidad) */
-        .text-white { color: #ffffff; } .text-transparent { color: transparent; }
-        .text-gray-300 { color: #d1d5db; } .text-gray-400 { color: #9ca3af; } .text-gray-500 { color: #6b7280; }
-        .text-gray-600 { color: #4b5563; } .text-gray-700 { color: #374151; } .text-gray-800 { color: #1f2937; }
-        .text-gray-900 { color: #111827; } .text-green-500 { color: #22c55e; } .text-green-800 { color: #166534; }
-        .text-yellow-600 { color: #ca8a04; } .text-yellow-800 { color: #854d0e; } .text-\[\#25D366\] { color: #25D366; }
-        .text-red-500 { color: #ef4444; } .text-red-600 { color: #dc2626; } .text-red-700 { color: #b91c1c; }
-
-        .bg-white { background-color: #ffffff; } .bg-white\/80 { background-color: rgba(255, 255, 255, 0.85); }
-        .bg-gray-50 { background-color: #f9fafb; } .bg-gray-100 { background-color: #f3f4f6; } .bg-gray-200 { background-color: #e5e7eb; }
-        .bg-gray-800 { background-color: #1f2937; } .bg-gray-900 { background-color: #111827; }
-        .bg-red-50 { background-color: #fef2f2; } .bg-red-50\/50 { background-color: rgba(254, 242, 242, 0.5); }
-        .bg-red-600 { background-color: #dc2626; } .bg-red-900 { background-color: #7f1d1d; }
-        .bg-teal-900 { background-color: #134e4a; } .bg-rose-900 { background-color: #881337; }
-        .bg-green-100 { background-color: #dcfce7; } .bg-yellow-50 { background-color: #fefce8; }
-        .bg-\[\#25D366\] { background-color: #25D366; }
-
-        .bg-clip-text { -webkit-background-clip: text; background-clip: text; }
-        .bg-gradient-to-b { background-image: linear-gradient(to bottom, var(--tw-gradient-stops)); }
-        .bg-gradient-to-t { background-image: linear-gradient(to top, var(--tw-gradient-stops)); }
-        .bg-gradient-to-r { background-image: linear-gradient(to right, var(--tw-gradient-stops)); }
-        .bg-gradient-to-br { background-image: linear-gradient(to bottom right, var(--tw-gradient-stops)); }
-        .bg-gradient-to-tr { background-image: linear-gradient(to top right, var(--tw-gradient-stops)); }
-
-        .from-red-50\/50 { --tw-gradient-from: rgba(254, 242, 242, 0.5); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(254, 242, 242, 0)); }
-        .via-white { --tw-gradient-stops: var(--tw-gradient-from), #ffffff, var(--tw-gradient-to, rgba(255, 255, 255, 0)); }
-        .to-gray-50 { --tw-gradient-to: #f9fafb; }
-        .from-red-700 { --tw-gradient-from: #b91c1c; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(185, 28, 28, 0)); }
-        .to-red-500 { --tw-gradient-to: #ef4444; }
-        .to-red-600 { --tw-gradient-to: #dc2626; }
-        .from-red-600 { --tw-gradient-from: #dc2626; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(220, 38, 38, 0)); }
-        .to-red-400 { --tw-gradient-to: #f87171; }
-        .from-black\/85 { --tw-gradient-from: rgba(0, 0, 0, 0.85); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 0, 0, 0)); }
-        .via-black\/25 { --tw-gradient-stops: var(--tw-gradient-from), rgba(0, 0, 0, 0.25), var(--tw-gradient-to, rgba(0, 0, 0, 0)); }
-        .to-transparent { --tw-gradient-to: transparent; }
-        .from-gray-900\/80 { --tw-gradient-from: rgba(17, 24, 39, 0.8); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(17, 24, 39, 0)); }
-        .via-gray-900\/20 { --tw-gradient-stops: var(--tw-gradient-from), rgba(17, 24, 39, 0.2), var(--tw-gradient-to, rgba(17, 24, 39, 0)); }
-        .from-gray-900\/60 { --tw-gradient-from: rgba(17, 24, 39, 0.6); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(17, 24, 39, 0)); }
-        .from-gray-900\/95 { --tw-gradient-from: rgba(17, 24, 39, 0.95); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(17, 24, 39, 0)); }
-        .via-gray-900\/50 { --tw-gradient-stops: var(--tw-gradient-from), rgba(17, 24, 39, 0.5), var(--tw-gradient-to, rgba(17, 24, 39, 0)); }
-        .from-red-50 { --tw-gradient-from: #fef2f2; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(254, 242, 242, 0)); }
-        .to-white { --tw-gradient-to: #ffffff; }
-        .from-green-600 { --tw-gradient-from: #16a34a; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(22, 163, 74, 0)); }
-        .to-green-500 { --tw-gradient-to: #22c55e; }
-        .from-\[\#f09433\] { --tw-gradient-from: #f09433; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(240, 148, 51, 0)); }
-        .via-\[\#dc2743\] { --tw-gradient-stops: var(--tw-gradient-from), #dc2743, var(--tw-gradient-to, rgba(220, 39, 67, 0)); }
-        .to-\[\#bc1888\] { --tw-gradient-to: #bc1888; }
-        .from-\[\#b91c1c\] { --tw-gradient-from: #b91c1c; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(185, 28, 28, 0)); }
-        .via-\[\#facc15\] { --tw-gradient-stops: var(--tw-gradient-from), #facc15, var(--tw-gradient-to, rgba(250, 204, 21, 0)); }
-        .to-\[\#16a34a\] { --tw-gradient-to: #16a34a; }
-
-        /* Bordes y Esquinas */
-        .border { border-width: 1px; } .border-0 { border-width: 0px; } .border-4 { border-width: 4px; }
-        .border-t { border-top-width: 1px; } .border-b { border-bottom-width: 1px; } .border-l-2 { border-left-width: 2px; }
-        .border-white { border-color: #ffffff; } .border-gray-50 { border-color: #f9fafb; }
-        .border-gray-100, .border-gray-100\/50 { border-color: #f3f4f6; } .border-gray-200 { border-color: #e5e7eb; }
-        .border-gray-800 { border-color: #1f2937; } .border-red-100, .border-red-100\/50 { border-color: #fee2e2; }
-        .border-green-200 { border-color: #bbf7d0; } .border-yellow-200 { border-color: #fef08a; }
-        .rounded-sm { border-radius: 0.125rem; } .rounded-t-sm { border-top-left-radius: 0.125rem; border-top-right-radius: 0.125rem; }
-        .rounded-lg { border-radius: 0.5rem; } .rounded-xl { border-radius: 0.75rem; } .rounded-2xl { border-radius: 1rem; }
-        .rounded-3xl { border-radius: 1.5rem; } .rounded-\[2rem\] { border-radius: 2rem; } .rounded-full { border-radius: 9999px; }
-
-        /* Efectos, Imágenes y Transiciones */
-        .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
-        .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); }
-        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); }
-        .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
-        .shadow-\[0_20px_50px_rgba\(0\,0\,0\,0\.15\)\] { box-shadow: 0 20px 50px rgba(0,0,0,0.15); }
-        .shadow-\[0_10px_30px_rgba\(37\,211\,102\,0\.4\)\] { box-shadow: 0 10px 30px rgba(37,211,102,0.4); }
-        .drop-shadow-2xl { filter: drop-shadow(0 25px 25px rgba(0, 0, 0, 0.15)); }
-        .opacity-0 { opacity: 0; } .opacity-50 { opacity: 0.5; }
-        .backdrop-blur-md { -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
-        .object-cover { object-fit: cover; } .object-contain { object-fit: contain; }
-        .object-bottom { object-position: bottom; } .object-center { object-position: center; } .object-top { object-position: top; }
-        .translate-y-2 { transform: translateY(0.5rem); } .translate-y-3 { transform: translateY(0.75rem); }
-        .transition, .transition-all, .transition-colors, .transition-opacity, .transition-transform { transition: all 0.3s ease; }
-
-        /* Hovers */
-        .hover\:text-funsoder-main:hover { color: #dc2626; }
-        .hover\:text-red-600:hover, .group:hover .group-hover\:text-red-600 { color: #dc2626; }
-        .hover\:text-red-800:hover { color: #991b1b; }
-        .hover\:text-white:hover, .group:hover .group-hover\:text-white { color: #ffffff; }
-        .hover\:bg-gray-50:hover { background-color: #f9fafb; }
-        .hover\:bg-gray-800:hover { background-color: #1f2937; }
-        .hover\:bg-red-50:hover { background-color: #fef2f2; }
-        .hover\:bg-\[\#20bd5a\]:hover { background-color: #20bd5a; }
-        .group:hover .group-hover\:bg-red-600 { background-color: #dc2626; }
-        .group:hover .group-hover\:bg-green-600 { background-color: #16a34a; }
-        .group:hover .group-hover\:bg-\[\#25D366\] { background-color: #25D366; }
-        .hover\:border-red-300:hover { border-color: #fca5a5; }
-        .hover\:shadow-md:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .hover\:shadow-lg:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        .hover\:-translate-y-1:hover { transform: translateY(-0.25rem); }
-        .hover\:-translate-y-2:hover { transform: translateY(-0.5rem); }
-        .hover\:scale-110:hover, .group:hover .group-hover\:scale-110 { transform: scale(1.1); }
-        .group:hover .group-hover\:scale-105 { transform: scale(1.05); }
-        .group:hover .group-hover\:opacity-100 { opacity: 1; }
-
-        /* Media Queries Responsivas */
-        @media (min-width: 640px) {
-            .sm\:block { display: block; }
-            .sm\:flex-row { flex-direction: row; }
-            .sm\:items-center { align-items: center; }
-            .sm\:w-3 { width: 0.75rem; } .sm\:w-8 { width: 2rem; }
-            .sm\:h-5 { height: 1.25rem; } .sm\:h-8 { height: 2rem; } .sm\:h-72 { height: 18rem; } .sm\:h-\[430px\] { height: 430px; }
-            .sm\:min-h-\[21rem\] { min-height: 21rem; }
-            .sm\:p-4 { padding: 1rem; } .sm\:p-5 { padding: 1.25rem; } .sm\:p-8 { padding: 2rem; }
-            .sm\:px-6 { padding-left: 1.5rem; padding-right: 1.5rem; } .sm\:px-10 { padding-left: 2.5rem; padding-right: 2.5rem; }
-            .sm\:py-5 { padding-top: 1.25rem; padding-bottom: 1.25rem; } .sm\:py-24 { padding-top: 6rem; padding-bottom: 6rem; }
-            .sm\:pt-28 { padding-top: 7rem; } .sm\:mb-4 { margin-bottom: 1rem; } .sm\:mb-8 { margin-bottom: 2rem; }
-            .sm\:mb-10 { margin-bottom: 2.5rem; } .sm\:mb-16 { margin-bottom: 4rem; } .sm\:mb-20 { margin-bottom: 5rem; }
-            .sm\:border-8 { border-width: 8px; }
-            .sm\:bottom-8 { bottom: 2rem; } .sm\:right-8 { right: 2rem; }
-            .sm\:text-sm { font-size: 0.875rem; line-height: 1.25rem; } .sm\:text-lg { font-size: 1.125rem; line-height: 1.75rem; }
-            .sm\:text-xl { font-size: 1.25rem; line-height: 1.75rem; } .sm\:text-2xl { font-size: 1.5rem; line-height: 2rem; }
-            .sm\:text-3xl { font-size: 1.875rem; line-height: 2.25rem; } .sm\:text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
-            .sm\:text-5xl { font-size: 3rem; line-height: 1; }
-        }
-        @media (min-width: 768px) {
-            .md\:flex-row { flex-direction: row; }
-            .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-            .md\:w-auto { width: auto; }
-            .md\:h-24 { height: 6rem; } .md\:h-\[500px\] { height: 500px; } .md\:min-h-\[24rem\] { min-height: 24rem; }
-            .md\:p-8 { padding: 2rem; } .md\:p-12 { padding: 3rem; }
-            .md\:pt-40 { padding-top: 10rem; } .md\:pb-28 { padding-bottom: 7rem; } .md\:mt-0 { margin-top: 0; }
-            .md\:text-base { font-size: 1rem; line-height: 1.5rem; } .md\:text-xl { font-size: 1.25rem; line-height: 1.75rem; }
-            .md\:text-3xl { font-size: 1.875rem; line-height: 2.25rem; } .md\:text-5xl { font-size: 3rem; line-height: 1; }
-        }
-        @media (min-width: 1024px) {
-            .lg\:hidden { display: none !important; }
-            .lg\:flex { display: flex !important; }
-            .lg\:flex-row { flex-direction: row; }
-            .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-            .lg\:w-1\/2 { width: 50%; } .lg\:w-1\/3 { width: 33.333333%; } .lg\:w-2\/3 { width: 66.666667%; }
-            .lg\:h-auto { height: auto; }
-            .lg\:px-8 { padding-left: 2rem; padding-right: 2rem; } .lg\:mx-0 { margin-left: 0; margin-right: 0; }
-            .lg\:gap-12 { gap: 3rem; } .lg\:gap-24 { gap: 6rem; }
-            .lg\:text-left { text-align: left; } .lg\:justify-start { justify-content: flex-start; }
-            .lg\:text-6xl { font-size: 3.75rem; line-height: 1; }
-        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased relative min-h-screen flex flex-col overflow-x-hidden">
@@ -291,26 +41,36 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 md:h-24">
                 <div class="flex items-center">
-                    <a href="#" onclick="window.showLanding(true)" class="flex items-center justify-center group gap-3">
-                        <img src="https://www.image2url.com/r2/default/images/1793235674026-9d79c259-c967-438f-bf63-df0c2afe9d91.png" alt="Logo FUNSODER" class="h-12 md:h-14 w-auto group-hover:scale-105 transition-transform duration-300">
-                        <span class="font-black text-xl tracking-widest text-gray-900 leading-none uppercase hidden sm:block">FUNSODER</span>
+                    <a href="#inicio" onclick="window.navigateToSection('inicio'); return false;" class="flex flex-col items-center justify-center pt-1 group">
+                        <div class="flex items-end space-x-1.5 h-10 mb-1 transition-transform duration-300 group-hover:scale-105">
+                            <div class="w-3.5 h-10 bg-funetec-dark rounded-t-sm"></div>
+                            <div class="w-3.5 h-7 bg-funetec-main rounded-t-sm"></div>
+                            <div class="w-3.5 h-10 bg-funetec-light rounded-t-sm"></div>
+                        </div>
+                        <span class="font-black text-xl tracking-widest text-gray-900 leading-none uppercase">FUNETEC</span>
                     </a>
                 </div>
                 <div class="hidden lg:flex items-center space-x-8">
                     <div id="desktop-nav-links" class="flex items-center space-x-8 transition-all duration-300">
-                        <a href="#inicio" onclick="window.showLanding()" class="text-gray-600 hover:text-funsoder-main font-semibold text-sm uppercase tracking-wide">Inicio</a>
-                        <a href="#programas" onclick="window.showLanding()" class="text-gray-600 hover:text-funsoder-main font-semibold text-sm uppercase tracking-wide">Programas</a>
-                        <a href="#visitanos" onclick="window.showLanding()" class="text-gray-600 hover:text-funsoder-main font-semibold text-sm uppercase tracking-wide">Visítanos</a>
-                        <a href="#contacto" onclick="window.showLanding()" class="text-gray-600 hover:text-funsoder-main font-semibold text-sm uppercase tracking-wide">Contacto</a>
+                        <a href="#inicio" onclick="window.navigateToSection('inicio'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Inicio</a>
+                        <a href="#sedes" onclick="window.navigateToSection('sedes'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Sedes</a>
+                        <a href="#programas" onclick="window.navigateToSection('programas'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Programas</a>
+                        <a href="#pagos" onclick="window.navigateToSection('pagos'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Pagos</a>
+                        <a href="#nosotros" onclick="window.navigateToSection('nosotros'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Nosotros</a>
+                        <a href="#galeria" onclick="window.navigateToSection('galeria'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Galería</a>
+                        <a href="#contacto" onclick="window.navigateToSection('contacto'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Contacto</a>
                     </div>
-                    <div class="border-l-2 border-gray-200 pl-8 flex items-center">
-                        <a href="https://site2.q10.com/User/Login" class="bg-gray-900 text-white px-6 py-2.5 rounded-full font-bold hover:shadow-lg hover:bg-gray-800 hover:-translate-y-0.5 transition-all flex items-center gap-2 text-sm">
-                            <i data-lucide="log-in" class="w-4 h-4 text-white"></i> Iniciar sesión Q10
+                    <div class="border-l-2 border-gray-200 pl-6 flex items-center">
+                        <a href="https://portalvirtualfunetec.vercel.app" class="text-funetec-main font-bold hover:text-red-800 transition-colors text-sm uppercase tracking-wide flex items-center gap-1.5">
+                            <i data-lucide="laptop" class="w-5 h-5"></i> Portal Virtual
                         </a>
                     </div>
+                    <a href="https://site2.q10.com/User/Login" class="bg-gray-900 text-white px-6 py-2.5 rounded-full font-bold hover:shadow-lg hover:bg-gray-800 hover:-translate-y-0.5 transition-all flex items-center gap-2 text-sm ml-3">
+                        <i data-lucide="log-in" class="w-4 h-4 text-white"></i> Iniciar sesión Q10
+                    </a>
                 </div>
                 <div class="flex items-center lg:hidden gap-2">
-                    <button id="mobile-menu-btn" aria-label="Abrir menú" class="text-gray-600 hover:text-funsoder-main p-2">
+                    <button id="mobile-menu-btn" aria-label="Abrir menú" class="text-gray-600 hover:text-funetec-main p-2">
                         <i data-lucide="menu" class="w-8 h-8"></i>
                     </button>
                 </div>
@@ -319,12 +79,18 @@
 
         <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 pb-4 shadow-xl absolute w-full max-h-[80vh] overflow-y-auto z-40">
             <div id="mobile-nav-links">
-                <a href="#inicio" onclick="window.showLanding()" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funsoder-main border-b border-gray-50">Inicio</a>
-                <a href="#programas" onclick="window.showLanding()" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funsoder-main border-b border-gray-50">Programas Técnicos</a>
-                <a href="#visitanos" onclick="window.showLanding()" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funsoder-main border-b border-gray-50">Visítanos</a>
-                <a href="#contacto" onclick="window.showLanding()" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funsoder-main border-b border-gray-50">Contacto</a>
+                <a href="#inicio" onclick="window.navigateToSection('inicio'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Inicio</a>
+                <a href="#sedes" onclick="window.navigateToSection('sedes'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Sedes</a>
+                <a href="#programas" onclick="window.navigateToSection('programas'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Programas</a>
+                <a href="#pagos" onclick="window.navigateToSection('pagos'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Pagos</a>
+                <a href="#nosotros" onclick="window.navigateToSection('nosotros'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Nosotros</a>
+                <a href="#galeria" onclick="window.navigateToSection('galeria'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Galería</a>
+                <a href="#contacto" onclick="window.navigateToSection('contacto'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Contacto</a>
             </div>
             <div class="bg-gray-50 mt-2 flex flex-col">
+                <a href="https://portalvirtualfunetec.vercel.app" onclick="document.getElementById('mobile-menu').classList.add('hidden');" class="flex w-full items-center justify-center gap-2 px-6 py-4 text-funetec-main font-bold hover:bg-red-100 uppercase tracking-wide border-b border-red-100/50">
+                    <i data-lucide="laptop" class="w-5 h-5"></i> Portal Virtual
+                </a>
                 <a href="https://site2.q10.com/User/Login" onclick="document.getElementById('mobile-menu').classList.add('hidden');" class="flex w-full items-center justify-center gap-2 px-6 py-4 bg-gray-900 text-white font-bold hover:bg-gray-800 hover:shadow-lg uppercase tracking-wide">
                     <i data-lucide="log-in" class="w-5 h-5 text-white"></i> Iniciar sesión Q10
                 </a>
@@ -333,176 +99,442 @@
     </nav>
 
     <div id="landing-view" class="flex-grow">
-        <!-- Hero Section -->
-        <section id="inicio" class="pt-28 pb-16 md:pt-40 md:pb-28 bg-gradient-to-b from-red-50/50 via-white to-gray-50 relative overflow-hidden">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-12">
-                <div class="w-full lg:w-1/2 text-center lg:text-left">
-                    <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white text-red-600 font-bold text-xs sm:text-sm mb-6 tracking-widest uppercase border border-red-100 shadow-sm">
-                        <span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span> Calendario A - 2027
-                    </div>
-                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.12] mb-6 tracking-tight text-balance">¡Tu futuro comienza con una decisión! <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-[#b91c1c] via-[#facc15] to-[#16a34a]">Da hoy el primer paso hacia tus metas profesionales.</span></h1>
-                    <p class="text-base sm:text-lg md:text-xl text-gray-600 mb-8 sm:mb-10 max-w-lg mx-auto lg:mx-0 font-medium text-balance">Las matrículas están abiertas. Prepárate para tu futuro con nuestros programas de alta demanda laboral. ¡Te estamos esperando!</p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <a href="#programas" class="bg-gradient-to-r from-green-600 to-green-500 text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:shadow-lg hover:-translate-y-1 transition-all flex justify-center items-center gap-2">Ver Programas <i data-lucide="arrow-down" class="w-5 h-5 pointer-events-none"></i></a>
-                    </div>
+        <!-- Hero Section Triunfar Style -->
+        <section id="inicio" class="relative pt-32 pb-20 md:pt-40 md:pb-28 bg-gray-900 flex flex-col items-center justify-center min-h-[80vh] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Campus" class="absolute inset-0 w-full h-full object-cover opacity-25">
+            <div class="absolute inset-0 bg-gradient-to-b from-funetec-dark/90 via-funetec-dark/60 to-gray-900"></div>
+            
+            <div class="relative z-10 text-center px-4 max-w-5xl mx-auto flex flex-col items-center">
+                <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/10 backdrop-blur-md text-white font-bold text-xs sm:text-sm mb-6 tracking-widest uppercase border border-white/20">
+                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> Inscripciones Abiertas 2027
                 </div>
-                <div class="w-full lg:w-1/2 relative">
-                    <div class="relative w-full h-[340px] sm:h-[430px] md:h-[500px] rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-4 sm:border-8 border-white group bg-gray-900">
-                        <img src="https://www.image2url.com/r2/default/images/1793913608673-091a174c-f091-4689-a07c-bba9484aaad2.png" alt="Institución FUNSODER" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 right-0 p-5 sm:p-8 text-white">
-                            <div class="font-bold text-xl sm:text-2xl md:text-3xl leading-tight">Fundación Social de Emprendimiento Regional</div>
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white mb-6 uppercase tracking-tight leading-tight">Tu futuro <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-200">comienza aquí</span></h1>
+                <p class="text-lg sm:text-2xl text-gray-200 mb-8 font-medium text-balance max-w-3xl">Formación técnica y humana para un mejor futuro. Educación de calidad orientada al mundo laboral.</p>
+                
+                <div class="flex flex-wrap justify-center gap-3 mb-12">
+                    <span class="bg-white/10 backdrop-blur-md text-white px-5 py-2.5 rounded-lg font-bold text-sm border border-white/20 flex items-center gap-2"><i data-lucide="book-open" class="w-4 h-4"></i> Programas Técnicos</span>
+                    <span class="bg-white/10 backdrop-blur-md text-white px-5 py-2.5 rounded-lg font-bold text-sm border border-white/20 flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> Docentes Calificados</span>
+                    <span class="bg-white/10 backdrop-blur-md text-white px-5 py-2.5 rounded-lg font-bold text-sm border border-white/20 flex items-center gap-2"><i data-lucide="briefcase" class="w-4 h-4"></i> Oportunidades de Empleo</span>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur-lg border border-white/20 p-6 md:p-8 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 w-full max-w-4xl shadow-2xl">
+                    <div class="text-center md:text-left text-white">
+                        <h3 class="font-black text-xl md:text-2xl mb-1">¿Eres estudiante o egresado?</h3>
+                        <p class="text-gray-300 font-medium">Consulta tus notas, tu diploma y descarga tus certificados</p>
+                    </div>
+                    <a href="https://portalvirtualfunetec.vercel.app" class="bg-white text-funetec-dark px-8 py-4 rounded-xl font-bold hover:bg-gray-100 hover:scale-105 transition-all whitespace-nowrap shadow-lg uppercase tracking-wide flex items-center justify-center gap-2">
+                        Ir a Portal Virtual <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions (Capacítate, Crece, Triunfa) -->
+        <section class="py-16 bg-gray-50 relative z-20 -mt-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-black text-gray-900 uppercase tracking-tight">Capacítate <span class="text-funetec-main">·</span> Crece <span class="text-funetec-main">·</span> Triunfa</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Action 1 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all flex flex-col items-center text-center group hover:-translate-y-1 cursor-pointer" onclick="window.navigateToSection('pagos')">
+                        <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center text-funetec-main mb-6 group-hover:scale-110 transition-transform">
+                            <i data-lucide="search" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="font-black text-lg text-gray-900 uppercase mb-3">Consulta de pagos</h3>
+                        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">(Estudiantes)</span>
+                        <p class="text-gray-600 text-sm mb-6 flex-grow">Ingresa tu documento y revisa tu historial de pagos.</p>
+                        <span class="text-funetec-main font-bold uppercase text-sm border-b-2 border-transparent group-hover:border-funetec-main transition-all flex items-center gap-1">Consultar Ahora <i data-lucide="chevron-right" class="w-4 h-4"></i></span>
+                    </div>
+                    <!-- Action 2 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all flex flex-col items-center text-center group hover:-translate-y-1 cursor-pointer" onclick="window.navigateToSection('programas')">
+                        <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center text-funetec-main mb-6 group-hover:scale-110 transition-transform">
+                            <i data-lucide="book-open" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="font-black text-lg text-gray-900 uppercase mb-3">Nuestros Programas</h3>
+                        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">(Oferta)</span>
+                        <p class="text-gray-600 text-sm mb-6 flex-grow">Conoce toda nuestra oferta académica técnica y cursos.</p>
+                        <span class="text-funetec-main font-bold uppercase text-sm border-b-2 border-transparent group-hover:border-funetec-main transition-all flex items-center gap-1">Ver Programas <i data-lucide="chevron-right" class="w-4 h-4"></i></span>
+                    </div>
+                    <!-- Action 3 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all flex flex-col items-center text-center group hover:-translate-y-1 cursor-pointer" onclick="window.openPreinscriptionModal()">
+                        <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center text-funetec-main mb-6 group-hover:scale-110 transition-transform">
+                            <i data-lucide="user-plus" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="font-black text-lg text-gray-900 uppercase mb-3">Preinscripción</h3>
+                        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">(Nuevos)</span>
+                        <p class="text-gray-600 text-sm mb-6 flex-grow">Déjanos tus datos y un asesor te contactará pronto.</p>
+                        <span class="text-funetec-main font-bold uppercase text-sm border-b-2 border-transparent group-hover:border-funetec-main transition-all flex items-center gap-1">Preinscribirme <i data-lucide="chevron-right" class="w-4 h-4"></i></span>
+                    </div>
+                    <!-- Action 4 -->
+                    <a href="https://portalvirtualfunetec.vercel.app" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all flex flex-col items-center text-center group hover:-translate-y-1">
+                        <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center text-funetec-main mb-6 group-hover:scale-110 transition-transform">
+                            <i data-lucide="file-text" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="font-black text-lg text-gray-900 uppercase mb-3">Notas y diplomas</h3>
+                        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">(Certificados)</span>
+                        <p class="text-gray-600 text-sm mb-6 flex-grow">Consulta tus notas y descarga certificados en el Portal.</p>
+                        <span class="text-funetec-main font-bold uppercase text-sm border-b-2 border-transparent group-hover:border-funetec-main transition-all flex items-center gap-1">Ir a Portal <i data-lucide="chevron-right" class="w-4 h-4"></i></span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sedes (Dónde estamos) -->
+        <section id="sedes" class="py-20 bg-white scroll-mt-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-14">
+                    <h2 class="text-sm font-bold text-funetec-main uppercase tracking-widest mb-2">Dónde estamos</h2>
+                    <h3 class="text-3xl sm:text-4xl font-black text-gray-900 uppercase">Nuestras sedes</h3>
+                    <p class="text-gray-600 mt-4 font-medium">Visítanos en la sede principal. Conoce nuestras instalaciones para tu formación.</p>
+                </div>
+                
+                <div class="max-w-4xl mx-auto bg-gray-50 rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col md:flex-row group hover:shadow-lg transition-all">
+                    <div class="md:w-1/2 h-64 md:h-auto relative overflow-hidden bg-gray-200">
+                        <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sede Principal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent flex items-end p-6">
+                            <span class="bg-funetec-main text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg">Sede Principal</span>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
+                        <h4 class="text-2xl font-black text-gray-900 uppercase mb-4">La Cordialidad</h4>
+                        <ul class="space-y-4 mb-8 flex-grow">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="map-pin" class="w-5 h-5 text-funetec-main flex-shrink-0 mt-0.5"></i>
+                                <span class="text-gray-600 text-sm font-medium">Calle 47 #18-24<br>Barranquilla, Atlántico</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="clock" class="w-5 h-5 text-funetec-main flex-shrink-0 mt-0.5"></i>
+                                <span class="text-gray-600 text-sm font-medium">Lunes a Sábado<br>8:00 a.m. a 4:00 p.m.</span>
+                            </li>
+                        </ul>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <a href="https://wa.me/573046781679" class="bg-[#25D366] text-white px-5 py-3 rounded-xl font-bold flex justify-center items-center gap-2 hover:bg-[#20bd5a] transition-colors flex-1 text-sm shadow-sm"><i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp</a>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Calle+47+%2318-24,+Barranquilla,+Colombia" target="_blank" class="bg-gray-900 text-white px-5 py-3 rounded-xl font-bold flex justify-center items-center gap-2 hover:bg-gray-800 transition-colors flex-1 text-sm shadow-sm"><i data-lucide="map" class="w-4 h-4"></i> Cómo llegar</a>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Programas Técnicos -->
-        <section id="programas" class="py-20 sm:py-24 bg-gray-50 relative scroll-mt-20">
+        <!-- Oferta Académica (Programas Estilo Triunfar) -->
+        <section id="programas" class="py-20 bg-gray-50 border-t border-gray-100 scroll-mt-20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-14 sm:mb-20">
-                    <h2 class="text-red-600 font-bold tracking-widest uppercase text-sm mb-3">Tu futuro empieza aquí</h2>
-                    <h3 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-gray-900 uppercase">Programas Técnicos</h3>
-                    <div class="w-24 h-1.5 bg-gradient-to-r from-red-600 to-yellow-400 mx-auto mt-6 rounded-full"></div>
+                <div class="text-center mb-14">
+                    <h2 class="text-sm font-bold text-funetec-main uppercase tracking-widest mb-2">Oferta académica</h2>
+                    <h3 class="text-3xl sm:text-4xl font-black text-gray-900 uppercase">Nuestros programas</h3>
+                    <p class="text-gray-600 mt-4 font-medium">Formación técnica laboral pensada para que trabajes pronto y bien.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                    <!-- Tarjeta: Farmacia -->
-                    <div class="bg-white rounded-3xl shadow-premium hover:shadow-premium-hover hover:-translate-y-2 transition-all relative overflow-hidden group flex flex-col border border-gray-100/50">
-                        <div class="h-64 sm:h-72 relative overflow-hidden bg-red-900 flex items-end justify-center pt-4">
-                            <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-40 transition-opacity duration-700" alt="Fondo Farmacia">
-                            <img src="https://www.image2url.com/r2/default/images/1793298340874-0efb8f41-9d70-44d3-94ee-402a8f3eb9bc.png" alt="Farmacia" class="w-auto h-[112%] max-w-none object-contain object-bottom translate-y-2 drop-shadow-2xl group-hover:scale-105 transition-transform duration-700 relative z-10">
-                            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent z-20 pointer-events-none"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                    <!-- Card 1 -->
+                    <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col group">
+                        <div class="h-48 relative overflow-hidden bg-gray-900">
+                            <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500">
+                            <div class="absolute top-4 right-4 bg-funetec-main text-white text-xs font-black px-3 py-1.5 rounded-md uppercase tracking-wider shadow-sm">Pensum</div>
                         </div>
-                        <div class="p-6 sm:p-8 flex-grow flex flex-col relative bg-white">
-                            <h3 class="text-xl sm:text-2xl font-black text-gray-900 leading-tight uppercase mb-6" data-course-ref="Auxiliar en Servicios Farmacéuticos">Auxiliar en<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-red-700 to-red-500">Servicios Farmacéuticos</span></h3>
-                            <button onclick="window.showCourseDetails('Auxiliar en Servicios Farmacéuticos')" class="mt-auto w-full flex justify-center items-center gap-2 bg-gradient-to-r from-green-600 to-green-500 text-white py-3.5 rounded-xl font-bold hover:shadow-lg transition-all">ESTUDIAR AHORA <i data-lucide="arrow-right" class="w-5 h-5 pointer-events-none"></i></button>
-                        </div>
-                    </div>
-
-                    <!-- Tarjeta: Administrativo en Salud -->
-                    <div class="bg-white rounded-3xl shadow-premium hover:shadow-premium-hover hover:-translate-y-2 transition-all relative overflow-hidden group flex flex-col border border-gray-100/50">
-                        <div class="h-64 sm:h-72 relative overflow-hidden bg-teal-900 flex items-end justify-center pt-4">
-                            <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-40 transition-opacity duration-700" alt="Fondo Administrativo">
-                            <img src="https://www.image2url.com/r2/default/images/1793297905878-3d94aa76-f93d-4a1f-806d-14611d7c94a4.png" alt="Admin" class="w-auto h-[112%] max-w-none object-contain object-bottom translate-y-3 drop-shadow-2xl group-hover:scale-105 transition-transform duration-700 relative z-10">
-                            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent z-20 pointer-events-none"></div>
-                        </div>
-                        <div class="p-6 sm:p-8 flex-grow flex flex-col relative bg-white">
-                            <h3 class="text-xl sm:text-2xl font-black text-gray-900 leading-tight uppercase mb-6" data-course-ref="Auxiliar Administrativo en Salud">Auxiliar Administrativo<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-red-700 to-red-500">En Salud</span></h3>
-                            <button onclick="window.showCourseDetails('Auxiliar Administrativo en Salud')" class="mt-auto w-full flex justify-center items-center gap-2 bg-gradient-to-r from-green-600 to-green-500 text-white py-3.5 rounded-xl font-bold hover:shadow-lg transition-all">ESTUDIAR AHORA <i data-lucide="arrow-right" class="w-5 h-5 pointer-events-none"></i></button>
-                        </div>
-                    </div>
-
-                    <!-- Tarjeta: Enfermería -->
-                    <div class="bg-white rounded-3xl shadow-premium hover:shadow-premium-hover hover:-translate-y-2 transition-all relative overflow-hidden group flex flex-col border border-gray-100/50">
-                        <div class="h-64 sm:h-72 relative overflow-hidden bg-rose-900 flex items-end justify-center pt-4">
-                            <img src="https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-40 transition-opacity duration-700" alt="Fondo Enfermería">
-                            <img src="https://www.image2url.com/r2/default/images/1793297110569-5239704a-8477-48c3-83fa-49c93f1a7a11.png" alt="Enfermería" class="w-auto h-[105%] max-w-none object-contain object-bottom translate-y-3 drop-shadow-2xl group-hover:scale-105 transition-transform duration-700 relative z-10">
-                            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent z-20 pointer-events-none"></div>
-                        </div>
-                        <div class="p-6 sm:p-8 flex-grow flex flex-col relative bg-white">
-                            <h3 class="text-xl sm:text-2xl font-black text-gray-900 leading-tight uppercase mb-6" data-course-ref="Auxiliar en Enfermería">Auxiliar en<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-red-700 to-red-500">Enfermería</span></h3>
-                            <button onclick="window.showCourseDetails('Auxiliar en Enfermería')" class="mt-auto w-full flex justify-center items-center gap-2 bg-gradient-to-r from-green-600 to-green-500 text-white py-3.5 rounded-xl font-bold hover:shadow-lg transition-all">ESTUDIAR AHORA <i data-lucide="arrow-right" class="w-5 h-5 pointer-events-none"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-3xl shadow-premium p-6 sm:p-8 md:p-12 border border-gray-100 mt-12">
-                    <div class="text-center mb-10">
-                        <h3 class="text-2xl md:text-3xl font-black text-gray-900 uppercase">También te ofrecemos programas en:</h3>
-                        <p class="text-gray-500 font-medium mt-2">Toca cualquier programa para solicitar más información</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="other-programs-container">
-                        <button onclick="window.showCourseDetails('Técnico Peluquería y Belleza')" class="w-full text-left flex items-center justify-between gap-3 bg-gray-50 p-4 sm:p-5 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-md hover:-translate-y-1 transition-all group"><div class="flex items-center gap-3.5 min-w-0"><div class="bg-white p-3 rounded-xl text-red-500 shadow-sm group-hover:bg-red-600 group-hover:text-white transition-colors relative flex-shrink-0"><i data-lucide="scissors" class="w-6 h-6 pointer-events-none"></i></div><span class="font-bold text-gray-800 text-sm md:text-base group-hover:text-red-600 leading-snug">Técnico Peluquería y Belleza</span></div><i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-transform group-hover:translate-x-1 pointer-events-none flex-shrink-0"></i></button>
-                        <button onclick="window.showCourseDetails('Auxiliar Contable')" class="w-full text-left flex items-center justify-between gap-3 bg-gray-50 p-4 sm:p-5 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-md hover:-translate-y-1 transition-all group"><div class="flex items-center gap-3.5 min-w-0"><div class="bg-white p-3 rounded-xl text-red-500 shadow-sm group-hover:bg-red-600 group-hover:text-white transition-colors flex-shrink-0"><i data-lucide="calculator" class="w-6 h-6 pointer-events-none"></i></div><span class="font-bold text-gray-800 text-sm md:text-base group-hover:text-red-600 leading-snug">Auxiliar Contable</span></div><i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-transform group-hover:translate-x-1 pointer-events-none flex-shrink-0"></i></button>
-                        <button onclick="window.showCourseDetails('Auxiliar Administrativo')" class="w-full text-left flex items-center justify-between gap-3 bg-gray-50 p-4 sm:p-5 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-md hover:-translate-y-1 transition-all group"><div class="flex items-center gap-3.5 min-w-0"><div class="bg-white p-3 rounded-xl text-red-500 shadow-sm group-hover:bg-red-600 group-hover:text-white transition-colors flex-shrink-0"><i data-lucide="briefcase" class="w-6 h-6 pointer-events-none"></i></div><span class="font-bold text-gray-800 text-sm md:text-base group-hover:text-red-600 leading-snug">Auxiliar Administrativo</span></div><i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-transform group-hover:translate-x-1 pointer-events-none flex-shrink-0"></i></button>
-                        <button onclick="window.showCourseDetails('Recursos Humanos')" class="w-full text-left flex items-center justify-between gap-3 bg-gray-50 p-4 sm:p-5 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-md hover:-translate-y-1 transition-all group"><div class="flex items-center gap-3.5 min-w-0"><div class="bg-white p-3 rounded-xl text-red-500 shadow-sm group-hover:bg-red-600 group-hover:text-white transition-colors flex-shrink-0"><i data-lucide="users" class="w-6 h-6 pointer-events-none"></i></div><span class="font-bold text-gray-800 text-sm md:text-base group-hover:text-red-600 leading-snug">Recursos Humanos</span></div><i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-transform group-hover:translate-x-1 pointer-events-none flex-shrink-0"></i></button>
-                        <button onclick="window.showCourseDetails('Educación Primera Infancia')" class="w-full text-left flex items-center justify-between gap-3 bg-gray-50 p-4 sm:p-5 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-md hover:-translate-y-1 transition-all group"><div class="flex items-center gap-3.5 min-w-0"><div class="bg-white p-3 rounded-xl text-red-500 shadow-sm group-hover:bg-red-600 group-hover:text-white transition-colors flex-shrink-0"><i data-lucide="baby" class="w-6 h-6 pointer-events-none"></i></div><span class="font-bold text-gray-800 text-sm md:text-base group-hover:text-red-600 leading-snug">Educación Primera Infancia</span></div><i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-transform group-hover:translate-x-1 pointer-events-none flex-shrink-0"></i></button>
-                        <button onclick="window.showCourseDetails('Cosmetología y Estética')" class="w-full text-left flex items-center justify-between gap-3 bg-gray-50 p-4 sm:p-5 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-md hover:-translate-y-1 transition-all group"><div class="flex items-center gap-3.5 min-w-0"><div class="bg-white p-3 rounded-xl text-red-500 shadow-sm group-hover:bg-red-600 group-hover:text-white transition-colors flex-shrink-0"><i data-lucide="sparkles" class="w-6 h-6 pointer-events-none"></i></div><span class="font-bold text-gray-800 text-sm md:text-base group-hover:text-red-600 leading-snug">Cosmetología y Estética</span></div><i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-transform group-hover:translate-x-1 pointer-events-none flex-shrink-0"></i></button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Mapa de Ubicación -->
-        <section id="visitanos" class="bg-gray-50 py-20 scroll-mt-20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="bg-white rounded-3xl shadow-premium overflow-hidden border border-gray-100 flex flex-col lg:flex-row">
-                    <div class="lg:w-1/3 p-8 md:p-12 flex flex-col justify-center bg-gradient-to-br from-red-50 to-white">
-                        <h3 class="text-3xl font-black text-gray-900 mb-4 uppercase">Visítanos</h3>
-                        <p class="text-gray-600 mb-8 text-balance">Nuestras instalaciones están listas para recibirte. Acércate y conoce nuestro campus de formación.</p>
-                        <div class="flex items-start gap-4 mb-6">
-                            <div class="bg-white p-3 rounded-xl shadow-sm text-red-500 border border-gray-100"><i data-lucide="map-pin" class="w-6 h-6"></i></div>
-                            <div>
-                                <p class="text-sm text-gray-500 font-bold uppercase tracking-wider">Dirección Principal</p>
-                                <p class="text-lg font-bold text-gray-900 mt-1">Carrera 26b #17b-05</p>
-                                <p class="text-gray-600">Malambo, Atlántico</p>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <h4 class="text-xl font-black text-gray-900 uppercase leading-tight mb-3">Auxiliar en Servicios Farmacéuticos</h4>
+                            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4">
+                                <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4 text-gray-400"></i> 3 Semestres</span>
+                                <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i> Sede Principal</span>
                             </div>
+                            <p class="text-gray-600 text-sm mb-6 flex-grow line-clamp-3">El egresado es un profesional integral para la atención farmacéutica, dispensación y control de medicamentos bajo normativas de salud.</p>
+                            <button onclick="window.showCourseDetails('Auxiliar en Servicios Farmacéuticos')" class="mt-auto w-full bg-white border-2 border-funetec-main text-funetec-main font-black py-3 rounded-xl hover:bg-funetec-main hover:text-white transition-colors uppercase text-sm tracking-wide">Ver detalles</button>
                         </div>
-                        <a href="https://maps.app.goo.gl/125YUwMLcrZ3nMht8?g_st=org.localsend.localsendApp.ShareExtension" target="_blank" rel="noopener noreferrer" class="text-red-600 font-bold hover:text-red-800 transition-colors flex items-center gap-2 mt-4 w-max">Abrir en Google Maps <i data-lucide="external-link" class="w-4 h-4 pointer-events-none"></i></a>
                     </div>
-                    <div class="lg:w-2/3 h-[400px] lg:h-auto w-full relative">
-                        <iframe src="https://maps.google.com/maps?q=Carrera%2026b%20%2317b-05%2C%20Malambo%2C%20Atlantico&t=&z=15&ie=UTF8&iwloc=&output=embed" class="absolute inset-0 w-full h-full border-0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+                    <!-- Card 2 -->
+                    <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col group">
+                        <div class="h-48 relative overflow-hidden bg-gray-900">
+                            <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500">
+                            <div class="absolute top-4 right-4 bg-funetec-main text-white text-xs font-black px-3 py-1.5 rounded-md uppercase tracking-wider shadow-sm">Pensum</div>
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <h4 class="text-xl font-black text-gray-900 uppercase leading-tight mb-3">Auxiliar Administrativo en Salud</h4>
+                            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4">
+                                <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4 text-gray-400"></i> 3 Semestres</span>
+                                <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i> Sede Principal</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-6 flex-grow line-clamp-3">Formación en afiliación, admisión, facturación y manejo de valores e ingresos dentro del Sistema General de Seguridad Social en Salud.</p>
+                            <button onclick="window.showCourseDetails('Auxiliar Administrativo en Salud')" class="mt-auto w-full bg-white border-2 border-funetec-main text-funetec-main font-black py-3 rounded-xl hover:bg-funetec-main hover:text-white transition-colors uppercase text-sm tracking-wide">Ver detalles</button>
+                        </div>
                     </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col group">
+                        <div class="h-48 relative overflow-hidden bg-gray-900">
+                            <img src="https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500">
+                            <div class="absolute top-4 right-4 bg-funetec-main text-white text-xs font-black px-3 py-1.5 rounded-md uppercase tracking-wider shadow-sm">Pensum</div>
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <h4 class="text-xl font-black text-gray-900 uppercase leading-tight mb-3">Auxiliar en Enfermería</h4>
+                            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4">
+                                <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4 text-gray-400"></i> 3 Semestres</span>
+                                <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i> Sede Principal</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-6 flex-grow line-clamp-3">Talento humano con sólida formación ética y científica para el cuidado integral del paciente, administración de medicamentos y asistencia.</p>
+                            <button onclick="window.showCourseDetails('Auxiliar en Enfermería')" class="mt-auto w-full bg-white border-2 border-funetec-main text-funetec-main font-black py-3 rounded-xl hover:bg-funetec-main hover:text-white transition-colors uppercase text-sm tracking-wide">Ver detalles</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col group">
+                        <div class="h-48 relative overflow-hidden bg-gray-900">
+                            <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500">
+                            <div class="absolute top-4 right-4 bg-funetec-main text-white text-xs font-black px-3 py-1.5 rounded-md uppercase tracking-wider shadow-sm">Pensum</div>
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <h4 class="text-xl font-black text-gray-900 uppercase leading-tight mb-3">Peluquería y Belleza</h4>
+                            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4">
+                                <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4 text-gray-400"></i> 2 Semestres</span>
+                                <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i> Sede Principal</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-6 flex-grow line-clamp-3">Competencias en corte de cabello, colorimetría, maquillaje facial y corporal, tratamientos capilares y emprendimiento estético.</p>
+                            <button onclick="window.showCourseDetails('Técnico Peluquería y Belleza')" class="mt-auto w-full bg-white border-2 border-funetec-main text-funetec-main font-black py-3 rounded-xl hover:bg-funetec-main hover:text-white transition-colors uppercase text-sm tracking-wide">Ver detalles</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col group">
+                        <div class="h-48 relative overflow-hidden bg-gray-900">
+                            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500">
+                            <div class="absolute top-4 right-4 bg-funetec-main text-white text-xs font-black px-3 py-1.5 rounded-md uppercase tracking-wider shadow-sm">Pensum</div>
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <h4 class="text-xl font-black text-gray-900 uppercase leading-tight mb-3">Auxiliar Contable</h4>
+                            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4">
+                                <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4 text-gray-400"></i> 3 Semestres</span>
+                                <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i> Sede Principal</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-6 flex-grow line-clamp-3">Desarrolla habilidades en control de recursos, nómina, tributación, costos de operación y soporte financiero para empresas.</p>
+                            <button onclick="window.showCourseDetails('Auxiliar Contable')" class="mt-auto w-full bg-white border-2 border-funetec-main text-funetec-main font-black py-3 rounded-xl hover:bg-funetec-main hover:text-white transition-colors uppercase text-sm tracking-wide">Ver detalles</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 6 -->
+                    <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col group">
+                        <div class="h-48 relative overflow-hidden bg-gray-900">
+                            <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-70 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500">
+                            <div class="absolute top-4 right-4 bg-funetec-main text-white text-xs font-black px-3 py-1.5 rounded-md uppercase tracking-wider shadow-sm">Pensum</div>
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <h4 class="text-xl font-black text-gray-900 uppercase leading-tight mb-3">Primera Infancia</h4>
+                            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-4">
+                                <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4 text-gray-400"></i> 3 Semestres</span>
+                                <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i> Sede Principal</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-6 flex-grow line-clamp-3">Especialista en atención, asistencia pedagógica, nutrición y educación inicial para niños y niñas con altos estándares éticos.</p>
+                            <button onclick="window.showCourseDetails('Educación Primera Infancia')" class="mt-auto w-full bg-white border-2 border-funetec-main text-funetec-main font-black py-3 rounded-xl hover:bg-funetec-main hover:text-white transition-colors uppercase text-sm tracking-wide">Ver detalles</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones Resto de Oferta Académica -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+                    <button onclick="window.showCourseDetails('Auxiliar Administrativo')" class="bg-white border border-gray-200 p-4 rounded-xl font-bold text-gray-700 hover:border-funetec-main hover:text-funetec-main transition-colors flex items-center justify-between group shadow-sm"><span class="text-sm uppercase truncate mr-2">Aux. Administrativo</span> <i data-lucide="arrow-right" class="w-4 h-4 text-gray-400 group-hover:text-funetec-main"></i></button>
+                    <button onclick="window.showCourseDetails('Recursos Humanos')" class="bg-white border border-gray-200 p-4 rounded-xl font-bold text-gray-700 hover:border-funetec-main hover:text-funetec-main transition-colors flex items-center justify-between group shadow-sm"><span class="text-sm uppercase truncate mr-2">Recursos Humanos</span> <i data-lucide="arrow-right" class="w-4 h-4 text-gray-400 group-hover:text-funetec-main"></i></button>
+                    <button onclick="window.showCourseDetails('Cosmetología y Estética')" class="bg-white border border-gray-200 p-4 rounded-xl font-bold text-gray-700 hover:border-funetec-main hover:text-funetec-main transition-colors flex items-center justify-between group shadow-sm"><span class="text-sm uppercase truncate mr-2">Cosmetología Estética</span> <i data-lucide="arrow-right" class="w-4 h-4 text-gray-400 group-hover:text-funetec-main"></i></button>
+                    <button onclick="window.showCourseDetails('Curso 5 en 1')" class="bg-gray-900 border border-gray-900 p-4 rounded-xl font-bold text-white hover:bg-gray-800 transition-colors flex items-center justify-between group shadow-sm"><span class="text-sm uppercase truncate mr-2">Ver Cursos Cortos</span> <i data-lucide="arrow-right" class="w-4 h-4 text-gray-400"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Consulta y Pagos en línea -->
+        <section id="pagos" class="py-20 bg-white border-t border-gray-100 scroll-mt-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-sm font-bold text-funetec-main uppercase tracking-widest mb-2">Solo estudiantes matriculados</h2>
+                    <h3 class="text-3xl sm:text-4xl font-black text-gray-900 uppercase">Consulta de Pagos</h3>
+                </div>
+
+                <div class="flex flex-col lg:flex-row gap-12 lg:gap-16">
+                    <div class="lg:w-1/2">
+                        <h4 class="text-2xl font-black text-gray-900 uppercase mb-8">¿Cómo pago?</h4>
+                        <ul class="space-y-6">
+                            <li class="flex gap-4 items-start">
+                                <div class="bg-funetec-main text-white font-black w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">1</div>
+                                <p class="text-gray-700 font-medium">Escribe tu documento y tu fecha de nacimiento en el portal y toca <strong class="text-gray-900">Consultar</strong>.</p>
+                            </li>
+                            <li class="flex gap-4 items-start">
+                                <div class="bg-funetec-main text-white font-black w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">2</div>
+                                <p class="text-gray-700 font-medium">En <strong class="text-gray-900">Paga en línea</strong> escoge las semanas o, en <strong class="text-gray-900">Otros pagos</strong>, lo que vas a cancelar.</p>
+                            </li>
+                            <li class="flex gap-4 items-start">
+                                <div class="bg-funetec-main text-white font-black w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">3</div>
+                                <p class="text-gray-700 font-medium">Toca Continuar al pago y escanea el QR con la app de tu banco o Nequi.</p>
+                            </li>
+                            <li class="flex gap-4 items-start mt-4">
+                                <div class="bg-green-500 text-white font-black w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-md"><i data-lucide="check" class="w-5 h-5"></i></div>
+                                <p class="text-gray-700 font-medium">¡Listo! El pago queda registrado solo, con tu recibo. No tienes que enviar comprobante.</p>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="lg:w-1/2 bg-gray-50 p-8 md:p-10 rounded-[2rem] border border-gray-200 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-red-100 rounded-full blur-3xl -mr-10 -mt-10 opacity-60 pointer-events-none"></div>
+                        <h4 class="text-xl font-black text-gray-900 uppercase mb-2 relative z-10">Ingresa tus datos</h4>
+                        <p class="text-gray-500 text-sm mb-8 font-medium relative z-10">Para ver tu historial de pagos, saldo y detalle de tu programa.</p>
+                        
+                        <form class="space-y-5 relative z-10" onsubmit="event.preventDefault(); window.open('https://site2.q10.com/User/Login', '_blank');">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Número de documento</label>
+                                <input type="text" placeholder="Ej. 1002345678" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-funetec-main focus:ring-2 focus:ring-red-100 outline-none transition-all font-medium">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Fecha de nacimiento</label>
+                                <input type="date" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-funetec-main focus:ring-2 focus:ring-red-100 outline-none transition-all font-medium text-gray-600">
+                            </div>
+                            <button type="submit" class="w-full bg-gray-900 text-white font-black py-4 rounded-xl mt-4 hover:bg-gray-800 transition-colors uppercase tracking-wide flex items-center justify-center gap-2 shadow-lg">
+                                Consultar Información <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                            </button>
+                        </form>
+                        
+                        <div class="mt-6 flex items-start gap-3 bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"></i>
+                            <p class="text-xs text-blue-800 font-medium leading-relaxed">Tus datos se tratan conforme a la Ley 1581 de 2012 (Habeas Data). Esta consulta es segura y solo muestra tu propia información.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Formulario de Preinscripción CTA -->
+        <section class="py-16 bg-gradient-to-r from-funetec-dark to-funetec-main text-white overflow-hidden relative">
+            <div class="absolute inset-0 bg-black/10"></div>
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center relative z-10">
+                <span class="bg-white/20 text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full mb-6 border border-white/20 shadow-sm">Solo para nuevos estudiantes</span>
+                <h2 class="text-3xl sm:text-5xl font-black uppercase tracking-tight mb-6 text-balance">Inscripciones Abiertas</h2>
+                <p class="text-lg text-white/90 mb-10 max-w-2xl font-medium text-balance">Da el primer paso hacia tu futuro. Déjanos tus datos y uno de nuestros asesores te contactará para darte toda la información de inicio, horarios y costos.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10 w-full max-w-3xl text-left">
+                    <div class="bg-white/10 p-5 rounded-2xl border border-white/20 backdrop-blur-sm">
+                        <i data-lucide="clock-4" class="w-6 h-6 mb-3"></i>
+                        <h4 class="font-bold text-sm uppercase">Toma menos de un minuto</h4>
+                        <p class="text-xs text-white/70 mt-1">Solo te pedimos lo necesario.</p>
+                    </div>
+                    <div class="bg-white/10 p-5 rounded-2xl border border-white/20 backdrop-blur-sm">
+                        <i data-lucide="headset" class="w-6 h-6 mb-3"></i>
+                        <h4 class="font-bold text-sm uppercase">Te acompaña un asesor</h4>
+                        <p class="text-xs text-white/70 mt-1">Resolvemos tus dudas por WhatsApp.</p>
+                    </div>
+                    <div class="bg-white/10 p-5 rounded-2xl border border-white/20 backdrop-blur-sm">
+                        <i data-lucide="lock" class="w-6 h-6 mb-3"></i>
+                        <h4 class="font-bold text-sm uppercase">Tus datos protegidos</h4>
+                        <p class="text-xs text-white/70 mt-1">Ley 1581 de 2012 · Habeas Data.</p>
+                    </div>
+                </div>
+                <button onclick="window.openPreinscriptionModal()" class="bg-white text-funetec-dark px-8 py-4 sm:px-10 sm:py-5 rounded-full font-black text-base sm:text-lg hover:bg-gray-100 hover:scale-105 transition-all shadow-2xl uppercase tracking-wide flex items-center gap-3">
+                    Ir al formulario de preinscripción <i data-lucide="arrow-right" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Nosotros -->
+        <section id="nosotros" class="py-20 bg-gray-50 scroll-mt-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-14">
+                    <h2 class="text-sm font-bold text-funetec-main uppercase tracking-widest mb-2">Nosotros</h2>
+                    <h3 class="text-3xl sm:text-4xl font-black text-gray-900 uppercase">Quiénes Somos</h3>
+                    <p class="text-gray-600 mt-4 max-w-3xl mx-auto font-medium text-balance">Somos una institución de educación para el trabajo y el desarrollo humano, comprometida con formar técnicos laborales competentes, con valores y listos para el mundo laboral.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                    <div class="bg-white p-8 md:p-10 rounded-[2rem] shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-xl transition-all">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full flex items-start justify-end p-6 transition-colors group-hover:bg-red-100">
+                            <i data-lucide="target" class="w-8 h-8 text-funetec-main"></i>
+                        </div>
+                        <h4 class="text-2xl font-black text-gray-900 uppercase mb-4 relative z-10">Misión</h4>
+                        <p class="text-gray-600 font-medium leading-relaxed relative z-10 text-justify">La Fundación Educativa Técnica de la Costa - FUNETEC tiene como misión formar técnicos laborales competentes, a través de programas de Formación para el Trabajo y el Desarrollo Humano, respondiendo a las necesidades del sector productivo. Brindamos una formación integral de alta calidad, basada en principios éticos, responsabilidad social y vocación de servicio, para fortalecer las habilidades de nuestros estudiantes y contribuir a su empleabilidad.</p>
+                    </div>
+                    
+                    <div class="bg-white p-8 md:p-10 rounded-[2rem] shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-xl transition-all">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full flex items-start justify-end p-6 transition-colors group-hover:bg-red-100">
+                            <i data-lucide="eye" class="w-8 h-8 text-funetec-main"></i>
+                        </div>
+                        <h4 class="text-2xl font-black text-gray-900 uppercase mb-4 relative z-10">Visión</h4>
+                        <p class="text-gray-600 font-medium leading-relaxed relative z-10 text-justify">Para el 2030, FUNETEC será la mejor institución oferente de formación técnica a nivel regional, a partir de programas innovadores que den respuesta a los requerimientos del mercado a través de un modelo educativo vanguardista que no pierda de vista al estudiante como ser integral, que aporte positivamente al desarrollo de su comunidad, su región y su país.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Galería (Vida FUNETEC) -->
+        <section id="galeria" class="py-20 bg-white scroll-mt-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-14">
+                    <h2 class="text-sm font-bold text-funetec-main uppercase tracking-widest mb-2">Vida FUNETEC</h2>
+                    <h3 class="text-3xl sm:text-4xl font-black text-gray-900 uppercase">Galería</h3>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Prácticas" class="w-full h-40 md:h-56 object-cover rounded-xl hover:opacity-80 transition-opacity cursor-pointer shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Campus" class="w-full h-40 md:h-56 object-cover rounded-xl hover:opacity-80 transition-opacity cursor-pointer shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Estudiantes" class="w-full h-40 md:h-56 object-cover rounded-xl hover:opacity-80 transition-opacity cursor-pointer shadow-sm md:col-span-2">
+                    <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Trabajo" class="w-full h-40 md:h-56 object-cover rounded-xl hover:opacity-80 transition-opacity cursor-pointer shadow-sm md:col-span-2">
+                    <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Aulas" class="w-full h-40 md:h-56 object-cover rounded-xl hover:opacity-80 transition-opacity cursor-pointer shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1606857521015-7f9fcf423740?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Graduación" class="w-full h-40 md:h-56 object-cover rounded-xl hover:opacity-80 transition-opacity cursor-pointer shadow-sm">
                 </div>
             </div>
         </section>
 
         <!-- Footer -->
         <footer id="contacto" class="bg-gray-900 text-white pt-20 pb-10 relative overflow-hidden scroll-mt-20">
-            <div class="h-1.5 w-full bg-gradient-to-r from-[#b91c1c] via-[#facc15] to-[#16a34a] absolute top-0 left-0"></div>
+            <div class="h-1.5 w-full bg-gradient-to-r from-red-800 via-red-500 to-red-300 absolute top-0 left-0"></div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 border-b border-gray-800 pb-12">
                     <div>
                         <div class="inline-block mb-6">
                             <div class="flex items-center gap-3">
-                                <img src="https://www.image2url.com/r2/default/images/1793235674026-9d79c259-c967-438f-bf63-df0c2afe9d91.png" alt="Logo FUNSODER" class="h-12 w-auto bg-white rounded-full p-1">
-                                <span class="font-black text-2xl tracking-widest text-white leading-none uppercase">FUNSODER</span>
+                                <div class="flex items-end space-x-1.5 h-8 mb-1"><div class="w-3 h-8 bg-funetec-dark rounded-t-sm"></div><div class="w-3 h-5 bg-funetec-main rounded-t-sm"></div><div class="w-3 h-8 bg-funetec-light rounded-t-sm"></div></div>
+                                <span class="font-black text-2xl tracking-widest text-white leading-none uppercase">FUNETEC</span>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-8 font-medium leading-relaxed">Formando los profesionales técnicos que la región necesita. Educación de calidad, práctica y orientada al futuro.</p>
-                        <div class="flex space-x-4 items-center">
-                            <a href="https://www.instagram.com/funsodercol" class="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] p-3.5 rounded-full shadow-lg hover:scale-110 transition-all">
+                        <h4 class="text-xl font-bold mb-4 text-white uppercase tracking-wider">Hablemos</h4>
+                        <p class="text-gray-400 mb-8 font-medium leading-relaxed">Inscripciones, grados y la vida en nuestra sede. Con gusto te orientamos.</p>
+                        <div class="flex space-x-4 items-center mb-6">
+                            <a href="https://www.instagram.com/FUNETEC_BQ" class="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] p-3.5 rounded-full shadow-lg hover:scale-110 transition-all">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
                             </a>
-                            <a href="https://www.instagram.com/funsodercol" class="text-gray-300 font-bold hover:text-white transition-colors">@funsodercol</a>
+                            <div>
+                                <p class="text-white font-bold">Síguenos en redes</p>
+                                <a href="https://www.instagram.com/FUNETEC_BQ" class="text-gray-400 text-sm hover:text-white transition-colors font-medium">@FUNETEC_BQ</a>
+                            </div>
                         </div>
                         <div class="mt-8">
-                            <a href="https://funsoder.vercel.app" class="bg-gradient-to-r from-red-700 to-red-600 text-white px-6 py-2.5 rounded-full font-bold hover:shadow-lg hover:-translate-y-0.5 transition-all inline-flex items-center gap-2 text-sm uppercase tracking-wide">
+                            <a href="https://verificacionfunetec.vercel.app" class="bg-white/10 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-white/20 transition-all inline-flex items-center gap-2 text-sm uppercase tracking-wide border border-white/20">
                                 <i data-lucide="shield-check" class="w-5 h-5 text-white"></i> Verificar Certificado
                             </a>
                         </div>
                     </div>
                     <div>
-                        <h4 class="text-lg font-bold mb-6 text-white uppercase tracking-wider">Contáctanos</h4>
+                        <h4 class="text-xl font-bold mb-6 text-white uppercase tracking-wider">Síguenos y escríbenos</h4>
                         <ul class="space-y-6">
                             <li class="flex items-start gap-4 group">
                                 <div class="bg-gray-800 p-3 rounded-xl text-red-500 group-hover:bg-red-500 group-hover:text-white transition-colors"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
-                                <span class="text-gray-300 font-medium mt-1.5 leading-relaxed">Carrera 26b #17b-05<br>Malambo, Atlántico</span>
+                                <span class="text-gray-300 font-medium mt-1.5 leading-relaxed">Calle 47 #18-24 La Cordialidad<br>Barranquilla, Colombia</span>
                             </li>
                             <li class="flex items-start gap-4 group">
                                 <div class="bg-gray-800 p-3 rounded-xl text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
                                 </div>
-                                <div class="flex flex-col text-gray-300 font-medium mt-2.5">
-                                    <a href="https://wa.me/573242355110" class="hover:text-white transition">324 235 5110</a>
+                                <div class="flex flex-col text-gray-300 font-medium mt-1">
+                                    <span class="text-xs uppercase text-gray-500 font-bold mb-1">WhatsApp</span>
+                                    <a href="https://wa.me/573046781679" class="hover:text-white transition text-lg">304 678 1679</a>
                                 </div>
                             </li>
                             <li class="flex items-center gap-4 group">
                                 <div class="bg-gray-800 p-3 rounded-xl text-red-500 group-hover:bg-red-500 group-hover:text-white transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></div>
-                                <a href="mailto:funsoder@gmail.com" class="text-gray-300 font-medium hover:text-white transition break-all">funsoder@gmail.com</a>
+                                <a href="mailto:funetec2022@gmail.com" class="text-gray-300 font-medium hover:text-white transition break-all">funetec2022@gmail.com</a>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <div class="text-center pt-8 text-gray-500 text-sm font-medium flex flex-col md:flex-row justify-between items-center">
-                    <p>&copy; 2026 FUNSODER - Fundación Social de Emprendimiento Regional. Todos los derechos reservados.</p>
-                    <p class="mt-2 md:mt-0">Diseñado para la excelencia.</p>
+                <div class="text-center pt-8 text-gray-500 text-sm font-medium flex flex-col justify-center items-center">
+                    <p>&copy; 2026 FUNDACIÓN EDUCATIVA TÉCNICA DE LA COSTA - FUNETEC. Todos los derechos reservados.</p>
                 </div>
             </div>
         </footer>
-    </div>
+    </div> <!-- FIN CONTENEDOR LANDING -->
 
     <!-- VISTA DE DETALLES DEL CURSO -->
     <div id="course-details-view" class="hidden flex-grow bg-gray-50 pt-24 sm:pt-28 pb-20 min-h-screen z-40 relative">
@@ -518,6 +550,7 @@
                     </div>
                 </div>
                 <div class="p-6 sm:p-8 md:p-12">
+                    <!-- Tarjetas de Duración, Horario de Clases y Atención -->
                     <div id="detail-info-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                         <div class="bg-red-50 p-6 rounded-2xl border border-red-100 flex items-start gap-5">
                             <div class="bg-white p-3 rounded-xl shadow-sm text-red-600 flex-shrink-0"><i data-lucide="clock" class="w-6 h-6"></i></div>
@@ -542,40 +575,52 @@
                         </div>
                     </div>
 
+                    <!-- Costos del Programa -->
                     <div id="detail-costs-section" class="hidden mb-12">
                         <h3 class="text-2xl font-black text-gray-900 uppercase mb-6 flex items-center gap-3">
-                            <i data-lucide="credit-card" class="text-funsoder-main w-7 h-7"></i> Inversión del Programa
+                            <i data-lucide="credit-card" class="text-funetec-main w-7 h-7"></i> Inversión del Programa
                         </h3>
-                        <div id="detail-costs" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+                        <div id="detail-costs" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Costs will be inserted here -->
+                        </div>
                     </div>
                     
+                    <!-- Contenido de Formación -->
                     <h3 class="text-2xl font-black text-gray-900 uppercase mb-6 flex items-center gap-3">
-                        <i data-lucide="list-checks" class="text-funsoder-main w-7 h-7"></i> Contenido de Formación
+                        <i data-lucide="list-checks" class="text-funetec-main w-7 h-7"></i> Contenido de Formación
                     </h3>
                     <div class="bg-gray-50 rounded-2xl p-6 md:p-8 border border-gray-100 mb-12">
-                        <ul id="detail-modules" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4"></ul>
+                        <ul id="detail-modules" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                            <!-- Modules will be inserted here -->
+                        </ul>
                     </div>
 
+                    <!-- Formación Complementaria -->
                     <div id="detail-complementary-section" class="hidden mb-12">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
                             <h3 class="text-2xl font-black text-gray-900 uppercase flex items-center gap-3">
-                                <i data-lucide="award" class="text-funsoder-main w-7 h-7"></i> Formación Complementaria
+                                <i data-lucide="award" class="text-funetec-main w-7 h-7"></i> Formación Complementaria
                             </h3>
                             <span class="bg-green-100 text-green-800 text-xs font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider w-max border border-green-200">
                                 Sin costo adicional
                             </span>
                         </div>
                         <div class="bg-white rounded-2xl p-6 md:p-8 border border-gray-200 shadow-sm">
-                            <ul id="detail-complementary" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></ul>
+                            <ul id="detail-complementary" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <!-- Complementary modules will be inserted here -->
+                            </ul>
                         </div>
                     </div>
 
+                    <!-- Requisitos -->
                     <div id="detail-requirements-section" class="hidden mb-12">
                         <h3 class="text-2xl font-black text-gray-900 uppercase mb-6 flex items-center gap-3">
-                            <i data-lucide="file-check-2" class="text-funsoder-main w-7 h-7"></i> Requisitos de Matrícula
+                            <i data-lucide="file-check-2" class="text-funetec-main w-7 h-7"></i> Requisitos de Matrícula
                         </h3>
                         <div class="bg-red-50/50 rounded-2xl p-6 md:p-8 border border-red-100">
-                            <ul id="detail-requirements" class="grid grid-cols-1 md:grid-cols-2 gap-4"></ul>
+                            <ul id="detail-requirements" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Requirements will be inserted here -->
+                            </ul>
                         </div>
                     </div>
 
@@ -590,26 +635,66 @@
         </div>
     </div>
 
-    <!-- Botón flotante de WhatsApp Mejorado -->
-    <a href="https://wa.me/573242355110?text=Hola%20FUNSODER,%20me%20gustar%C3%ADa%20recibir%20m%C3%A1s%20informaci%C3%B3n." id="whatsapp-float" target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 bg-[#25D366] text-white p-4 rounded-full shadow-[0_10px_30px_rgba(37,211,102,0.5)] hover:bg-[#20bd5a] hover:scale-110 transition-all duration-300 z-[100] flex items-center justify-center group animate-whatsapp-pulse hover:animate-none">
-        <svg class="w-8 h-8 text-white pointer-events-none" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+    <!-- Botón de Preinscripción Flotante -->
+    <button onclick="window.openPreinscriptionModal()" class="fixed bottom-20 right-5 sm:bottom-28 sm:right-8 bg-gradient-to-r from-[#FF2A2D] to-[#AF172B] text-white px-5 py-3 md:px-6 md:py-3.5 rounded-full shadow-[0_10px_25px_rgba(175,23,43,0.4)] hover:shadow-[0_15px_35px_rgba(175,23,43,0.6)] hover:-translate-y-1 hover:scale-105 transition-all duration-300 z-50 flex items-center justify-center gap-3 border-2 border-white group cursor-pointer outline-none">
+        <span class="relative flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+        </span>
+        <span class="font-black text-sm uppercase tracking-widest drop-shadow-md">Preinscripción</span>
+    </button>
+
+    <a href="https://wa.me/573046781679" id="whatsapp-float" class="fixed bottom-5 right-5 sm:bottom-8 sm:right-8 bg-[#25D366] text-white p-3.5 sm:p-4 rounded-full shadow-[0_10px_30px_rgba(37,211,102,0.4)] hover:bg-[#20bd5a] hover:scale-110 transition-all duration-300 z-50 flex items-center justify-center group animate-whatsapp-pulse hover:animate-none">
+        <svg class="w-7 h-7 sm:w-8 sm:h-8 text-white pointer-events-none" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
         <span class="hidden sm:block absolute right-[115%] bg-white text-gray-800 text-sm font-bold px-4 py-2 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none origin-right scale-95 group-hover:scale-100">¡Escríbenos!</span>
     </a>
 
+    <!-- Modal de Preinscripción Flotante -->
+    <div id="preinscription-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-900/60 backdrop-blur-sm transition-opacity p-4">
+        <div class="relative w-full max-w-4xl h-[90vh] md:h-[85vh] bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col transform transition-all animate-in fade-in zoom-in duration-300">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-6 py-4 md:px-8 md:py-5 border-b border-gray-100 bg-white">
+                <div class="flex items-center gap-3">
+                    <div class="bg-red-50 p-2.5 rounded-xl text-red-600">
+                        <i data-lucide="clipboard-edit" class="w-6 h-6 md:w-7 md:h-7"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl md:text-2xl font-black text-gray-900 uppercase tracking-tight leading-none">Preinscripción</h3>
+                        <p class="text-xs md:text-sm text-gray-500 font-medium mt-1">Completa el formulario para iniciar tu proceso</p>
+                    </div>
+                </div>
+                <button onclick="window.closePreinscriptionModal()" class="text-gray-400 hover:text-red-600 transition-colors p-2.5 bg-gray-50 hover:bg-red-50 rounded-full shadow-sm hover:shadow-md border border-gray-100">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <!-- Modal Body (Iframe) -->
+            <div class="flex-grow w-full h-full relative bg-gray-50/50">
+                <div class="absolute inset-0 flex flex-col items-center justify-center z-0">
+                    <div class="w-12 h-12 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mb-4"></div>
+                    <p class="text-gray-500 font-bold tracking-wide animate-pulse">Cargando formulario...</p>
+                </div>
+                <!-- Iframe hacia Google Forms -->
+                <iframe src="https://forms.gle/1UToNCRyR6e6ckjR8" class="absolute inset-0 w-full h-full border-0 z-10" id="preinscription-iframe" onload="this.previousElementSibling.style.display='none'"></iframe>
+            </div>
+        </div>
+    </div>
+
     <!-- Lógica Principal -->
     <script>
+        // Estructura de datos por defecto (Cursos)
         window.courseData = {
             "Auxiliar en Servicios Farmacéuticos": {
                 category: "Programa Técnico",
-                img: "https://www.image2url.com/r2/default/images/1793298340874-0efb8f41-9d70-44d3-94ee-402a8f3eb9bc.png",
-                bgImg: "https://images.unsplash.com/photo-1585435557343-3b092031a831?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                bgColor: "bg-red-900",
+                img: "https://image2url.com/r2/default/images/1775745615976-dcb347de-c701-4c5f-bf72-ae20d14dca21.png",
+                bgImg: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                bgColor: "bg-blue-900",
                 imgClass: "scale-[1.28] translate-y-1",
                 duration: "2 Semestres (1 año) + 6 meses de prácticas externas",
                 schedule: "Según cronograma disponible",
                 costs: [
                     { label: "Matrícula", value: "$100.000", note: "Incluye inscripción, carnet, seguro estudiantil y porta carnet" },
-                    { label: "Mensualidad", value: "$60.000", note: "Pago mensual durante el programa" }
+                    { label: "Mensualidad", value: "$60.000", note: "Pago mensual durante el programa" },
+                    { label: "Uniforme", value: "$110.000", note: "Dotación institucional reglamentaria" }
                 ],
                 modules: [
                     "1. Atender y orientar a las personas",
@@ -641,8 +726,8 @@
             },
             "Auxiliar Administrativo en Salud": {
                 category: "Programa Técnico",
-                img: "https://www.image2url.com/r2/default/images/1793297905878-3d94aa76-f93d-4a1f-806d-14611d7c94a4.png",
-                bgImg: "https://images.unsplash.com/photo-1516549655169-df83a0774514?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                img: "https://image2url.com/r2/default/images/1775745524150-e3153919-f337-403b-be90-c4670a4f7d87.png",
+                bgImg: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 bgColor: "bg-teal-900",
                 imgClass: "scale-[1.42] translate-y-3",
                 duration: "2 Semestres (1 año) + 6 meses de práctica",
@@ -650,7 +735,8 @@
                 attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
                 costs: [
                     { label: "Matrícula", value: "$100.000", note: "Incluye inscripción, carnet, seguro estudiantil y porta carnet" },
-                    { label: "Mensualidad", value: "$60.000", note: "Pago mensual durante el programa" }
+                    { label: "Mensualidad", value: "$60.000", note: "Pago mensual durante el programa" },
+                    { label: "Uniforme", value: "$110.000", note: "Dotación institucional reglamentaria" }
                 ],
                 modules: [
                     "1. Atender y orientar a las personas",
@@ -683,8 +769,8 @@
             },
             "Auxiliar en Enfermería": {
                 category: "Programa Técnico",
-                img: "https://www.image2url.com/r2/default/images/1793297110569-5239704a-8477-48c3-83fa-49c93f1a7a11.png",
-                bgImg: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                img: "https://image2url.com/r2/default/images/1775747694884-659acee1-1cf2-48c6-8f9c-9993102d4dbe.png",
+                bgImg: "https://images.unsplash.com/photo-1631815587646-b85a1bb027e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 bgColor: "bg-rose-900",
                 imgClass: "scale-[1.15] translate-y-1",
                 duration: "2 Semestres (1 año) + 6 meses de prácticas hospitalarias externas",
@@ -692,7 +778,8 @@
                 attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
                 costs: [
                     { label: "Matrícula", value: "$100.000", note: "Incluye inscripción, carnet, seguro estudiantil y porta carnet" },
-                    { label: "Mensualidad", value: "$60.000", note: "Pago mensual durante el programa" }
+                    { label: "Mensualidad", value: "$60.000", note: "Pago mensual durante el programa" },
+                    { label: "Uniforme", value: "$110.000", note: "Dotación institucional reglamentaria" }
                 ],
                 modules: [
                     "1. Atender y orientar a las personas",
@@ -734,13 +821,13 @@
                 title: "Belleza y Peluquería Integral",
                 category: "Programa Técnico",
                 img: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                bgImg: "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 duration: "2 Semestres (1 año)",
                 schedule: "Según cronograma disponible",
                 attentionHours: "Lunes a sábados: 8:00 a.m. a 5:00 p.m.",
                 costs: [
                     { label: "Matrícula", value: "$100.000", note: "Incluye inscripción, carnet, seguro estudiantil y porta carnet" },
-                    { label: "Mensualidad", value: "$80.000", note: "Pago mensual durante el programa" }
+                    { label: "Mensualidad", value: "$80.000", note: "Pago mensual durante el programa" },
+                    { label: "Uniforme", value: "$110.000", note: "Dotación institucional reglamentaria" }
                 ],
                 modules: [
                     "1. Aplicar tratamiento capilar",
@@ -775,13 +862,13 @@
                 title: "Auxiliar Contable y Financiero",
                 category: "Programa Técnico",
                 img: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                bgImg: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 duration: "2 Semestres (1 año) + 4 meses de prácticas externas",
                 schedule: "Según cronograma disponible",
                 attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
                 costs: [
                     { label: "Matrícula", value: "$100.000", note: "Incluye inscripción, carnet, seguro estudiantil y porta carnet" },
-                    { label: "Mensualidad", value: "$60.000", note: "Pago mensual durante el programa" }
+                    { label: "Mensualidad", value: "$60.000", note: "Pago mensual durante el programa" },
+                    { label: "Uniforme", value: "$150.000", note: "Dotación institucional reglamentaria" }
                 ],
                 modules: [
                     "1. Controlar recursos monetarios",
@@ -815,13 +902,13 @@
             "Auxiliar Administrativo": {
                 category: "Programa Técnico",
                 img: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                bgImg: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 duration: "2 Semestres (1 año) + 4 meses de prácticas externas",
-                schedule: "Según cronograma disponible",
+                schedule: "According to available schedule",
                 attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
                 costs: [
                     { label: "Matrícula", value: "$100.000", note: "Incluye inscripción, carnet, seguro estudiantil y porta carnet" },
-                    { label: "Mensualidad", value: "$60.000", note: "Pago mensual durante el programa" }
+                    { label: "Mensualidad", value: "$60.000", note: "Pago mensual durante el programa" },
+                    { label: "Uniforme", value: "$150.000", note: "Dotación institucional reglamentaria" }
                 ],
                 modules: [
                     "1. Tramitar documentos",
@@ -855,13 +942,13 @@
                 title: "Auxiliar en Recursos Humanos",
                 category: "Programa Técnico",
                 img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                bgImg: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 duration: "2 Semestres (1 año) + 4 meses de prácticas externas",
-                schedule: "According to available schedule",
+                schedule: "Según cronograma disponible",
                 attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
                 costs: [
                     { label: "Matrícula", value: "$100.000", note: "Incluye inscripción, carnet, seguro estudiantil y porta carnet" },
-                    { label: "Mensualidad", value: "$60.000", note: "Pago mensual durante el programa" }
+                    { label: "Mensualidad", value: "$60.000", note: "Pago mensual durante el programa" },
+                    { label: "Uniforme", value: "$150.000", note: "Dotación institucional reglamentaria" }
                 ],
                 modules: [
                     "1. Estructurar cargos",
@@ -896,13 +983,13 @@
                 title: "Auxiliar de Educación para la Primera Infancia",
                 category: "Programa Técnico",
                 img: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                bgImg: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 duration: "2 Semestres (1 año) + 4 meses de prácticas externas",
                 schedule: "Según cronograma disponible",
                 attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
                 costs: [
                     { label: "Matrícula", value: "$100.000", note: "Incluye inscripción, carnet, seguro estudiantil y porta carnet" },
-                    { label: "Mensualidad", value: "$60.000", note: "Pago mensual durante el programa" }
+                    { label: "Mensualidad", value: "$60.000", note: "Pago mensual durante el programa" },
+                    { label: "Uniforme", value: "$110.000", note: "Dotación institucional reglamentaria" }
                 ],
                 modules: [
                     "1. Atender niños y niñas según proceso pedagógico",
@@ -937,13 +1024,13 @@
                 title: "Cosmetología y Estética Integral",
                 category: "Programa Técnico",
                 img: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                bgImg: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
                 duration: "2 Semestres (1 año) + 4 meses de prácticas externas",
                 schedule: "Según cronograma disponible",
                 attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
                 costs: [
                     { label: "Matrícula", value: "$100.000", note: "Incluye inscripción, carnet, seguro estudiantil y porta carnet" },
-                    { label: "Mensualidad", value: "$80.000", note: "Pago mensual durante el programa" }
+                    { label: "Mensualidad", value: "$80.000", note: "Pago mensual durante el programa" },
+                    { label: "Uniforme", value: "$110.000", note: "Dotación institucional reglamentaria" }
                 ],
                 modules: [
                     "1. Fomentar prácticas seguras y saludables en los ambientes de trabajo",
@@ -967,11 +1054,21 @@
                     "Certificación de EPS o SISBEN"
                 ]
             },
+            "Curso 5 en 1": {
+                category: "Curso Corto Intensivo", img: "https://images.unsplash.com/photo-1516549655169-df83a0774514?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", duration: "1 Jornada Intensiva", modules: ["Soporte Vital Básico (BLS)", "Soporte Vital Avanzado (ACLS)", "Violencia de Género", "Sustancias Químicas", "Gestión de Duelo"]
+            },
+            "Uñas Acrílicas": {
+                category: "Curso Corto", img: "https://images.unsplash.com/photo-1604654894610-df63bc536371?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", duration: "2 Meses", modules: ["Preparación de la Uña", "Manejo del Acrílico", "Estructuras y Formas", "Decoración Básica y Avanzada", "Mantenimiento y Retiro"]
+            },
+            "Inyectología y Venopunción": {
+                category: "Curso Corto", img: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", duration: "1 Mes", modules: ["Anatomía Básica", "Técnicas de Inyección", "Venopunción y Canalización", "Bioseguridad", "Manejo de Residuos"]
+            },
             "General": {
-                category: "Programa Educativo", img: "https://www.image2url.com/r2/default/images/1793913608673-091a174c-f091-4689-a07c-bba9484aaad2.png", bgImg: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", duration: "Varía según el programa", modules: ["Módulo Introductorio", "Fundamentos Básicos", "Profundización", "Práctica Profesional"]
+                category: "Programa Educativo", img: "https://images.unsplash.com/photo-1576267423445-b2e0074d68a4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", duration: "Varía según el programa", modules: ["Módulo Introductorio", "Fundamentos Básicos", "Profundización", "Práctica Profesional"]
             }
         };
 
+        // ====== NAVEGACIÓN Y VISTAS ======
         window.showCourseDetails = function(courseName) {
             document.getElementById('landing-view')?.classList.add('hidden');
             const detailView = document.getElementById('course-details-view');
@@ -986,6 +1083,7 @@
             const bgImgEl = document.getElementById('detail-bg-img'); if(bgImgEl) bgImgEl.src = data.bgImg || data.img;
             const durEl = document.getElementById('detail-duration'); if(durEl) durEl.innerText = data.duration;
 
+            // Horario
             const scheduleBox = document.getElementById('detail-schedule-box');
             const scheduleEl = document.getElementById('detail-schedule');
             if (scheduleBox && scheduleEl) {
@@ -997,6 +1095,7 @@
                 }
             }
 
+            // Horario de atención
             const attentionBox = document.getElementById('detail-attention-box');
             const attentionEl = document.getElementById('detail-attention');
             const infoGrid = document.getElementById('detail-info-grid');
@@ -1013,12 +1112,11 @@
                 }
             }
 
+            // Costos
             const costsSection = document.getElementById('detail-costs-section');
             const costsContainer = document.getElementById('detail-costs');
             if (costsSection && costsContainer) {
                 if (data.costs && data.costs.length > 0) {
-                    costsContainer.className = `grid grid-cols-1 ${data.costs.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`;
-                    
                     costsContainer.innerHTML = data.costs.map(c => `
                         <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
                             <div>
@@ -1034,6 +1132,7 @@
                 }
             }
             
+            // Módulos principales
             const modUl = document.getElementById('detail-modules');
             if(modUl) {
                 modUl.innerHTML = (data.modules || []).map(m => `
@@ -1044,6 +1143,7 @@
                 `).join('');
             }
 
+            // Formación complementaria
             const compSection = document.getElementById('detail-complementary-section');
             const compUl = document.getElementById('detail-complementary');
             if (compSection && compUl) {
@@ -1060,6 +1160,7 @@
                 }
             }
 
+            // Requisitos
             const reqSection = document.getElementById('detail-requirements-section');
             const reqUl = document.getElementById('detail-requirements');
             if (reqSection && reqUl) {
@@ -1080,8 +1181,8 @@
             
             const wpBtn = document.getElementById('detail-whatsapp-btn');
             if (wpBtn) {
-                const textMsg = encodeURIComponent(`Hola FUNSODER, quiero empezar con ustedes y me gustaría matricularme en: ${displayTitle}`);
-                wpBtn.href = `https://wa.me/573242355110?text=${textMsg}`;
+                const textMsg = encodeURIComponent(`Hola FUNETEC, quiero empezar con ustedes y me gustaría matricularme en: ${displayTitle}`);
+                wpBtn.href = `https://wa.me/573046781679?text=${textMsg}`;
             }
         };
 
@@ -1099,6 +1200,40 @@
             }
         };
 
+        window.navigateToSection = function(sectionId) {
+            window.showLanding(false);
+            const target = document.getElementById(sectionId);
+            if (target) {
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 10);
+            }
+        };
+
+        // ====== LÓGICA DEL MODAL DE PREINSCRIPCIÓN ======
+        window.openPreinscriptionModal = function() {
+            const modal = document.getElementById('preinscription-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden'; // Evitar scroll de fondo
+            if (typeof lucide !== 'undefined') lucide.createIcons({root: modal});
+        };
+
+        window.closePreinscriptionModal = function() {
+            const modal = document.getElementById('preinscription-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto'; // Restaurar scroll
+        };
+
+        // Cerrar modal si se hace clic fuera del contenedor blanco
+        document.getElementById('preinscription-modal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                window.closePreinscriptionModal();
+            }
+        });
+
+        // ====== EVENTOS INICIALES ======
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof lucide !== 'undefined') lucide.createIcons();
             const btnMenu = document.getElementById('mobile-menu-btn');
