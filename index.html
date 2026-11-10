@@ -61,7 +61,7 @@
                         <a href="#contacto" onclick="window.navigateToSection('contacto'); return false;" class="text-gray-600 hover:text-funetec-main font-semibold text-sm uppercase tracking-wide">Contacto</a>
                     </div>
                     <div class="border-l-2 border-gray-200 pl-6 flex items-center">
-                        <a href="https://portalvirtualfunetec.vercel.app" class="text-funetec-main font-bold hover:text-red-800 transition-colors text-sm uppercase tracking-wide flex items-center gap-1.5">
+                        <a href="https://verificacionfunetec.vercel.app" class="text-funetec-main font-bold hover:text-red-800 transition-colors text-sm uppercase tracking-wide flex items-center gap-1.5">
                             <i data-lucide="laptop" class="w-5 h-5"></i> Portal Virtual
                         </a>
                     </div>
@@ -88,7 +88,7 @@
                 <a href="#contacto" onclick="window.navigateToSection('contacto'); return false;" class="block px-6 py-4 text-gray-700 font-semibold hover:bg-red-50 hover:text-funetec-main border-b border-gray-50">Contacto</a>
             </div>
             <div class="bg-gray-50 mt-2 flex flex-col">
-                <a href="https://portalvirtualfunetec.vercel.app" onclick="document.getElementById('mobile-menu').classList.add('hidden');" class="flex w-full items-center justify-center gap-2 px-6 py-4 text-funetec-main font-bold hover:bg-red-100 uppercase tracking-wide border-b border-red-100/50">
+                <a href="https://verificacionfunetec.vercel.app" onclick="document.getElementById('mobile-menu').classList.add('hidden');" class="flex w-full items-center justify-center gap-2 px-6 py-4 text-funetec-main font-bold hover:bg-red-100 uppercase tracking-wide border-b border-red-100/50">
                     <i data-lucide="laptop" class="w-5 h-5"></i> Portal Virtual
                 </a>
                 <a href="https://site2.q10.com/User/Login" onclick="document.getElementById('mobile-menu').classList.add('hidden');" class="flex w-full items-center justify-center gap-2 px-6 py-4 bg-gray-900 text-white font-bold hover:bg-gray-800 hover:shadow-lg uppercase tracking-wide">
@@ -122,7 +122,7 @@
                         <h3 class="font-black text-xl md:text-2xl mb-1">¿Eres estudiante o egresado?</h3>
                         <p class="text-gray-300 font-medium">Consulta tus notas, tu diploma y descarga tus certificados</p>
                     </div>
-                    <a href="https://portalvirtualfunetec.vercel.app" class="bg-white text-funetec-dark px-8 py-4 rounded-xl font-bold hover:bg-gray-100 hover:scale-105 transition-all whitespace-nowrap shadow-lg uppercase tracking-wide flex items-center justify-center gap-2">
+                    <a href="https://verificacionfunetec.vercel.app" class="bg-white text-funetec-dark px-8 py-4 rounded-xl font-bold hover:bg-gray-100 hover:scale-105 transition-all whitespace-nowrap shadow-lg uppercase tracking-wide flex items-center justify-center gap-2">
                         Ir a Portal Virtual <i data-lucide="arrow-right" class="w-5 h-5"></i>
                     </a>
                 </div>
@@ -167,7 +167,7 @@
                         <span class="text-funetec-main font-bold uppercase text-sm border-b-2 border-transparent group-hover:border-funetec-main transition-all flex items-center gap-1">Preinscribirme <i data-lucide="chevron-right" class="w-4 h-4"></i></span>
                     </div>
                     <!-- Action 4 -->
-                    <a href="https://portalvirtualfunetec.vercel.app" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all flex flex-col items-center text-center group hover:-translate-y-1">
+                    <a href="https://verificacionfunetec.vercel.app" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all flex flex-col items-center text-center group hover:-translate-y-1">
                         <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center text-funetec-main mb-6 group-hover:scale-110 transition-transform">
                             <i data-lucide="file-text" class="w-8 h-8"></i>
                         </div>
@@ -400,31 +400,40 @@
         </section>
 
         <!-- Formulario de Preinscripción CTA -->
-        <section class="py-16 bg-gradient-to-r from-funetec-dark to-funetec-main text-white overflow-hidden relative">
-            <div class="absolute inset-0 bg-black/10"></div>
+        <section class="py-20 sm:py-28 bg-gray-900 text-white overflow-hidden relative shadow-2xl">
+            <!-- Imagen de fondo con overlay para que resalte más -->
+            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Inscripciones" class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay">
+            <div class="absolute inset-0 bg-gradient-to-br from-red-900 via-funetec-dark to-funetec-main opacity-90"></div>
+            
             <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center relative z-10">
-                <span class="bg-white/20 text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full mb-6 border border-white/20 shadow-sm">Solo para nuevos estudiantes</span>
-                <h2 class="text-3xl sm:text-5xl font-black uppercase tracking-tight mb-6 text-balance">Inscripciones Abiertas</h2>
-                <p class="text-lg text-white/90 mb-10 max-w-2xl font-medium text-balance">Da el primer paso hacia tu futuro. Déjanos tus datos y uno de nuestros asesores te contactará para darte toda la información de inicio, horarios y costos.</p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10 w-full max-w-3xl text-left">
-                    <div class="bg-white/10 p-5 rounded-2xl border border-white/20 backdrop-blur-sm">
-                        <i data-lucide="clock-4" class="w-6 h-6 mb-3"></i>
-                        <h4 class="font-bold text-sm uppercase">Toma menos de un minuto</h4>
-                        <p class="text-xs text-white/70 mt-1">Solo te pedimos lo necesario.</p>
+                <span class="bg-white text-funetec-main text-xs font-black uppercase tracking-widest px-5 py-2 rounded-full mb-6 shadow-[0_0_15px_rgba(255,255,255,0.3)] border border-white">Solo para nuevos estudiantes</span>
+                <h2 class="text-4xl sm:text-6xl font-black uppercase tracking-tight mb-6 text-balance drop-shadow-xl text-white">Inscripciones Abiertas</h2>
+                <p class="text-lg sm:text-xl text-white mb-12 max-w-2xl font-medium text-balance drop-shadow-md">Da el primer paso hacia tu futuro. Déjanos tus datos y uno de nuestros asesores te contactará para darte toda la información de inicio, horarios y costos.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12 w-full max-w-4xl text-left">
+                    <div class="bg-black/20 p-6 rounded-3xl border border-white/30 backdrop-blur-md shadow-lg hover:-translate-y-1 transition-transform">
+                        <div class="bg-white/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="clock-4" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h4 class="font-black text-base uppercase text-white">Toma menos de un minuto</h4>
+                        <p class="text-sm text-gray-200 mt-2 font-medium">Solo te pedimos lo necesario para iniciar.</p>
                     </div>
-                    <div class="bg-white/10 p-5 rounded-2xl border border-white/20 backdrop-blur-sm">
-                        <i data-lucide="headset" class="w-6 h-6 mb-3"></i>
-                        <h4 class="font-bold text-sm uppercase">Te acompaña un asesor</h4>
-                        <p class="text-xs text-white/70 mt-1">Resolvemos tus dudas por WhatsApp.</p>
+                    <div class="bg-black/20 p-6 rounded-3xl border border-white/30 backdrop-blur-md shadow-lg hover:-translate-y-1 transition-transform">
+                        <div class="bg-white/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="headset" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h4 class="font-black text-base uppercase text-white">Te acompaña un asesor</h4>
+                        <p class="text-sm text-gray-200 mt-2 font-medium">Resolvemos tus dudas por WhatsApp.</p>
                     </div>
-                    <div class="bg-white/10 p-5 rounded-2xl border border-white/20 backdrop-blur-sm">
-                        <i data-lucide="lock" class="w-6 h-6 mb-3"></i>
-                        <h4 class="font-bold text-sm uppercase">Tus datos protegidos</h4>
-                        <p class="text-xs text-white/70 mt-1">Ley 1581 de 2012 · Habeas Data.</p>
+                    <div class="bg-black/20 p-6 rounded-3xl border border-white/30 backdrop-blur-md shadow-lg hover:-translate-y-1 transition-transform">
+                        <div class="bg-white/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="lock" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h4 class="font-black text-base uppercase text-white">Tus datos protegidos</h4>
+                        <p class="text-sm text-gray-200 mt-2 font-medium">Ley 1581 de 2012 · Habeas Data.</p>
                     </div>
                 </div>
-                <button onclick="window.openPreinscriptionModal()" class="bg-white text-funetec-dark px-8 py-4 sm:px-10 sm:py-5 rounded-full font-black text-base sm:text-lg hover:bg-gray-100 hover:scale-105 transition-all shadow-2xl uppercase tracking-wide flex items-center gap-3">
-                    Ir al formulario de preinscripción <i data-lucide="arrow-right" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                <button onclick="window.openPreinscriptionModal()" class="bg-white text-funetec-dark px-10 py-5 sm:px-12 sm:py-6 rounded-full font-black text-lg sm:text-xl hover:bg-gray-100 hover:scale-105 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.3)] uppercase tracking-wider flex items-center gap-3 group">
+                    Ir al formulario de preinscripción <i data-lucide="arrow-right" class="w-6 h-6 group-hover:translate-x-1 transition-transform"></i>
                 </button>
             </div>
         </section>
