@@ -414,6 +414,9 @@
                         <p class="text-gray-500 font-medium mt-2">Toca cualquier programa para solicitar más información</p>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="other-programs-container">
+                        <button onclick="window.showCourseDetails('Auxiliar de Bodega y Logística')" class="w-full text-left flex items-center justify-between gap-3 bg-gray-50 p-4 sm:p-5 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-md hover:-translate-y-1 transition-all group"><div class="flex items-center gap-3.5 min-w-0"><div class="bg-white p-3 rounded-xl text-red-500 shadow-sm group-hover:bg-red-600 group-hover:text-white transition-colors relative flex-shrink-0"><i data-lucide="package" class="w-6 h-6 pointer-events-none"></i></div><span class="font-bold text-gray-800 text-sm md:text-base group-hover:text-red-600 leading-snug">Auxiliar de Bodega y Logística</span></div><i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-transform group-hover:translate-x-1 pointer-events-none flex-shrink-0"></i></button>
+                        <button onclick="window.showCourseDetails('Operador de Montacargas')" class="w-full text-left flex items-center justify-between gap-3 bg-gray-50 p-4 sm:p-5 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-md hover:-translate-y-1 transition-all group"><div class="flex items-center gap-3.5 min-w-0"><div class="bg-white p-3 rounded-xl text-red-500 shadow-sm group-hover:bg-red-600 group-hover:text-white transition-colors relative flex-shrink-0"><i data-lucide="truck" class="w-6 h-6 pointer-events-none"></i></div><span class="font-bold text-gray-800 text-sm md:text-base group-hover:text-red-600 leading-snug">Operador de Montacargas</span></div><i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-transform group-hover:translate-x-1 pointer-events-none flex-shrink-0"></i></button>
+                        <button onclick="window.showCourseDetails('Mecánica Automotriz')" class="w-full text-left flex items-center justify-between gap-3 bg-gray-50 p-4 sm:p-5 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-md hover:-translate-y-1 transition-all group"><div class="flex items-center gap-3.5 min-w-0"><div class="bg-white p-3 rounded-xl text-red-500 shadow-sm group-hover:bg-red-600 group-hover:text-white transition-colors relative flex-shrink-0"><i data-lucide="wrench" class="w-6 h-6 pointer-events-none"></i></div><span class="font-bold text-gray-800 text-sm md:text-base group-hover:text-red-600 leading-snug">Mecánica Automotriz</span></div><i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-transform group-hover:translate-x-1 pointer-events-none flex-shrink-0"></i></button>
                         <button onclick="window.showCourseDetails('Técnico Peluquería y Belleza')" class="w-full text-left flex items-center justify-between gap-3 bg-gray-50 p-4 sm:p-5 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-md hover:-translate-y-1 transition-all group"><div class="flex items-center gap-3.5 min-w-0"><div class="bg-white p-3 rounded-xl text-red-500 shadow-sm group-hover:bg-red-600 group-hover:text-white transition-colors relative flex-shrink-0"><i data-lucide="scissors" class="w-6 h-6 pointer-events-none"></i></div><span class="font-bold text-gray-800 text-sm md:text-base group-hover:text-red-600 leading-snug">Técnico Peluquería y Belleza</span></div><i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-transform group-hover:translate-x-1 pointer-events-none flex-shrink-0"></i></button>
                         <button onclick="window.showCourseDetails('Auxiliar Contable')" class="w-full text-left flex items-center justify-between gap-3 bg-gray-50 p-4 sm:p-5 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-md hover:-translate-y-1 transition-all group"><div class="flex items-center gap-3.5 min-w-0"><div class="bg-white p-3 rounded-xl text-red-500 shadow-sm group-hover:bg-red-600 group-hover:text-white transition-colors flex-shrink-0"><i data-lucide="calculator" class="w-6 h-6 pointer-events-none"></i></div><span class="font-bold text-gray-800 text-sm md:text-base group-hover:text-red-600 leading-snug">Auxiliar Contable</span></div><i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-transform group-hover:translate-x-1 pointer-events-none flex-shrink-0"></i></button>
                         <button onclick="window.showCourseDetails('Auxiliar Administrativo')" class="w-full text-left flex items-center justify-between gap-3 bg-gray-50 p-4 sm:p-5 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-md hover:-translate-y-1 transition-all group"><div class="flex items-center gap-3.5 min-w-0"><div class="bg-white p-3 rounded-xl text-red-500 shadow-sm group-hover:bg-red-600 group-hover:text-white transition-colors flex-shrink-0"><i data-lucide="briefcase" class="w-6 h-6 pointer-events-none"></i></div><span class="font-bold text-gray-800 text-sm md:text-base group-hover:text-red-600 leading-snug">Auxiliar Administrativo</span></div><i data-lucide="arrow-right" class="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-transform group-hover:translate-x-1 pointer-events-none flex-shrink-0"></i></button>
@@ -599,6 +602,110 @@
     <!-- Lógica Principal -->
     <script>
         window.courseData = {
+            "Auxiliar de Bodega y Logística": {
+                title: "Auxiliar de Bodega y Logística",
+                category: "Programa Técnico",
+                img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                bgImg: "https://images.unsplash.com/photo-1553413077-190dd305871c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                duration: "2 Semestres (1 año)",
+                schedule: "Según cronograma disponible",
+                attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
+                costs: [
+                    { label: "Matrícula", value: "$30.000", note: "Oferta limitada (Inscripción gratis)" },
+                    { label: "Semestre", value: "$200.000", note: "Valor promocional por semestre" }
+                ],
+                modules: [
+                    "1. Logística Básica: Cadena de abastecimiento, tipos de bodega",
+                    "2. Gestión de Inventarios: Kardex, conteo cíclico, mermas, rotación ABC",
+                    "3. Manipulación y Embalaje: Empaque, embalaje, rotulado, unitarización, paletizado",
+                    "4. Operación de Equipos: Montacargas, estibadores, transpaletas, seguridad",
+                    "5. Software y Documentación: Excel, WMS, facturación, guías, trazabilidad",
+                    "6. Calidad y SST: BPM, 5S, normas de higiene y seguridad",
+                    "7. Informática",
+                    "8. Ética"
+                ],
+                complementary: [
+                    "Primeros Auxilios",
+                    "Atención al Cliente",
+                    "Desarrollo del Ser"
+                ],
+                requirements: [
+                    "Ser mayor de 16 años",
+                    "Fotocopia de cédula o tarjeta de identidad",
+                    "Fotocopia del último grado cursado (mínimo 9°), acta de grado o diploma si es bachiller",
+                    "Certificación de EPS o SISBEN"
+                ]
+            },
+            "Operador de Montacargas": {
+                title: "Operador de Montacargas",
+                category: "Programa Técnico",
+                img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                bgImg: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                duration: "2 Semestres (1 año)",
+                schedule: "Según cronograma disponible",
+                attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
+                costs: [
+                    { label: "Matrícula", value: "$30.000", note: "Oferta limitada (Inscripción gratis)" },
+                    { label: "Semestre", value: "$200.000", note: "Valor promocional por semestre" }
+                ],
+                modules: [
+                    "1. Fundamentos Logística: Cadena de suministro, tipos de bodega, SST",
+                    "2. Gestión de Almacén: Recepción, almacenamiento, inventarios, Kardex, picking",
+                    "3. Operación Montacargas I: Montacargas eléctrico, contrapeso, seguridad, maniobras",
+                    "4. Operación Montacargas II: Montacargas combustión, retráctil, apilador. Altura",
+                    "5. Mantenimiento y Mecánica Básica: Checklist, hidráulica, fallas comunes",
+                    "6. Informática",
+                    "7. Seguridad y salud en el trabajo",
+                    "8. Ética"
+                ],
+                complementary: [
+                    "Primeros Auxilios",
+                    "Atención al Cliente",
+                    "Desarrollo del Ser"
+                ],
+                requirements: [
+                    "Ser mayor de 16 años",
+                    "Fotocopia de cédula o tarjeta de identidad",
+                    "Fotocopia del último grado cursado (mínimo 9°), acta de grado o diploma si es bachiller",
+                    "Certificación de EPS o SISBEN"
+                ]
+            },
+            "Mecánica Automotriz": {
+                title: "Mecánica Automotriz",
+                category: "Programa Técnico",
+                img: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                bgImg: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                duration: "2 Semestres (1 año)",
+                schedule: "Según cronograma disponible",
+                attentionHours: "Lunes a sábados: 8:00 a.m. a 4:00 p.m.",
+                costs: [
+                    { label: "Matrícula", value: "$30.000", note: "Oferta limitada (Inscripción gratis)" },
+                    { label: "Semestre", value: "$200.000", note: "Valor promocional por semestre" }
+                ],
+                modules: [
+                    "1. Fundamentos: Metrología, herramientas, seguridad, materiales",
+                    "2. Motor Gasolina: Desarme, diagnóstico, reparación, desgaste",
+                    "3. Motor Diésel: Bombas inyección, turbo, sistemas diésel",
+                    "4. Transmisión: Caja mecánica, automática, embrague, diferenciales",
+                    "5. Sistemas Automotrices: Frenos ABS, dirección, suspensión, A/C",
+                    "6. Electricidad y Electrónica: Circuitos, inyección, scanner, sensores",
+                    "7. Mantenimiento Preventivo: Alineación, balanceo, lubricación",
+                    "8. Informática",
+                    "9. Seguridad y salud en el trabajo",
+                    "10. Ética"
+                ],
+                complementary: [
+                    "Primeros Auxilios",
+                    "Atención al Cliente",
+                    "Desarrollo del Ser"
+                ],
+                requirements: [
+                    "Ser mayor de 16 años",
+                    "Fotocopia de cédula o tarjeta de identidad",
+                    "Fotocopia del último grado cursado (mínimo 9°), acta de grado o diploma si es bachiller",
+                    "Certificación de EPS o SISBEN"
+                ]
+            },
             "Auxiliar en Servicios Farmacéuticos": {
                 category: "Programa Técnico",
                 img: "https://www.image2url.com/r2/default/images/1793298340874-0efb8f41-9d70-44d3-94ee-402a8f3eb9bc.png",
