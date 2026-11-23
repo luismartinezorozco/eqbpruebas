@@ -1874,76 +1874,165 @@
 
         window.renderMessages = () => {
             const workersMap = getWorkersMap();
-            const workersOptions = window.appState.dbWorkers.filter(w => w.status === 'activo' && w.role !== 'Administrador').map(w => `<option value="${w.id}">${window.escapeHtml(w.name)}</option>`).join('');
+            const activeWorkersList = window.appState.dbWorkers
+                .filter(w => w.status === 'activo' && w.role !== 'Administrador')
+                .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            const workersOptions = activeWorkersList
+                .map(w => `<option value="${w.id}">${window.escapeHtml(`${w.name} ${w.lastname || ''}`.trim())}</option>`)
+                .join('');
             const sorted = [...(window.appState.messages || [])].sort((a,b) => b.timestamp - a.timestamp);
+            const activeTab = window.appState.messageFilter || 'all';
 
-            let listHtml = sorted.map(m => {
+            const generalCount = sorted.filter(m => !m.targetWorkerId).length;
+            const directCount = sorted.filter(m => !!m.targetWorkerId).length;
+
+            const filteredMessages = sorted.filter(m => {
+                if (activeTab === 'general') return !m.targetWorkerId;
+                if (activeTab === 'direct') return !!m.targetWorkerId;
+                return true;
+            });
+
+            const formatMsgDate = (ts) => {
+                if (!ts) return '';
+                const d = new Date(ts);
+                return d.toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' }) +
+                    ' · ' + d.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+            };
+
+            let listHtml = filteredMessages.map(m => {
                 const targetWorker = m.targetWorkerId ? workersMap.get(m.targetWorkerId) : null;
                 const isDirect = !!m.targetWorkerId;
-                const targetLabel = isDirect ? (targetWorker ? targetWorker.name : 'Colaborador eliminado') : 'Aviso General';
+                const targetFullName = targetWorker ? `${targetWorker.name} ${targetWorker.lastname || ''}`.trim() : 'Colaborador eliminado';
+                const targetLabel = isDirect ? targetFullName : 'Todo el equipo';
                 
-                const badgeClass = isDirect ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-blue-50 text-blue-700 border-blue-200';
-                const iconClass = isDirect ? 'text-purple-600 bg-purple-50 border-purple-100' : 'text-blue-600 bg-blue-50 border-blue-100';
-                const iconName = isDirect ? 'user' : 'megaphone';
+                const stripeClass = isDirect ? 'bg-purple-500' : 'bg-[#bb7434]';
+                const badgeClass = isDirect
+                    ? 'bg-purple-50 text-purple-700 border-purple-200/80'
+                    : 'bg-amber-50 text-[#965820] border-amber-200/80';
+                const iconClass = isDirect
+                    ? 'text-purple-600 bg-purple-50 border-purple-100'
+                    : 'text-[#bb7434] bg-amber-50 border-amber-100';
+                const iconName = isDirect ? 'user-check' : 'megaphone';
 
                 return `
-                <div class="perf-list-item bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-start gap-3.5">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${iconClass}"><i data-lucide="${iconName}" class="w-5 h-5"></i></div>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-2 mb-2 flex-wrap">
-                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-md uppercase tracking-wider border ${badgeClass}">${window.escapeHtml(targetLabel)}</span>
-                            <span class="text-xs font-medium text-gray-400 inline-flex items-center gap-1 tabular-nums"><i data-lucide="clock" class="w-3 h-3"></i> ${new Date(m.timestamp).toLocaleDateString()}</span>
+                <article class="perf-list-item bg-white rounded-2xl card-shadow overflow-hidden flex relative">
+                    <div class="w-1.5 shrink-0 ${stripeClass}"></div>
+                    <div class="flex-1 min-w-0 p-4 sm:p-5">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${iconClass}">
+                                    <i data-lucide="${iconName}" class="w-4 h-4"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider border ${badgeClass} truncate max-w-[200px] sm:max-w-xs">${window.escapeHtml(targetLabel)}</span>
+                                        <span class="text-[11px] font-medium text-gray-400 tabular-nums">${formatMsgDate(m.timestamp)}</span>
+                                    </div>
+                                    <p class="text-[11px] font-semibold text-gray-500 mt-0.5 truncate">De: ${window.escapeHtml(m.authorName)}</p>
+                                </div>
+                            </div>
+                            <button type="button" onclick="window.deleteMessage('${m.id}')" class="w-8 h-8 min-h-0 rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600 flex items-center justify-center shrink-0" title="Eliminar comunicado">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
                         </div>
-                        <p class="text-sm text-gray-800 break-words whitespace-pre-wrap leading-relaxed">${window.escapeHtml(m.text)}</p>
-                        <p class="text-[11px] font-semibold text-gray-400 mt-3 inline-flex items-center gap-1.5"><i data-lucide="pen-tool" class="w-3 h-3"></i> Publicado por ${window.escapeHtml(m.authorName)}</p>
+                        <div class="mt-3 pl-0 sm:pl-12">
+                            <p class="text-sm text-gray-800 break-words whitespace-pre-wrap leading-relaxed">${window.escapeHtml(m.text)}</p>
+                        </div>
                     </div>
-                    <button onclick="window.deleteMessage('${m.id}')" class="w-9 h-9 min-h-0 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-red-50 hover:text-red-600 hover:border-red-200 shrink-0" title="Eliminar"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                </div>`;
+                </article>`;
             }).join('');
 
-            if(!listHtml) listHtml = '<div class="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200 card-shadow"><div class="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="message-square-dashed" class="w-7 h-7"></i></div><p class="text-sm font-bold text-gray-500">Aún no hay comunicados publicados</p></div>';
+            if (!listHtml) {
+                listHtml = `
+                <div class="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200 card-shadow">
+                    <div class="w-12 h-12 rounded-2xl bg-[#f5f2ee] flex items-center justify-center mx-auto mb-3 text-[#bb7434]">
+                        <i data-lucide="inbox" class="w-6 h-6"></i>
+                    </div>
+                    <p class="text-sm font-bold text-gray-600">No hay comunicados en esta vista</p>
+                    <p class="text-xs text-gray-400 mt-1">Redacta un aviso arriba para informar al equipo.</p>
+                </div>`;
+            }
+
+            const tabBtn = (id, label, count) => {
+                const isAct = activeTab === id;
+                return `<button type="button" onclick="window.setMessageFilter('${id}')" class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 min-h-0 ${isAct ? 'bg-[#2d170e] text-white shadow-sm' : 'text-gray-500 hover:text-[#2d170e] hover:bg-white'}">
+                    <span>${label}</span>
+                    <span class="px-1.5 py-0.5 rounded-md text-[10px] tabular-nums ${isAct ? 'bg-white/20 text-white' : 'bg-gray-200/80 text-gray-600'}">${count}</span>
+                </button>`;
+            };
 
             return `
-            <div class="max-w-4xl mx-auto space-y-5">
-                <div class="bg-white p-5 sm:p-6 rounded-2xl card-shadow">
-                    <h1 class="text-2xl sm:text-3xl font-black text-[#2d170e] tracking-tight">Comunicados</h1>
-                    <p class="text-gray-500 text-xs sm:text-sm font-medium mt-0.5">Publica avisos generales o mensajes directos a un colaborador.</p>
+            <div class="max-w-5xl mx-auto space-y-5">
+                <!-- ENCABEZADO -->
+                <div class="bg-white p-5 sm:p-6 rounded-2xl card-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-black text-[#2d170e] tracking-tight">Comunicados</h1>
+                        <p class="text-gray-500 text-xs sm:text-sm font-medium mt-0.5">Central de avisos generales y notas directas al personal.</p>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs font-bold text-[#542c1c] bg-[#f5f2ee] px-3.5 py-2 rounded-xl border border-[#2d170e]/10 self-start sm:self-auto tabular-nums">
+                        <i data-lucide="megaphone" class="w-4 h-4 text-[#bb7434]"></i>
+                        <span>${sorted.length} comunicado${sorted.length !== 1 ? 's' : ''} activo${sorted.length !== 1 ? 's' : ''}</span>
+                    </div>
                 </div>
 
+                <!-- COMPOSITOR ORDENADO -->
                 <form onsubmit="window.saveMessage(event)" class="bg-white p-5 sm:p-6 rounded-2xl card-shadow space-y-4">
-                    <h3 class="text-xs font-extrabold text-[#542c1c] uppercase tracking-[0.14em] flex items-center gap-2"><i data-lucide="edit-3" class="w-4 h-4 text-[#bb7434]"></i> Nuevo Comunicado</h3>
-                    <div class="space-y-3.5">
-                        <div>
-                            <label class="block text-[11px] font-bold text-gray-500 mb-1.5 uppercase tracking-wider">Destinatario</label>
+                    <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                        <h3 class="text-xs font-extrabold text-[#542c1c] uppercase tracking-[0.14em] flex items-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4 text-[#bb7434]"></i> Redactar Comunicado
+                        </h3>
+                        <span id="msg-char-count" class="text-[11px] font-semibold text-gray-400 tabular-nums">0 / 600</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5 items-start">
+                        <div class="md:col-span-5">
+                            <label for="msg-target" class="block text-[11px] font-bold text-gray-500 mb-1.5 uppercase tracking-wider min-h-0">Dirigido a</label>
                             <div class="relative">
-                                <i data-lucide="users" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
+                                <i data-lucide="users" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#bb7434] pointer-events-none"></i>
                                 <select id="msg-target" class="w-full pl-10 pr-9 py-2.5 rounded-xl text-sm font-semibold text-[#2d170e] cursor-pointer appearance-none">
-                                    <option value="">Todos (Aviso General)</option>
-                                    ${workersOptions}
+                                    <option value="">Todos los colaboradores (Aviso General)</option>
+                                    <optgroup label="Mensaje Directo Individual">
+                                        ${workersOptions}
+                                    </optgroup>
                                 </select>
                                 <i data-lucide="chevron-down" class="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-gray-500 mb-1.5 uppercase tracking-wider">Mensaje</label>
-                            <textarea id="msg-text" rows="3" placeholder="Escribe aquí el comunicado o instrucción..." class="w-full p-3.5 rounded-xl text-sm font-medium text-gray-800 resize-none"></textarea>
+
+                        <div class="md:col-span-7">
+                            <label for="msg-text" class="block text-[11px] font-bold text-gray-500 mb-1.5 uppercase tracking-wider min-h-0">Contenido del aviso</label>
+                            <textarea id="msg-text" rows="2" maxlength="600" oninput="const c=document.getElementById('msg-char-count'); if(c) c.innerText=this.value.length+' / 600';" placeholder="Escribe una instrucción clara, recordatorio o nota individual..." class="w-full p-3 rounded-xl text-sm font-medium text-gray-800 resize-none"></textarea>
                         </div>
-                        <div class="flex justify-end">
-                            <button type="submit" id="save-message-btn" class="w-full sm:w-auto bg-[#bb7434] text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-[#a05e24] shadow-sm flex items-center justify-center gap-2">
-                                <i data-lucide="send" class="w-4 h-4"></i> Publicar comunicado
-                            </button>
-                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                        <p class="text-[11px] text-gray-400 font-medium">Los avisos generales aparecen en el perfil de todos los colaboradores activos.</p>
+                        <button type="submit" id="save-message-btn" class="w-full sm:w-auto bg-[#bb7434] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-[#a05e24] shadow-sm flex items-center justify-center gap-2 shrink-0">
+                            <i data-lucide="send" class="w-4 h-4"></i> Publicar ahora
+                        </button>
                     </div>
                 </form>
 
+                <!-- BARRA DE FILTROS + FEED LIMPIO -->
                 <div class="space-y-3">
-                    <div class="flex items-center justify-between px-1">
-                        <h3 class="text-xs font-extrabold text-[#542c1c]/70 uppercase tracking-[0.14em]">Historial de Comunicados</h3>
-                        <span class="text-xs font-bold text-gray-400 tabular-nums">${sorted.length} publicado${sorted.length !== 1 ? 's' : ''}</span>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 px-1">
+                        <h3 class="text-xs font-extrabold text-[#542c1c]/70 uppercase tracking-[0.14em]">Bandeja de Publicaciones</h3>
+                        <div class="bg-[#eae5df] p-1 rounded-xl flex items-center gap-1">
+                            ${tabBtn('all', 'Todos', sorted.length)}
+                            ${tabBtn('general', 'Generales', generalCount)}
+                            ${tabBtn('direct', 'Directos', directCount)}
+                        </div>
                     </div>
-                    ${listHtml}
+                    <div class="space-y-2.5">
+                        ${listHtml}
+                    </div>
                 </div>
             </div>`;
+        };
+
+        window.setMessageFilter = (filter) => {
+            window.appState.messageFilter = filter;
+            window.setView('messages', { preserveScroll: true, skipFetch: true });
         };
 
         window.renderProfile = () => {
@@ -1989,24 +2078,36 @@
 
             const relevantMessages = (window.appState.messages || []).filter(m => !m.targetWorkerId || m.targetWorkerId === w.id).sort((a,b) => b.timestamp - a.timestamp);
             let announcementsHtml = relevantMessages.length > 0 ? `
-                <div id="tab-anuncios" class="${window.appState.activeProfileTab === 'anuncios' ? 'block' : 'hidden'} space-y-3">
-                    ${relevantMessages.map(m => `
-                        <div class="bg-white border border-amber-200/80 p-4 sm:p-5 rounded-2xl card-shadow flex items-start gap-3.5">
-                            <div class="w-10 h-10 rounded-xl bg-amber-50 text-[#bb7434] border border-amber-200/60 flex items-center justify-center shrink-0"><i data-lucide="megaphone" class="w-5 h-5"></i></div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex justify-between items-center gap-2 mb-1.5 flex-wrap">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider text-[#965820] bg-amber-50 border border-amber-200/70 px-2 py-0.5 rounded-md">${m.targetWorkerId ? 'Mensaje Directo' : 'Anuncio General'}</span>
-                                    <span class="text-xs font-medium text-gray-400 tabular-nums">${new Date(m.timestamp).toLocaleDateString()}</span>
+                <div id="tab-anuncios" class="${window.appState.activeProfileTab === 'anuncios' ? 'block' : 'hidden'} space-y-2.5">
+                    ${relevantMessages.map(m => {
+                        const isDirect = !!m.targetWorkerId;
+                        const dStr = new Date(m.timestamp).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
+                        return `
+                        <article class="bg-white rounded-2xl card-shadow overflow-hidden flex">
+                            <div class="w-1.5 shrink-0 ${isDirect ? 'bg-purple-500' : 'bg-[#bb7434]'}"></div>
+                            <div class="flex-1 min-w-0 p-4 sm:p-5">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="flex items-center gap-2.5 min-w-0">
+                                        <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${isDirect ? 'bg-purple-50 text-purple-600 border-purple-100' : 'bg-amber-50 text-[#bb7434] border-amber-100'}">
+                                            <i data-lucide="${isDirect ? 'user-check' : 'megaphone'}" class="w-4 h-4"></i>
+                                        </div>
+                                        <div class="min-w-0">
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md border ${isDirect ? 'text-purple-700 bg-purple-50 border-purple-200/80' : 'text-[#965820] bg-amber-50 border-amber-200/80'}">${isDirect ? 'Mensaje Directo' : 'Aviso General'}</span>
+                                                <span class="text-[11px] font-medium text-gray-400 tabular-nums">${dStr}</span>
+                                            </div>
+                                            <p class="text-[11px] text-gray-500 font-semibold mt-0.5 truncate">De: ${window.escapeHtml(m.authorName)}</p>
+                                        </div>
+                                    </div>
+                                    ${canEdit ? `<button onclick="window.deleteMessage('${m.id}')" class="w-8 h-8 min-h-0 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 flex items-center justify-center shrink-0" title="Eliminar"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
                                 </div>
-                                <p class="text-sm text-gray-800 break-words whitespace-pre-wrap leading-relaxed">${window.escapeHtml(m.text)}</p>
-                                <p class="text-[11px] text-gray-400 font-semibold mt-2.5 flex items-center gap-1.5"><i data-lucide="user-circle" class="w-3.5 h-3.5"></i> ${window.escapeHtml(m.authorName)}</p>
+                                <p class="text-sm text-gray-800 break-words whitespace-pre-wrap leading-relaxed mt-3 sm:pl-11">${window.escapeHtml(m.text)}</p>
                             </div>
-                            ${canEdit ? `<button onclick="window.deleteMessage('${m.id}')" class="w-9 h-9 min-h-0 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 shrink-0"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
-                        </div>
-                    `).join('')}
+                        </article>`;
+                    }).join('')}
                 </div>` : `
                 <div id="tab-anuncios" class="${window.appState.activeProfileTab === 'anuncios' ? 'block' : 'hidden'} text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200 card-shadow">
-                    <div class="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="bell-off" class="w-7 h-7"></i></div>
+                    <div class="w-12 h-12 rounded-2xl bg-[#f5f2ee] flex items-center justify-center mx-auto mb-3 text-gray-400"><i data-lucide="bell-off" class="w-6 h-6"></i></div>
                     <p class="text-sm font-bold text-gray-500">No hay avisos por el momento</p>
                 </div>`;
 
