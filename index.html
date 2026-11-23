@@ -432,13 +432,30 @@
 
         <!-- MAIN CONTENT AREA -->
         <div class="flex-1 min-w-0 flex flex-col h-[100dvh] bg-[#f5f2ee] lg:rounded-l-[2rem] overflow-hidden relative shadow-2xl">
+            <!-- HEADER SUPERIOR COMPACTO (MÓVIL + TABLET) -->
+            <header class="lg:hidden bg-[#1e0f09] text-white px-4 pt-[calc(0.65rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between gap-3 border-b border-white/[0.08] shrink-0 z-30">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-9 h-9 bg-gradient-to-br from-[#bb7434] to-[#965820] rounded-xl flex items-center justify-center text-white shadow-md shrink-0 border border-white/15">
+                        <i data-lucide="briefcase" class="w-4 h-4"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <h2 class="text-sm font-black tracking-tight leading-none truncate">LALY TALENTO</h2>
+                        <p id="mobile-user-subtitle" class="text-[10px] text-[#cab2a2]/85 font-semibold truncate mt-1">Portal Corporativo</p>
+                    </div>
+                </div>
+                <button type="button" onclick="window.appSignOut()" class="min-h-0 px-3 py-2 rounded-xl bg-white/[0.08] hover:bg-red-500/20 text-white/85 hover:text-white border border-white/10 text-xs font-bold flex items-center gap-1.5 shrink-0">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5 text-red-300"></i>
+                    <span>Salir</span>
+                </button>
+            </header>
+
             <main id="main-content" class="flex-1 overflow-y-auto p-0 relative pb-32 lg:pb-10 hide-scrollbar">
                 <!-- Vistas dinámicas inyectadas aquí -->
             </main>
 
             <!-- BOTTOM NAV (Móvil + Tablet) -->
-            <div class="lg:hidden fixed nav-safe left-2.5 right-2.5 sm:left-6 sm:right-6 max-w-lg mx-auto bg-white/95 backdrop-blur-md border border-[#2d170e]/10 px-1.5 sm:px-2 py-1.5 rounded-2xl shadow-[0_14px_38px_-10px_rgba(24,12,7,0.22),0_2px_8px_rgba(24,12,7,0.06)] z-[200]">
-                <div id="mobile-nav" class="flex justify-around items-center w-full gap-0.5 sm:gap-1"></div>
+            <div id="mobile-nav-wrapper" class="lg:hidden fixed nav-safe left-3 right-3 sm:left-6 sm:right-6 max-w-lg mx-auto bg-white/95 backdrop-blur-md border border-[#2d170e]/10 px-1.5 py-1.5 rounded-2xl shadow-[0_14px_38px_-10px_rgba(24,12,7,0.22),0_2px_8px_rgba(24,12,7,0.06)] z-[200]">
+                <div id="mobile-nav" class="flex justify-around items-center w-full gap-1"></div>
             </div>
         </div>
     </div>
@@ -1286,6 +1303,8 @@
             document.getElementById('app-layout').classList.remove('hidden');
             const user = window.appState.currentUser;
             document.getElementById('user-name').innerText = user.name;
+            const mobileSubtitle = document.getElementById('mobile-user-subtitle');
+            if (mobileSubtitle) mobileSubtitle.innerText = `${user.name.split(' ')[0]} · ${user.role}`;
             const photoEl = document.getElementById('user-avatar');
             if(user.photo) photoEl.innerHTML = `<img src="${user.photo}" decoding="async" class="w-full h-full object-cover">`;
             else photoEl.innerText = window.getInitials(user.name);
@@ -1512,14 +1531,15 @@
 
             const desktopNav = document.getElementById('desktop-nav');
             const mobileNav = document.getElementById('mobile-nav');
+            const mobileNavWrapper = document.getElementById('mobile-nav-wrapper');
 
             const navItems = [
                 { id: 'dashboard', icon: 'layout-dashboard', label: 'Inicio', roles: ['ADMIN', 'HR', 'COORD'] },
-                { id: 'directory', icon: 'users', label: 'Directorio', roles: ['ADMIN', 'HR', 'COORD'] },
+                { id: 'directory', icon: 'users', label: 'Equipo', roles: ['ADMIN', 'HR', 'COORD'] },
                 { id: 'ranking', icon: 'star', label: 'Ranking', roles: ['ADMIN', 'HR', 'COORD'] },
                 { id: 'finances', icon: 'wallet', label: 'Finanzas', roles: ['ADMIN', 'HR'] },
                 { id: 'signatures', icon: 'pen-tool', label: 'Firmas', roles: ['ADMIN', 'HR'] },
-                { id: 'messages', icon: 'message-square', label: 'Mensajes', roles: ['ADMIN', 'HR', 'COORD'] },
+                { id: 'messages', icon: 'message-square', label: 'Avisos', roles: ['ADMIN', 'HR', 'COORD'] },
                 { id: 'profile', icon: 'user', label: 'Mi Perfil', roles: ['WORKER'] }
             ];
 
@@ -1527,31 +1547,30 @@
 
             desktopNav.innerHTML = allowedItems.map(item => {
                 const isActive = window.appState.currentView === item.id;
+                const fullLabel = item.id === 'directory' ? 'Directorio' : item.id === 'messages' ? 'Mensajes' : item.label;
                 return `
                 <button onclick="window.setView('${item.id}')"
                     class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold relative ${isActive ? 'bg-[#bb7434] text-white shadow-md shadow-[#bb7434]/20' : 'text-white/65 hover:bg-white/[0.06] hover:text-white'}">
                     <i data-lucide="${item.icon}" class="w-[18px] h-[18px] shrink-0"></i>
-                    <span class="truncate">${item.label}</span>
+                    <span class="truncate">${fullLabel}</span>
                 </button>`;
             }).join('');
 
-            let mobileHtml = allowedItems.map(item => {
-                const isActive = window.appState.currentView === item.id;
-                return `
-                <button onclick="window.setView('${item.id}')" data-active="${isActive}" class="flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 py-1 px-0.5 rounded-xl ${isActive ? 'text-[#2d170e]' : 'text-gray-400'}">
-                    <div class="mobile-icon-pill px-2 sm:px-3 py-1.5 rounded-xl transition-colors ${isActive ? 'bg-[#bb7434]/15 text-[#bb7434]' : ''}">
-                        <i data-lucide="${item.icon}" class="w-[18px] h-[18px] sm:w-[19px] sm:h-[19px] shrink-0"></i>
-                    </div>
-                    <span class="text-[9.5px] sm:text-[10px] font-bold truncate max-w-full leading-tight">${item.label}</span>
-                </button>`;
-            }).join('');
-
-            mobileHtml += `
-                <button onclick="window.appSignOut()" class="flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 py-1 px-0.5 rounded-xl text-red-500/80 hover:text-red-600">
-                    <div class="px-2 sm:px-3 py-1.5 rounded-xl"><i data-lucide="log-out" class="w-[18px] h-[18px] sm:w-[19px] sm:h-[19px] shrink-0"></i></div>
-                    <span class="text-[9.5px] sm:text-[10px] font-bold truncate leading-tight">Salir</span>
-                </button>`;
-            mobileNav.innerHTML = mobileHtml;
+            if (role === 'WORKER') {
+                if (mobileNavWrapper) mobileNavWrapper.classList.add('hidden');
+            } else {
+                if (mobileNavWrapper) mobileNavWrapper.classList.remove('hidden');
+                mobileNav.innerHTML = allowedItems.map(item => {
+                    const isActive = window.appState.currentView === item.id;
+                    return `
+                    <button onclick="window.setView('${item.id}')" data-active="${isActive}" class="flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-xl ${isActive ? 'text-[#2d170e]' : 'text-gray-400'}">
+                        <div class="mobile-icon-pill px-2.5 py-1 rounded-lg transition-colors ${isActive ? 'bg-[#bb7434]/15 text-[#bb7434]' : ''}">
+                            <i data-lucide="${item.icon}" class="w-[18px] h-[18px] shrink-0"></i>
+                        </div>
+                        <span class="text-[10px] font-bold truncate max-w-full leading-tight">${item.label}</span>
+                    </button>`;
+                }).join('');
+            }
             scheduleIcons();
         };
 
