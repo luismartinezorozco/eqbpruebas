@@ -27,6 +27,9 @@
     <!-- Carga diferida de librerías pesadas para no bloquear el primer renderizado -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- pdf-lib y pdf.js para visualizar PDFs en móvil y estampar firma oficial al final -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
@@ -312,6 +315,17 @@
         }
         .login-type-btn.inactive:hover {
             color: #2d170e;
+        }
+
+        /* Lienzo de firma táctil (evita scroll de página mientras se dibuja con el dedo) */
+        .signature-pad-canvas {
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            cursor: crosshair;
+            display: block;
+            width: 100%;
+            height: 170px;
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -739,6 +753,124 @@
         </div>
     </div>
 
+    <!-- MODAL ENVIAR DOCUMENTO PARA FIRMA (ADMIN / HR) -->
+    <div id="send-sign-modal" class="modal-backdrop z-[1050]">
+        <div class="modal-content w-full sm:max-w-md">
+            <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100/80 shrink-0 bg-white">
+                <h3 class="font-black text-lg sm:text-xl text-[#2d170e] flex items-center gap-2">
+                    <i data-lucide="pen-tool" class="w-5 h-5 text-[#bb7434]"></i> Enviar Documento a Firma
+                </h3>
+                <button type="button" onclick="window.closeSendSignModal()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 shrink-0">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-4 sm:p-6 overflow-y-auto flex-1 hide-scrollbar bg-gray-50/60">
+                <form id="send-sign-form" onsubmit="window.saveSignRequest(event)" class="space-y-4">
+                    <div>
+                        <label for="sign-title" class="block text-[11px] font-bold text-gray-500 mb-1.5 uppercase tracking-wider min-h-0">Título del Documento</label>
+                        <input required type="text" id="sign-title" placeholder="Ej: Contrato de Prestación de Servicios" class="w-full rounded-xl p-3 text-sm font-semibold text-gray-800 bg-white">
+                    </div>
+
+                    <div>
+                        <label for="sign-target" class="block text-[11px] font-bold text-gray-500 mb-1.5 uppercase tracking-wider min-h-0">Destinatario</label>
+                        <div class="relative">
+                            <i data-lucide="users" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#bb7434] pointer-events-none"></i>
+                            <select id="sign-target" class="w-full pl-10 pr-9 py-3 rounded-xl text-sm font-semibold text-[#2d170e] bg-white appearance-none cursor-pointer">
+                                <option value="ALL">Todo el equipo activo (Envío masivo)</option>
+                                <optgroup id="sign-target-workers" label="Colaborador Individual"></optgroup>
+                            </select>
+                            <i data-lucide="chevron-down" class="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="sign-notes" class="block text-[11px] font-bold text-gray-500 mb-1.5 uppercase tracking-wider min-h-0">Instrucciones (Opcional)</label>
+                        <textarea id="sign-notes" rows="2" placeholder="Ej: Leer detenidamente y firmar antes del viernes..." class="w-full rounded-xl p-3 text-sm font-medium text-gray-800 bg-white resize-none"></textarea>
+                    </div>
+
+                    <div class="p-4 bg-white rounded-2xl border border-dashed border-[#bb7434]/40 text-center">
+                        <p class="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">Archivo PDF a Firmar (Máx. 600 KB)</p>
+                        <p id="sign-file-name" class="text-xs font-extrabold text-[#2d170e] mb-3 hidden truncate px-2"></p>
+                        <label class="cursor-pointer inline-flex items-center gap-2 bg-[#f5f2ee] hover:bg-amber-50 text-[#2d170e] border border-[#2d170e]/15 px-4 py-2.5 rounded-xl text-xs font-bold">
+                            <i data-lucide="file-up" class="w-4 h-4 text-[#bb7434]"></i> Seleccionar PDF
+                            <input type="file" id="sign-pdf-input" accept="application/pdf" class="hidden" onchange="window.handleSignPdfUpload(event)">
+                        </label>
+                        <input type="hidden" id="sign-pdf-base64">
+                    </div>
+
+                    <button type="submit" id="save-sign-req-btn" class="w-full bg-[#bb7434] text-white py-3.5 rounded-xl font-black text-sm hover:bg-[#a05e24] shadow-lg shadow-[#bb7434]/25 flex items-center justify-center gap-2">
+                        <i data-lucide="send" class="w-4 h-4"></i> Enviar para Firma
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FIRMAR DOCUMENTO (COLABORADOR: LECTURA + DEDO + PIN) -->
+    <div id="sign-doc-modal" class="modal-backdrop z-[1150]">
+        <div class="modal-content w-full sm:max-w-xl">
+            <div class="flex justify-between items-center p-4 sm:p-5 border-b border-gray-100 shrink-0 bg-white">
+                <div class="min-w-0 pr-2">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-[#bb7434]">Firma Electrónica</p>
+                    <h3 id="sign-doc-modal-title" class="font-black text-base sm:text-lg text-[#2d170e] truncate">Documento</h3>
+                </div>
+                <button type="button" onclick="window.closeSignDocModal()" class="p-2 hover:bg-gray-100 rounded-full text-gray-500 shrink-0">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-4 sm:p-6 overflow-y-auto flex-1 hide-scrollbar bg-gray-50/70 space-y-4">
+                <input type="hidden" id="sign-doc-id">
+
+                <div id="sign-doc-notes-box" class="hidden bg-amber-50 border border-amber-200/80 p-3 rounded-xl text-xs text-amber-900 font-medium"></div>
+
+                <!-- Visor del PDF para lectura previa -->
+                <div class="bg-white rounded-2xl border border-gray-200/80 overflow-hidden shadow-sm">
+                    <div class="px-3.5 py-2.5 bg-[#f5f2ee] border-b border-gray-200/70 flex items-center justify-between gap-2">
+                        <span class="text-[11px] font-bold text-[#542c1c] uppercase tracking-wider flex items-center gap-1.5">
+                            <i data-lucide="file-text" class="w-3.5 h-3.5 text-[#bb7434]"></i> Vista previa del documento
+                        </span>
+                        <button type="button" onclick="window.openPendingSignPdf()" class="text-[11px] font-bold text-[#bb7434] hover:underline min-h-0 py-1 px-2">
+                            Abrir completo
+                        </button>
+                    </div>
+                    <div id="sign-pdf-pages-container" class="max-h-60 sm:max-h-72 overflow-y-auto p-3 space-y-3 bg-gray-100/80 flex flex-col items-center">
+                        <p class="text-xs text-gray-400 py-8">Cargando vista previa...</p>
+                    </div>
+                </div>
+
+                <!-- Recuadro de firma con el dedo -->
+                <div class="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <label class="text-[11px] font-extrabold text-[#2d170e] uppercase tracking-wider flex items-center gap-1.5 min-h-0">
+                            <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-[#bb7434]"></i> Dibuja tu firma aquí
+                        </label>
+                        <button type="button" onclick="window.clearSignaturePad()" class="text-xs font-bold text-red-600 hover:bg-red-50 px-2.5 py-1 rounded-lg min-h-0">
+                            Limpiar trazo
+                        </button>
+                    </div>
+                    <div class="rounded-xl border-2 border-dashed border-gray-300 bg-[#faf9f7] overflow-hidden relative">
+                        <canvas id="signature-canvas" class="signature-pad-canvas"></canvas>
+                        <div class="pointer-events-none absolute bottom-2 left-4 right-4 border-b border-gray-300/80 text-center">
+                            <span class="text-[10px] text-gray-400 font-medium bg-[#faf9f7] px-2">Firma del colaborador</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Validación con PIN personal -->
+                <div class="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm space-y-2">
+                    <label for="sign-doc-pin" class="block text-[11px] font-extrabold text-[#2d170e] uppercase tracking-wider min-h-0">
+                        Confirma con tu PIN personal (4 a 6 dígitos)
+                    </label>
+                    <input type="password" id="sign-doc-pin" minlength="4" maxlength="6" pattern="[0-9]*" inputmode="numeric" placeholder="••••" class="w-full rounded-xl p-3 text-center text-lg font-black tracking-widest">
+                </div>
+
+                <button type="button" id="confirm-sign-btn" onclick="window.submitDocumentSignature()" class="w-full bg-[#2d170e] text-white py-3.5 rounded-xl font-black text-sm hover:bg-[#1e0f09] shadow-lg flex items-center justify-center gap-2">
+                    <i data-lucide="check-circle-2" class="w-5 h-5 text-[#7be4af]"></i> Firmar y Certificar Documento
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL CONFIRMACIÓN FLUIDA (no bloqueante) -->
     <div id="confirm-modal" class="modal-backdrop z-[1200]">
         <div class="modal-content w-full sm:max-w-sm">
@@ -830,14 +962,12 @@
 
         // Control de sincronización en segundo plano sin peticiones duplicadas ni parpadeos
         let activeFetchPromise = null;
-        let lastDataSignature = '';
-        let lastNavSignature = '';
-
-        const computeSignature = (w, p, m, pay) =>
-            `${w.length}:${p.length}:${m.length}:${pay.length}:` +
+        const computeSignature = (w, p, m, pay, sigs = []) =>
+            `${w.length}:${p.length}:${m.length}:${pay.length}:${sigs.length}:` +
             `${w.map(x => `${x.id}:${x.name}:${x.lastname || ''}:${x.status}:${x.role}:${x.bankNumber || ''}`).join('|')}:` +
             `${p[p.length - 1]?.timestamp || 0}:${m[m.length - 1]?.timestamp || 0}:` +
-            `${pay.map(x => `${x.dbId}:${x.status || ''}`).join(',')}`;
+            `${pay.map(x => `${x.dbId}:${x.status || ''}`).join(',')}:` +
+            `${sigs.map(x => `${x.dbId}:${x.status || ''}`).join(',')}`;
 
         window.appState = {
             currentUser: null,
@@ -848,6 +978,8 @@
             points: [],
             messages: [],
             payments: [],
+            signRequests: [],
+            signFilter: 'all',
             currentProfileDocs: [],
             activeProfileTab: 'rendimiento',
             loginType: 'admin'
@@ -1023,19 +1155,21 @@
 
             const requestPromise = (async () => {
                 try {
-                    const [wSnap, pSnap, mSnap, paySnap] = await Promise.all([
+                    const [wSnap, pSnap, mSnap, paySnap, sigSnap] = await Promise.all([
                         getDocs(collection(db, "workers")),
                         getDocs(collection(db, "points")),
                         getDocs(collection(db, "messages")),
-                        getDocs(collection(db, "payments"))
+                        getDocs(collection(db, "payments")),
+                        getDocs(collection(db, "sign_requests"))
                     ]);
                     
                     const workers = wSnap.docs.map(d => d.data());
                     const points = pSnap.docs.map(d => ({dbId: d.id, ...d.data()}));
                     const messages = mSnap.docs.map(d => d.data());
                     const payments = paySnap.docs.map(d => ({dbId: d.id, ...d.data()}));
+                    const signRequests = sigSnap.docs.map(d => ({dbId: d.id, ...d.data()}));
 
-                    const nextSignature = computeSignature(workers, points, messages, payments);
+                    const nextSignature = computeSignature(workers, points, messages, payments, signRequests);
                     const changed = nextSignature !== lastDataSignature;
                     lastDataSignature = nextSignature;
 
@@ -1050,6 +1184,9 @@
 
                     window.appState.payments = payments;
                     window.saveToLocalAsync('laly_payments', payments);
+
+                    window.appState.signRequests = signRequests;
+                    window.saveToLocalAsync('laly_sign_requests', signRequests);
 
                     // Mantener actualizado el trabajador seleccionado si estamos viendo su perfil
                     if (window.appState.selectedWorker) {
@@ -1079,6 +1216,7 @@
                 const cP = localStorage.getItem('laly_points');
                 const cM = localStorage.getItem('laly_messages');
                 const cPay = localStorage.getItem('laly_payments');
+                const cSig = localStorage.getItem('laly_sign_requests');
                 
                 performLoginUIFast();
                 
@@ -1087,11 +1225,13 @@
                     window.appState.points = JSON.parse(cP);
                     window.appState.messages = JSON.parse(cM);
                     if (cPay) window.appState.payments = JSON.parse(cPay);
+                    if (cSig) window.appState.signRequests = JSON.parse(cSig);
                     lastDataSignature = computeSignature(
                         window.appState.dbWorkers,
                         window.appState.points,
                         window.appState.messages,
-                        window.appState.payments
+                        window.appState.payments,
+                        window.appState.signRequests
                     );
                     renderViewAfterLogin(); 
                 }
@@ -1329,6 +1469,10 @@
                 updateUI(window.renderFinances()); 
                 syncViewInBackground('finances', window.renderFinances);
             }
+            if (viewName === 'signatures') {
+                updateUI(window.renderSignatures());
+                syncViewInBackground('signatures', window.renderSignatures);
+            }
             if (viewName === 'profile') {
                 const wId = window.appState.selectedWorker.id;
                 window.appState.activeProfileTab = window.appState.activeProfileTab || 'rendimiento'; 
@@ -1372,6 +1516,7 @@
                 { id: 'directory', icon: 'users', label: 'Directorio', roles: ['ADMIN', 'HR', 'COORD'] },
                 { id: 'ranking', icon: 'star', label: 'Ranking', roles: ['ADMIN', 'HR', 'COORD'] },
                 { id: 'finances', icon: 'wallet', label: 'Finanzas', roles: ['ADMIN', 'HR'] },
+                { id: 'signatures', icon: 'pen-tool', label: 'Firmas', roles: ['ADMIN', 'HR'] },
                 { id: 'messages', icon: 'message-square', label: 'Mensajes', roles: ['ADMIN', 'HR', 'COORD'] },
                 { id: 'profile', icon: 'user', label: 'Mi Perfil', roles: ['WORKER'] }
             ];
@@ -1453,6 +1598,7 @@
             const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
             const pendingPaymentsCount = window.appState.payments.filter(p => p.status === 'Pendiente').length;
+            const pendingSignsCount = window.appState.signRequests.filter(s => s.status === 'Pendiente').length;
 
             return `
             <div class="space-y-6 max-w-6xl mx-auto">
@@ -1550,11 +1696,14 @@
 
                 <!-- MÓDULOS DE GESTIÓN -->
                 <section>
-                    <div class="flex items-center justify-between mb-3 px-1">
+                    <div class="flex items-center justify-between flex-wrap gap-2 mb-3 px-1">
                         <h3 class="text-xs font-extrabold text-[#542c1c]/70 uppercase tracking-[0.14em]">Módulos de Gestión</h3>
-                        ${canSeeFinances && pendingPaymentsCount > 0 ? `<button onclick="setView('finances')" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-800 bg-amber-100/80 border border-amber-200 px-2.5 py-1 rounded-full min-h-0 hover:bg-amber-100"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>${pendingPaymentsCount} cobro${pendingPaymentsCount > 1 ? 's' : ''} pendiente${pendingPaymentsCount > 1 ? 's' : ''}</button>` : ''}
+                        <div class="flex items-center gap-2 flex-wrap">
+                            ${canSeeFinances && pendingPaymentsCount > 0 ? `<button onclick="setView('finances')" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-800 bg-amber-100/80 border border-amber-200 px-2.5 py-1 rounded-full min-h-0 hover:bg-amber-100"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>${pendingPaymentsCount} cobro${pendingPaymentsCount > 1 ? 's' : ''} pendiente${pendingPaymentsCount > 1 ? 's' : ''}</button>` : ''}
+                            ${canSeeFinances && pendingSignsCount > 0 ? `<button onclick="setView('signatures')" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-purple-800 bg-purple-100/80 border border-purple-200 px-2.5 py-1 rounded-full min-h-0 hover:bg-purple-100"><span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>${pendingSignsCount} firma${pendingSignsCount > 1 ? 's' : ''} pendiente${pendingSignsCount > 1 ? 's' : ''}</button>` : ''}
+                        </div>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
                         <div onclick="setView('directory')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3.5 cursor-pointer group">
                             <div class="w-11 h-11 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-[#2d170e] group-hover:text-white transition-colors"><i data-lucide="users" class="w-5 h-5"></i></div>
                             <div class="flex-1 min-w-0">
@@ -1577,6 +1726,14 @@
                             <div class="flex-1 min-w-0">
                                 <h3 class="font-bold text-gray-900 text-sm truncate">Finanzas</h3>
                                 <p class="text-xs text-gray-500 truncate">Cobros y cierres ZIP</p>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-gray-300 group-hover:text-[#bb7434] shrink-0"></i>
+                        </div>
+                        <div onclick="setView('signatures')" class="bg-white p-4 sm:p-5 rounded-2xl card-shadow flex items-center gap-3.5 cursor-pointer group">
+                            <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors"><i data-lucide="pen-tool" class="w-5 h-5"></i></div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-bold text-gray-900 text-sm truncate">Firmas</h3>
+                                <p class="text-xs text-gray-500 truncate">Contratos y actas</p>
                             </div>
                             <i data-lucide="chevron-right" class="w-4 h-4 text-gray-300 group-hover:text-[#bb7434] shrink-0"></i>
                         </div>` : ''}
@@ -2035,6 +2192,541 @@
             window.setView('messages', { preserveScroll: true, skipFetch: true });
         };
 
+        // ================= SECCIÓN FIRMAS DE DOCUMENTOS =================
+        window.setSignFilter = (filter) => {
+            window.appState.signFilter = filter;
+            window.setView('signatures', { preserveScroll: true, skipFetch: true });
+        };
+
+        window.renderSignatures = () => {
+            const workersMap = getWorkersMap();
+            const allReqs = [...(window.appState.signRequests || [])].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+            const activeTab = window.appState.signFilter || 'all';
+
+            const pendingCount = allReqs.filter(r => r.status === 'Pendiente').length;
+            const signedCount = allReqs.filter(r => r.status === 'Firmado').length;
+
+            const filtered = allReqs.filter(r => {
+                if (activeTab === 'pending') return r.status === 'Pendiente';
+                if (activeTab === 'signed') return r.status === 'Firmado';
+                return true;
+            });
+
+            const listHtml = filtered.map(r => {
+                const w = workersMap.get(r.workerId) || { name: r.workerName || 'Colaborador', document: r.workerDoc || '-' };
+                const fullName = `${w.name} ${w.lastname || ''}`.trim();
+                const isSigned = r.status === 'Firmado';
+                const createdStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
+                const signedStr = r.signedAt ? new Date(r.signedAt).toLocaleString('es-CO', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+
+                return `
+                <article class="perf-list-item bg-white rounded-2xl card-shadow overflow-hidden flex">
+                    <div class="w-1.5 shrink-0 ${isSigned ? 'bg-emerald-500' : 'bg-amber-500'}"></div>
+                    <div class="flex-1 min-w-0 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+                        <div class="flex items-start gap-3.5 min-w-0">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${isSigned ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-amber-50 text-amber-700 border-amber-100'}">
+                                <i data-lucide="${isSigned ? 'file-check-2' : 'file-clock'}" class="w-5 h-5"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap mb-1">
+                                    <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md border ${isSigned ? 'bg-emerald-50 text-emerald-700 border-emerald-200/80' : 'bg-amber-50 text-amber-700 border-amber-200/80'}">${r.status}</span>
+                                    <span class="text-[11px] font-medium text-gray-400 tabular-nums">Enviado: ${createdStr}</span>
+                                    ${isSigned && signedStr ? `<span class="text-[11px] font-semibold text-emerald-700 tabular-nums">&bull; Firmado: ${signedStr}</span>` : ''}
+                                </div>
+                                <h4 class="font-extrabold text-gray-900 text-sm sm:text-base truncate">${window.escapeHtml(r.title)}</h4>
+                                <p class="text-xs font-semibold text-gray-600 mt-0.5 truncate">${window.escapeHtml(fullName)} <span class="text-gray-400 font-normal tabular-nums">(CC. ${window.escapeHtml(w.document || '-')})</span></p>
+                                ${r.verificationCode ? `<p class="text-[10px] font-mono text-gray-400 mt-1 truncate">ID Certificación: ${r.verificationCode}</p>` : ''}
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-1.5 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-gray-100">
+                            <button type="button" onclick="window.viewSignRequestPdf('${r.dbId}', 'view')" class="flex-1 sm:flex-none px-3.5 py-2 bg-[#f5f2ee] hover:bg-[#2d170e] hover:text-white text-[#2d170e] rounded-xl text-xs font-bold border border-[#2d170e]/10 flex items-center justify-center gap-1.5">
+                                <i data-lucide="eye" class="w-3.5 h-3.5"></i> ${isSigned ? 'Ver Firmado' : 'Ver PDF'}
+                            </button>
+                            <button type="button" onclick="window.viewSignRequestPdf('${r.dbId}', 'download')" class="px-3 py-2 bg-[#f5f2ee] hover:bg-gray-200 text-[#2d170e] rounded-xl text-xs font-bold border border-[#2d170e]/10 flex items-center justify-center" title="Descargar PDF">
+                                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <button type="button" onclick="window.deleteSignRequest('${r.dbId}')" class="px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold border border-red-200/80 flex items-center justify-center" title="Eliminar">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>`;
+            }).join('');
+
+            const tabBtn = (id, label, count) => {
+                const isAct = activeTab === id;
+                return `<button type="button" onclick="window.setSignFilter('${id}')" class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 min-h-0 ${isAct ? 'bg-[#2d170e] text-white shadow-sm' : 'text-gray-500 hover:text-[#2d170e] hover:bg-white'}">
+                    <span>${label}</span>
+                    <span class="px-1.5 py-0.5 rounded-md text-[10px] tabular-nums ${isAct ? 'bg-white/20 text-white' : 'bg-gray-200/80 text-gray-600'}">${count}</span>
+                </button>`;
+            };
+
+            return `
+            <div class="max-w-5xl mx-auto space-y-5">
+                <div class="bg-white p-5 sm:p-6 rounded-2xl card-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-black text-[#2d170e] tracking-tight">Firmas Digitales</h1>
+                        <p class="text-gray-500 text-xs sm:text-sm font-medium mt-0.5">Envío de contratos y actas para firma táctil con PIN.</p>
+                    </div>
+                    <button type="button" onclick="window.openSendSignModal()" class="w-full sm:w-auto bg-[#bb7434] text-white px-5 py-3 rounded-xl font-bold text-xs sm:text-sm hover:bg-[#a05e24] shadow-md shadow-[#bb7434]/20 flex items-center justify-center gap-2 shrink-0">
+                        <i data-lucide="file-plus-2" class="w-4 h-4"></i> Enviar Documento
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="bg-white p-4 rounded-2xl card-shadow">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Enviados</p>
+                        <p class="text-2xl font-black text-[#2d170e] mt-1 tabular-nums">${allReqs.length}</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl card-shadow">
+                        <p class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">Pendientes</p>
+                        <p class="text-2xl font-black text-amber-600 mt-1 tabular-nums">${pendingCount}</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl card-shadow">
+                        <p class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">Firmados</p>
+                        <p class="text-2xl font-black text-emerald-700 mt-1 tabular-nums">${signedCount}</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 px-1">
+                        <h3 class="text-xs font-extrabold text-[#542c1c]/70 uppercase tracking-[0.14em]">Documentos Gestionados</h3>
+                        <div class="bg-[#eae5df] p-1 rounded-xl flex items-center gap-1">
+                            ${tabBtn('all', 'Todos', allReqs.length)}
+                            ${tabBtn('pending', 'Pendientes', pendingCount)}
+                            ${tabBtn('signed', 'Firmados', signedCount)}
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        ${listHtml || `
+                        <div class="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200 card-shadow">
+                            <div class="w-12 h-12 rounded-2xl bg-[#f5f2ee] flex items-center justify-center mx-auto mb-3 text-[#bb7434]"><i data-lucide="pen-tool" class="w-6 h-6"></i></div>
+                            <p class="text-sm font-bold text-gray-600">No hay documentos en esta vista</p>
+                            <p class="text-xs text-gray-400 mt-1">Usa el botón "Enviar Documento" para subir un PDF y solicitar firma.</p>
+                        </div>`}
+                    </div>
+                </div>
+            </div>`;
+        };
+
+        window.openSendSignModal = (preselectedWorkerId = null) => {
+            document.getElementById('send-sign-form').reset();
+            document.getElementById('sign-pdf-base64').value = '';
+            const nameBadge = document.getElementById('sign-file-name');
+            nameBadge.innerText = '';
+            nameBadge.classList.add('hidden');
+
+            const optgroup = document.getElementById('sign-target-workers');
+            const activeWorkers = window.appState.dbWorkers
+                .filter(w => w.status === 'activo' && w.role !== 'Administrador')
+                .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            optgroup.innerHTML = activeWorkers
+                .map(w => `<option value="${w.id}">${window.escapeHtml(`${w.name} ${w.lastname || ''}`.trim())}</option>`)
+                .join('');
+
+            const targetSelect = document.getElementById('sign-target');
+            targetSelect.value = preselectedWorkerId || 'ALL';
+
+            document.getElementById('send-sign-modal').classList.add('active');
+            scheduleIcons();
+        };
+
+        window.closeSendSignModal = () => {
+            document.getElementById('send-sign-modal').classList.remove('active');
+        };
+
+        window.handleSignPdfUpload = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.type !== 'application/pdf') {
+                e.target.value = '';
+                return window.showToast('Solo se permiten archivos PDF', 'error');
+            }
+            if (file.size > 620 * 1024) {
+                e.target.value = '';
+                return window.showToast('El PDF debe pesar máximo 600 KB', 'error');
+            }
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                document.getElementById('sign-pdf-base64').value = ev.target.result;
+                const nameBadge = document.getElementById('sign-file-name');
+                nameBadge.innerText = `Archivo: ${file.name}`;
+                nameBadge.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.saveSignRequest = async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('sign-title').value.trim();
+            const target = document.getElementById('sign-target').value;
+            const notes = document.getElementById('sign-notes').value.trim();
+            const pdfBase64 = document.getElementById('sign-pdf-base64').value;
+            const btn = document.getElementById('save-sign-req-btn');
+
+            if (!title) return window.showToast('Ingresa un título para el documento', 'error');
+            if (!pdfBase64) return window.showToast('Adjunta un archivo PDF', 'error');
+
+            const recipients = target === 'ALL'
+                ? window.appState.dbWorkers.filter(w => w.status === 'activo' && w.role !== 'Administrador')
+                : window.appState.dbWorkers.filter(w => w.id === target);
+
+            if (recipients.length === 0) return window.showToast('No hay colaboradores destinatarios activos', 'error');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Enviando...';
+            scheduleIcons();
+
+            try {
+                const nowTs = Date.now();
+                const batchPromises = recipients.map(async (w) => {
+                    const payload = {
+                        title,
+                        notes,
+                        workerId: w.id,
+                        workerName: `${w.name} ${w.lastname || ''}`.trim(),
+                        workerDoc: w.document || '',
+                        originalPdf: pdfBase64,
+                        signedPdf: null,
+                        signatureImage: null,
+                        status: 'Pendiente',
+                        createdAt: nowTs,
+                        createdBy: window.appState.currentUser.name,
+                        signedAt: null,
+                        verificationCode: null
+                    };
+                    const ref = await addDoc(collection(db, "sign_requests"), payload);
+                    window.appState.signRequests.push({ dbId: ref.id, ...payload });
+                });
+
+                await Promise.all(batchPromises);
+                window.saveToLocalAsync('laly_sign_requests', window.appState.signRequests);
+                window.closeSendSignModal();
+                window.showToast(`Documento enviado a ${recipients.length} colaborador${recipients.length > 1 ? 'es' : ''}`);
+                if (window.appState.currentView === 'signatures') window.setView('signatures', { skipFetch: true });
+                if (window.appState.currentView === 'profile') window.setView('profile', { preserveScroll: true });
+            } catch (err) {
+                console.error(err);
+                window.showToast('Error al enviar documento (verifica tamaño < 600KB)', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> Enviar para Firma';
+                scheduleIcons();
+            }
+        };
+
+        window.deleteSignRequest = async (dbId) => {
+            if (!(await window.showConfirmModal('¿Eliminar este documento de firma?'))) return;
+            try {
+                await deleteDoc(doc(db, "sign_requests", dbId));
+                window.appState.signRequests = window.appState.signRequests.filter(x => x.dbId !== dbId);
+                window.saveToLocalAsync('laly_sign_requests', window.appState.signRequests);
+                window.showToast('Documento eliminado');
+                if (window.appState.currentView === 'signatures') window.setView('signatures', { preserveScroll: true, skipFetch: true });
+                if (window.appState.currentView === 'profile') window.setView('profile', { preserveScroll: true });
+            } catch (e) {
+                window.showToast('Error al eliminar documento', 'error');
+            }
+        };
+
+        // Lienzo de firma táctil y mouse
+        let sigPadState = { initialized: false, drawing: false, hasStrokes: false, ctx: null, canvas: null };
+
+        window.initSignaturePad = () => {
+            const canvas = document.getElementById('signature-canvas');
+            if (!canvas) return;
+            const rect = canvas.getBoundingClientRect();
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            canvas.width = Math.max(rect.width, 280) * dpr;
+            canvas.height = 170 * dpr;
+
+            const ctx = canvas.getContext('2d');
+            ctx.scale(dpr, dpr);
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.lineWidth = 2.6;
+            ctx.strokeStyle = '#1e0f09';
+
+            sigPadState = { initialized: true, drawing: false, hasStrokes: false, ctx, canvas };
+
+            const getPos = (ev) => {
+                const r = canvas.getBoundingClientRect();
+                const point = ev.touches && ev.touches[0] ? ev.touches[0] : ev;
+                return { x: point.clientX - r.left, y: point.clientY - r.top };
+            };
+
+            const startDraw = (ev) => {
+                if (ev.cancelable) ev.preventDefault();
+                sigPadState.drawing = true;
+                const pos = getPos(ev);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+            };
+
+            const moveDraw = (ev) => {
+                if (!sigPadState.drawing) return;
+                if (ev.cancelable) ev.preventDefault();
+                const pos = getPos(ev);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                sigPadState.hasStrokes = true;
+            };
+
+            const endDraw = () => {
+                if (!sigPadState.drawing) return;
+                sigPadState.drawing = false;
+                ctx.closePath();
+            };
+
+            canvas.onpointerdown = startDraw;
+            canvas.onpointermove = moveDraw;
+            canvas.onpointerup = endDraw;
+            canvas.onpointerleave = endDraw;
+            canvas.ontouchstart = startDraw;
+            canvas.ontouchmove = moveDraw;
+            canvas.ontouchend = endDraw;
+        };
+
+        window.clearSignaturePad = () => {
+            if (!sigPadState.canvas || !sigPadState.ctx) return;
+            sigPadState.ctx.clearRect(0, 0, sigPadState.canvas.width, sigPadState.canvas.height);
+            sigPadState.hasStrokes = false;
+        };
+
+        window.openSignDocModal = async (dbId) => {
+            const w = window.appState.selectedWorker;
+            if (!w.pdfPinHash) {
+                window.showToast('Primero debes crear tu PIN personal', 'error');
+                window.openPinSetupModal();
+                return;
+            }
+
+            const req = window.appState.signRequests.find(x => x.dbId === dbId);
+            if (!req) return window.showToast('Documento no encontrado', 'error');
+
+            document.getElementById('sign-doc-id').value = dbId;
+            document.getElementById('sign-doc-modal-title').innerText = req.title;
+            document.getElementById('sign-doc-pin').value = '';
+
+            const notesBox = document.getElementById('sign-doc-notes-box');
+            if (req.notes) {
+                notesBox.innerText = `Nota: ${req.notes}`;
+                notesBox.classList.remove('hidden');
+            } else {
+                notesBox.classList.add('hidden');
+            }
+
+            document.getElementById('sign-doc-modal').classList.add('active');
+            scheduleIcons();
+
+            requestAnimationFrame(() => window.initSignaturePad());
+            await window.renderPdfPreviewInModal(req.originalPdf);
+        };
+
+        window.closeSignDocModal = () => {
+            document.getElementById('sign-doc-modal').classList.remove('active');
+        };
+
+        window.openPendingSignPdf = () => {
+            const dbId = document.getElementById('sign-doc-id').value;
+            if (dbId) window.viewSignRequestPdf(dbId, 'view');
+        };
+
+        window.renderPdfPreviewInModal = async (dataUrl) => {
+            const container = document.getElementById('sign-pdf-pages-container');
+            if (!container) return;
+            container.innerHTML = '<p class="text-xs text-gray-500 py-8 font-medium">Renderizando páginas...</p>';
+
+            try {
+                if (window.pdfjsLib) {
+                    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                    const base64 = dataUrl.split(',')[1];
+                    const raw = atob(base64);
+                    const uint8 = new Uint8Array(raw.length);
+                    for (let i = 0; i < raw.length; i++) uint8[i] = raw.charCodeAt(i);
+
+                    const pdf = await window.pdfjsLib.getDocument({ data: uint8 }).promise;
+                    container.innerHTML = '';
+
+                    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                        const page = await pdf.getPage(pageNum);
+                        const viewport = page.getViewport({ scale: 1.25 });
+                        const pageCanvas = document.createElement('canvas');
+                        pageCanvas.width = viewport.width;
+                        pageCanvas.height = viewport.height;
+                        pageCanvas.className = 'w-full h-auto rounded-lg shadow-sm bg-white border border-gray-200';
+                        await page.render({ canvasContext: pageCanvas.getContext('2d'), viewport }).promise;
+                        container.appendChild(pageCanvas);
+                    }
+                } else {
+                    container.innerHTML = `<iframe src="${dataUrl}" class="w-full h-64 rounded-lg border-0"></iframe>`;
+                }
+            } catch (e) {
+                console.error('Error previsualizando PDF:', e);
+                container.innerHTML = `<p class="text-xs text-gray-500 py-6 text-center">Toca "Abrir completo" arriba para leer el PDF antes de firmar.</p>`;
+            }
+        };
+
+        window.submitDocumentSignature = async () => {
+            const dbId = document.getElementById('sign-doc-id').value;
+            const pin = document.getElementById('sign-doc-pin').value.trim();
+            const btn = document.getElementById('confirm-sign-btn');
+            const w = window.appState.selectedWorker;
+
+            if (!sigPadState.hasStrokes) {
+                return window.showToast('Dibuja tu firma con el dedo en el recuadro', 'error');
+            }
+            if (!pin || pin.length < 4) {
+                return window.showToast('Ingresa tu PIN personal para autorizar la firma', 'error');
+            }
+
+            const req = window.appState.signRequests.find(x => x.dbId === dbId);
+            if (!req) return window.showToast('Documento no encontrado', 'error');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Certificando firma...';
+            scheduleIcons();
+
+            try {
+                const hashedPin = await hashPIN(pin);
+                if (hashedPin !== w.pdfPinHash) {
+                    window.showToast('PIN incorrecto', 'error');
+                    document.getElementById('sign-doc-pin').value = '';
+                    return;
+                }
+
+                if (!window.PDFLib) {
+                    window.showToast('Cargando motor de firma PDF, intenta en un segundo', 'error');
+                    return;
+                }
+
+                const signaturePngDataUrl = sigPadState.canvas.toDataURL('image/png');
+                const signedAtTs = Date.now();
+                const signedAtStr = new Date(signedAtTs).toLocaleString('es-CO');
+                const fullName = `${w.name} ${w.lastname || ''}`.trim();
+                const verificationCode = (await hashPIN(`${dbId}|${w.id}|${signedAtTs}|${hashedPin}`)).slice(0, 16).toUpperCase();
+
+                // Cargar PDF original y anexar página oficial de certificación con firma trazada
+                const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
+                const origBytes = await fetch(req.originalPdf).then(r => r.arrayBuffer());
+                const pdfDoc = await PDFDocument.load(origBytes);
+                const sigPngBytes = await fetch(signaturePngDataUrl).then(r => r.arrayBuffer());
+                const sigPngImage = await pdfDoc.embedPng(sigPngBytes);
+
+                const certPage = pdfDoc.addPage([612, 792]);
+                const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+                const fontReg = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+                // Encabezado corporativo
+                certPage.drawRectangle({ x: 0, y: 712, width: 612, height: 80, color: rgb(45 / 255, 23 / 255, 14 / 255) });
+                certPage.drawText('LALY TALENTO', { x: 48, y: 754, size: 20, font: fontBold, color: rgb(1, 1, 1) });
+                certPage.drawText('CERTIFICADO DE FIRMA ELECTRONICA', { x: 48, y: 734, size: 11, font: fontReg, color: rgb(214 / 255, 163 / 255, 114 / 255) });
+
+                // Datos del documento y firmante
+                const cleanAscii = (txt) => String(txt || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\x20-\x7E]/g, '');
+
+                certPage.drawText('INFORMACION DEL DOCUMENTO FIRMADO', { x: 48, y: 672, size: 11, font: fontBold, color: rgb(187 / 255, 116 / 255, 52 / 255) });
+                certPage.drawLine({ start: { x: 48, y: 665 }, end: { x: 564, y: 665 }, thickness: 1, color: rgb(0.88, 0.86, 0.84) });
+
+                certPage.drawText(`Documento: ${cleanAscii(req.title)}`, { x: 48, y: 642, size: 11, font: fontBold, color: rgb(0.15, 0.15, 0.15) });
+                certPage.drawText(`Firmante: ${cleanAscii(fullName).toUpperCase()}`, { x: 48, y: 620, size: 11, font: fontReg, color: rgb(0.2, 0.2, 0.2) });
+                certPage.drawText(`Numero de Documento (CC): ${cleanAscii(w.document || '-')}`, { x: 48, y: 600, size: 11, font: fontReg, color: rgb(0.2, 0.2, 0.2) });
+                certPage.drawText(`Cargo / Rol: ${cleanAscii(w.role || 'Colaborador')}`, { x: 48, y: 580, size: 11, font: fontReg, color: rgb(0.2, 0.2, 0.2) });
+                certPage.drawText(`Fecha y Hora de Firma: ${cleanAscii(signedAtStr)}`, { x: 48, y: 560, size: 11, font: fontReg, color: rgb(0.2, 0.2, 0.2) });
+                certPage.drawText(`Codigo de Verificacion SHA-256: ${verificationCode}`, { x: 48, y: 540, size: 10, font: fontBold, color: rgb(0.1, 0.45, 0.25) });
+
+                // Recuadro con firma manuscrita
+                certPage.drawRectangle({
+                    x: 48, y: 345, width: 516, height: 165,
+                    borderColor: rgb(187 / 255, 116 / 255, 52 / 255),
+                    borderWidth: 1.2,
+                    color: rgb(0.985, 0.98, 0.975)
+                });
+                certPage.drawText('FIRMA MANUSCRITA DEL COLABORADOR', { x: 64, y: 490, size: 9, font: fontBold, color: rgb(0.45, 0.45, 0.45) });
+
+                const sigDims = sigPngImage.scaleToFit(320, 105);
+                certPage.drawImage(sigPngImage, {
+                    x: 48 + (516 - sigDims.width) / 2,
+                    y: 378,
+                    width: sigDims.width,
+                    height: sigDims.height
+                });
+
+                certPage.drawLine({ start: { x: 160, y: 372 }, end: { x: 452, y: 372 }, thickness: 0.8, color: rgb(0.5, 0.5, 0.5) });
+                certPage.drawText(`${cleanAscii(fullName)} - CC. ${cleanAscii(w.document || '-')}`, { x: 185, y: 357, size: 9, font: fontReg, color: rgb(0.35, 0.35, 0.35) });
+
+                // Nota legal Ley 527 de 1999
+                certPage.drawText('VALIDEZ JURIDICA (LEY 527 DE 1999 - COLOMBIA):', { x: 48, y: 305, size: 9.5, font: fontBold, color: rgb(0.25, 0.25, 0.25) });
+                certPage.drawText('El firmante declara haber leido y aceptado integramente el contenido del presente documento,', { x: 48, y: 289, size: 9, font: fontReg, color: rgb(0.4, 0.4, 0.4) });
+                certPage.drawText('autenticando su identidad mediante trazo manuscrito y clave PIN personal cifrada en LALY TALENTO.', { x: 48, y: 276, size: 9, font: fontReg, color: rgb(0.4, 0.4, 0.4) });
+
+                const signedPdfBase64 = await pdfDoc.saveAsBase64({ dataUri: true });
+
+                await updateDoc(doc(db, "sign_requests", dbId), {
+                    status: 'Firmado',
+                    signedAt: signedAtTs,
+                    signatureImage: signaturePngDataUrl,
+                    signedPdf: signedPdfBase64,
+                    verificationCode: verificationCode
+                });
+
+                const idx = window.appState.signRequests.findIndex(x => x.dbId === dbId);
+                if (idx > -1) {
+                    window.appState.signRequests[idx] = {
+                        ...window.appState.signRequests[idx],
+                        status: 'Firmado',
+                        signedAt: signedAtTs,
+                        signatureImage: signaturePngDataUrl,
+                        signedPdf: signedPdfBase64,
+                        verificationCode: verificationCode
+                    };
+                    window.saveToLocalAsync('laly_sign_requests', window.appState.signRequests);
+                }
+
+                window.closeSignDocModal();
+                window.showToast('Documento firmado y certificado con éxito');
+                window.setView('profile', { preserveScroll: true });
+            } catch (err) {
+                console.error(err);
+                window.showToast('Error al firmar el documento', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="check-circle-2" class="w-5 h-5 text-[#7be4af]"></i> Firmar y Certificar Documento';
+                scheduleIcons();
+            }
+        };
+
+        window.viewSignRequestPdf = async (dbId, action = 'view') => {
+            const req = window.appState.signRequests.find(x => x.dbId === dbId);
+            if (!req) return window.showToast('Documento no encontrado', 'error');
+
+            const dataUri = req.signedPdf || req.originalPdf;
+            if (!dataUri) return window.showToast('Archivo PDF no disponible', 'error');
+
+            try {
+                const res = await fetch(dataUri);
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const safeTitle = (req.title || 'Documento').replace(/[^a-zA-Z0-9]/g, '_');
+                const safeWorker = (req.workerName || 'Colaborador').replace(/[^a-zA-Z0-9]/g, '_');
+                const fileName = `${safeTitle}_${safeWorker}_${req.status}.pdf`;
+
+                if (action === 'download') {
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileName;
+                    a.click();
+                    setTimeout(() => URL.revokeObjectURL(url), 10000);
+                } else {
+                    window.open(url, '_blank');
+                }
+            } catch (e) {
+                window.showToast('No se pudo abrir el PDF', 'error');
+            }
+        };
+
         window.renderProfile = () => {
             const w = window.appState.selectedWorker;
             const role = window.appState.currentUser.systemRole;
@@ -2113,6 +2805,8 @@
 
             // === SECCIÓN DE COBROS E HISTORIAL ===
             const myPayments = (window.appState.payments || []).filter(p => p.workerId === w.id).sort((a,b) => b.timestamp - a.timestamp);
+            const mySignRequests = (window.appState.signRequests || []).filter(s => s.workerId === w.id).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+            const myPendingSigns = mySignRequests.filter(s => s.status === 'Pendiente');
             
             let paymentsHtml = myPayments.map(p => {
                 const pStatus = p.status || 'Aprobado';
@@ -2232,12 +2926,28 @@
                 </div>
 
                 <!-- PESTAÑAS SEGMENTADAS (LEGIBLES EN MÓVIL Y PC) -->
-                <div class="bg-[#eae5df] p-1 rounded-2xl grid ${canSeeBank ? 'grid-cols-4' : 'grid-cols-3'} gap-1">
-                    <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="min-w-0 px-2 sm:px-3 py-2.5 text-[11px] sm:text-xs font-bold rounded-xl flex justify-center items-center gap-1 sm:gap-1.5 ${window.appState.activeProfileTab === 'rendimiento' ? tabActiveClass : tabInactiveClass}"><i data-lucide="star" class="w-3.5 h-3.5 shrink-0"></i><span class="truncate">Puntos</span></button>
-                    <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="min-w-0 px-2 sm:px-3 py-2.5 text-[11px] sm:text-xs font-bold rounded-xl flex justify-center items-center gap-1 sm:gap-1.5 ${window.appState.activeProfileTab === 'laboral' ? tabActiveClass : tabInactiveClass}"><i data-lucide="user" class="w-3.5 h-3.5 shrink-0"></i><span class="truncate">Info</span></button>
-                    <button onclick="switchTab('anuncios')" id="tab-btn-anuncios" class="min-w-0 px-2 sm:px-3 py-2.5 text-[11px] sm:text-xs font-bold rounded-xl flex justify-center items-center gap-1 sm:gap-1.5 ${window.appState.activeProfileTab === 'anuncios' ? tabActiveClass : tabInactiveClass}"><i data-lucide="bell" class="w-3.5 h-3.5 shrink-0"></i><span class="truncate">Avisos</span></button>
-                    ${canSeeBank ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="min-w-0 px-2 sm:px-3 py-2.5 text-[11px] sm:text-xs font-bold rounded-xl flex justify-center items-center gap-1 sm:gap-1.5 ${window.appState.activeProfileTab === 'banco' ? tabActiveClass : tabInactiveClass}"><i data-lucide="credit-card" class="w-3.5 h-3.5 shrink-0"></i><span class="truncate">Cobros</span></button>` : ''}
+                <div class="bg-[#eae5df] p-1 rounded-2xl grid ${canSeeBank ? 'grid-cols-5' : 'grid-cols-4'} gap-1">
+                    <button onclick="switchTab('rendimiento')" id="tab-btn-rendimiento" class="min-w-0 px-1.5 sm:px-3 py-2.5 text-[10.5px] sm:text-xs font-bold rounded-xl flex justify-center items-center gap-1 sm:gap-1.5 ${window.appState.activeProfileTab === 'rendimiento' ? tabActiveClass : tabInactiveClass}"><i data-lucide="star" class="w-3.5 h-3.5 shrink-0"></i><span class="truncate">Puntos</span></button>
+                    <button onclick="switchTab('laboral')" id="tab-btn-laboral" class="min-w-0 px-1.5 sm:px-3 py-2.5 text-[10.5px] sm:text-xs font-bold rounded-xl flex justify-center items-center gap-1 sm:gap-1.5 ${window.appState.activeProfileTab === 'laboral' ? tabActiveClass : tabInactiveClass}"><i data-lucide="user" class="w-3.5 h-3.5 shrink-0"></i><span class="truncate">Info</span></button>
+                    <button onclick="switchTab('firmas')" id="tab-btn-firmas" class="min-w-0 px-1.5 sm:px-3 py-2.5 text-[10.5px] sm:text-xs font-bold rounded-xl flex justify-center items-center gap-1 sm:gap-1.5 relative ${window.appState.activeProfileTab === 'firmas' ? tabActiveClass : tabInactiveClass}">
+                        <i data-lucide="pen-tool" class="w-3.5 h-3.5 shrink-0"></i><span class="truncate">Firmas</span>
+                        ${myPendingSigns.length > 0 ? `<span class="w-4 h-4 rounded-full bg-amber-500 text-white text-[9px] font-black flex items-center justify-center shrink-0 tabular-nums">${myPendingSigns.length}</span>` : ''}
+                    </button>
+                    <button onclick="switchTab('anuncios')" id="tab-btn-anuncios" class="min-w-0 px-1.5 sm:px-3 py-2.5 text-[10.5px] sm:text-xs font-bold rounded-xl flex justify-center items-center gap-1 sm:gap-1.5 ${window.appState.activeProfileTab === 'anuncios' ? tabActiveClass : tabInactiveClass}"><i data-lucide="bell" class="w-3.5 h-3.5 shrink-0"></i><span class="truncate">Avisos</span></button>
+                    ${canSeeBank ? `<button onclick="switchTab('banco')" id="tab-btn-banco" class="min-w-0 px-1.5 sm:px-3 py-2.5 text-[10.5px] sm:text-xs font-bold rounded-xl flex justify-center items-center gap-1 sm:gap-1.5 ${window.appState.activeProfileTab === 'banco' ? tabActiveClass : tabInactiveClass}"><i data-lucide="credit-card" class="w-3.5 h-3.5 shrink-0"></i><span class="truncate">Cobros</span></button>` : ''}
                 </div>
+
+                ${myPendingSigns.length > 0 && window.appState.activeProfileTab !== 'firmas' ? `
+                <div onclick="switchTab('firmas')" class="bg-amber-50 border border-amber-300/80 p-3.5 sm:p-4 rounded-2xl flex items-center justify-between gap-3 cursor-pointer hover:bg-amber-100/70">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0"><i data-lucide="pen-tool" class="w-4 h-4"></i></div>
+                        <div class="min-w-0">
+                            <p class="text-xs sm:text-sm font-extrabold text-amber-950 truncate">Tienes ${myPendingSigns.length} documento${myPendingSigns.length > 1 ? 's' : ''} pendiente${myPendingSigns.length > 1 ? 's' : ''} por firmar</p>
+                            <p class="text-[11px] text-amber-800 truncate">Toca aquí para revisar y firmar con tu dedo y PIN.</p>
+                        </div>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-amber-700 shrink-0"></i>
+                </div>` : ''}
 
                 <div class="space-y-4">
                     
@@ -2344,6 +3054,67 @@
                     <!-- TAB: ANUNCIOS -->
                     ${announcementsHtml}
 
+                    <!-- TAB: FIRMAS DIGITALES -->
+                    <div id="tab-firmas" class="${window.appState.activeProfileTab === 'firmas' ? 'block' : 'hidden'} space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <h4 class="text-xs font-extrabold text-[#542c1c]/70 uppercase tracking-[0.14em] flex items-center gap-2">
+                                    <i data-lucide="pen-tool" class="w-4 h-4 text-[#bb7434]"></i> Documentos para Firma Electrónica
+                                </h4>
+                                <p class="text-xs font-medium text-gray-500 mt-0.5">Contratos, actas y acuerdos asignados</p>
+                            </div>
+                            ${canEdit ? `
+                            <button type="button" onclick="window.openSendSignModal('${w.id}')" class="w-full sm:w-auto bg-[#bb7434] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-sm hover:bg-[#a05e24] flex items-center justify-center gap-1.5">
+                                <i data-lucide="file-plus-2" class="w-4 h-4"></i> Enviar PDF a firmar
+                            </button>` : ''}
+                        </div>
+
+                        <div class="space-y-2.5">
+                            ${mySignRequests.length > 0 ? mySignRequests.map(r => {
+                                const isSigned = r.status === 'Firmado';
+                                const dCreated = r.createdAt ? new Date(r.createdAt).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
+                                const dSigned = r.signedAt ? new Date(r.signedAt).toLocaleString('es-CO', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+
+                                return `
+                                <div class="perf-list-item bg-white p-4 sm:p-5 rounded-2xl card-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+                                    <div class="flex items-start gap-3.5 min-w-0">
+                                        <div class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border ${isSigned ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-amber-50 text-amber-700 border-amber-100'}">
+                                            <i data-lucide="${isSigned ? 'file-check-2' : 'file-pen-line'}" class="w-5 h-5"></i>
+                                        </div>
+                                        <div class="min-w-0">
+                                            <div class="flex items-center gap-2 flex-wrap mb-1">
+                                                <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md border ${isSigned ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'}">${r.status}</span>
+                                                <span class="text-[11px] font-medium text-gray-400 tabular-nums">Enviado: ${dCreated}</span>
+                                            </div>
+                                            <h4 class="font-bold text-gray-900 text-sm truncate">${window.escapeHtml(r.title)}</h4>
+                                            ${r.notes ? `<p class="text-xs text-gray-500 mt-0.5 line-clamp-2">${window.escapeHtml(r.notes)}</p>` : ''}
+                                            ${isSigned && dSigned ? `<p class="text-[11px] font-semibold text-emerald-700 mt-1 tabular-nums">Firmado el ${dSigned} &bull; ID: ${r.verificationCode || ''}</p>` : ''}
+                                        </div>
+                                    </div>
+
+                                    <div class="flex gap-1.5 w-full sm:w-auto shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-gray-100">
+                                        ${!isSigned && role === 'WORKER' ? `
+                                            <button type="button" onclick="window.openSignDocModal('${r.dbId}')" class="flex-1 sm:flex-none px-4 py-2 bg-[#bb7434] hover:bg-[#a05e24] text-white rounded-xl text-xs font-extrabold shadow-sm flex items-center justify-center gap-1.5">
+                                                <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i> Firmar ahora
+                                            </button>
+                                        ` : ''}
+                                        <button type="button" onclick="window.viewSignRequestPdf('${r.dbId}', 'view')" class="flex-1 sm:flex-none px-3.5 py-2 bg-[#f5f2ee] hover:bg-gray-200 text-[#2d170e] rounded-xl text-xs font-bold border border-[#2d170e]/10 flex items-center justify-center gap-1.5">
+                                            <i data-lucide="eye" class="w-3.5 h-3.5"></i> ${isSigned ? 'Ver Firmado' : 'Ver PDF'}
+                                        </button>
+                                        <button type="button" onclick="window.viewSignRequestPdf('${r.dbId}', 'download')" class="px-3 py-2 bg-[#f5f2ee] hover:bg-gray-200 text-[#2d170e] rounded-xl text-xs font-bold border border-[#2d170e]/10 flex items-center justify-center" title="Descargar">
+                                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                        ${canEdit ? `<button type="button" onclick="window.deleteSignRequest('${r.dbId}')" class="px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold border border-red-200/80 flex items-center justify-center" title="Eliminar"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>` : ''}
+                                    </div>
+                                </div>`;
+                            }).join('') : `
+                            <div class="text-center py-10 bg-white rounded-2xl border border-dashed border-gray-200 card-shadow">
+                                <div class="w-12 h-12 rounded-2xl bg-[#f5f2ee] flex items-center justify-center mx-auto mb-3 text-gray-400"><i data-lucide="file-check" class="w-6 h-6"></i></div>
+                                <p class="text-sm font-bold text-gray-500">Sin documentos asignados para firma</p>
+                            </div>`}
+                        </div>
+                    </div>
+
                     <!-- TAB: BANCO Y COBROS -->
                     ${canSeeBank ? `
                     <div id="tab-banco" class="${window.appState.activeProfileTab === 'banco' ? 'block' : 'hidden'} space-y-6">
@@ -2396,9 +3167,9 @@
 
         window.switchTab = (tabId) => {
             window.appState.activeProfileTab = tabId;
-            const tabs = ['rendimiento', 'laboral', 'anuncios', 'banco'];
-            const tabActiveClass = 'min-w-0 px-2 sm:px-3 py-2.5 text-[11px] sm:text-xs font-bold rounded-xl flex justify-center items-center gap-1 sm:gap-1.5 bg-white text-[#2d170e] shadow-sm border border-[#2d170e]/10';
-            const tabInactiveClass = 'min-w-0 px-2 sm:px-3 py-2.5 text-[11px] sm:text-xs font-bold rounded-xl flex justify-center items-center gap-1 sm:gap-1.5 text-gray-500 hover:text-[#2d170e] hover:bg-white/60 border border-transparent';
+            const tabs = ['rendimiento', 'laboral', 'firmas', 'anuncios', 'banco'];
+            const tabActiveClass = 'min-w-0 px-1.5 sm:px-3 py-2.5 text-[10.5px] sm:text-xs font-bold rounded-xl flex justify-center items-center gap-1 sm:gap-1.5 relative bg-white text-[#2d170e] shadow-sm border border-[#2d170e]/10';
+            const tabInactiveClass = 'min-w-0 px-1.5 sm:px-3 py-2.5 text-[10.5px] sm:text-xs font-bold rounded-xl flex justify-center items-center gap-1 sm:gap-1.5 relative text-gray-500 hover:text-[#2d170e] hover:bg-white/60 border border-transparent';
             
             tabs.forEach(t => {
                 const content = document.getElementById(`tab-${t}`);
