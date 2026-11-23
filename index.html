@@ -962,6 +962,8 @@
 
         // Control de sincronización en segundo plano sin peticiones duplicadas ni parpadeos
         let activeFetchPromise = null;
+        let lastDataSignature = '';
+        let lastNavSignature = '';
         const computeSignature = (w, p, m, pay, sigs = []) =>
             `${w.length}:${p.length}:${m.length}:${pay.length}:${sigs.length}:` +
             `${w.map(x => `${x.id}:${x.name}:${x.lastname || ''}:${x.status}:${x.role}:${x.bankNumber || ''}`).join('|')}:` +
