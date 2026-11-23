@@ -69,14 +69,16 @@
             to { opacity: 1; transform: translate3d(0, 0, 0); }
         }
         .view-enter {
-            animation: viewEnter 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation: viewEnter 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
-
-        /* Respuesta táctil instantánea sin deformar checkboxes */
-        button, a, label,
+        /* Respuesta táctil instantánea sin deformar checkboxes ni estirar etiquetas */
+        button, a, label.cursor-pointer,
         input:not([type="hidden"]):not([type="file"]):not([type="checkbox"]),
         select, textarea {
             min-height: 42px;
+            touch-action: manipulation;
+        }
+        label, input[type="checkbox"] {
             touch-action: manipulation;
         }
         input[type="checkbox"] {
@@ -228,14 +230,14 @@
         .modal-backdrop {
             position: fixed; inset: 0; background-color: rgba(24, 12, 7, 0.56);
             backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-            z-index: 1000; display: flex; align-items: center; justify-content: center;
+            z-index: 1000; display: none; align-items: center; justify-content: center;
             opacity: 0; visibility: hidden; pointer-events: none;
             padding: 0.75rem;
             padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
-            transition: opacity 0.18s ease-out, visibility 0s linear 0.18s;
+            transition: opacity 0.18s ease-out;
         }
         .modal-backdrop.active {
-            opacity: 1; visibility: visible; pointer-events: auto;
+            display: flex; opacity: 1; visibility: visible; pointer-events: auto;
             transition: opacity 0.18s ease-out, visibility 0s;
         }
         .modal-content {
@@ -833,6 +835,7 @@
 
         const computeSignature = (w, p, m, pay) =>
             `${w.length}:${p.length}:${m.length}:${pay.length}:` +
+            `${w.map(x => `${x.id}:${x.name}:${x.lastname || ''}:${x.status}:${x.role}:${x.bankNumber || ''}`).join('|')}:` +
             `${p[p.length - 1]?.timestamp || 0}:${m[m.length - 1]?.timestamp || 0}:` +
             `${pay.map(x => `${x.dbId}:${x.status || ''}`).join(',')}`;
 
@@ -844,19 +847,15 @@
             dbWorkers: [],
             points: [],
             messages: [],
-            payments: [], 
+            payments: [],
             currentProfileDocs: [],
             activeProfileTab: 'rendimiento',
             loginType: 'admin'
         };
 
-        // Mapa O(1) de trabajadores para búsquedas instantáneas en finanzas, mensajes y perfiles
         const getWorkersMap = () => {
             const map = new Map();
-            for (let i = 0; i < window.appState.dbWorkers.length; i++) {
-                const w = window.appState.dbWorkers[i];
-                map.set(w.id, w);
-            }
+            window.appState.dbWorkers.forEach(w => map.set(w.id, w));
             return map;
         };
 
@@ -1019,10 +1018,10 @@
         };
 
         // Deduplica descargas concurrentes y devuelve si hubo cambios reales para evitar re-renders innecesarios
-        async function fetchAllData() {
-            if (activeFetchPromise) return activeFetchPromise;
+        async function fetchAllData(force = false) {
+            if (activeFetchPromise && !force) return activeFetchPromise;
 
-            activeFetchPromise = (async () => {
+            const requestPromise = (async () => {
                 try {
                     const [wSnap, pSnap, mSnap, paySnap] = await Promise.all([
                         getDocs(collection(db, "workers")),
@@ -1063,11 +1062,12 @@
                     console.error("Error sincronizando BD en segundo plano:", e);
                     return false;
                 } finally {
-                    activeFetchPromise = null;
+                    if (activeFetchPromise === requestPromise) activeFetchPromise = null;
                 }
             })();
 
-            return activeFetchPromise;
+            activeFetchPromise = requestPromise;
+            return requestPromise;
         }
 
         async function checkSession() {
@@ -1666,6 +1666,131 @@
                         <div class="date-input-shell">
                             <i data-lucide="calendar" class="w-4 h-4 text-[#bb7434] shrink-0 pointer-events-none"></i>
                             <input type="month" value="${monthStr}" onchange="window.changeMonth(event)" class="text-[#2d170e] text-sm font-bold cursor-pointer tabular-nums">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-glow-bg p-5 sm:p-7 rounded-3xl text-white flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 shadow-xl relative overflow-hidden border border-[#bb7434]/30">
+                    <div class="absolute -right-6 -bottom-6 opacity-[0.07] pointer-events-none"><i data-lucide="banknote" class="w-44 h-44"></i></div>
+                    <div class="relative z-10 flex-1 min-w-0">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.16em] text-[#cab2a2] mb-1.5 flex items-center gap-1.5">
+                            <i data-lucide="calculator" class="w-4 h-4 text-[#7be4af]"></i> Total Aprobado (${monthStr})
+                        </p>
+                        <p class="text-3xl sm:text-4xl font-black tracking-tight tabular-nums text-white">${formatCOP(totalAmount)}</p>
+                        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs font-semibold">
+                            <span class="text-[#7be4af] tabular-nums">${approvedCount} aprobada${approvedCount !== 1 ? 's' : ''}</span>
+                            ${pendingAmount > 0 ? `<span class="text-amber-300 inline-flex items-center gap-1 tabular-nums"><i data-lucide="clock" class="w-3.5 h-3.5"></i> ${formatCOP(pendingAmount)} pendiente (${pendingCount})</span>` : ''}
+                        </div>
+                    </div>
+                    <button onclick="window.downloadMonthlyZip('${monthStr}')" class="w-full sm:w-auto bg-white text-[#2d170e] px-5 py-3 rounded-xl font-extrabold text-xs sm:text-sm hover:bg-gray-100 shadow-lg flex items-center justify-center gap-2 shrink-0 relative z-10">
+                        <i data-lucide="folder-down" class="w-4 h-4 text-[#bb7434]"></i> Descargar cierre ZIP
+                    </button>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between px-1">
+                        <h3 class="text-xs font-extrabold text-[#542c1c]/70 uppercase tracking-[0.14em] flex items-center gap-1.5">
+                            <i data-lucide="list-checks" class="w-4 h-4"></i> Desglose de Constancias
+                        </h3>
+                        <span class="text-xs font-bold text-gray-400 tabular-nums">${monthPayments.length} registro${monthPayments.length !== 1 ? 's' : ''}</span>
+                    </div>
+                    ${paymentsListHtml}
+                </div>
+            </div>`;
+        };
+
+        window.changeMonth = (e) => { 
+            const newMonth = e.target.value; 
+            if (!newMonth) return;
+            window.appState.selectedMonth = newMonth; 
+            window.setView(window.appState.currentView, { skipFetch: true });
+        };
+
+        let filterTimeout;
+        window.filterDirectory = (term, immediate = false) => {
+            const runFilter = () => {
+                const lowerTerm = (term || '').toLowerCase().trim();
+                document.querySelectorAll('.directory-card').forEach(card => {
+                    const data = card.getAttribute('data-search') || '';
+                    card.style.display = data.includes(lowerTerm) ? 'flex' : 'none';
+                });
+            };
+            clearTimeout(filterTimeout);
+            if (immediate) runFilter();
+            else filterTimeout = setTimeout(runFilter, 120);
+        };
+
+        window.renderDirectory = () => {
+            const canEdit = ['ADMIN', 'HR'].includes(window.appState.currentUser.systemRole);
+            const isAdmin = window.appState.currentUser.systemRole === 'ADMIN';
+            const workers = window.appState.dbWorkers.filter(w => w.role !== 'Administrador');
+            
+            const cardsHtml = workers.map(w => {
+                const isInactive = w.status === 'inactivo';
+                const photoHtml = w.photo 
+                    ? `<img src="${w.photo}" loading="lazy" decoding="async" class="w-12 h-12 rounded-xl object-cover shrink-0 border border-gray-100">` 
+                    : `<div class="w-12 h-12 rounded-xl bg-[#f5f2ee] text-[#542c1c] font-extrabold text-sm flex items-center justify-center shrink-0 border border-[#2d170e]/10">${window.getInitials(w.name)}</div>`;
+                
+                let firstSpecHtml = '';
+                if (w.specialties) {
+                    const firstSpec = w.specialties.split(',')[0].trim();
+                    if (firstSpec) firstSpecHtml = `<span class="bg-amber-50 text-[#965820] text-[10px] font-bold px-2 py-0.5 rounded-md inline-flex items-center gap-1 truncate border border-amber-200/70"><i data-lucide="sparkles" class="w-2.5 h-2.5 shrink-0"></i><span class="truncate">${window.escapeHtml(firstSpec)}</span></span>`;
+                }
+                const cityHtml = w.city 
+                    ? `<span class="bg-gray-50 text-gray-500 text-[10px] font-semibold px-2 py-0.5 rounded-md inline-flex items-center gap-1 truncate border border-gray-200/70"><i data-lucide="map-pin" class="w-2.5 h-2.5 shrink-0"></i><span class="truncate">${window.escapeHtml(w.city)}</span></span>` 
+                    : '';
+                
+                const fullName = `${w.name} ${w.lastname || ''}`.trim();
+                const safeNameJS = fullName.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                const safeDocJS = String(w.document || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                const searchData = window.escapeHtml(`${fullName} ${w.role} ${w.document || ''} ${w.specialties || ''} ${w.city || ''}`.toLowerCase());
+
+                return `
+                <div onclick="viewWorkerProfile('${w.id}')" data-search="${searchData}" class="directory-card bg-white p-4 rounded-2xl card-shadow cursor-pointer flex items-center gap-3.5 relative overflow-hidden group ${isInactive ? 'opacity-65' : ''}">
+                    <div class="relative shrink-0">
+                        ${photoHtml}
+                        <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 ${isInactive ? 'bg-red-400' : 'bg-emerald-500'} border-2 border-white rounded-full"></span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-gray-900 text-sm leading-tight truncate group-hover:text-[#bb7434] transition-colors">${window.escapeHtml(fullName)}</h4>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider truncate mt-0.5 mb-2">${window.escapeHtml(w.role || 'Colaborador')}</p>
+                        <div class="flex items-center gap-1.5 overflow-hidden">${firstSpecHtml}${cityHtml}</div>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0 z-10">
+                        ${canEdit ? `<button type="button" onclick="window.copyWorkerData(event, '${safeNameJS}', '${safeDocJS}')" class="w-8 h-8 min-h-0 rounded-lg bg-[#f5f2ee] text-gray-500 hover:text-[#bb7434] hover:bg-amber-50 border border-[#2d170e]/10 flex items-center justify-center" title="Copiar nombre y cédula"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>` : ''}
+                        <i data-lucide="chevron-right" class="w-4 h-4 text-gray-300 group-hover:text-[#bb7434]"></i>
+                    </div>
+                </div>`;
+            });
+
+            if (cardsHtml.length === 0) {
+                cardsHtml.push(`
+                <div class="col-span-full text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200 card-shadow">
+                    <div class="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center mx-auto mb-3 text-gray-300"><i data-lucide="users" class="w-7 h-7"></i></div>
+                    <p class="text-sm font-bold text-gray-500">No hay colaboradores registrados</p>
+                </div>`);
+            }
+
+            return `
+            <div class="max-w-6xl mx-auto space-y-5">
+                <div class="bg-white p-4 sm:p-6 rounded-2xl card-shadow">
+                    <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
+                        <div class="min-w-0">
+                            <h1 class="text-2xl sm:text-3xl font-black text-[#2d170e] tracking-tight">Directorio</h1>
+                            <p class="text-gray-500 text-xs sm:text-sm font-medium mt-0.5">${workers.length} integrante${workers.length !== 1 ? 's' : ''} en el equipo</p>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-2.5 w-full md:w-auto">
+                            <div class="relative flex-1 sm:w-64 min-w-0">
+                                <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
+                                <input type="text" id="directory-search-input" oninput="window.filterDirectory(this.value)" placeholder="Buscar por nombre, cédula o rol..." class="w-full pl-10 pr-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-800">
+                            </div>
+                            ${canEdit ? `
+                            <div class="flex gap-2 shrink-0">
+                                <button onclick="openWorkerForm()" class="flex-1 sm:flex-none bg-[#bb7434] text-white px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm hover:bg-[#a05e24]">
+                                    <i data-lucide="user-plus" class="w-4 h-4"></i> <span>Colaborador</span>
+                                </button>
+                                ${isAdmin ? `<button onclick="window.openAdminModal()" class="flex-1 sm:flex-none bg-[#2d170e] text-white px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm hover:bg-[#1e0f09]"><i data-lucide="shield" class="w-4 h-4"></i> <span>Admin</span></button>` : ''}
+                            </div>` : ''}
                         </div>
                     </div>
                 </div>
@@ -2534,7 +2659,7 @@
         window.generatePaymentPDF = async (paymentId, action) => {
             const p = window.appState.payments.find(x => x.dbId === paymentId);
             if(!p) return window.showToast('Pago no encontrado', 'error');
-            const w = window.appState.dbWorkers.find(x => x.id === p.workerId);
+            const w = window.appState.dbWorkers.find(x => x.id === p.workerId) || { name: 'Colaborador', lastname: '', document: '-', role: '-', specialties: 'General' };
             if (!window.jspdf) return window.showToast('Cargando motor PDF, intenta en un segundo', 'error');
 
             if (action !== 'blob') window.showToast('Generando constancia...', 'success');
@@ -2771,11 +2896,18 @@
                         pdfDoc.save(fileName);
                         window.showToast("Tu dispositivo descargó la constancia.");
                     }
-                } else { 
+                } else {
                     const url = URL.createObjectURL(pdfBlob);
                     window.open(url, '_blank');
                 }
             }
+        };
+
+        window.viewWorkerProfile = (id) => {
+            const found = window.appState.dbWorkers.find(w => w.id === id);
+            if (!found) return window.showToast('Colaborador no encontrado', 'error');
+            window.appState.selectedWorker = found;
+            window.setView('profile');
         };
 
         window.downloadMonthlyZip = async (monthStr) => {
@@ -2895,8 +3027,6 @@
             } catch (e) { window.showToast('Error al eliminar', 'error'); }
         };
 
-        window.viewWorkerProfile = (id) => { window.appState.selectedWorker = window.appState.dbWorkers.find(w => w.id === id); window.setView('profile'); };
-
         window.uploadDocument = (e) => {
             const file = e.target.files[0];
             if (!file || file.size > 1024 * 1024) return window.showToast('El PDF debe pesar máximo 1MB', 'error');
@@ -2945,6 +3075,7 @@
 
             if (id) {
                 const w = window.appState.dbWorkers.find(x => x.id === id);
+                if (!w) return window.showToast('Colaborador no encontrado', 'error');
                 document.getElementById('worker-modal-title').innerText = 'Editar Colaborador'; 
                 document.getElementById('w-id').value = w.id || ''; 
                 document.getElementById('w-name').value = w.name || ''; 
@@ -2964,11 +3095,12 @@
                 document.getElementById('w-specs').value = w.specialties || '';
                 
                 if(canSeeBank){ 
-                    document.getElementById('w-bank-name').value = w.bankName||''; 
-                    document.getElementById('w-bank-type').value = w.bankType||'Ahorros'; 
-                    document.getElementById('w-bank-num').value = w.bankNumber||''; 
-                    document.getElementById('w-bank-owner').value = w.bankOwner||'';
-                    window.handleBankChange(document.getElementById('w-bank-name'));
+                    const bankSelect = document.getElementById('w-bank-name');
+                    bankSelect.value = w.bankName || ''; 
+                    window.handleBankChange(bankSelect);
+                    document.getElementById('w-bank-type').value = w.bankType || 'Ahorros'; 
+                    document.getElementById('w-bank-num').value = w.bankNumber || ''; 
+                    document.getElementById('w-bank-owner').value = w.bankOwner || '';
                 }
                 
                 const dayMap = { 'Lunes': 'lunes', 'Martes': 'martes', 'Miércoles': 'miercoles', 'Jueves': 'jueves', 'Viernes': 'viernes', 'Sábado': 'sabado', 'Domingo': 'domingo' };
@@ -3037,7 +3169,7 @@
                 const adminData = { id: 'admin_' + Date.now(), name, username, password, role: 'Administrador', systemRole: 'ADMIN', status: 'activo' };
                 await setDoc(doc(db, "workers", adminData.id), adminData);
                 
-                window.closeAdminModal(); window.showToast('Administrador creado exitosamente'); await fetchAllData();
+                window.closeAdminModal(); window.showToast('Administrador creado exitosamente'); await fetchAllData(true);
             } catch(err) { window.showToast('Error: ' + err.message, 'error'); } 
             finally { btn.disabled = false; btn.innerText = 'Crear Administrador'; }
         };
@@ -3143,7 +3275,7 @@
             
             try { 
                 await setDoc(doc(db, "workers", workerData.id), workerData, { merge: true }); 
-                window.closeWorkerModal(); window.showToast('Colaborador guardado'); await fetchAllData(); 
+                window.closeWorkerModal(); window.showToast('Colaborador guardado'); await fetchAllData(true); 
                 if(window.appState.currentView === 'directory') window.setView('directory', { preserveScroll: true, skipFetch: true }); 
                 if(window.appState.currentView === 'profile') window.setView('profile', { preserveScroll: true }); 
             } catch(err) { window.showToast('Error: ' + err.message, 'error'); } 
